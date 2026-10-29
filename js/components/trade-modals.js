@@ -1,0 +1,168 @@
+/* Popup tambah/edit trade, tutup posisi, hitung risiko */
+"use strict";
+function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
+    var _a, _b, _c;
+    const pf = prefill || null;
+    const [tzMode, setTzMode] = useState(mt5GetTz());
+    const [form, setForm] = useState(pf ? { symbol: pf.symbol, side: pf.side, date: pf.date, closeDate: pf.closeDate, entry: String(pf.entry), exit: pf.exit == null ? '' : String(pf.exit), lots: String(pf.lots), sl: pf.sl == null ? '' : String(pf.sl), tp: pf.tp == null ? '' : String(pf.tp), fees: String(pf.fees || 0), exitMethod: pf.exitMethod, setup: '', screenshots: [] } : initial ? { ...initial, entry: String((_a = initial.entry) !== null && _a !== void 0 ? _a : ''), exit: initial.exit == null ? '' : String(initial.exit), lots: String((_b = initial.lots) !== null && _b !== void 0 ? _b : ''), sl: initial.sl == null ? '' : String(initial.sl), tp: initial.tp == null ? '' : String(initial.tp), fees: String((_c = initial.fees) !== null && _c !== void 0 ? _c : 0), setup: initial.setup || '', screenshots: initial.screenshots || [] } : { symbol: 'XAUUSD', side: 'Long', date: isoNow(), entry: '', exit: '', lots: '0.01', sl: '', tp: '', fees: '0', setup: '', screenshots: [] });
+    const [showAdjust, setShowAdjust] = useState(false);
+    const [calculated, setCalculated] = useState(false);
+    const risk = riskFor(form.entry, form.sl, form.lots, form.symbol);
+    const reward = rewardFor(form.entry, form.tp, form.lots, form.symbol);
+    const riskPct = form.entry && form.sl ? Math.abs((Number(form.sl) - Number(form.entry)) / Number(form.entry) * 100) : 0;
+    const suggestedLots = Number(form.entry) && Number(form.sl) ? (Number(account.balance) * 0.01) / (Math.abs(Number(form.entry) - Number(form.sl)) * contractSize(form.symbol)) : 0;
+    const set = (key, value) => setForm({ ...form, [key]: value });
+    async function handlePaste(e) { var _a; const items = [...(((_a = e.clipboardData) === null || _a === void 0 ? void 0 : _a.items) || [])]; const images = items.filter(item => item.type.startsWith('image/')); if (images.length) {
+        e.preventDefault();
+        const urls = await Promise.all(images.slice(0, 3).map(x => fileToDataUrl(x.getAsFile())));
+        set('screenshots', [...form.screenshots, ...urls.filter(Boolean)].slice(0, 3));
+    } }
+    async function handleFiles(e) { const urls = await Promise.all([...(e.target.files || [])].slice(0, 3).map(fileToDataUrl)); set('screenshots', urls.filter(Boolean)); }
+    const dupTicket = !!(pf && pf.ticket && (account.trades || []).some(t => t.mt5Ticket === pf.ticket));
+    function changeTz(v) { mt5SetTz(v); setTzMode(v); setForm({ ...form, date: mt5ToWib(pf.rawOpen, v), closeDate: mt5ToWib(pf.rawClose, v) }); }
+    function submit(e) { e.preventDefault(); const extra = pf ? { mt5Ticket: pf.ticket || undefined, mt5Net: form.exit && pf.net != null ? pf.net : null, source: 'screenshot' } : {}; onSave({ ...form, ...extra, pnl: form.exit ? pnlFor(form, form.exit) : 0 }); }
+    const scanBox = pf && React.createElement("div", { className: "scan-result" },
+        React.createElement("strong", null, "Hasil baca screenshot (Beta)"),
+        React.createElement("small", null, "Periksa tiap kolom sebelum disimpan \u2014 pembacaan teks bisa keliru."),
+        pf.ticket && React.createElement("small", null, "Tiket MT5: #", pf.ticket),
+        !pf.symbolKnown && React.createElement("small", { className: "warn" }, "Simbol \"", pf.symbolRaw, "\" tidak ada di daftar, dipilih XAUUSD. Silakan ganti jika salah."),
+        !pf.hasOpen && React.createElement("small", { className: "warn" }, "Waktu buka tidak terbaca (baris detail posisi tidak ikut di screenshot). Tanggal di bawah memakai waktu tutup \u2014 sesuaikan. SL/TP juga perlu diisi manual."),
+        dupTicket && React.createElement("small", { className: "warn" }, "Peringatan: tiket ini sudah pernah dicatat di akun ini."),
+        React.createElement("label", null, "Zona waktu server MT5",
+            React.createElement("select", { value: tzMode, onChange: e => changeTz(e.target.value) }, MT5_TZ_OPTIONS.map(o => React.createElement("option", { key: o.v, value: o.v }, o.l)))),
+        React.createElement("small", null, "Waktu ditampilkan dalam WIB (UTC+7)."));
+    const closeBox = pf && form.exit !== '' && React.createElement("div", { className: "form-grid" },
+        React.createElement("label", null, "Exit price", React.createElement("input", { inputMode: "decimal", value: form.exit, onChange: e => set('exit', e.target.value) })),
+        React.createElement("label", null, "Waktu close (WIB)", React.createElement(DateField, { withTime: true, value: form.closeDate, onChange: v => set('closeDate', v) })),
+        React.createElement("label", null, "Biaya (swap + komisi)", React.createElement("input", { inputMode: "decimal", value: form.fees, onChange: e => set('fees', e.target.value) })),
+        React.createElement("label", null, "Profit MT5 (bersih)", React.createElement("input", { readOnly: true, value: pf.net == null ? '-' : pf.net.toFixed(2) })));
+    const formEl = React.createElement("form", { onSubmit: submit },
+                scanBox,
+                React.createElement("div", { className: "form-grid" },
+                    React.createElement("label", null,
+                        "Symbol",
+                        React.createElement(TSelect, { title: "Symbol", value: form.symbol, options: SYMBOLS, onChange: v => set('symbol', v) })),
+                    React.createElement("label", null,
+                        "Tanggal & waktu",
+                        React.createElement(DateField, { withTime: true, value: form.date, onChange: v => set('date', v) }))),
+                React.createElement("label", null,
+                    "Trade setup / alasan entry",
+                    React.createElement("textarea", { value: form.setup, onChange: e => set('setup', e.target.value), placeholder: "Contoh: breakout + retest di resistance H1..." })),
+                React.createElement("div", { className: "direction" },
+                    React.createElement("button", { type: "button", className: form.side === 'Long' ? 'selected long' : '', onClick: () => set('side', 'Long') }, "Long / Buy"),
+                    React.createElement("button", { type: "button", className: form.side === 'Short' ? 'selected short' : '', onClick: () => set('side', 'Short') }, "Short / Sell")),
+                React.createElement("div", { className: "form-grid four" },
+                    React.createElement("label", null,
+                        "Entry level",
+                        React.createElement("input", { inputMode: "decimal", value: form.entry, onChange: e => set('entry', e.target.value), placeholder: "2728.40", required: true })),
+                    React.createElement("label", null,
+                        "Lots",
+                        React.createElement("input", { type: "number", step: "0.01", value: form.lots, onChange: e => set('lots', e.target.value) })),
+                    React.createElement("label", null,
+                        "Stop loss",
+                        React.createElement("input", { inputMode: "decimal", value: form.sl, onChange: e => set('sl', e.target.value), placeholder: "2720.00" })),
+                    React.createElement("label", null,
+                        "Take profit",
+                        React.createElement("input", { inputMode: "decimal", value: form.tp, onChange: e => set('tp', e.target.value), placeholder: "2745.00" }))),
+                React.createElement("div", { className: "calc-result" },
+                    React.createElement("div", null,
+                        React.createElement("span", null, "Risk USD"),
+                        React.createElement("strong", { className: "negative" }, money(risk))),
+                    React.createElement("div", null,
+                        React.createElement("span", null, "Risk %"),
+                        React.createElement("strong", { className: "negative" },
+                            riskPct.toFixed(2),
+                            "%")),
+                    React.createElement("div", null,
+                        React.createElement("span", null, "Reward"),
+                        React.createElement("strong", { className: "positive" }, money(reward))),
+                    React.createElement("div", null,
+                        React.createElement("span", null, "R:R"),
+                        React.createElement("strong", null, risk ? (reward / risk).toFixed(2) : '—'))),
+                closeBox,
+                React.createElement("div", { className: "fs-actions" },
+                    React.createElement("button", { type: "button", className: "secondary-btn", onClick: () => { setCalculated(true); setShowAdjust(true); } },
+                        React.createElement(Target, { size: 15 }),
+                        " Calculate / Adjust risk"),
+                    React.createElement("button", { className: "primary-btn", type: "submit" },
+                        React.createElement(Plus, { size: 17 }),
+                        pf && form.exit !== '' ? " Simpan trade (closed)" : " Save open trade")),
+                calculated && React.createElement("p", { className: "helper-note" },
+                    React.createElement(ClipboardPaste, { size: 13 }),
+                    " Kalkulasi tersimpan sebelum submit. ",
+                    suggestedLots ? `Ukuran lot 1% risiko: ${suggestedLots.toFixed(2)}` : ''));
+    return React.createElement("div", { className: "modal-backdrop fs" },
+        React.createElement("div", { className: "modal wide-modal fs" },
+            React.createElement("div", { className: "modal-head" },
+                React.createElement("div", null,
+                    React.createElement("p", { className: "eyebrow" }, initial ? 'EDIT TRADE / UPDATE' : pf ? 'NEW TRADE / SCREENSHOT ENTRY' : 'NEW TRADE / MANUAL ENTRY'),
+                    React.createElement("h2", null, initial ? 'Edit trade' : 'Tambah trade')),
+                React.createElement("button", { className: "icon-btn", onClick: onClose },
+                    React.createElement(X, { size: 19 }))),
+            formEl));
+}
+function AddTradeModal(props) { return React.createElement(AddTradeForm, props); }
+function CloseTradeModal({ trade, onClose, onSave }) { var _a; const [form, setForm] = useState({ tradeId: trade.id, exit: (trade.tp !== null && trade.tp !== undefined && trade.tp !== '') ? trade.tp : ((_a = trade.exit) !== null && _a !== void 0 ? _a : trade.entry), closeDate: isoNow(), exitMethod: (trade.tp !== null && trade.tp !== undefined && trade.tp !== '') ? 'TP' : 'Manual', fees: '0', review: '' }); const set = (k, v) => setForm({ ...form, [k]: v }); function method(m) { const exit = m === 'TP' ? trade.tp : m === 'SL' ? trade.sl : m === 'BE' ? trade.entry : form.exit; setForm({ ...form, exit: exit !== null && exit !== void 0 ? exit : '', exitMethod: m }); } return React.createElement("div", { className: "modal-backdrop fs" },
+    React.createElement("div", { className: "modal compact-modal fs" },
+        React.createElement("div", { className: "modal-head" },
+            React.createElement("div", null,
+                React.createElement("p", { className: "eyebrow" },
+                    "CLOSE POSITION / ",
+                    trade.symbol),
+                React.createElement("h2", null, "Close trade")),
+            React.createElement("button", { className: "icon-btn", onClick: onClose },
+                React.createElement(X, { size: 19 }))),
+        React.createElement("div", { className: "close-methods" },
+            React.createElement("button", { className: form.exitMethod === 'TP' ? 'selected tp' : '', onClick: () => method('TP') }, "TP"),
+            React.createElement("button", { className: form.exitMethod === 'SL' ? 'selected sl' : '', onClick: () => method('SL') }, "SL"),
+            React.createElement("button", { className: form.exitMethod === 'BE' ? 'selected be' : '', onClick: () => method('BE') }, "BE"),
+            React.createElement("button", { className: form.exitMethod === 'Manual' ? 'selected manual' : '', onClick: () => method('Manual') }, "Manual")),
+        React.createElement("label", null,
+            "Harga close",
+            React.createElement("input", { inputMode: "decimal", value: form.exit, onChange: e => set('exit', e.target.value) })),
+        React.createElement("label", null,
+            "Tanggal close",
+            React.createElement(DateField, { withTime: true, value: form.closeDate, onChange: v => set('closeDate', v) })),
+        React.createElement("label", null,
+            "Fees / commission",
+            React.createElement("input", { type: "number", step: "0.01", value: form.fees, onChange: e => set('fees', e.target.value) })),
+        React.createElement("label", null,
+            "Post-trade review",
+            React.createElement("textarea", { value: form.review, onChange: e => set('review', e.target.value), placeholder: "Apa yang berjalan baik? Apa yang perlu diperbaiki?" })),
+        React.createElement("div", { className: "close-preview" },
+            React.createElement("span", null, "Net P&L preview"),
+            React.createElement("strong", { className: pnlFor({ ...trade, fees: Number(form.fees) }, Number(form.exit)) >= 0 ? 'positive' : 'negative' },
+                pnlFor({ ...trade, fees: Number(form.fees) }, Number(form.exit)) >= 0 ? '+' : '',
+                money(pnlFor({ ...trade, fees: Number(form.fees) }, Number(form.exit))))),
+        React.createElement("div", { className: "fs-actions" },
+            React.createElement("button", { type: "button", className: "secondary-btn", onClick: onClose }, "Batal"),
+            React.createElement("button", { className: "primary-btn", onClick: () => onSave(form) },
+                React.createElement(CheckIcon, null),
+                " Save close & review")))); }
+function CheckIcon() { return React.createElement("span", { className: "check-icon" }, "\u2713"); }
+function AdjustRiskModal({ calc, suggestedLots, onClose, onApply }) { const [riskPct, setRiskPct] = useState(calc.riskPct || '1'); const riskAmount = Number(calc.balance || 0) * Number(riskPct || 0) / 100; const lots = Number(calc.entry) && Number(calc.sl) ? riskAmount / (Math.abs(Number(calc.entry) - Number(calc.sl)) * contractSize(calc.symbol)) : suggestedLots; return React.createElement("div", { className: "modal-backdrop" },
+    React.createElement("div", { className: "modal compact-modal" },
+        React.createElement("div", { className: "modal-head" },
+            React.createElement("div", null,
+                React.createElement("p", { className: "eyebrow" }, "RISK MANAGEMENT"),
+                React.createElement("h2", null, "Adjust risk")),
+            React.createElement("button", { className: "icon-btn", onClick: onClose },
+                React.createElement(X, { size: 19 }))),
+        React.createElement("p", { className: "muted" },
+            "Posisi disesuaikan berdasarkan balance ",
+            money(calc.balance),
+            " dan jarak SL."),
+        React.createElement("label", null,
+            "Risk percentage",
+            React.createElement("input", { type: "number", step: "0.1", value: riskPct, onChange: e => setRiskPct(e.target.value) })),
+        React.createElement("div", { className: "calc-result" },
+            React.createElement("div", null,
+                React.createElement("span", null, "Risk amount"),
+                React.createElement("strong", { className: "negative" }, money(riskAmount))),
+            React.createElement("div", null,
+                React.createElement("span", null, "Suggested lots"),
+                React.createElement("strong", null, lots ? lots.toFixed(2) : '—')),
+            React.createElement("div", null,
+                React.createElement("span", null, "Contract"),
+                React.createElement("strong", null, contractSize(calc.symbol).toLocaleString()))),
+        React.createElement("button", { className: "primary-btn", onClick: () => onApply(lots ? lots.toFixed(2) : calc.lots) }, "Apply lot size"))); }

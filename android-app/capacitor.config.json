@@ -1,0 +1,21 @@
+{
+  "appId": "com.ridha.edgejournal",
+  "appName": "Edge Journal",
+  "webDir": "www",
+  "server": {
+    "url": "https://ridha-maulana.github.io/edge-journal-v3.0.0/",
+    "cleartext": false,
+    "allowNavigation": ["ridha-maulana.github.io", "*.firebaseapp.com", "*.googleapis.com", "*.gstatic.com"]
+  },
+  "android": {
+    "backgroundColor": "#090d18",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "backgroundColor": "#090d18",
+      "showSpinner": false
+    }
+  }
+}

@@ -1,0 +1,146 @@
+/* Menggambar gambar ringkasan untuk dibagikan */
+"use strict";
+function drawShareImage(d) {
+    const W = 1080, H = 1920, c = document.createElement('canvas');
+    c.width = W;
+    c.height = H;
+    const x = c.getContext('2d');
+    const F = 'Manrope, system-ui, sans-serif', M = "'DM Mono', ui-monospace, monospace", G = '#34d399', R = '#ff6b81', col = d.total >= 0 ? G : R;
+    const rr = (a, b, w, h, r) => { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); };
+    const t = (str, px, py, size, color, weight, align, font) => { x.font = `${weight || 500} ${size}px ${font || F}`; x.fillStyle = color; x.textAlign = align || 'left'; x.fillText(str, px, py); };
+    let g = x.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, '#0a1126');
+    g.addColorStop(1, '#162244');
+    x.fillStyle = g;
+    x.fillRect(0, 0, W, H);
+    g = x.createRadialGradient(W - 120, 260, 20, W - 120, 260, 520);
+    g.addColorStop(0, 'rgba(93,131,255,.28)');
+    g.addColorStop(1, 'rgba(93,131,255,0)');
+    x.fillStyle = g;
+    x.fillRect(0, 0, W, H);
+    g = x.createRadialGradient(100, H - 200, 20, 100, H - 200, 520);
+    g.addColorStop(0, 'rgba(52,211,153,.14)');
+    g.addColorStop(1, 'rgba(52,211,153,0)');
+    x.fillStyle = g;
+    x.fillRect(0, 0, W, H);
+    // header
+    g = x.createLinearGradient(80, 110, 176, 206);
+    g.addColorStop(0, '#6a8dff');
+    g.addColorStop(1, '#4565e7');
+    x.fillStyle = g;
+    rr(80, 110, 96, 96, 26);
+    x.fill();
+    x.fillStyle = '#fff';
+    x.beginPath();
+    [[132, 128], [108, 164], [128, 164], [124, 188], [148, 150], [128, 150]].forEach((p, i) => i ? x.lineTo(p[0], p[1]) : x.moveTo(p[0], p[1]));
+    x.closePath();
+    x.fill();
+    t('EDGE JOURNAL', 204, 152, 40, '#eef2ff', 800);
+    t('TRADING LOGBOOK', 204, 192, 22, '#7d8bab', 500, 'left', M);
+    // card
+    const cx = 60, cy = 270, cw = 960, ch = 1290;
+    g = x.createLinearGradient(cx, cy, cx + cw, cy + ch);
+    g.addColorStop(0, '#18284b');
+    g.addColorStop(1, '#111a33');
+    x.fillStyle = g;
+    rr(cx, cy, cw, ch, 56);
+    x.fill();
+    x.strokeStyle = '#2a3a60';
+    x.lineWidth = 3;
+    x.stroke();
+    t('TOTAL P&L', 110, 360, 26, '#7d8bab', 500, 'left', M);
+    t('ACTIVE ACCOUNT', 970, 360, 24, '#7d8bab', 500, 'right', M);
+    t(d.account, 970, 420, 46, '#fff', 800, 'right');
+    const big = d.hide ? `${d.growthPct >= 0 ? '+' : ''}${d.growthPct.toFixed(2)}%` : `${d.total >= 0 ? '+' : ''}${d.fmt(d.total)}`;
+    t(big, 110, 520, 126, col, 800);
+    t(`${d.total >= 0 ? '↗' : '↘'}  ${d.hide ? 'Pertumbuhan' : `${d.growthPct >= 0 ? '+' : ''}${d.growthPct.toFixed(2)}%`} in selected period`, 110, 590, 32, col, 500);
+    x.strokeStyle = '#2a3a60';
+    x.lineWidth = 2;
+    x.beginPath();
+    x.moveTo(110, 640);
+    x.lineTo(970, 640);
+    x.stroke();
+    const mask = '••••••';
+    const stats = [['Saldo awal', d.hide ? mask : d.fmt(d.start), '#fff'], ['Sekarang', d.hide ? mask : d.fmt(d.now), col], ['Pertumbuhan', `${d.growthPct >= 0 ? '+' : ''}${d.growthPct.toFixed(2)}%`, col], ['Hari aktif', String(d.days), '#fff']];
+    stats.forEach((s0, i) => { const px = i % 2 ? 570 : 110, py = i < 2 ? 710 : 870; t(s0[0], px, py, 28, '#8a97b8', 500); t(s0[1], px, py + 68, 58, s0[2], 800); });
+    // chart
+    const L = 110, Rr = 970, T = 1060, B = 1370, vals = d.vals, n = vals.length;
+    const lo = Math.min(...vals), hi = Math.max(...vals), sp = (hi - lo) || 1;
+    const px = i => n < 2 ? (L + Rr) / 2 : L + i / (n - 1) * (Rr - L), py = v => T + (hi - v) / sp * (B - T);
+    x.setLineDash([8, 14]);
+    x.strokeStyle = '#2a3a60';
+    x.lineWidth = 2;
+    [.25, .5, .75].forEach(f => { x.beginPath(); x.moveTo(L, T + (B - T) * f); x.lineTo(Rr, T + (B - T) * f); x.stroke(); });
+    x.setLineDash([]);
+    x.strokeStyle = '#33466f';
+    x.beginPath();
+    x.moveTo(L, B);
+    x.lineTo(Rr, B);
+    x.stroke();
+    if (n > 1) {
+        const P = vals.map((v, i) => [px(i), py(v)]);
+        const path = () => { x.beginPath(); x.moveTo(P[0][0], P[0][1]); for (let i = 0; i < P.length - 1; i++) {
+            const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
+            x.bezierCurveTo(p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6, p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6, p2[0], p2[1]);
+        } };
+        path();
+        x.lineTo(px(n - 1), B);
+        x.lineTo(px(0), B);
+        x.closePath();
+        g = x.createLinearGradient(0, T, 0, B);
+        g.addColorStop(0, d.total >= 0 ? 'rgba(52,211,153,.42)' : 'rgba(255,107,129,.42)');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        x.fillStyle = g;
+        x.fill();
+        x.save();
+        x.shadowColor = col;
+        x.shadowBlur = 26;
+        x.strokeStyle = col;
+        x.lineWidth = 9;
+        x.lineCap = 'round';
+        x.lineJoin = 'round';
+        path();
+        x.stroke();
+        x.restore();
+        const ex = px(n - 1), ey = py(vals[n - 1]);
+        x.fillStyle = col == G ? 'rgba(52,211,153,.25)' : 'rgba(255,107,129,.25)';
+        x.beginPath();
+        x.arc(ex, ey, 24, 0, Math.PI * 2);
+        x.fill();
+        x.fillStyle = col;
+        x.strokeStyle = '#0f172a';
+        x.lineWidth = 6;
+        x.beginPath();
+        x.arc(ex, ey, 12, 0, Math.PI * 2);
+        x.fill();
+        x.stroke();
+        const endTxt = d.hide ? `${vals[n - 1] >= 0 ? '+' : ''}${(d.growthPct).toFixed(2)}%` : `${vals[n - 1] > 0 ? '+' : ''}${d.fmt(vals[n - 1])}`;
+        t(endTxt, Math.min(ex, Rr - 10), Math.max(ey - 34, T - 14), 30, col, 800, 'right');
+    }
+    else {
+        t('Belum ada trade pada periode ini', 540, (T + B) / 2, 30, '#7d8bab', 500, 'center');
+    }
+    t(d.labels[0], L, B + 52, 26, '#7d8bab', 500);
+    if (n > 1)
+        t(d.labels[n - 1], Rr, B + 52, 26, '#7d8bab', 500, 'right');
+    // legend
+    x.fillStyle = G;
+    x.beginPath();
+    x.arc(120, 1456, 13, 0, Math.PI * 2);
+    x.fill();
+    t('Bulan terbaik:', 148, 1466, 30, '#9aa7c5', 500);
+    x.font = '800 30px ' + F;
+    const bw = x.measureText('Bulan terbaik: ').width;
+    t(d.best, 148 + bw + 6, 1466, 30, '#eef2ff', 800);
+    x.fillStyle = R;
+    x.beginPath();
+    x.arc(120, 1516, 13, 0, Math.PI * 2);
+    x.fill();
+    t('Drawdown terdalam:', 148, 1526, 30, '#9aa7c5', 500);
+    x.font = '500 30px ' + F;
+    const dw = x.measureText('Drawdown terdalam: ').width;
+    t(d.dd, 148 + dw + 6, 1526, 30, '#eef2ff', 800);
+    t(d.periodText, 540, 1650, 34, '#cbd8ff', 700, 'center');
+    t('Dibuat dengan Edge Journal', 540, 1820, 26, '#5f6d8c', 500, 'center');
+    return c;
+}

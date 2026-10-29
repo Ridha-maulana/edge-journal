@@ -1,0 +1,24 @@
+/* Splash / layar pembuka */
+/* ===== v2.3.0 — Splash logo + tulisan, tanpa lompatan posisi ===== */
+html,body{background:#090d18}
+#splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#090d18;overflow:hidden;font-family:Manrope,system-ui,sans-serif;transition:opacity .4s ease,transform .4s cubic-bezier(.16,1,.3,1);will-change:opacity}
+#splash.sp-out{opacity:0;transform:scale(1.035);pointer-events:none}
+#splash .sp-glow{position:absolute;left:50%;top:50%;width:min(110vw,560px);height:min(110vw,560px);margin:calc(min(110vw,560px)/-2) 0 0 calc(min(110vw,560px)/-2);border-radius:50%;background:radial-gradient(circle,rgba(93,131,255,.22) 0%,rgba(93,131,255,.07) 40%,transparent 68%);animation:spGlow .9s ease-out .15s both!important;pointer-events:none}
+#splash .sp-lockup{position:relative;display:flex;align-items:center;gap:clamp(12px,4.2vw,20px);padding:0 16px}
+#splash .sp-mark{flex:none;display:grid;place-items:center;width:clamp(58px,18vw,76px);height:clamp(58px,18vw,76px);border-radius:50%;background:linear-gradient(135deg,#6a8bff,#4564e8);box-shadow:0 10px 38px rgba(69,100,232,.5)}
+#splash .sp-mark svg{width:56%;height:56%;overflow:visible}
+#splash .sp-bolt{fill:none;stroke:#fff;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+#splash .sp-text strong{display:block;color:#eef2ff;font-weight:800;font-size:clamp(18px,5.8vw,25px);letter-spacing:.13em;line-height:1.1;white-space:nowrap;opacity:0;animation:spText .6s cubic-bezier(.16,1,.3,1) .5s both!important}
+#splash .sp-text span{display:block;margin-top:7px;color:#64708a;font-weight:500;font-size:clamp(9.5px,3vw,13px);letter-spacing:.3em;line-height:1;white-space:nowrap;opacity:0;animation:spText .6s cubic-bezier(.16,1,.3,1) .62s both!important}
+#splash .sp-mark{animation:spMark .6s cubic-bezier(.16,1,.3,1) both!important}
+#splash.sp-morph .sp-mark{animation:spMorph .95s cubic-bezier(.62,0,.18,1) both!important}
+#splash .sp-status{position:absolute;left:0;right:0;bottom:14%;padding:0 24px;text-align:center;color:#8590a8;font:13px/1.5 system-ui,sans-serif}
+#splash .sp-status:empty{display:none}
+@keyframes spMark{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+@keyframes spMorph{0%{opacity:0;border-radius:50%;transform:translate(var(--sx,0px),var(--sy,0px)) scale(var(--ss,1))}12%{opacity:1;border-radius:50%;transform:translate(var(--sx,0px),var(--sy,0px)) scale(var(--ss,1))}100%{opacity:1;border-radius:50%;transform:none}}
+@keyframes spMorphA{0%,12%{opacity:1;border-radius:50%;transform:translate(var(--sx,0px),var(--sy,0px)) scale(var(--ss,1))}100%{opacity:1;border-radius:50%;transform:none}}
+/* dibuka sebagai aplikasi terpasang: logo sudah terlihat di splash Android, jadi langsung tampil tanpa fade-in */
+#splash.sp-android.sp-morph .sp-mark{animation-name:spMorphA!important}
+@keyframes spText{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes spGlow{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+

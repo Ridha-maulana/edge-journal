@@ -1,0 +1,9 @@
+/* Tombol ikon satu baris di Advanced Statistics (v2.8.8) */
+/* ===== v2.8.8 — Ikon saja, satu baris (Advanced Statistics) ===== */
+.dd-crumbs,.pe-tabs.icon-tabs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;flex-wrap:nowrap}
+.pe-tabs.icon-tabs{grid-template-columns:repeat(5,1fr)}
+.dd-crumb,.dd-crumbs .dd-lock{display:flex;align-items:center;justify-content:center;padding:0;height:46px;min-width:0;gap:0}
+.pe-tabs.icon-tabs button{display:flex;align-items:center;justify-content:center;padding:0;height:46px;min-width:0}
+.dd-crumb svg,.pe-tabs.icon-tabs button svg{flex:none}
+.dd-crumbs .dd-lock.on{color:#f5b84b}
+.dd-title{margin-top:16px!important}

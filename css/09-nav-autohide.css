@@ -1,0 +1,5 @@
+/* Menu bawah menyembunyikan diri saat scroll (v2.8.11) */
+/* ===== v2.8.11 — Menu bawah bersembunyi saat scroll ke bawah, muncul lagi di kepala halaman ===== */
+.bottom-nav{transition:transform .22s ease!important;will-change:transform}
+.bottom-nav.nav-hidden{transform:translateY(110%)}
+body.popup-open .bottom-nav,body.confirm-open .bottom-nav{transform:none!important}

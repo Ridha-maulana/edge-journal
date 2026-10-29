@@ -1,0 +1,17 @@
+/* Menu bawah sederhana (v2.8.7) dan popup layar penuh */
+/* ===== v2.8.7 — Menu bawah sederhana (contoh video): ikon + tulisan, kelima menu sama besar, menu aktif jadi putih ===== */
+.bottom-nav .nav-item:before,.bottom-nav .nav-item:after,.bottom-nav .nav-item.active:before,.bottom-nav .nav-item.active:after{display:none!important;content:none!important}
+.bottom-nav .nav-item{flex:1 1 0!important;min-width:0!important;max-width:none!important;width:auto!important;height:auto!important;align-self:stretch!important;margin:0!important;padding:10px 2px 8px!important;gap:5px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#7d8798;transform:none!important;transition:color .15s ease,opacity .15s ease!important}
+.bottom-nav .nav-item svg{width:25px!important;height:25px!important;margin:0!important;flex:none;animation:none!important;filter:none!important;transform:none!important;transition:none!important}
+.bottom-nav .nav-item span{font-size:11px;line-height:1.1;font-weight:500;letter-spacing:0;white-space:nowrap}
+.bottom-nav .nav-item.active{color:#fff!important;font-weight:600}
+.bottom-nav .nav-item.active svg{color:#fff!important}
+.bottom-nav .nav-item.active span{font-weight:700}
+.bottom-nav .nav-item:active{opacity:.6}
+@media(max-width:380px){.bottom-nav .nav-item span{font-size:10px}}
+/* ===== v2.8.7 — Pop up tambah / edit / close / konfirmasi hapus: layar penuh tanpa jarak di atas ===== */
+.modal-backdrop.fs{align-items:stretch;justify-content:stretch;padding:0!important;background:#10182a;z-index:200}
+.modal.fs{width:100%!important;max-width:none!important;height:100%;max-height:none!important;border:0;border-radius:0!important;margin:0!important;box-shadow:none;padding:calc(18px + env(safe-area-inset-top,0px)) 20px calc(28px + env(safe-area-inset-bottom,0px))!important;overflow-y:auto;animation:none!important}
+.modal.fs .modal-head{align-items:flex-start}
+.fs-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;width:100%}
+.fs-actions>button,.fs-actions>label{width:100%;min-height:50px;justify-content:center;align-items:center;text-align:center;margin:0!important;display:inline-flex;gap:8px;white-space:nowrap}

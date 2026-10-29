@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- kotak gelap seukuran penuh: sudut di luar lingkaran memakai warna latar splash (#090D18), bukan hitam bawaan HyperOS -->
+    <path
+        android:fillColor="#090D18"
+        android:pathData="M0,0 L108,0 L108,108 L0,108 Z" />
+    <path android:pathData="M18,54 A36,36 0 1 0 90,54 A36,36 0 1 0 18,54 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="18"
+                android:startY="18"
+                android:endX="90"
+                android:endY="90">
+                <item android:offset="0" android:color="#6A8BFF" />
+                <item android:offset="1" android:color="#4564E8" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

@@ -1,0 +1,69 @@
+/* Menu bawah versi lama (v2.3 - v2.7), tetap dimuat karena aturan berikutnya menimpa di atasnya */
+/* ===== v2.3.0 — Menu bawah: respons sentuhan lebih cepat dan tampilan lebih rapi ===== */
+.bottom-nav{background:linear-gradient(180deg,rgba(17,23,41,.96),rgba(10,14,26,.98));border-top:1px solid #1f2a45;box-shadow:0 -12px 32px rgba(0,0,0,.38);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.bottom-nav .nav-item{touch-action:manipulation;-webkit-user-select:none;user-select:none;color:#74809b;font-weight:600;letter-spacing:.01em;min-width:84px;padding:9px 12px 8px;transition:color .16s ease,transform .14s cubic-bezier(.2,.8,.2,1)!important}
+.bottom-nav .nav-item svg{width:21px;height:21px;transition:transform .2s cubic-bezier(.34,1.56,.64,1)!important}
+.bottom-nav .nav-item:active{transform:scale(.92)}
+.bottom-nav .nav-item:active svg{transform:translateY(-1px) scale(1.08)}
+.bottom-nav .nav-item.active{color:#d7e0ff;font-weight:700}
+.bottom-nav .nav-item.active:after{content:'';position:absolute;left:50%;top:-10px;width:26px;height:3px;margin-left:-13px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,#6a8bff,#9bb2ff);box-shadow:0 3px 12px rgba(106,139,255,.85)}
+.sync-note{margin:10px 0 0;font-size:13px;line-height:1.5;color:#9aa6c4}
+.sync-note strong{color:#e6ecff;word-break:break-all}
+.sync-note.warn{color:#ffb4a8}
+.sync-status{margin:6px 0 10px;font-size:13px;font-weight:700;color:#8fa0c8}
+.sync-status.synced{color:#3ddc97}.sync-status.error,.sync-status.conflict{color:#ff9d8a}.sync-status.offline,.sync-status.dirty{color:#f3c969}
+.sync-diag{margin:10px 0;padding:10px 12px;border:1px solid #25304f;border-radius:12px;background:#0b1020;font-size:12.5px;line-height:1.5}
+.sync-diag div{display:flex;flex-direction:column;gap:1px;padding:4px 0;border-bottom:1px solid #1b2440}
+.sync-diag div:last-child{border-bottom:0}
+.sync-diag span{color:#7f8db3}.sync-diag b{color:#e6ecff;word-break:break-all;font-weight:600}
+.sync-conflict{margin:8px 0;padding:10px 12px;border:1px solid #5a3a3a;border-radius:12px;background:rgba(255,120,100,.08);font-size:13px;line-height:1.5;color:#ffd3cb}
+.sync-conflict p{margin:0 0 8px}
+.tool-card .button-row button:disabled{opacity:.5}
+.gate{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));background:#090d18;overflow:auto}
+.gate-brand{display:flex;align-items:center;gap:14px}
+.gate-mark{display:grid;place-items:center;width:58px;height:58px;border-radius:28%;background:linear-gradient(135deg,#6a8bff,#4564e8);box-shadow:0 10px 38px rgba(69,100,232,.5);color:#fff}
+.gate-brand strong{display:block;font-size:22px;font-weight:800;letter-spacing:.13em;color:#eef2ff;line-height:1.1;white-space:nowrap}
+.gate-brand span{display:block;margin-top:6px;font-size:11px;letter-spacing:.3em;color:#64708a;white-space:nowrap}
+.gate-box{width:100%;max-width:380px;background:#111729;border:1px solid #25304f;border-radius:20px;padding:20px}
+.gate-box h1{margin:0 0 4px;font-size:22px;color:#eef2ff}
+.gate-box p{margin:0 0 6px;color:#9aa6c4;font-size:14px;line-height:1.5}
+.gate-box label{display:block;margin:12px 0 0;font-size:13px;color:#9aa6c4}
+.gate-box input{width:100%;margin-top:6px;padding:13px 14px;border-radius:12px;border:1px solid #2a3558;background:#0b1020;color:#eef2ff;font:16px Manrope,system-ui,sans-serif}
+.gate-btn{width:100%;margin-top:16px;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,#6a8bff,#4564e8);color:#fff;font:800 16px Manrope,system-ui,sans-serif}
+.gate-btn:disabled,.gate-sec:disabled{opacity:.5}
+.gate-row{display:flex;gap:10px;margin-top:10px}
+.gate-sec{flex:1;padding:12px;border-radius:12px;border:1px solid #2a3558;background:#151d32;color:#cdd7f7;font:700 14px Manrope,system-ui,sans-serif}
+.gate-link{display:block;margin:16px auto 0;background:none;border:0;color:#7f8db3;font:13px/1.4 Manrope,system-ui,sans-serif;text-decoration:underline;text-align:center}
+.gate-err{margin:12px 0 0!important;color:#ffb4a8!important;font-size:13px!important}
+.gate-note{color:#9aa6c4;font-size:14px;margin:0}
+.gate-art{background:#000;justify-content:flex-start;gap:12px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.gate-art>:first-child{margin-top:auto}.gate-art>:last-child{margin-bottom:auto}
+.gate-hero{--h:min(35vh,88vw);position:relative;flex:none;height:var(--h);width:calc(var(--h)*900/893);background:url(../assets/login-art.webp) center/100% 100% no-repeat;animation:gateArt .7s cubic-bezier(.16,1,.3,1) both!important}
+.gate-hero-brand{position:absolute;left:45%;top:45.3%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:calc(var(--h)*.028);white-space:nowrap}
+.gate-hero-mark{display:grid;place-items:center;width:calc(var(--h)*.13);height:calc(var(--h)*.13);border-radius:28%;background:linear-gradient(135deg,#6a8bff,#4564e8);box-shadow:0 6px 18px rgba(69,100,232,.45);color:#fff}
+.gate-hero-mark svg{width:58%;height:58%}
+.gate-hero-brand strong{display:block;font-size:calc(var(--h)*.05);font-weight:800;letter-spacing:.08em;line-height:1.1;color:#0b1228}
+.gate-hero-brand span{display:block;margin-top:calc(var(--h)*.014);font-size:calc(var(--h)*.026);letter-spacing:.2em;line-height:1;color:#4b5676;font-weight:600}
+.gate-art .gate-box{background:rgba(10,15,30,.94);backdrop-filter:blur(6px)}
+@media(max-height:700px){.gate-art .gate-box>p:not(.gate-err){display:none}.gate-art{gap:6px}}
+@keyframes gateArt{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+
+/* ===== v2.6.0 — Menu bawah 5 slot: Performance | My Journal | + | Tools | Akun ===== */
+.bottom-nav{justify-content:space-between;gap:0;padding-left:6px;padding-right:6px}
+.bottom-nav .nav-item{flex:1 1 0;min-width:0;max-width:96px;padding:9px 2px 8px;font-size:10.5px;letter-spacing:0;white-space:nowrap}
+.bottom-nav .nav-item span{font-size:10.5px}
+@media(max-width:380px){.bottom-nav .nav-item,.bottom-nav .nav-item span{font-size:9.5px}}
+
+/* ===== v2.7.0 — Menu bawah: penanda pil hanya di belakang ikon, ada jarak ke tulisan, pil melebar dari tengah ===== */
+.bottom-nav .nav-item{gap:8px!important;padding:8px 2px 6px!important;transform:none!important;border-radius:0!important;background:none!important;border:0!important}
+.bottom-nav .nav-item svg{position:relative;z-index:1;width:22px;height:22px;flex:none;filter:none!important}
+.bottom-nav .nav-item:before{content:''!important;display:block!important;position:absolute!important;inset:auto!important;top:4px!important;left:50%!important;width:58px!important;height:30px!important;margin-left:-29px!important;border:0!important;border-radius:16px!important;background:#2c479a!important;z-index:0!important;opacity:0!important;transform:scaleX(.3)!important;transition:transform .24s cubic-bezier(.2,.9,.25,1),opacity .18s ease!important;animation:none!important}
+.bottom-nav .nav-item.active:before{opacity:1!important;transform:scaleX(1)!important}
+.bottom-nav .nav-item:not(.active):active:before{opacity:1!important;transform:scaleX(.7)!important;background:rgba(255,255,255,.1)!important}
+.bottom-nav .nav-item.active:after{display:none!important}
+.bottom-nav .nav-item.active{color:#d6e2ff}
+.bottom-nav .nav-item.active svg{color:#fff;animation:navIcoIn .34s cubic-bezier(.2,.9,.25,1.2) both!important}
+.bottom-nav .nav-item:active svg{transform:scale(.9)!important}
+@keyframes navIcoIn{0%{transform:translateY(3px) scale(.82)}60%{transform:translateY(-1px) scale(1.1)}100%{transform:none}}
+@media(prefers-reduced-motion:reduce){#splash,#splash *{animation:none!important;transition:none!important}#splash .sp-text strong,#splash .sp-text span{opacity:1!important}}
+

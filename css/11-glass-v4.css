@@ -1,0 +1,122 @@
+/* ===== v4.0.0 — Liquid Glass =====
+   Hanya mengganti tampilan (warna, bentuk, efek). Tata letak, urutan kartu, dan fitur tidak diubah.
+   Blur (backdrop-filter) sengaja hanya dipakai di bilah atas, menu bawah, dan lembar pop-up agar HP tidak panas. */
+
+:root{
+  --bg:#060913;--panel:rgba(255,255,255,.07);--panel2:rgba(255,255,255,.1);--border:rgba(255,255,255,.15);--muted:#a3aec8;
+  --glow:radial-gradient(60% 42% at 6% 0%,rgba(47,91,255,.52),transparent 72%),radial-gradient(55% 38% at 100% 34%,rgba(22,201,184,.26),transparent 72%),radial-gradient(62% 40% at 0% 90%,rgba(122,77,255,.34),transparent 72%);
+  --glass-card:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.045));
+  --glass-line:rgba(255,255,255,.16);
+  --glass-hi:inset 0 1px 0 rgba(255,255,255,.22);
+  --mint:#7ff0b4;--coral:#ff8a8a;
+  background:#060913;color:#f0f3ff
+}
+html{background:#060913}
+body{background:transparent!important}
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--glow),#060913}
+
+/* ---------- Bilah atas ---------- */
+.topbar{background:rgba(8,11,24,.55);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid rgba(255,255,255,.08)}
+.header-icon,.icon-btn{background:rgba(255,255,255,.1);border:1px solid var(--glass-line);box-shadow:var(--glass-hi);color:#eef2ff}
+.header-icon{border-radius:50%}
+.icon-btn{border-radius:14px}
+.account-switcher{background:rgba(255,255,255,.1);border:1px solid var(--glass-line);box-shadow:var(--glass-hi);border-radius:999px;color:#eef2ff}
+
+/* ---------- Kartu ---------- */
+.hero-card,.chart-card,.metric,.panel,.tool-card,.trade-card,.week-head,.adv-card,.pe-card,.account-summary,.backup-row,.account-list-item,.pe-banner,.empty-state,.dd-info,.dd-total,.dd-item,.sync-diag,.sync-conflict{
+  background:var(--glass-card);border:1px solid var(--glass-line);box-shadow:var(--glass-hi),0 10px 28px rgba(0,0,0,.22)}
+.hero-card{border-radius:28px;background:linear-gradient(145deg,rgba(106,139,255,.32),rgba(255,255,255,.07) 62%);border-color:rgba(160,185,255,.34)}
+.chart-card,.panel,.tool-card,.adv-card,.pe-card{border-radius:26px}
+.metric{border-radius:22px}
+.trade-card,.week-head,.account-summary,.backup-row,.account-list-item,.dd-item,.pe-banner,.empty-state{border-radius:22px}
+.account-list-item.selected{border-color:rgba(160,185,255,.6);background:linear-gradient(145deg,rgba(106,139,255,.3),rgba(255,255,255,.07))}
+
+/* panel dalam (sebelumnya biru sangat gelap) */
+.pe-tile,.pe-sum>div,.dna-quick,.dna-item,.calc-result,.capital-balance,.quick-values>div,.combo-mini>div,.trade-detail,.close-preview,.screenshot-upload,.import-row,.scan-result,.pe-chips>div,.adv-prof{
+  background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.09)}
+.pe-tile,.calc-result,.capital-balance,.trade-detail{border-radius:18px}
+.pe-bar{background:rgba(255,255,255,.1)}
+.pe-months button{background:transparent}
+
+/* teks tipis yang tadinya terlalu redup di atas kaca */
+.week-head small,.metric small,.pe-sub,.pe-sub2,.pe-note,.pe-rowhead small,.dna-meta,.day-row small,.date-label em{color:#a3aec8}
+
+/* ---------- Tombol ---------- */
+.primary-btn,.secondary-btn,.share-btn,.detail-action-btn{
+  border-radius:999px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.1);color:#e9eeff;
+  box-shadow:var(--glass-hi);font-weight:700;font-size:12.5px;min-height:46px}
+.primary-btn{background:linear-gradient(135deg,#6a8bff,#4564e8);border:1px solid rgba(255,255,255,.4);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 8px 22px rgba(69,100,232,.5)}
+.share-btn{background:linear-gradient(135deg,rgba(106,139,255,.34),rgba(255,255,255,.08));border-color:rgba(170,192,255,.4);color:#f0f4ff}
+.detail-action-btn{background:rgba(255,255,255,.09)}
+.filter-chip{border-radius:999px;background:rgba(255,255,255,.1);border:1px solid var(--glass-line);color:#e4eaff;box-shadow:var(--glass-hi)}
+.pill{border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--glass-line);color:#b4bfd8}
+.pill.active{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.36);color:#fff;font-weight:700;box-shadow:var(--glass-hi)}
+.edit-btn,.pe-link{color:#9db4ff}
+.fab{border-radius:50%;border:1px solid rgba(255,255,255,.4);background:linear-gradient(135deg,#6a8bff,#4564e8);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 10px 26px rgba(69,100,232,.6)}
+
+/* kontrol segmen: Long/Short, tab kecil */
+.direction{background:rgba(255,255,255,.07);border:1px solid var(--glass-line);border-radius:999px;padding:4px}
+.direction button{border-radius:999px;color:#c3cbe0}
+.direction button.selected.long{background:rgba(127,240,180,.26);color:#c9ffe3;box-shadow:var(--glass-hi),0 0 20px rgba(127,240,180,.2)}
+.direction button.selected.short{background:rgba(255,138,138,.26);color:#ffd6d6;box-shadow:var(--glass-hi),0 0 20px rgba(255,138,138,.18)}
+.pe-tabs button,.pe-years button,.dd-crumb,.dd-lock,.dd-btn,.capital-toggle button,.close-methods button,.dp-grid button,.preview-strip button{
+  background:rgba(255,255,255,.07);border:1px solid var(--glass-line);color:#b4bfd8;border-radius:14px}
+.pe-tabs button.on,.pe-years button.on,.dd-crumb.on,.close-methods button.selected,.capital-toggle button.active{
+  background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.38);color:#fff;box-shadow:var(--glass-hi)}
+.capital-toggle{background:rgba(255,255,255,.07);border:1px solid var(--glass-line);border-radius:18px}
+
+/* ---------- Kolom isian ---------- */
+.calc-grid input,.calc-grid select,.form-grid input,.form-grid select,.modal input,.modal textarea,.modal select,
+.acct-inline input,.acct-inline textarea,.acct-inline select,.add-page textarea,.gate-box input,.tsel,.dfield,
+.section-row select,.journal-controls select{
+  background:rgba(255,255,255,.07);border:1px solid var(--glass-line);border-radius:16px;color:#f2f5ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.search-box{background:rgba(255,255,255,.08);border:1px solid var(--glass-line);border-radius:999px;box-shadow:var(--glass-hi);color:#a9b4cd}
+.calc-grid input:focus,.form-grid input:focus,.modal input:focus,.modal textarea:focus,.acct-inline input:focus,.acct-inline textarea:focus,.add-page textarea:focus,.gate-box input:focus{
+  border-color:rgba(150,174,255,.85);box-shadow:0 0 0 3px rgba(93,131,255,.24);outline:none}
+
+/* ---------- Lembar pop-up (kaca + blur) ---------- */
+.modal-backdrop{background:rgba(3,5,12,.58)}
+.modal,.tsel-sheet,.dp-sheet,.range-dialog,.add-menu,.share-sheet,.scan-card,.gate-box{
+  background:linear-gradient(170deg,rgba(44,58,108,.86),rgba(15,21,44,.93));
+  backdrop-filter:blur(26px) saturate(150%);-webkit-backdrop-filter:blur(26px) saturate(150%);
+  border:1px solid rgba(255,255,255,.2);box-shadow:var(--glass-hi),0 -18px 56px rgba(0,0,0,.5);color:#f0f3ff}
+.modal{border-radius:30px 30px 0 0}
+.modal-backdrop.center .modal,.tsel-sheet,.dp-sheet,.range-dialog,.scan-card,.gate-box{border-radius:28px}
+.add-menu{border-radius:22px}
+.add-menu-item:active,.add-menu-item:hover{background:rgba(255,255,255,.12)}
+.range-actions button{color:#a9bfff}
+.range-dialog input{background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.3);border-radius:0;box-shadow:none}
+.tsel-sheet>button.on{background:rgba(255,255,255,.14)}
+.dp-col button.on{background:rgba(255,255,255,.2)}
+
+/* ---------- Halaman penuh (Kalender, Advanced Statistics, Trader DNA) ---------- */
+.calendar-page,.performance-detail-page,.gate{background:var(--glow),#060913}
+.cal-cell,.calendar-cell{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px}
+.cal-cell.empty,.calendar-cell.empty{background:transparent;border-color:transparent}
+.cal-cell.win,.calendar-cell.win{background:rgba(52,211,153,.2);border-color:rgba(52,211,153,.5)}
+.cal-cell.loss,.calendar-cell.loss{background:rgba(255,107,129,.2);border-color:rgba(255,107,129,.5)}
+.cal-cell.flat,.calendar-cell.flat{background:rgba(255,255,255,.1)}
+
+/* ---------- Layar masuk ---------- */
+.gate-btn{border-radius:999px;border:1px solid rgba(255,255,255,.4);background:linear-gradient(135deg,#6a8bff,#4564e8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 8px 22px rgba(69,100,232,.5)}
+.gate-sec{border-radius:999px}
+
+/* ---------- Menu bawah: kapsul melayang ---------- */
+.bottom-nav{
+  left:14px!important;right:14px!important;width:auto!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;
+  height:66px!important;border-radius:33px!important;padding:0 6px!important;
+  background:rgba(34,44,84,.62)!important;backdrop-filter:blur(26px) saturate(170%)!important;-webkit-backdrop-filter:blur(26px) saturate(170%)!important;
+  border:1px solid rgba(255,255,255,.22)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 14px 34px rgba(0,0,0,.5)!important}
+.bottom-nav .nav-item{color:#b9c3dc;font-weight:600}
+.bottom-nav .nav-item.active{color:#fff}
+.bottom-nav .nav-item:before,.bottom-nav .nav-item.active:before{content:''!important;display:block!important;position:absolute!important;inset:5px 4px!important;width:auto!important;height:auto!important;margin:0!important;
+  border:0!important;border-radius:24px!important;background:rgba(255,255,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.32)!important;z-index:-1!important;
+  opacity:0!important;transform:none!important;transition:opacity .18s ease!important}
+.bottom-nav .nav-item.active:before{opacity:1!important}
+.bottom-nav .nav-item:not(.active):active:before{opacity:1!important;background:rgba(255,255,255,.12)!important}
+.app-shell{padding-bottom:112px}
+.modal-backdrop.fs{bottom:0!important}
+.modal.fs{padding-bottom:calc(var(--nav-h,66px) + 30px + env(safe-area-inset-bottom,0px))!important}
+.fab{bottom:104px}
+@media(min-width:761px){.bottom-nav{display:none!important}}
