@@ -1,4 +1,4 @@
-const C='ej3-4.1.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-3.4.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -17,7 +17,6 @@ const SHELL=[
   './css/08-profitability-carousel.css',
   './css/09-nav-autohide.css',
   './css/10-profile-add-trade.css',
-  './css/11-glass-v4.css',
   './js/app.js',
   './js/boot.js',
   './js/pwa.js',
