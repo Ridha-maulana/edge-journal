@@ -1,1 +1,169 @@
+name: Build APK
+
+# Satu repositori untuk web + Android.
+# - Unggah release.zip ke root repositori: zip dibuka otomatis.
+# - APK dibangun hanya bila zip berisi folder android-app/ (atau tombol Run workflow ditekan).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-apk
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Ekstrak release.zip bila ada
+        id: zip
+        run: |
+          BUILD=false
+          if [ -f release.zip ]; then
+            if unzip -Z1 release.zip | grep -q '^android-app/'; then BUILD=true; fi
+            unzip -o release.zip -x '.github/*' '__MACOSX/*'
+            rm -f release.zip
+            if [ -f HAPUS.txt ]; then
+              while IFS= read -r f; do
+                f="${f%$'\r'}"
+                case "$f" in ""|/*|*..*|.git*|.github*) continue;; esac
+                rm -rf -- "$f"
+              done < HAPUS.txt
+              rm -f HAPUS.txt
+            fi
+            git config user.name "github-actions"
+            git config user.email "actions@github.com"
+            git add -A
+            git commit -m "Ekstrak release.zip" || true
+            git push
+          else
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              BUILD=true
+            elif git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -q '^android-app/'; then
+              BUILD=true
+            fi
+          fi
+          if [ ! -f android-app/package.json ]; then BUILD=false; fi
+          echo "build=$BUILD" >> "$GITHUB_OUTPUT"
+          echo "Bangun APK: $BUILD"
+
+      - name: Alamat web otomatis (dari nama repositori)
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+          if [ "${REPO,,}" = "$OWNER.github.io" ]; then
+            WEB_URL="https://$OWNER.github.io/"
+          else
+            WEB_URL="https://$OWNER.github.io/$REPO/"
+          fi
+          export WEB_URL
+          node -e '
+            const fs=require("fs");
+            const c=JSON.parse(fs.readFileSync("capacitor.config.json","utf8"));
+            c.server.url=process.env.WEB_URL;
+            c.server.allowNavigation=[new URL(process.env.WEB_URL).host,"*.firebaseapp.com","*.googleapis.com","*.gstatic.com"];
+            fs.writeFileSync("capacitor.config.json",JSON.stringify(c,null,2)+"\n");
+          '
+          cat capacitor.config.json
+
+      - uses: actions/setup-node@v4
+        if: steps.zip.outputs.build == 'true'
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        if: steps.zip.outputs.build == 'true'
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Pasang paket
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: npm install
+
+      - name: Buat proyek Android
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: npx cap add android
+
+      - name: Ikon dan splash
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: |
+          npx capacitor-assets generate --android \
+            --iconBackgroundColor '#4564e8' --iconBackgroundColorDark '#4564e8' \
+            --splashBackgroundColor '#090d18' --splashBackgroundColorDark '#090d18'
+
+      - name: Ikon splash bulat (vektor, tidak lewat alat ikon)
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: |
+          cp -r splash-res/. android/app/src/main/res/
+          find android/app/src/main/res -name 'ic_launcher_splash*' -o -name 'splash_bg*' -o -name 'splash_fg*'
+
+      - name: Tema splash gelap (Android 12+)
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: |
+          S=android/app/src/main/res/values/styles.xml
+          if grep -q 'AppTheme.NoActionBarLaunch' "$S"; then
+            sed -i 's#<style name="AppTheme.NoActionBarLaunch"[^>]*>#&\n        <item name="windowSplashScreenBackground">\#090d18</item>\n        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_splash</item>#' "$S"
+          fi
+          cat "$S"
+          grep -q 'ic_launcher_splash' "$S" || { echo 'GAGAL: tema splash tidak terpasang'; exit 1; }
+
+      - name: Izin getar
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: |
+          M=android/app/src/main/AndroidManifest.xml
+          grep -q 'android.permission.VIBRATE' "$M" || sed -i 's#</manifest>#    <uses-permission android:name="android.permission.VIBRATE" />\n</manifest>#' "$M"
+          grep -n 'VIBRATE' "$M"
+
+      - name: Nomor versi
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: |
+          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/; s/versionName \"1.0\"/versionName \"1.0.${{ github.run_number }}\"/" android/app/build.gradle
+
+      - name: Kunci penanda tetap (agar bisa memperbarui APK lama tanpa hapus aplikasi)
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: |
+          mkdir -p ~/.android
+          if [ -f debug.keystore ]; then cp debug.keystore ~/.android/debug.keystore; fi
+
+      - name: Sinkronkan Capacitor
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app
+        run: npx cap sync android
+
+      - name: Bangun APK
+        if: steps.zip.outputs.build == 'true'
+        working-directory: android-app/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Siapkan berkas
+        if: steps.zip.outputs.build == 'true'
+        run: cp android-app/android/app/build/outputs/apk/debug/app-debug.apk edge-journal.apk
+
+      - uses: softprops/action-gh-release@v2
+        if: steps.zip.outputs.build == 'true'
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: Edge Journal APK #${{ github.run_number }}
+          files: edge-journal.apk
 
