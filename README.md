@@ -1,4 +1,4 @@
-# Edge Journal v3.4.2
+# Edge Journal v3.5.0
 
 Jurnal trading pribadi (PWA) — React 19, tanpa build tool, jalan langsung di GitHub Pages.
 Data tersimpan lokal (localStorage) dan bisa disinkronkan online lewat Firebase (Auth + Firestore).
@@ -10,7 +10,7 @@ index.html            kerangka halaman: memuat CSS dan JS sesuai urutan
 manifest.webmanifest  PWA (nama, ikon)
 sw.js                 service worker (mode offline) — naikkan angka cache `C` setiap rilis
 assets/               ikon dan gambar login
-css/                  gaya, dimuat berurutan 01 → 10 (aturan belakangan menimpa yang depan)
+css/                  gaya, dimuat berurutan 01 → 11 (aturan belakangan menimpa yang depan; 11-nav-center.css = menu bawah dengan tombol tengah menonjol)
 js/
   splash.js           layar pembuka
   vendor/             React + ReactDOM 19 (satu berkas lokal, tanpa CDN)
