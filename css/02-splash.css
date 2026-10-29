@@ -22,3 +22,13 @@ html,body{background:#090d18}
 @keyframes spText{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
 @keyframes spGlow{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
 
+
+/* ===== v3.4.2 — susunan logo splash disamakan dengan logo di header halaman utama =====
+   Perbandingan ukuran persis seperti header (logo 30 : judul 13 : subjudul 8, jarak 10, spasi huruf 1,2 / 1,5),
+   hanya diperbesar dengan faktor --k. Blok tulisan (judul + subjudul) setinggi logo, jadi sejajar atas-bawah. */
+#splash{--k:min(2.3px,calc((100vw - 44px) / 154))}
+#splash .sp-lockup{gap:calc(10 * var(--k));padding:0}
+#splash .sp-mark{width:calc(30 * var(--k));height:calc(30 * var(--k))}
+#splash .sp-text{display:flex;flex-direction:column;justify-content:center}
+#splash .sp-text strong{font-size:calc(13 * var(--k));letter-spacing:calc(1.2 * var(--k));line-height:normal}
+#splash .sp-text span{margin-top:calc(2 * var(--k));font-size:calc(8 * var(--k));letter-spacing:calc(1.5 * var(--k));line-height:normal}

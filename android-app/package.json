@@ -15,5 +15,8 @@
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^6.2.0"
+  },
+  "scripts": {
+    "capacitor:sync:after": "node patch-theme.js"
   }
 }
