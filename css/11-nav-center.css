@@ -2,24 +2,26 @@
    Hanya mengubah menu bawah. Tab: Performance, My Journal, [Add trade menonjol di tengah], Tools, Profil.
    Hapus baris <link> berkas ini di index.html untuk kembali ke menu bawah lama. */
 @media(max-width:760px){
-.bottom-nav{height:calc(72px + env(safe-area-inset-bottom,0px))!important;padding:0 0 calc(6px + env(safe-area-inset-bottom,0px))!important;
+.bottom-nav{height:calc(60px + env(safe-area-inset-bottom,0px))!important;padding:0 0 calc(4px + env(safe-area-inset-bottom,0px))!important;
   background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;overflow:visible!important}
 /* alas menu dengan lengkung di tengah (tempat tombol menonjol) */
 .bottom-nav:before{content:''!important;position:absolute;left:0;right:0;top:0;bottom:0;z-index:-1;pointer-events:none;
-  background:rgba(12,17,30,.97);border-top:1px solid #26334e;
-  -webkit-mask:radial-gradient(circle 41px at 50% 0,transparent 40px,#000 41px);mask:radial-gradient(circle 41px at 50% 0,transparent 40px,#000 41px)}
-.bottom-nav .nav-item{color:#7d8798!important;gap:4px!important}
+  background:#0c111e;border-top:1px solid #26334e;
+  -webkit-mask:radial-gradient(circle 35px at 50% 5px,transparent 34px,#000 35px);mask:radial-gradient(circle 35px at 50% 5px,transparent 34px,#000 35px)}
+.bottom-nav .nav-item{color:#7d8798!important;gap:3px!important;justify-content:flex-start!important;padding:10px 2px 0!important}
+.bottom-nav .nav-item svg{width:21px!important;height:21px!important}
+.bottom-nav .nav-item span{font-size:10px!important}
 .bottom-nav .nav-item.active{color:#8fa9ff!important}
 .bottom-nav .nav-item.active svg{color:#8fa9ff!important}
 /* Add trade (tab ke-3): lingkaran biru menonjol */
 .bottom-nav .nav-item:nth-child(3){color:#8fa9ff!important}
-.bottom-nav .nav-item:nth-child(3) svg{position:relative;width:26px!important;height:26px!important;padding:15px;box-sizing:content-box!important;border-radius:50%!important;color:#fff!important;
-  background:linear-gradient(135deg,#6a8bff,#4564e8)!important;box-shadow:0 8px 22px rgba(69,100,232,.55),0 0 0 5px #0a0f1d!important;
-  transform:translateY(-34px)!important;margin-bottom:-24px!important}
-.bottom-nav .nav-item:nth-child(3):active svg{transform:translateY(-34px) scale(.94)!important}
+.bottom-nav .nav-item:nth-child(3) svg{position:relative;width:24px!important;height:24px!important;padding:13px;box-sizing:content-box!important;border-radius:50%!important;color:#fff!important;
+  background:linear-gradient(135deg,#6a8bff,#4564e8)!important;box-shadow:0 8px 22px rgba(69,100,232,.55),0 0 0 4px #0a0f1d!important;
+  transform:translateY(-30px)!important;margin-bottom:-29px!important}
+.bottom-nav .nav-item:nth-child(3):active svg{transform:translateY(-30px) scale(.94)!important}
 /* saat menu disembunyikan (gulir turun), tombol menonjol ikut turun sepenuhnya */
 .bottom-nav.nav-hidden{transform:translateY(calc(100% + 56px))!important}
 body.popup-open .bottom-nav,body.confirm-open .bottom-nav{transform:none!important}
-.app-shell{padding-bottom:86px}
-.fab{bottom:96px}
+.app-shell{padding-bottom:76px}
+.fab{bottom:80px}
 }
