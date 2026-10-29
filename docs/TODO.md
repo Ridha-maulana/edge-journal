@@ -339,3 +339,4 @@
 - v3.5.0: menu bawah baru (pilihan nomor 2): tombol Add trade di tengah berbentuk lingkaran biru menonjol ke atas dengan lengkung pada alas menu; tab lain tetap ikon + label. Seluruhnya di css/11-nav-center.css (hanya layar ≤760 px). Menu yang disembunyikan saat gulir kini turun sepenuhnya termasuk tombol menonjol.
 - v3.5.1: menu bawah dikecilkan: ikon 21 px, tulisan 10 px, tombol tengah 50 px, tinggi menu 60 px (sebelumnya 72 px) sehingga garis batas atas menu lebih rendah.
 - v3.5.2: ukuran tampilan dibuat tetap: aplikasi tidak bisa diperbesar dengan cubit dua jari dan ketuk dua kali tidak memperbesar (viewport maximum-scale=1 + user-scalable=no, css/12-no-zoom.css dengan touch-action: pan-x pan-y, dan penahan gesturestart untuk iOS). Gulir normal tetap bisa.
+- v3.5.3: menu bawah: garis batas atas kini naik melengkung membungkus tombol tengah (bukit, bukan lekukan ke dalam); ikon dan tulisan 4 tab lain diletakkan tepat di tengah tinggi menu.
