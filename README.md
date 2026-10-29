@@ -1,4 +1,4 @@
-# Edge Journal v3.5.3
+# Edge Journal v3.5.4
 
 Jurnal trading pribadi (PWA) — React 19, tanpa build tool, jalan langsung di GitHub Pages.
 Data tersimpan lokal (localStorage) dan bisa disinkronkan online lewat Firebase (Auth + Firestore).
