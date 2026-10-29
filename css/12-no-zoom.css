@@ -1,0 +1,5 @@
+/* ===== v3.5.2 — Ukuran tampilan tetap: tidak bisa dicubit/diperbesar, dan ketuk dua kali tidak memperbesar =====
+   Gulir ke atas/bawah dan ke samping tetap normal. Grafik keuntungan tetap hanya bergeser vertikal (aturan .combo-chart). */
+html{touch-action:pan-x pan-y;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body,body *{touch-action:pan-x pan-y}
+.combo-chart,.combo-chart *{touch-action:pan-y}

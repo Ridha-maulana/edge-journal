@@ -1,4 +1,4 @@
-const C='ej3-3.5.1';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-3.5.2';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -18,6 +18,7 @@ const SHELL=[
   './css/09-nav-autohide.css',
   './css/10-profile-add-trade.css',
   './css/11-nav-center.css',
+  './css/12-no-zoom.css',
   './js/app.js',
   './js/boot.js',
   './js/pwa.js',
