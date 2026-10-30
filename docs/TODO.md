@@ -348,3 +348,5 @@
 - v3.7.2: mode Garis memakai bingkai yang sama dengan Kandel: informasi di kiri atas (tanggal/sesi · jumlah trade, P&L), sumbu harga di kanan, label waktu di bawah, skala 1H–1Y, geser dan ketuk titik; animasi garis tergambar saat berganti.
 - v3.7.3: rincian periode di kartu utama jadi 6 data: tahun · bulan · minggu · hari · sesi · posisi (dua kolom baru: tahun dan bulan); ikon dompet di bawah ACTIVE ACCOUNT ditampilkan kembali.
 - v3.7.4: rincian periode di kartu utama: kolom "posisi" dihapus (sudah ada di dasbor bawah); tinggal tahun · bulan · minggu · hari · sesi.
+- v3.7.5: rincian periode (tahun · bulan · minggu · hari · sesi) kembali satu baris sejajar dengan pemisah tegak, bukan bertingkat.
+- v3.7.6: baris rincian periode dibuat tepat di tengah antara dua garis (jarak atas = jarak bawah).
