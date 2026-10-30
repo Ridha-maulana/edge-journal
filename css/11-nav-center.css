@@ -1,20 +1,18 @@
-/* ===== v3.5.4 — Menu bawah: tombol tengah bulat di dalam menu =====
-   Lima tab berukuran sama (ikon 21 px, tulisan 10 px, sebaris). Hanya tombol tengah (Add trade) yang berbeda bentuk:
-   ikonnya berlatar lingkaran biru. Garis atas menu rata, setinggi puncak lingkaran, jadi lingkaran berada penuh di dalam menu.
+/* ===== v3.6.0 — Menu bawah nomor 3: tombol tengah kotak =====
+   Persis seperti contoh nomor 3: menu rata, tab aktif berikon tebal, tombol Add trade di tengah berbentuk kotak
+   biru bersudut sedang yang sedikit menonjol ke atas. Hanya layar HP (<=760 px).
    Hapus baris <link> berkas ini di index.html untuk kembali ke menu bawah lama. */
 @media(max-width:760px){
-.bottom-nav{height:calc(68px + env(safe-area-inset-bottom,0px))!important;padding:0 0 env(safe-area-inset-bottom,0px)!important;
-  background:#0c111e!important;border:0!important;border-top:1px solid #26334e!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;overflow:visible!important}
-.bottom-nav .nav-item{color:#7d8798!important;gap:2px!important;justify-content:center!important;padding:0 2px!important}
-/* semua ikon memakai kotak 44 px yang sama agar sejajar; hanya tab tengah yang diberi latar lingkaran */
-.bottom-nav .nav-item svg{width:21px!important;height:21px!important;padding:11.5px;box-sizing:content-box!important;border-radius:50%!important}
-.bottom-nav .nav-item span{font-size:10px!important}
+.bottom-nav{height:calc(74px + env(safe-area-inset-bottom,0px))!important;background:#0c111e!important;border-top:1px solid #202b43!important;overflow:visible!important;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))!important}
+.bottom-nav .nav-item{color:#7d8798!important;gap:4px!important}
 .bottom-nav .nav-item.active{color:#8fa9ff!important}
-.bottom-nav .nav-item.active svg{color:#8fa9ff!important}
-.bottom-nav .nav-item:nth-child(3){color:#8fa9ff!important}
-.bottom-nav .nav-item:nth-child(3) svg{color:#fff!important;background:linear-gradient(135deg,#6a8bff,#4564e8)!important;box-shadow:0 4px 14px rgba(69,100,232,.5)!important}
-.bottom-nav .nav-item:nth-child(3):active svg{transform:scale(.94)!important}
+.bottom-nav .nav-item.active svg{color:#8fa9ff!important;stroke-width:2.6!important}
+.bottom-nav .nav-item:nth-child(3) svg{width:26px!important;height:26px!important;padding:14px;box-sizing:content-box!important;border-radius:16px!important;color:#fff!important;fill:none!important;
+ background:linear-gradient(135deg,#6a8bff,#4564e8)!important;box-shadow:0 8px 20px rgba(69,100,232,.5)!important;transform:translateY(-20px)!important;margin-bottom:-18px!important}
+.bottom-nav .nav-item:nth-child(3){color:#9db4ff!important}
+/* saat menu disembunyikan (gulir turun), tombol menonjol ikut turun sepenuhnya */
+.bottom-nav.nav-hidden{transform:translateY(calc(100% + 30px))!important}
 body.popup-open .bottom-nav,body.confirm-open .bottom-nav{transform:none!important}
-.app-shell{padding-bottom:84px}
-.fab{bottom:88px}
+.app-shell{padding-bottom:86px}
+.fab{bottom:92px}
 }
