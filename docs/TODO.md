@@ -347,3 +347,4 @@
 - v3.7.1: tombol ganti grafik disatukan jadi satu sakelar (kandel/garis) dengan thumb yang bergeser dan animasi tumbuh/fade seperti contoh; skala kandel disingkat 1H · 1S · 1D · 1W · 1M dan ditambah 1Y (kandel tahunan dari gabungan kandel bulanan); versi aplikasi Android 1.0.9 (android-app/package.json "version" dibaca oleh patch-theme.js dan menimpa versionName).
 - v3.7.2: mode Garis memakai bingkai yang sama dengan Kandel: informasi di kiri atas (tanggal/sesi · jumlah trade, P&L), sumbu harga di kanan, label waktu di bawah, skala 1H–1Y, geser dan ketuk titik; animasi garis tergambar saat berganti.
 - v3.7.3: rincian periode di kartu utama jadi 6 data: tahun · bulan · minggu · hari · sesi · posisi (dua kolom baru: tahun dan bulan); ikon dompet di bawah ACTIVE ACCOUNT ditampilkan kembali.
+- v3.7.4: rincian periode di kartu utama: kolom "posisi" dihapus (sudah ada di dasbor bawah); tinggal tahun · bulan · minggu · hari · sesi.

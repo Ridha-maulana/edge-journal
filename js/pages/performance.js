@@ -125,7 +125,7 @@ function Performance({ onSelectDate, onWallet, account, trades, period, setPerio
                         React.createElement("strong", null, account.name),
                         React.createElement("button", { className: "header-icon wallet-inline", onClick: onWallet, "aria-label": "Deposit dan Withdraw" },
                             React.createElement(Wallet, { size: 17 })))),
-                React.createElement("div", { className: "hero-facts", "aria-label": "Rincian periode" }, [[heroFx.years, 'tahun'], [heroFx.months, 'bulan'], [heroFx.weeks, 'minggu'], [heroFx.days, 'hari'], [heroFx.sessions, 'sesi'], [heroFx.n, 'posisi']].map(([v, l]) => React.createElement("span", { key: l },
+                React.createElement("div", { className: "hero-facts", "aria-label": "Rincian periode" }, [[heroFx.years, 'tahun'], [heroFx.months, 'bulan'], [heroFx.weeks, 'minggu'], [heroFx.days, 'hari'], [heroFx.sessions, 'sesi']].map(([v, l]) => React.createElement("span", { key: l },
                     React.createElement("b", null, v),
                     " " + l))),
                 React.createElement("div", { className: "combo-stats" },
