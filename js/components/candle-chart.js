@@ -77,7 +77,8 @@ function candleNum(v) {
     const s = a >= 10000 ? (a / 1000).toFixed(1) + 'k' : a >= 1000 ? (a / 1000).toFixed(2) + 'k' : a >= 100 ? a.toFixed(0) : a.toFixed(2);
     return (v < 0 ? '-' : v > 0 ? '+' : '') + s;
 }
-function CandleChart({ candles, tf }) {
+function CandleChart({ candles, tf, mode }) {
+    const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
     const W = 500, H = 214, T = 36, B = 26, L = 6, AX = 46;
     const SW = tf === 'Y1' ? 44 : tf === 'M1' || tf === 'W1' ? 34 : tf === 'D1' ? 26 : tf === 'SES' ? 22 : 18;
     const plotW = W - L - AX;
@@ -92,7 +93,7 @@ function CandleChart({ candles, tf }) {
     const o = Math.max(0, Math.min(maxOff, off));
     const shown = candles.slice(Math.max(0, Math.floor(n - o - vis)), Math.ceil(n - o));
     let lo = Infinity, hi = -Infinity;
-    shown.forEach(c => { lo = Math.min(lo, c.l); hi = Math.max(hi, c.h); });
+    shown.forEach(c => { lo = Math.min(lo, isL ? c.c : c.l); hi = Math.max(hi, isL ? c.c : c.h); });
     if (!isFinite(lo)) { lo = 0; hi = 1; }
     if (hi - lo < 1e-6) { hi += 1; lo -= 1; }
     const pad = (hi - lo) * .08;
@@ -149,7 +150,22 @@ function CandleChart({ candles, tf }) {
             React.createElement("text", { x: W - 2, y: y(g) + 3.5, textAnchor: "end", fontSize: "10", fill: "#7d8bab" }, candleNum(g)))),
         React.createElement("line", { x1: L, x2: W - AX, y1: H - B, y2: H - B, stroke: "#33466f", strokeWidth: "1" }),
         lo < 0 && hi > 0 && React.createElement("line", { x1: L, x2: W - AX, y1: y(0), y2: y(0), stroke: "#4a5f91", strokeWidth: "1", strokeDasharray: "2 3" }),
-        React.createElement("g", { clipPath: "url(#cdclip)" }, shown.map(c => {
+        isL && React.createElement("g", { clipPath: "url(#cdclip)" }, (() => {
+            const P = shown.map(c => [x(candles.indexOf(c)), y(c.c)]);
+            const lc = candles[n - 1].c >= 0 ? '#34d399' : '#ff6b81';
+            const base = H - B, cls = fresh ? "cd-in" : "";
+            const d = P.length > 1 ? smoothPath(P) : `M${L},${P[0][1]} L${W - AX},${P[0][1]}`;
+            return React.createElement(React.Fragment, null,
+                React.createElement("defs", null,
+                    React.createElement("linearGradient", { id: "cdg", x1: "0", x2: "0", y1: "0", y2: "1" },
+                        React.createElement("stop", { offset: "0", stopColor: lc, stopOpacity: ".38" }),
+                        React.createElement("stop", { offset: "1", stopColor: lc, stopOpacity: "0" }))),
+                P.length > 1 && React.createElement("path", { d: `${d} L${P[P.length - 1][0]},${base} L${P[0][0]},${base} Z`, fill: "url(#cdg)", className: `cl-area ${cls}` }),
+                React.createElement("path", { d: d, pathLength: "1", className: `cl-line ${cls}`, fill: "none", stroke: lc, strokeWidth: "2.8", strokeLinecap: "round", strokeLinejoin: "round" }),
+                React.createElement("line", { x1: x(ix), x2: x(ix), y1: T - 4, y2: base, stroke: "#fff", strokeOpacity: ".28", strokeDasharray: "3 3" }),
+                React.createElement("circle", { cx: x(ix), cy: y(act.c), r: "4.6", fill: lc, stroke: "#0f172a", strokeWidth: "2.2" }));
+        })()),
+        !isL && React.createElement("g", { clipPath: "url(#cdclip)" }, shown.map(c => {
             const i = candles.indexOf(c);
             const cx = x(i);
             const top = y(Math.max(c.o, c.c)), bot = y(Math.min(c.o, c.c));
@@ -165,7 +181,10 @@ function CandleChart({ candles, tf }) {
             React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500", dx: "6" },
                 act.n,
                 " trade")),
-        React.createElement("text", { x: L, y: 29, fontSize: "11", fontWeight: "600" },
+        isL && React.createElement("text", { x: L, y: 29, fontSize: "11", fontWeight: "600" },
+            React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, "P&L "),
+            React.createElement("tspan", { fill: act.c >= 0 ? '#34d399' : '#ff6b81' }, candleNum(act.c))),
+        !isL && React.createElement("text", { x: L, y: 29, fontSize: "11", fontWeight: "600" },
             [['O', act.o], ['H', act.h], ['L', act.l], ['C', act.c]].map(([l, v], j) => React.createElement("tspan", { key: l, fill: col(act), dx: j ? "9" : "0" },
                 React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, l + " "),
                 candleNum(v)))),
@@ -190,9 +209,9 @@ function HeroChart({ trades, line }) {
     const candles = useMemo(() => buildCandles(trades, tf), [trades, tf]);
     const isLine = kind !== 'candle';
     return React.createElement("div", { className: "hero-chart" },
-        React.createElement("div", { className: "hc-body", key: kind + (isLine ? '' : tf) }, isLine ? line : React.createElement(CandleChart, { candles: candles, tf: tf })),
+        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle' })),
         React.createElement("div", { className: "chart-tools" },
-            !isLine && React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala kandel" }, CANDLE_TFS.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
+            React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
             React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },
                 React.createElement("span", { className: "ct-thumb" }),
                 React.createElement("svg", { className: "ct-ic ic-candle", viewBox: "0 0 24 24", width: "20", height: "20", "aria-hidden": "true" },

@@ -17,3 +17,6 @@
 .ct-ic{position:relative;z-index:1;justify-self:center;transition:color .25s ease}
 .ct-pill.is-line .ic-line{color:#3b4a73}
 .ct-pill:active .ct-thumb{width:32px}
+.candle-chart .cl-line.cd-in{stroke-dasharray:1;stroke-dashoffset:1;animation:clDraw .9s cubic-bezier(.4,0,.2,1) both}
+.candle-chart .cl-area.cd-in{animation:hcIn .8s ease .2s both}
+@keyframes clDraw{to{stroke-dashoffset:0}}
