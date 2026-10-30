@@ -1,0 +1,23 @@
+/* v3.7.0 - kartu utama Performance: baris rincian periode desain D "Ringkas" */
+.hero-facts{display:flex;flex-wrap:wrap;gap:6px}
+.hero-facts span{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:999px;background:#0e1730;border:1px solid #223357;font-size:11.5px;color:#9aa7c5;white-space:nowrap}
+.hero-facts b{color:#eef2ff;font-weight:800}
+.perf-screen>.hero-card.combo .combo-top{order:1}.perf-screen>.hero-card.combo .hero-facts{order:2}.perf-screen>.hero-card.combo .combo-stats{order:3}.perf-screen>.hero-card.combo .hero-chart{order:4}.perf-screen>.hero-card.combo .combo-legend{order:5}.perf-screen>.hero-card.combo .combo-mini{order:6}.perf-screen>.hero-card.combo .performance-actions{order:7}
+
+/* ===== D  RINGKAS : padat, rincian periode satu baris teks, statistik satu strip ===== */
+.perf-screen>.hero-card.combo.hv-d{background:#0e1630;border:1px solid #243457;border-radius:14px;padding:14px;gap:8px}
+.hv-d .hero-number{font-size:30px}
+.hv-d .combo-top .wallet-inline{display:none}
+.hv-d .combo-top{order:1}.hv-d .combo-stats{order:2}.hv-d .hero-chart{order:3}.hv-d .hero-facts{order:4}
+.hv-d .combo-stats{grid-template-columns:repeat(4,1fr);gap:6px;margin:4px 0 0;padding:10px 0 0}
+.hv-d .combo-stats>div{background:none!important;border:0!important;padding:0;box-shadow:none!important}
+.hv-d .combo-stats span{font-size:10px}.hv-d .combo-stats b{font-size:13px;margin-top:2px}
+.hv-d .hero-facts{gap:0;justify-content:center;padding:8px 0 2px;border-top:1px solid #1f2d4d}
+.hv-d .hero-facts span{background:none;border:0;padding:0 10px;border-radius:0;border-left:1px solid #2a3a60;font-size:11.5px}
+.hv-d .hero-facts span:first-child{border-left:0}
+
+/* info Bulan terbaik & Drawdown terdalam: tetap sejajar satu baris seperti sebelumnya */
+.hv-d .combo-legend{flex-wrap:wrap;justify-content:space-between;gap:4px 8px;font-size:11px;margin-top:2px}
+@media(max-width:380px){.hv-d .combo-legend{font-size:10px}.hv-d .combo-legend i{width:8px;height:8px;margin-right:4px}}
+.hv-d .combo-legend span{white-space:nowrap;min-width:0}
+.hv-d .combo-legend i{margin-right:5px}

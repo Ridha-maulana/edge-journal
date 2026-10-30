@@ -20,6 +20,7 @@ const SHELL=[
   './css/11-nav-center.css',
   './css/12-no-zoom.css',
   './css/13-chart-tools.css',
+  './css/14-hero-designs.css',
   './js/app.js',
   './js/boot.js',
   './js/pwa.js',

@@ -3,10 +3,11 @@
 
 /* Membentuk kandel ekuitas (P&L kumulatif) dari trade yang sudah urut waktu.
    H1   = satu kandel per jam masuk (trade tunggal = body penuh)
+   Minggu = gabungan 5 kandel D1 (Senin-Jumat); Bulan = gabungan kandel minggu dalam satu bulan.
    Sesi = gabungan kandel H1 dalam satu sesi (Asia 06-12, London 12-20, New York 20-06)
    D1   = gabungan kandel sesi dalam satu hari trading (mulai 06:00 WIB)
    Penggabungan standar OHLC: open = awal, close = akhir, high/low = ekstrem seluruh langkah. */
-const CANDLE_TFS = [['H1', 'H1'], ['SES', 'Sesi'], ['D1', 'D1']];
+const CANDLE_TFS = [['H1', 'H1'], ['SES', 'Sesi'], ['D1', 'D1'], ['W1', 'Minggu'], ['M1', 'Bulan']];
 const CANDLE_BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 const CANDLE_SESI = ['Asia', 'London', 'New York'];
 function candleDayLabel(day) { return `${day.slice(8, 10)} ${CANDLE_BULAN[Number(day.slice(5, 7)) - 1]}`; }
@@ -31,6 +32,20 @@ function buildCandles(trades, tf) {
             k = `${tday}|${si}`;
             label = `${candleDayLabel(tday)} · ${CANDLE_SESI[si]}`;
             short = `${tday.slice(8, 10)}/${tday.slice(5, 7)} ${['AS', 'LDN', 'NY'][si]}`;
+        }
+        else if (tf === 'W1') {
+            const md = new Date(Date.UTC(Number(tday.slice(0, 4)), Number(tday.slice(5, 7)) - 1, Number(tday.slice(8, 10))));
+            md.setUTCDate(md.getUTCDate() - ((md.getUTCDay() + 6) % 7));
+            const fr = new Date(md.getTime() + 4 * 86400000);
+            const iso = x => x.toISOString().slice(0, 10);
+            k = iso(md);
+            label = `Minggu ${candleDayLabel(iso(md))} \u2013 ${candleDayLabel(iso(fr))}`;
+            short = candleDayLabel(iso(md));
+        }
+        else if (tf === 'M1') {
+            k = tday.slice(0, 7);
+            label = `${CANDLE_BULAN[Number(tday.slice(5, 7)) - 1]} ${tday.slice(0, 4)}`;
+            short = CANDLE_BULAN[Number(tday.slice(5, 7)) - 1];
         }
         else {
             k = tday;
@@ -59,7 +74,7 @@ function candleNum(v) {
 }
 function CandleChart({ candles, tf }) {
     const W = 500, H = 214, T = 36, B = 26, L = 6, AX = 46;
-    const SW = tf === 'D1' ? 26 : tf === 'SES' ? 22 : 18;
+    const SW = tf === 'M1' || tf === 'W1' ? 34 : tf === 'D1' ? 26 : tf === 'SES' ? 22 : 18;
     const plotW = W - L - AX;
     const vis = Math.max(4, Math.floor(plotW / SW));
     const n = candles.length;

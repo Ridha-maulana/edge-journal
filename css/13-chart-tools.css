@@ -7,6 +7,10 @@
 .ct-btn{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:0 10px;border:0;border-radius:7px;background:transparent;color:#8a97b8;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
 .ct-btn svg{flex:none}
 .ct-btn.on{background:#26365f;color:#eef2ff}
-.ct-tf .ct-btn{padding:0 12px}
+.ct-tf .ct-btn{padding:0 9px}
+.chart-tools{flex-wrap:wrap}
+.ct-tf{margin-left:auto}
 .perf-screen .candle-chart text,.perf-screen .candle-chart g,.perf-screen .candle-chart line,.perf-screen .candle-chart rect{animation:none!important}
 .candle-chart{margin-top:6px}
+.ct-tf{flex:1 1 100%;margin-left:0}
+.ct-tf .ct-btn{flex:1;justify-content:center;padding:0 4px}

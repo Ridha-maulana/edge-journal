@@ -62,6 +62,7 @@ function Performance({ onSelectDate, onWallet, account, trades, period, setPerio
     const bd0 = dvals0.length ? Math.max(...dvals0) : 0;
     const cLabels = ['Awal', ...cs.map(t => new Date(t.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }))];
     const sgn = v => v > 0.005 ? '+' : '';
+    const heroFx = ddStat(ddBuild(filtered));   // sama dengan kartu Performa per bulan: minggu, hari, sesi, posisi
     const bestTxt = bestMk ? `${MS[Number(bestMk.slice(5, 7)) - 1]} ${mm[bestMk] >= 0 ? '+' : ''}${(mm[bestMk] / startBal * 100).toFixed(1)}%` : '—';
     const ddTxt = maxDd ? `-${(maxDd / (account.balance || 1) * 100).toFixed(1)}%` : '0%';
     const periodTxt = period === 'Custom date range' && customStart && customEnd ? `${fmtLong(customStart)} – ${fmtLong(customEnd)}` : period;
@@ -107,7 +108,7 @@ function Performance({ onSelectDate, onWallet, account, trades, period, setPerio
     } saveShare(); };
     return React.createElement("section", { className: `performance-page ${performanceView === 'overview' ? 'performance-overview-page' : 'performance-detail-wrap'}` },
         performanceView === 'overview' && React.createElement("div", { className: "perf-screen" },
-            React.createElement("div", { className: "hero-card combo" },
+            React.createElement("div", { className: "hero-card combo hv-d" },
                 React.createElement("div", { className: "combo-top" },
                     React.createElement("div", null,
                         React.createElement("span", { className: "label" }, "TOTAL P&L"),
@@ -124,6 +125,9 @@ function Performance({ onSelectDate, onWallet, account, trades, period, setPerio
                         React.createElement("strong", null, account.name),
                         React.createElement("button", { className: "header-icon wallet-inline", onClick: onWallet, "aria-label": "Deposit dan Withdraw" },
                             React.createElement(Wallet, { size: 17 })))),
+                React.createElement("div", { className: "hero-facts", "aria-label": "Rincian periode" }, [[heroFx.weeks, 'minggu'], [heroFx.days, 'hari'], [heroFx.sessions, 'sesi'], [heroFx.n, 'posisi']].map(([v, l]) => React.createElement("span", { key: l },
+                    React.createElement("b", null, v),
+                    " " + l))),
                 React.createElement("div", { className: "combo-stats" },
                     React.createElement("div", null,
                         React.createElement("span", null, "Saldo awal"),
