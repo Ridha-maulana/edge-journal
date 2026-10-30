@@ -140,7 +140,7 @@ function Performance({ onSelectDate, onWallet, account, trades, period, setPerio
                     React.createElement("div", null,
                         React.createElement("span", null, "Hari aktif"),
                         React.createElement("b", null, activeDays))),
-                React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }),
+                React.createElement(HeroChart, { trades: cs, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
                 React.createElement("div", { className: "combo-legend" },
                     React.createElement("span", null,
                         React.createElement("i", { style: { background: '#34d399' } }),

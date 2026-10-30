@@ -1,4 +1,4 @@
-const C='ej3-3.6.1';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-3.7.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -19,6 +19,7 @@ const SHELL=[
   './css/10-profile-add-trade.css',
   './css/11-nav-center.css',
   './css/12-no-zoom.css',
+  './css/13-chart-tools.css',
   './js/app.js',
   './js/boot.js',
   './js/pwa.js',
@@ -28,6 +29,7 @@ const SHELL=[
   './js/components/calendar-modal.js',
   './js/components/screenshot-entry.js',
   './js/components/charts.js',
+  './js/components/candle-chart.js',
   './js/components/error-boundary.js',
   './js/components/form-controls.js',
   './js/components/layout.js',

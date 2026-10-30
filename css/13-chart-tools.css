@@ -1,0 +1,12 @@
+/* v3.7.0 - ganti jenis grafik Performance (Kandel / Garis) + skala H1 / Sesi / D1 */
+.hero-chart{margin-top:2px}
+.candle-chart{height:auto;aspect-ratio:500/214;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.candle-chart:active{cursor:grabbing}
+.chart-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.ct-seg{display:inline-flex;gap:2px;padding:2px;border-radius:9px;background:#0f1830;border:1px solid #243457}
+.ct-btn{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:0 10px;border:0;border-radius:7px;background:transparent;color:#8a97b8;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.ct-btn svg{flex:none}
+.ct-btn.on{background:#26365f;color:#eef2ff}
+.ct-tf .ct-btn{padding:0 12px}
+.perf-screen .candle-chart text,.perf-screen .candle-chart g,.perf-screen .candle-chart line,.perf-screen .candle-chart rect{animation:none!important}
+.candle-chart{margin-top:6px}
