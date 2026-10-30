@@ -1,6 +1,6 @@
 /* Versi aplikasi, format uang, tanggal, waktu WIB, sesi trading, helper kecil */
 "use strict";
-const APP_VERSION = '3.7.2';
+const APP_VERSION = '3.7.3';
 // Dialog & toast sendiri (alert/confirm browser diblokir di halaman terhosting)
 function fmtLong(iso) { return new Date(iso + 'T12:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
 const money = (n, currency = 'USD') => new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(Number(n) || 0);
