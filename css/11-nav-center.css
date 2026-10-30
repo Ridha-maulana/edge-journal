@@ -1,17 +1,17 @@
 /* ===== v3.6.0 — Menu bawah nomor 3: tombol tengah kotak =====
    Persis seperti contoh nomor 3: menu rata, tab aktif berikon tebal, tombol Add trade di tengah berbentuk kotak
-   biru bersudut sedang yang sedikit menonjol ke atas. Hanya layar HP (<=760 px).
+   biru bersudut sedang, tanpa tulisan, sejajar dengan tab lain. Hanya layar HP (<=760 px).
    Hapus baris <link> berkas ini di index.html untuk kembali ke menu bawah lama. */
 @media(max-width:760px){
 .bottom-nav{height:calc(74px + env(safe-area-inset-bottom,0px))!important;background:#0c111e!important;border-top:1px solid #202b43!important;overflow:visible!important;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))!important}
 .bottom-nav .nav-item{color:#7d8798!important;gap:4px!important}
 .bottom-nav .nav-item.active{color:#8fa9ff!important}
 .bottom-nav .nav-item.active svg{color:#8fa9ff!important;stroke-width:2.6!important}
-.bottom-nav .nav-item:nth-child(3) svg{width:26px!important;height:26px!important;padding:14px;box-sizing:content-box!important;border-radius:16px!important;color:#fff!important;fill:none!important;
- background:linear-gradient(135deg,#6a8bff,#4564e8)!important;box-shadow:0 8px 20px rgba(69,100,232,.5)!important;transform:translateY(-20px)!important;margin-bottom:-18px!important}
-.bottom-nav .nav-item:nth-child(3){color:#9db4ff!important}
-/* saat menu disembunyikan (gulir turun), tombol menonjol ikut turun sepenuhnya */
-.bottom-nav.nav-hidden{transform:translateY(calc(100% + 30px))!important}
+/* tombol Add trade: kotak biru bersudut sedang, sejajar dengan tab lain (tanpa tulisan, tidak menonjol) */
+.bottom-nav .nav-item:nth-child(3) svg{width:24px!important;height:24px!important;padding:12px;box-sizing:content-box!important;border-radius:16px!important;color:#fff!important;fill:none!important;
+ background:linear-gradient(135deg,#6a8bff,#4564e8)!important;box-shadow:0 6px 16px rgba(69,100,232,.45)!important}
+.bottom-nav .nav-item:nth-child(3) span{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;margin:-1px!important;padding:0!important;border:0!important}
+.bottom-nav .nav-item:nth-child(3):active svg{transform:scale(.94)!important}
 body.popup-open .bottom-nav,body.confirm-open .bottom-nav{transform:none!important}
 .app-shell{padding-bottom:86px}
 .fab{bottom:92px}

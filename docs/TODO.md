@@ -342,3 +342,4 @@
 - v3.5.3: menu bawah: garis batas atas kini naik melengkung membungkus tombol tengah (bukit, bukan lekukan ke dalam); ikon dan tulisan 4 tab lain diletakkan tepat di tengah tinggi menu.
 - v3.5.4: menu bawah: tombol tengah kini berada penuh di dalam menu (garis atas rata setinggi puncak lingkaran, tanpa bukit/lekukan). Kelima tab berukuran sama (ikon 21 px, tulisan 10 px, sejajar satu baris); hanya ikon Add trade yang berlatar lingkaran biru. Tinggi menu 68 px.
 - v3.6.0: menu bawah dibuat persis seperti contoh nomor 3 (pilihan pengguna): menu rata tinggi 74 px, tab aktif berikon tebal, tombol Add trade kotak biru bersudut sedang yang sedikit menonjol. Hasil tangkapan layar identik piksel demi piksel dengan gambar contoh nomor 3.
+- v3.6.1: menu bawah: tulisan "Add trade" dihilangkan (tetap ada untuk pembaca layar) dan tombol kotak biru tidak lagi menonjol ke atas; tombol sejajar tepat di tengah tinggi menu bersama ikon dan tulisan tab lain.
