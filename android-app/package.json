@@ -1,6 +1,6 @@
 {
   "name": "edge-journal-android",
-  "version": "1.0.0",
+  "version": "1.0.9",
   "private": true,
   "description": "Pembungkus Android (Capacitor) untuk Edge Journal",
   "dependencies": {

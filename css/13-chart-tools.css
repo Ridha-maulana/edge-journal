@@ -1,16 +1,19 @@
-/* v3.7.0 - ganti jenis grafik Performance (Kandel / Garis) + skala H1 / Sesi / D1 */
+/* v3.7.0 - ganti jenis grafik Performance: tombol sakelar tunggal (kandel / garis) + skala 1H 1S 1D 1W 1M 1Y */
 .hero-chart{margin-top:2px}
-.candle-chart{height:auto;aspect-ratio:500/214;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.candle-chart{height:auto;aspect-ratio:500/214;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;margin-top:6px}
 .candle-chart:active{cursor:grabbing}
-.chart-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
-.ct-seg{display:inline-flex;gap:2px;padding:2px;border-radius:9px;background:#0f1830;border:1px solid #243457}
-.ct-btn{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:0 10px;border:0;border-radius:7px;background:transparent;color:#8a97b8;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
-.ct-btn svg{flex:none}
-.ct-btn.on{background:#26365f;color:#eef2ff}
-.ct-tf .ct-btn{padding:0 9px}
-.chart-tools{flex-wrap:wrap}
-.ct-tf{margin-left:auto}
-.perf-screen .candle-chart text,.perf-screen .candle-chart g,.perf-screen .candle-chart line,.perf-screen .candle-chart rect{animation:none!important}
-.candle-chart{margin-top:6px}
-.ct-tf{flex:1 1 100%;margin-left:0}
-.ct-tf .ct-btn{flex:1;justify-content:center;padding:0 4px}
+.hc-body{animation:hcIn .42s cubic-bezier(.2,.7,.2,1) both}
+@keyframes hcIn{from{opacity:0;transform:translateY(6px) scale(.985)}to{opacity:1;transform:none}}
+.candle-chart .cd.cd-in{transform-box:fill-box;transform-origin:50% 50%;animation:cdGrow .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 14ms)}
+@keyframes cdGrow{from{opacity:0;transform:scaleY(.15)}to{opacity:1;transform:none}}
+.perf-screen .candle-chart text{animation:none!important}
+.chart-tools{display:flex;align-items:center;gap:8px;margin-top:8px}
+.ct-tf{display:flex;flex:1;min-width:0;gap:1px;animation:hcIn .3s ease both}
+.ct-chip{flex:1;min-width:0;min-height:34px;padding:0 2px;border:0;border-radius:10px;background:transparent;color:#8a97b8;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .22s ease,color .22s ease}
+.ct-chip.on{background:#26365f;color:#fff}
+.ct-pill{position:relative;flex:none;margin-left:auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;width:62px;height:34px;padding:0;border:1px solid #2a3a60;border-radius:999px;background:#0f1830;cursor:pointer;color:#7d8bab}
+.ct-thumb{position:absolute;top:2px;left:2px;width:28px;height:28px;border-radius:50%;background:#e9eefc;box-shadow:0 2px 8px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.3,1.3,.5,1)}
+.ct-pill.is-line .ct-thumb{transform:translateX(28px)}
+.ct-ic{position:relative;z-index:1;justify-self:center;transition:color .25s ease}
+.ct-pill.is-line .ic-line{color:#3b4a73}
+.ct-pill:active .ct-thumb{width:32px}

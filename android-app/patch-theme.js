@@ -17,3 +17,15 @@ function add(name, color) {
 add('AppTheme.NoActionBarLaunch', '#090d18');
 add('AppTheme.NoActionBar', '#0b1020');
 fs.writeFileSync(p, s);
+
+/* Nomor versi aplikasi: ikuti "version" di android-app/package.json (mis. 1.0.9) */
+try {
+  const ver = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+  const g = 'android/app/build.gradle';
+  if (ver && fs.existsSync(g)) {
+    let b = fs.readFileSync(g, 'utf8');
+    b = b.replace(/versionName\s+"[^"]*"/, 'versionName "' + ver + '"');
+    fs.writeFileSync(g, b);
+    console.log('patch-theme: versionName -> ' + ver);
+  }
+} catch (e) { console.log('patch-theme: versi dilewati: ' + e.message); }

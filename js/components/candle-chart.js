@@ -3,11 +3,11 @@
 
 /* Membentuk kandel ekuitas (P&L kumulatif) dari trade yang sudah urut waktu.
    H1   = satu kandel per jam masuk (trade tunggal = body penuh)
-   Minggu = gabungan 5 kandel D1 (Senin-Jumat); Bulan = gabungan kandel minggu dalam satu bulan.
+   Minggu = gabungan 5 kandel D1 (Senin-Jumat); Bulan = gabungan kandel minggu dalam satu bulan; Tahun (1Y) = gabungan kandel bulan dalam satu tahun.
    Sesi = gabungan kandel H1 dalam satu sesi (Asia 06-12, London 12-20, New York 20-06)
    D1   = gabungan kandel sesi dalam satu hari trading (mulai 06:00 WIB)
    Penggabungan standar OHLC: open = awal, close = akhir, high/low = ekstrem seluruh langkah. */
-const CANDLE_TFS = [['H1', 'H1'], ['SES', 'Sesi'], ['D1', 'D1'], ['W1', 'Minggu'], ['M1', 'Bulan']];
+const CANDLE_TFS = [['H1', '1H'], ['SES', '1S'], ['D1', '1D'], ['W1', '1W'], ['M1', '1M'], ['Y1', '1Y']];
 const CANDLE_BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 const CANDLE_SESI = ['Asia', 'London', 'New York'];
 function candleDayLabel(day) { return `${day.slice(8, 10)} ${CANDLE_BULAN[Number(day.slice(5, 7)) - 1]}`; }
@@ -47,6 +47,11 @@ function buildCandles(trades, tf) {
             label = `${CANDLE_BULAN[Number(tday.slice(5, 7)) - 1]} ${tday.slice(0, 4)}`;
             short = CANDLE_BULAN[Number(tday.slice(5, 7)) - 1];
         }
+        else if (tf === 'Y1') {
+            k = tday.slice(0, 4);
+            label = `Tahun ${tday.slice(0, 4)}`;
+            short = tday.slice(0, 4);
+        }
         else {
             k = tday;
             label = candleDayLabel(tday);
@@ -74,7 +79,7 @@ function candleNum(v) {
 }
 function CandleChart({ candles, tf }) {
     const W = 500, H = 214, T = 36, B = 26, L = 6, AX = 46;
-    const SW = tf === 'M1' || tf === 'W1' ? 34 : tf === 'D1' ? 26 : tf === 'SES' ? 22 : 18;
+    const SW = tf === 'Y1' ? 44 : tf === 'M1' || tf === 'W1' ? 34 : tf === 'D1' ? 26 : tf === 'SES' ? 22 : 18;
     const plotW = W - L - AX;
     const vis = Math.max(4, Math.floor(plotW / SW));
     const n = candles.length;
@@ -82,7 +87,8 @@ function CandleChart({ candles, tf }) {
     const [off, setOff] = useState(0); // jumlah kandel digeser dari ujung kanan (terbaru)
     const [sel, setSel] = useState(null);
     const drag = useRef(null);
-    useEffect(() => { setOff(0); setSel(null); }, [tf, n]);
+    const [fresh, setFresh] = useState(true); // animasi tumbuh hanya saat jenis/skala berganti
+    useEffect(() => { setOff(0); setSel(null); setFresh(true); const tm = setTimeout(() => setFresh(false), 900); return () => clearTimeout(tm); }, [tf, n]);
     const o = Math.max(0, Math.min(maxOff, off));
     const shown = candles.slice(Math.max(0, Math.floor(n - o - vis)), Math.ceil(n - o));
     let lo = Infinity, hi = -Infinity;
@@ -148,7 +154,7 @@ function CandleChart({ candles, tf }) {
             const cx = x(i);
             const top = y(Math.max(c.o, c.c)), bot = y(Math.min(c.o, c.c));
             const k = col(c);
-            return React.createElement("g", { key: c.k, opacity: i === ix ? 1 : .92 },
+            return React.createElement("g", { key: c.k, className: fresh ? "cd cd-in" : "cd", style: { "--i": Math.max(0, shown.indexOf(c)) }, opacity: i === ix ? 1 : .92 },
                 i === ix && React.createElement("rect", { x: cx - SW / 2, y: T - 4, width: SW, height: H - T - B + 8, fill: "#fff", opacity: ".06" }),
                 React.createElement("line", { x1: cx, x2: cx, y1: y(c.h), y2: y(c.l), stroke: k, strokeWidth: "1.6", strokeLinecap: "round" }),
                 React.createElement("rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(1.8, bot - top), rx: "1.2", fill: k }));
@@ -182,16 +188,18 @@ function HeroChart({ trades, line }) {
     const pick = (k) => { setKind(k); candleSavedSet('ej3-chart-kind', k); };
     const pickTf = (v) => { setTf(v); candleSavedSet('ej3-chart-tf', v); };
     const candles = useMemo(() => buildCandles(trades, tf), [trades, tf]);
-    const ic = (paths) => React.createElement("svg", { viewBox: "0 0 24 24", width: "17", height: "17", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" }, paths);
+    const isLine = kind !== 'candle';
     return React.createElement("div", { className: "hero-chart" },
-        kind === 'candle' ? React.createElement(CandleChart, { candles: candles, tf: tf }) : line,
+        React.createElement("div", { className: "hc-body", key: kind + (isLine ? '' : tf) }, isLine ? line : React.createElement(CandleChart, { candles: candles, tf: tf })),
         React.createElement("div", { className: "chart-tools" },
-            React.createElement("div", { className: "ct-seg", role: "group", "aria-label": "Jenis grafik" },
-                React.createElement("button", { type: "button", className: kind === 'candle' ? 'ct-btn on' : 'ct-btn', onClick: () => pick('candle'), "aria-label": "Grafik kandel", title: "Kandel" },
-                    ic([React.createElement("path", { key: 1, d: "M7 3v3M7 17v4" }), React.createElement("rect", { key: 2, x: 4.5, y: 6, width: 5, height: 11, rx: 1 }), React.createElement("path", { key: 3, d: "M17 7v2M17 18v3" }), React.createElement("rect", { key: 4, x: 14.5, y: 9, width: 5, height: 9, rx: 1 })]),
-                    React.createElement("span", null, "Kandel")),
-                React.createElement("button", { type: "button", className: kind === 'line' ? 'ct-btn on' : 'ct-btn', onClick: () => pick('line'), "aria-label": "Grafik garis", title: "Garis" },
-                    ic([React.createElement("path", { key: 1, d: "M3 17l5-6 4 3 8-9" })]),
-                    React.createElement("span", null, "Garis"))),
-            kind === 'candle' && React.createElement("div", { className: "ct-seg ct-tf", role: "group", "aria-label": "Skala kandel" }, CANDLE_TFS.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-btn on' : 'ct-btn', onClick: () => pickTf(k) }, l)))));
+            !isLine && React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala kandel" }, CANDLE_TFS.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
+            React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },
+                React.createElement("span", { className: "ct-thumb" }),
+                React.createElement("svg", { className: "ct-ic ic-candle", viewBox: "0 0 24 24", width: "20", height: "20", "aria-hidden": "true" },
+                    React.createElement("path", { d: "M7 3v3M7 18v3", stroke: "#ff6b81", strokeWidth: "2", strokeLinecap: "round" }),
+                    React.createElement("rect", { x: 4.5, y: 6, width: 5, height: 12, rx: 1.2, fill: "#ff6b81" }),
+                    React.createElement("path", { d: "M17 2v3M17 17v4", stroke: "#34d399", strokeWidth: "2", strokeLinecap: "round" }),
+                    React.createElement("rect", { x: 14.5, y: 5, width: 5, height: 12, rx: 1.2, fill: "#34d399" })),
+                React.createElement("svg", { className: "ct-ic ic-line", viewBox: "0 0 24 24", width: "20", height: "20", "aria-hidden": "true" },
+                    React.createElement("path", { d: "M3 16c2-4 3-5 5-3s3 3 5-1 3-6 5-3 2 3 3 2", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round" })))));
 }
