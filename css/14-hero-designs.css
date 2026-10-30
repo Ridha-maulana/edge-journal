@@ -21,3 +21,14 @@
 @media(max-width:380px){.hv-d .combo-legend{font-size:10px}.hv-d .combo-legend i{width:8px;height:8px;margin-right:4px}}
 .hv-d .combo-legend span{white-space:nowrap;min-width:0}
 .hv-d .combo-legend i{margin-right:5px}
+
+/* v4.0.0 - enam metrik jadi satu strip bergaris tegak (tanpa kotak) dan tiga tombol aksi satu baris: Share / Stats / DNA */
+.hv-d .combo-mini{display:flex;align-items:stretch;gap:0;border-top:1px solid #1f2d4d;padding-top:12px;margin-top:2px}
+.hv-d .combo-mini>div{flex:1 1 auto;min-width:0;background:none!important;border:0;border-left:1px solid #243457;border-radius:0;padding:0 clamp(3px,1.1vw,8px);box-shadow:none!important;white-space:nowrap}
+.hv-d .combo-mini>div:first-child{border-left:0;padding-left:0}
+.hv-d .combo-mini>div:last-child{padding-right:0}
+.hv-d .combo-mini span{font-size:clamp(7.6px,2.4vw,11px);margin-bottom:3px;color:#8a97b8}
+.hv-d .combo-mini b{font-size:clamp(12px,3.9vw,17px);font-weight:800}
+.perf-screen .hv-d .performance-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.perf-screen .hv-d .performance-actions .share-btn{grid-column:auto;margin:0;background:#111d3b;border:1px solid #334f91;color:#cfe0ff}
+.hv-d .performance-action{min-height:50px;font-size:clamp(13px,3.9vw,15px);font-weight:700;gap:7px;border-radius:14px;padding:0 6px}
