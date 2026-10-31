@@ -77,21 +77,39 @@ function candleNum(v) {
     const s = a >= 10000 ? (a / 1000).toFixed(1) + 'k' : a >= 1000 ? (a / 1000).toFixed(2) + 'k' : a >= 100 ? a.toFixed(0) : a.toFixed(2);
     return (v < 0 ? '-' : v > 0 ? '+' : '') + s;
 }
-function CandleChart({ candles, tf, mode }) {
+const CANDLE_DEF = 120, CANDLE_MIN = 10;
+function CandleChart({ candles, tf, mode, resetKey }) {
     const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
-    const W = 500, H = 214, T = 36, B = 26, L = 6, AX = 46;
-    const SW = tf === 'Y1' ? 44 : tf === 'M1' || tf === 'W1' ? 34 : tf === 'D1' ? 26 : tf === 'SES' ? 22 : 18;
+    const W = 500, H = 428, T = 36, B = 26, L = 6, AX = 46;
     const plotW = W - L - AX;
-    const vis = Math.max(4, Math.floor(plotW / SW));
     const n = candles.length;
-    const maxOff = Math.max(0, n - vis);
+    const [count, setCount] = useState(CANDLE_DEF); // jumlah kandel yang tampak (zoom jari)
+    const maxCount = Math.max(CANDLE_DEF, Math.min(500, n * 2));
+    const cnt = Math.max(CANDLE_MIN, Math.min(maxCount, count));
+    const SW = plotW / cnt;
+    const maxOff = Math.max(0, n - cnt);
     const [off, setOff] = useState(0); // jumlah kandel digeser dari ujung kanan (terbaru)
     const [sel, setSel] = useState(null);
     const drag = useRef(null);
+    const ptrs = useRef(new Map());
+    const pinch = useRef(null);
+    const svgRef = useRef(null);
     const [fresh, setFresh] = useState(true); // animasi tumbuh hanya saat jenis/skala berganti
-    useEffect(() => { setOff(0); setSel(null); setFresh(true); const tm = setTimeout(() => setFresh(false), 900); return () => clearTimeout(tm); }, [tf, n]);
+    // ganti skala / data / tekan ulang tombol skala: kembali ke tampilan awal (120 kandel, terbaru di kanan)
+    useEffect(() => { setOff(0); setSel(null); setCount(CANDLE_DEF); setFresh(true); const tm = setTimeout(() => setFresh(false), 900); return () => clearTimeout(tm); }, [tf, n, resetKey]);
+    // dua jari = zoom: cegah halaman ikut bergulir / ter-zoom browser
+    useEffect(() => {
+        const el = svgRef.current;
+        if (!el)
+            return;
+        const stop = e => { if (e.touches && e.touches.length >= 2 && e.cancelable)
+            e.preventDefault(); };
+        el.addEventListener('touchstart', stop, { passive: false });
+        el.addEventListener('touchmove', stop, { passive: false });
+        return () => { el.removeEventListener('touchstart', stop); el.removeEventListener('touchmove', stop); };
+    }, [n]);
     const o = Math.max(0, Math.min(maxOff, off));
-    const shown = candles.slice(Math.max(0, Math.floor(n - o - vis)), Math.ceil(n - o));
+    const shown = candles.slice(Math.max(0, Math.floor(n - o - cnt) - 1), Math.ceil(n - o) + 1);
     let lo = Infinity, hi = -Infinity;
     shown.forEach(c => { lo = Math.min(lo, isL ? c.c : c.l); hi = Math.max(hi, isL ? c.c : c.h); });
     if (!isFinite(lo)) { lo = 0; hi = 1; }
@@ -103,11 +121,38 @@ function CandleChart({ candles, tf, mode }) {
     const x = i => L + plotW - SW / 2 - ((n - 1 - i) - o) * SW;
     const ix = sel != null && sel >= 0 && sel < n ? sel : Math.min(n - 1, Math.max(0, n - 1 - Math.floor(o)));
     const act = candles[ix];
-    const down = e => { drag.current = { x: e.clientX, off: o, moved: false, w: e.currentTarget.getBoundingClientRect().width }; try {
-        e.currentTarget.setPointerCapture(e.pointerId);
-    }
-    catch (_) { } };
+    const dist = () => { const p = [...ptrs.current.values()]; return Math.max(8, Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y)); };
+    const down = e => {
+        ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        try {
+            e.currentTarget.setPointerCapture(e.pointerId);
+        }
+        catch (_) { }
+        const r = e.currentTarget.getBoundingClientRect();
+        if (ptrs.current.size === 2) {
+            const p = [...ptrs.current.values()];
+            const px = ((p[0].x + p[1].x) / 2 - r.left) / r.width * W;
+            // kandel (indeks pecahan) tepat di antara dua jari — dijaga tetap di bawah jari saat zoom
+            const idx = (n - 1) - o - (L + plotW - SW / 2 - px) / SW;
+            pinch.current = { d0: dist(), c0: cnt, px, idx, w: r.width };
+            drag.current = null;
+            return;
+        }
+        if (ptrs.current.size === 1)
+            drag.current = { x: e.clientX, off: o, moved: false, w: r.width };
+    };
     const move = e => {
+        if (ptrs.current.has(e.pointerId))
+            ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        const pz = pinch.current;
+        if (pz && ptrs.current.size >= 2) {
+            const nc = Math.max(CANDLE_MIN, Math.min(maxCount, pz.c0 * pz.d0 / dist()));
+            const sw2 = plotW / nc;
+            const no = (n - 1) - pz.idx - (L + plotW - sw2 / 2 - pz.px) / sw2;
+            setCount(nc);
+            setOff(Math.max(0, Math.min(Math.max(0, n - nc), no)));
+            return;
+        }
         const d = drag.current;
         if (!d)
             return;
@@ -120,6 +165,13 @@ function CandleChart({ candles, tf, mode }) {
         }
     };
     const up = e => {
+        ptrs.current.delete(e.pointerId);
+        if (pinch.current) {
+            if (ptrs.current.size < 2)
+                pinch.current = null;
+            drag.current = null; // sisa satu jari tidak dihitung sebagai ketukan / geser
+            return;
+        }
         const d = drag.current;
         drag.current = null;
         if (d && !d.moved) {
@@ -130,18 +182,20 @@ function CandleChart({ candles, tf, mode }) {
                 bd = dd;
                 best = i;
             } });
-            if (best >= 0 && bd < SW)
+            if (best >= 0 && bd < Math.max(SW, 9))
                 setSel(best);
         }
     };
+    const cancel = e => { ptrs.current.delete(e.pointerId); if (ptrs.current.size < 2)
+        pinch.current = null; drag.current = null; };
     if (!n)
         return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, className: "combo-chart candle-chart" },
             React.createElement("text", { x: W / 2, y: H / 2, textAnchor: "middle", fontSize: "12", fill: "#7d8bab" }, "Belum ada trade pada periode ini"));
     const grid = [0, 1, 2, 3].map(i => lo + (hi - lo) * (i + .5) / 4);
-    const step = Math.max(1, Math.ceil(64 / SW));
+    const step = Math.max(1, Math.ceil(58 / SW));
     const col = c => c.c > c.o ? '#34d399' : c.c < c.o ? '#ff6b81' : '#9aa7c5';
-    const bw = SW * .62;
-    return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, className: "combo-chart candle-chart", onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerCancel: () => { drag.current = null; } },
+    const bw = Math.max(1.4, SW * .62), wk = Math.max(.9, Math.min(1.6, bw * .55));
+    return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, ref: svgRef, className: "combo-chart candle-chart", onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerCancel: cancel },
         React.createElement("defs", null,
             React.createElement("clipPath", { id: "cdclip" },
                 React.createElement("rect", { x: L, y: T - 4, width: plotW, height: H - T - B + 8 }))),
@@ -172,8 +226,8 @@ function CandleChart({ candles, tf, mode }) {
             const k = col(c);
             return React.createElement("g", { key: c.k, className: fresh ? "cd cd-in" : "cd", style: { "--i": Math.max(0, shown.indexOf(c)) }, opacity: i === ix ? 1 : .92 },
                 i === ix && React.createElement("rect", { x: cx - SW / 2, y: T - 4, width: SW, height: H - T - B + 8, fill: "#fff", opacity: ".06" }),
-                React.createElement("line", { x1: cx, x2: cx, y1: y(c.h), y2: y(c.l), stroke: k, strokeWidth: "1.6", strokeLinecap: "round" }),
-                React.createElement("rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(1.8, bot - top), rx: "1.2", fill: k }));
+                React.createElement("line", { x1: cx, x2: cx, y1: y(c.h), y2: y(c.l), stroke: k, strokeWidth: wk, strokeLinecap: "round" }),
+                React.createElement("rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(1.8, bot - top), rx: bw > 4 ? "1.2" : "0", fill: k }));
         })),
         shown.map(c => { const i = candles.indexOf(c); return (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14) ? React.createElement("text", { key: c.k, x: x(i), y: H - 8, textAnchor: "middle", fontSize: "9.5", fill: "#7d8bab" }, c.short) : null; }),
         React.createElement("text", { x: L, y: 13, fontSize: "11.5", fontWeight: "700", fill: "#eef2ff" },
@@ -188,7 +242,8 @@ function CandleChart({ candles, tf, mode }) {
             [['O', act.o], ['H', act.h], ['L', act.l], ['C', act.c]].map(([l, v], j) => React.createElement("tspan", { key: l, fill: col(act), dx: j ? "9" : "0" },
                 React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, l + " "),
                 candleNum(v)))),
-        o > 0.5 && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: "#7d8bab" }, "← geser →"));
+        o > 0.5 && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: "#7d8bab" }, "← geser →"),
+        Math.abs(cnt - CANDLE_DEF) > 1 && React.createElement("text", { x: W - AX - 2, y: 29, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, Math.round(cnt) + " kandel"));
 }
 
 function candleSavedGet(k, d) { try {
@@ -205,11 +260,12 @@ function HeroChart({ trades, line }) {
     const [kind, setKind] = useState(() => candleSavedGet('ej3-chart-kind', 'line'));
     const [tf, setTf] = useState(() => candleSavedGet('ej3-chart-tf', 'SES'));
     const pick = (k) => { setKind(k); candleSavedSet('ej3-chart-kind', k); };
-    const pickTf = (v) => { setTf(v); candleSavedSet('ej3-chart-tf', v); };
+    const [rk, setRk] = useState(0);
+    const pickTf = (v) => { setTf(v); candleSavedSet('ej3-chart-tf', v); setRk(r => r + 1); };
     const candles = useMemo(() => buildCandles(trades, tf), [trades, tf]);
     const isLine = kind !== 'candle';
     return React.createElement("div", { className: "hero-chart" },
-        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle' })),
+        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk })),
         React.createElement("div", { className: "chart-tools" },
             React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
             React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },

@@ -351,3 +351,4 @@
 - v3.7.5: rincian periode (tahun · bulan · minggu · hari · sesi) kembali satu baris sejajar dengan pemisah tegak, bukan bertingkat.
 - v3.7.6: baris rincian periode dibuat tepat di tengah antara dua garis (jarak atas = jarak bawah).
 - v4.0.0: kartu utama Performance diringkas lagi: enam metrik (Win rate, Profit Factor, Total Trades, Avg. R:R, Perolehan Pips, Best Day) menjadi satu strip bergaris tegak tanpa kotak; tombol aksi menjadi tiga dalam satu baris dengan nama pendek Share / Stats / DNA (nama lengkap tetap untuk pembaca layar). PRD belum diperbarui (rencana: diperbarui setelah perbaikan selesai, sekitar sebulan lagi).
+- v4.1.0: grafik utama 2× lebih tinggi; default 120 kandel di semua skala (1H/1S/1D/1W/1M/1Y); cubit dua jari untuk zoom (titik di antara jari tetap di tempat), geser satu jari, ketuk tombol skala (termasuk yang aktif) mengembalikan tampilan awal; strip metrik dan tombol Share/Stats/DNA dikecilkan sesuai gambar acuan.
