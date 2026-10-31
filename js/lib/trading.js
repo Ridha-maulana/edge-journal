@@ -28,3 +28,9 @@ function pipSizeOf(sym) { const u = String(sym || '').toUpperCase(); if (u.inclu
     return 1; return .0001; }
 function pipsOf(t) { if (t.exit === null || t.exit === undefined || t.exit === '')
     return 0; const d = t.side === 'Long' ? Number(t.exit) - Number(t.entry) : Number(t.entry) - Number(t.exit); return d / pipSizeOf(t.symbol); }
+
+/* Modal awal akun (dasar perhitungan %) — sama dengan kartu Performance */
+function acctStartBal(account) { const h = (account && account.capitalHistory) || []; const dep = h.filter(x => x.type !== 'withdraw').reduce((a, x) => a + (Number(x.amount) || 0), 0), wd = h.filter(x => x.type === 'withdraw').reduce((a, x) => a + (Number(x.amount) || 0), 0); return Math.max(((account && account.balance) || 0) - dep + wd, 1); }
+function tradePips(t) { return t && t.status === 'closed' ? pipsOf(t) : 0; }
+function fmtPctS(v) { const x = Number(v) || 0; return (x > 0 ? '+' : x < 0 ? '-' : '') + Math.abs(x).toFixed(2) + '%'; }
+function fmtPipsS(v) { const x = Number(v) || 0; return (x > 0 ? '+' : x < 0 ? '-' : '') + Math.abs(x).toFixed(1) + ' pips'; }

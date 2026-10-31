@@ -208,3 +208,8 @@ button,[role="button"]{-webkit-tap-highlight-color:transparent}
 button:focus,button:focus-visible,[role="button"]:focus,[role="button"]:focus-visible{outline:none!important}
 .bottom-nav .nav-item:before{animation:none!important;transition:none!important}
 
+
+.week-head .pp-col{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none}
+.week-head .pp-col b{font:500 13px 'DM Mono',monospace}.week-head .pp-col small{margin:0;font:500 10px 'DM Mono',monospace;color:inherit;opacity:.78}
+.date-label em{display:flex;flex-direction:column;align-items:flex-end;gap:2px}.date-label em .dl-sub{font-size:.88em;opacity:.78}
+.trade-result .tr-sub{white-space:nowrap}
