@@ -209,7 +209,12 @@ button:focus,button:focus-visible,[role="button"]:focus,[role="button"]:focus-vi
 .bottom-nav .nav-item:before{animation:none!important;transition:none!important}
 
 
-.week-head .pp-col{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none}
-.week-head .pp-col b{font:500 13px 'DM Mono',monospace}.week-head .pp-col small{margin:0;font:500 10px 'DM Mono',monospace;color:inherit;opacity:.78}
-.date-label em{display:flex;flex-direction:column;align-items:flex-end;gap:2px}.date-label em .dl-sub{font-size:.88em;opacity:.78}
+.week-head{flex-wrap:wrap}.week-head>div:first-child{flex:1}
+.pos-strip{display:grid;grid-template-columns:.95fr 1.05fr .9fr 1.15fr;width:100%;font:500 11px 'DM Mono',monospace;color:#8a97b8;white-space:nowrap}
+.pos-strip>span{text-align:center;padding:0 2px;border-left:1px solid #243457;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.pos-strip>span:first-child{border-left:0;text-align:left;padding-left:0;color:#8a97b8}
+.pos-strip>span:last-child{text-align:right;padding-right:0}
+.week-head .pos-strip{margin-top:8px;font-size:11px}
+.date-label{flex-direction:column;gap:7px;margin:14px 2px 9px}
+.week-head>.pos-strip{flex:0 0 100%}.pos-strip{letter-spacing:0;text-transform:none}
 .trade-result .tr-sub{white-space:nowrap}

@@ -1,5 +1,22 @@
 /* Tampilan login dan kartu Sinkron online (memakai cloud-sync.js) */
 "use strict";
+
+/* Login: ingat email di perangkat, kolom password dengan ikon mata, simpan kredensial ke pengelola sandi bila didukung */
+function loginEmailGet() { try { return localStorage.getItem('ej3-login-email') || ''; } catch (e) { return ''; } }
+function loginRemember(email, pw) {
+    try { localStorage.setItem('ej3-login-email', String(email || '').trim()); } catch (e) { }
+    try { if (window.PasswordCredential && navigator.credentials && pw) navigator.credentials.store(new window.PasswordCredential({ id: String(email).trim(), password: pw, name: String(email).trim() })); } catch (e) { }
+}
+function PwInput({ value, onChange, placeholder, name, autoComplete }) {
+    const [show, setShow] = useState(false);
+    return React.createElement("div", { className: "pw-wrap" },
+        React.createElement("input", { type: show ? "text" : "password", name: name || "password", id: name || "password", autoComplete: autoComplete || "current-password", autoCapitalize: "none", autoCorrect: "off", spellCheck: false, value: value, onChange: onChange, placeholder: placeholder }),
+        React.createElement("button", { type: "button", className: "pw-eye", "aria-label": show ? "Sembunyikan password" : "Tampilkan password", "aria-pressed": show, onClick: () => setShow(!show) },
+            React.createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", fill: "none", stroke: "currentColor", strokeWidth: "1.9", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" },
+                React.createElement("path", { d: "M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" }),
+                React.createElement("circle", { cx: 12, cy: 12, r: 3 }),
+                show && React.createElement("path", { d: "M4 4l16 16" }))));
+}
 async function cleanReload() {
     try { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); } catch (e) { }
     try { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } catch (e) { }
@@ -21,7 +38,7 @@ function AuthGate({ children }) {
     const [skip, setSkip] = useState(() => { try { return sessionStorage.getItem('edge-gate-skip') === '1'; } catch (e) { return false; } });
     const [entered, setEntered] = useState(false);
     const [late, setLate] = useState(false);
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(loginEmailGet);
     const [pw, setPw] = useState('');
     const [busy, setBusy] = useState(false);
     const [msg, setMsg] = useState('');
@@ -90,23 +107,23 @@ function AuthGate({ children }) {
             msg && React.createElement("p", { className: "gate-err" }, msg)));
     const err = msg || (st && st.state === 'offline' && st.message) || '';
     return React.createElement("div", { className: "gate gate-art" }, heroBrand,
-        React.createElement("form", { className: "gate-box", onSubmit: e => { e.preventDefault(); if (email && pw) run(() => cs.signIn(email, pw)); } },
+        React.createElement("form", { className: "gate-box", autoComplete: "on", method: "post", onSubmit: e => { e.preventDefault(); if (email && pw) run(async () => { await cs.signIn(email, pw); loginRemember(email, pw); }); } },
             React.createElement("h1", null, "Masuk"),
             React.createElement("p", null, "Data jurnal tersimpan online di akun Anda dan otomatis muncul di perangkat mana pun."),
             React.createElement("label", null, "Email",
-                React.createElement("input", { type: "email", name: "email", autoComplete: "username", inputMode: "email", value: email, onChange: e => setEmail(e.target.value), placeholder: "email@anda.com" })),
+                React.createElement("input", { type: "email", name: "email", id: "email", autoComplete: "username", autoCapitalize: "none", inputMode: "email", value: email, onChange: e => setEmail(e.target.value), placeholder: "email@anda.com" })),
             React.createElement("label", null, "Password",
-                React.createElement("input", { type: "password", name: "password", autoComplete: "current-password", value: pw, onChange: e => setPw(e.target.value), placeholder: "Password" })),
+                React.createElement(PwInput, { value: pw, onChange: e => setPw(e.target.value), placeholder: "Password" })),
             err && React.createElement("p", { className: "gate-err" }, err),
             React.createElement("button", { className: "gate-btn", type: "submit", disabled: busy || !email || !pw }, busy ? 'Memproses…' : 'Masuk'),
             React.createElement("div", { className: "gate-row" },
-                React.createElement("button", { className: "gate-sec", type: "button", disabled: busy || !email || !pw, onClick: () => run(() => cs.signUp(email, pw)) }, "Daftar baru"),
+                React.createElement("button", { className: "gate-sec", type: "button", disabled: busy || !email || !pw, onClick: () => run(async () => { await cs.signUp(email, pw); loginRemember(email, pw); }) }, "Daftar baru"),
                 React.createElement("button", { className: "gate-sec", type: "button", disabled: busy || !email, onClick: () => run(async () => { await cs.resetPassword(email); setMsg('Email reset password dikirim. Periksa kotak masuk/spam.'); }) }, "Lupa password")),
             React.createElement("button", { className: "gate-link", type: "button", onClick: () => { try { sessionStorage.setItem('edge-gate-skip', '1'); } catch (e) { } setSkip(true); } }, "Lanjut tanpa masuk (data hanya di perangkat ini)")));
 }
 function CloudSyncCard() {
     const [st, setSt] = useState(() => (window.cloudSync && window.cloudSync.getStatus()) || null);
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(loginEmailGet);
     const [pw, setPw] = useState('');
     const [busy, setBusy] = useState(false);
     const [msg, setMsg] = useState('');
@@ -151,9 +168,9 @@ function CloudSyncCard() {
             React.createElement("label", null, "Email",
                 React.createElement("input", { type: "email", autoComplete: "username", inputMode: "email", value: email, onChange: e => setEmail(e.target.value), placeholder: "email@anda.com" })),
             React.createElement("label", null, "Password",
-                React.createElement("input", { type: "password", autoComplete: "current-password", value: pw, onChange: e => setPw(e.target.value), placeholder: "minimal 6 karakter" }))),
+                React.createElement(PwInput, { value: pw, onChange: e => setPw(e.target.value), placeholder: "minimal 6 karakter" }))),
         React.createElement("div", { className: "button-row" },
-            React.createElement("button", { className: "secondary-btn", disabled: busy || !email || !pw, onClick: () => run(() => cs.signIn(email, pw)) }, busy ? 'Memproses…' : 'Masuk'),
+            React.createElement("button", { className: "secondary-btn", disabled: busy || !email || !pw, onClick: () => run(async () => { await cs.signIn(email, pw); loginRemember(email, pw); }) }, busy ? 'Memproses…' : 'Masuk'),
             React.createElement("button", { className: "secondary-btn", disabled: busy || !email || !pw, onClick: () => run(() => cs.signUp(email, pw)) }, "Daftar"),
             React.createElement("button", { className: "secondary-btn", disabled: busy || !email, onClick: () => run(() => cs.resetPassword(email), 'Email reset password dikirim. Periksa kotak masuk/spam.') }, "Lupa password")),
         (msg || st.message) && React.createElement("p", { className: "sync-note warn" }, msg || st.message));

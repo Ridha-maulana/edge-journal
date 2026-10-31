@@ -1,5 +1,13 @@
 /* Halaman My Journal dan kartu trade */
 "use strict";
+function PosStrip({ n, pnl, pct, pips, cur }) {
+    const cls = pnl > 0 ? 'positive' : pnl < 0 ? 'negative' : '';
+    return React.createElement("div", { className: "pos-strip" },
+        React.createElement("span", { className: "ps-n" }, n + ' posisi'),
+        React.createElement("span", { className: cls }, (pnl >= 0 ? '+' : '') + money(pnl, cur)),
+        React.createElement("span", { className: cls }, fmtPctS(pct)),
+        React.createElement("span", { className: cls }, fmtPipsS(pips)));
+}
 function Journal({ account, trades, filters, setFilters, expanded, setExpanded, onAdd, onScan, onDelete, onClose, onEdit }) {
     const [addMenu, setAddMenu] = useState(false);
     const fileRef = useRef(null);
@@ -40,27 +48,13 @@ function Journal({ account, trades, filters, setFilters, expanded, setExpanded, 
         (() => { const isoOf = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; const weeks = {}; Object.keys(groups).forEach(day => { const d = new Date(`${day}T12:00`); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const wk = isoOf(d); (weeks[wk] || (weeks[wk] = {}))[day] = groups[day]; }); return Object.keys(weeks).sort().reverse().map((wk, wi) => { const w = weeks[wk]; const list = Object.values(w).flat(); const wsum = sumOf(list), pnl = wsum.pnl; const st = new Date(`${wk}T12:00`); const en = new Date(st); en.setDate(st.getDate() + 6); const open = openWeeks[wk] !== undefined ? openWeeks[wk] : !!filters.date; const label = `${st.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} - ${en.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`; return React.createElement("div", { className: "week-block", key: wk },
             React.createElement("button", { className: "week-head", onClick: () => setOpenWeeks({ ...openWeeks, [wk]: !open }) },
                 React.createElement("div", null,
-                    React.createElement("strong", null, label),
-                    React.createElement("small", null,
-                        list.length,
-                        " posisi")),
-                React.createElement("div", { className: `pp-col ${pnl >= 0 ? 'positive' : 'negative'}` },
-                    React.createElement("b", null,
-                        pnl >= 0 ? '+' : '',
-                        money(pnl, account.currency)),
-                    React.createElement("small", null, fmtPctS(pnl / startBal * 100) + ' \u00B7 ' + fmtPipsS(wsum.pips))),
-                React.createElement(ChevronDown, { size: 17, className: open ? 'rotate' : '' })),
+                    React.createElement("strong", null, label)),
+                React.createElement(ChevronDown, { size: 17, className: open ? 'rotate' : '' }),
+                React.createElement(PosStrip, { n: list.length, pnl: pnl, pct: pnl / startBal * 100, pips: wsum.pips, cur: account.currency })),
             open && Object.keys(w).sort((x, y) => y.localeCompare(x)).map(day => { const dsum = sumOf(w[day]), dp = dsum.pnl; return React.createElement("div", { key: day },
                 React.createElement("div", { className: "date-label" },
                     React.createElement("span", null, new Date(`${day}T12:00`).toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })),
-                    React.createElement("em", { className: dp >= 0 ? 'positive' : 'negative' },
-                        React.createElement("span", null,
-                            dp >= 0 ? '+' : '',
-                            money(dp, account.currency),
-                            " \u00B7 ",
-                            w[day].length,
-                            " posisi"),
-                        React.createElement("span", { className: "dl-sub" }, fmtPctS(dp / startBal * 100) + ' \u00B7 ' + fmtPipsS(dsum.pips)))),
+                    React.createElement(PosStrip, { n: w[day].length, pnl: dp, pct: dp / startBal * 100, pips: dsum.pips, cur: account.currency })),
                 w[day].map(t => React.createElement(TradeCard, { key: t.id, trade: t, startBal: startBal, expanded: expanded === t.id, onToggle: () => setExpanded(expanded === t.id ? null : t.id), onDelete: () => onDelete(t.id), onClose: () => onClose(t), onEdit: () => onEdit(t) }))); })); }); })(),
         !filtered.length && React.createElement("div", { className: "empty-state" },
             React.createElement(BookOpen, { size: 26 }),

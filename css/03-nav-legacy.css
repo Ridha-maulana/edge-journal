@@ -67,3 +67,8 @@
 @keyframes navIcoIn{0%{transform:translateY(3px) scale(.82)}60%{transform:translateY(-1px) scale(1.1)}100%{transform:none}}
 @media(prefers-reduced-motion:reduce){#splash,#splash *{animation:none!important;transition:none!important}#splash .sp-text strong,#splash .sp-text span{opacity:1!important}}
 
+
+.pw-wrap{position:relative;margin-top:6px}
+.pw-wrap input{margin-top:0!important;padding-right:50px!important}
+.pw-eye{position:absolute;top:0;right:0;bottom:0;width:48px;display:grid;place-items:center;background:none;border:0;color:#8a97b8;border-radius:0 12px 12px 0;cursor:pointer}
+.pw-eye:active,.pw-eye[aria-pressed=true]{color:#cfe0ff}

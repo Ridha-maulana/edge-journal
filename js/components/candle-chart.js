@@ -260,11 +260,14 @@ function CandleChart({ candles, tf, mode, resetKey, startBal }) {
         (() => {
             const dv = act.c - act.o, dpips = (act.pc || 0) - (act.po || 0), up = dv >= 0, base = startBal || 1;
             const cc = dv > 0 ? '#34d399' : dv < 0 ? '#ff6b81' : '#9aa7c5';
-            return React.createElement("text", { x: L, y: 45, fontSize: "11", fontWeight: "700", fill: cc },
-                dv === 0 ? "Datar " : up ? "Naik " : "Turun ",
-                candleNum(dv),
-                React.createElement("tspan", { dx: "6" }, `(${fmtPctS(dv / base * 100)})`),
-                React.createElement("tspan", { dx: "6" }, fmtPipsS(dpips)));
+            const ty = 36; // segitiga naik / turun (ikon, bukan tulisan)
+            const tri = dv > 0 ? `M${L},${ty + 7} L${L + 8},${ty + 7} L${L + 4},${ty - 1} Z` : dv < 0 ? `M${L},${ty - 1} L${L + 8},${ty - 1} L${L + 4},${ty + 7} Z` : `M${L},${ty + 3} L${L + 8},${ty + 3}`;
+            return React.createElement("g", null,
+                dv === 0 ? React.createElement("path", { d: tri, stroke: cc, strokeWidth: "2", strokeLinecap: "round" }) : React.createElement("path", { d: tri, fill: cc }),
+                React.createElement("text", { x: L + 14, y: 45, fontSize: "11", fontWeight: "600", fill: cc },
+                    candleNum(dv),
+                    React.createElement("tspan", { dx: "9" }, `(${fmtPctS(dv / base * 100)})`),
+                    React.createElement("tspan", { dx: "9" }, fmtPipsS(dpips))));
         })(),
         isL && React.createElement("text", { x: L, y: 29, fontSize: "11", fontWeight: "600" },
             React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, "P&L "),
