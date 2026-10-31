@@ -85,7 +85,7 @@ const CANDLE_DEF = 120, CANDLE_MIN = 5, CANDLE_FLOOR = 8;
 function candleDef(n) { return Math.max(CANDLE_FLOOR, Math.min(CANDLE_DEF, n)); }
 function CandleChart({ candles, tf, mode, resetKey, startBal }) {
     const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
-    const W = 500, H = 428, T = 52, B = 26, L = 6, AX = 46;
+    const W = 500, H = 428, T = 68, B = 26, L = 6, AX = 46;
     const plotW = W - L - AX;
     const n = candles.length;
     const def = candleDef(n);
@@ -257,25 +257,25 @@ function CandleChart({ candles, tf, mode, resetKey, startBal }) {
             React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500", dx: "6" },
                 act.n,
                 " trade")),
-        (() => {
-            const dv = act.c - act.o, dpips = (act.pc || 0) - (act.po || 0), up = dv >= 0, base = startBal || 1;
+        (() => { // bentuk E: angka perubahan besar + % di sampingnya, lalu pips | O H L C
+            const dv = act.c - act.o, dpips = (act.pc || 0) - (act.po || 0), base = startBal || 1;
             const cc = dv > 0 ? '#34d399' : dv < 0 ? '#ff6b81' : '#9aa7c5';
-            const ty = 36; // segitiga naik / turun (ikon, bukan tulisan)
-            const tri = dv > 0 ? `M${L},${ty + 7} L${L + 8},${ty + 7} L${L + 4},${ty - 1} Z` : dv < 0 ? `M${L},${ty - 1} L${L + 8},${ty - 1} L${L + 4},${ty + 7} Z` : `M${L},${ty + 3} L${L + 8},${ty + 3}`;
+            const y0 = 27, hh = 11; // segitiga naik / turun (ikon)
+            const tri = dv > 0 ? `M${L},${y0 + hh} L${L + 12},${y0 + hh} L${L + 6},${y0} Z` : dv < 0 ? `M${L},${y0} L${L + 12},${y0} L${L + 6},${y0 + hh} Z` : `M${L},${y0 + 6} L${L + 12},${y0 + 6}`;
+            const vc = isL ? (act.c >= 0 ? '#34d399' : '#ff6b81') : col(act);
             return React.createElement("g", null,
-                dv === 0 ? React.createElement("path", { d: tri, stroke: cc, strokeWidth: "2", strokeLinecap: "round" }) : React.createElement("path", { d: tri, fill: cc }),
-                React.createElement("text", { x: L + 14, y: 45, fontSize: "11", fontWeight: "600", fill: cc },
+                dv === 0 ? React.createElement("path", { d: tri, stroke: cc, strokeWidth: "2.4", strokeLinecap: "round" }) : React.createElement("path", { d: tri, fill: cc }),
+                React.createElement("text", { x: L + 19, y: 39, fontSize: "21", fontWeight: "800", fill: cc },
                     candleNum(dv),
-                    React.createElement("tspan", { dx: "9" }, `(${fmtPctS(dv / base * 100)})`),
-                    React.createElement("tspan", { dx: "9" }, fmtPipsS(dpips))));
+                    React.createElement("tspan", { fontSize: "13.5", fontWeight: "700", dx: "9" }, fmtPctS(dv / base * 100))),
+                React.createElement("text", { x: L, y: 58, fontSize: "10.5", fontWeight: "700", fill: cc },
+                    fmtPipsS(dpips),
+                    React.createElement("tspan", { fill: "#2b3a60", fontWeight: "400", dx: "8" }, "|"),
+                    isL ? [React.createElement("tspan", { key: "pl", fill: "#7d8bab", fontWeight: "500", dx: "8" }, "P&L "), React.createElement("tspan", { key: "pv", fill: vc, fontWeight: "600" }, candleNum(act.c))]
+                        : [['O', act.o], ['H', act.h], ['L', act.l], ['C', act.c]].map(([l, v], j) => React.createElement("tspan", { key: l, fill: vc, fontWeight: "600", dx: j ? "9" : "8" },
+                            React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, l + " "),
+                            candleNum(v)))));
         })(),
-        isL && React.createElement("text", { x: L, y: 29, fontSize: "11", fontWeight: "600" },
-            React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, "P&L "),
-            React.createElement("tspan", { fill: act.c >= 0 ? '#34d399' : '#ff6b81' }, candleNum(act.c))),
-        !isL && React.createElement("text", { x: L, y: 29, fontSize: "11", fontWeight: "600" },
-            [['O', act.o], ['H', act.h], ['L', act.l], ['C', act.c]].map(([l, v], j) => React.createElement("tspan", { key: l, fill: col(act), dx: j ? "9" : "0" },
-                React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, l + " "),
-                candleNum(v)))),
         (Math.abs(o - def0) > 0.5 || Math.abs(vy) > 2 || Math.abs(vs - 1) > .02 || Math.abs(cnt - def) > 1) && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, "tekan skala = reset"),
         Math.abs(cnt - def) > 1 && React.createElement("text", { x: W - AX - 2, y: 29, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, Math.round(cnt) + " kandel"));
 }
