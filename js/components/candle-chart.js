@@ -77,20 +77,24 @@ function candleNum(v) {
     const s = a >= 10000 ? (a / 1000).toFixed(1) + 'k' : a >= 1000 ? (a / 1000).toFixed(2) + 'k' : a >= 100 ? a.toFixed(0) : a.toFixed(2);
     return (v < 0 ? '-' : v > 0 ? '+' : '') + s;
 }
-const CANDLE_DEF = 120, CANDLE_MIN = 10;
+const CANDLE_DEF = 120, CANDLE_MIN = 5, CANDLE_FLOOR = 8;
+// tampilan awal: sebanyak kandel yang ada (maks 120); kurang dari 8 tetap selebar 8 slot, mulai dari kiri
+function candleDef(n) { return Math.max(CANDLE_FLOOR, Math.min(CANDLE_DEF, n)); }
 function CandleChart({ candles, tf, mode, resetKey }) {
     const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
     const W = 500, H = 428, T = 36, B = 26, L = 6, AX = 46;
     const plotW = W - L - AX;
     const n = candles.length;
-    const [count, setCount] = useState(CANDLE_DEF); // jumlah kandel yang tampak (zoom jari)
+    const def = candleDef(n);
+    const [count, setCount] = useState(def); // jumlah kandel yang tampak (zoom jari)
     const maxCount = Math.max(CANDLE_DEF, Math.min(500, n * 2));
+    const def0 = Math.min(0, n - def); // jika kandel < 8: kandel pertama tetap di kiri
     const cnt = Math.max(CANDLE_MIN, Math.min(maxCount, count));
     const SW = plotW / cnt;
     const offMax = c => Math.max(0, n - 3); // boleh digeser sampai tinggal 3 kandel di sisi kanan
-    const offMin = c => -Math.max(3, c - 3); // dan ke ruang kosong di kanan (bebas seperti MT5)
+    const offMin = c => Math.min(-Math.max(3, c - 3), n - c); // dan ke ruang kosong di kanan (bebas seperti MT5)
     const clampOff = (v, c) => Math.max(offMin(c), Math.min(offMax(c), v));
-    const [off, setOff] = useState(0); // jumlah kandel digeser dari ujung kanan (terbaru)
+    const [off, setOff] = useState(def0); // jumlah kandel digeser dari ujung kanan (terbaru)
     const [vy, setVy] = useState(0); // geser vertikal (satuan viewBox)
     const [vs, setVs] = useState(1); // skala vertikal (cubit dua jari vertikal)
     const [sel, setSel] = useState(null);
@@ -100,7 +104,7 @@ function CandleChart({ candles, tf, mode, resetKey }) {
     const svgRef = useRef(null);
     const [fresh, setFresh] = useState(true); // animasi tumbuh hanya saat jenis/skala berganti
     // ganti skala / data / tekan ulang tombol skala: kembali ke tampilan awal (120 kandel, terbaru di kanan)
-    useEffect(() => { setOff(0); setVy(0); setVs(1); setSel(null); setCount(CANDLE_DEF); setFresh(true); const tm = setTimeout(() => setFresh(false), 900); return () => clearTimeout(tm); }, [tf, n, resetKey]);
+    useEffect(() => { setOff(def0); setVy(0); setVs(1); setSel(null); setCount(def); setFresh(true); const tm = setTimeout(() => setFresh(false), 900); return () => clearTimeout(tm); }, [tf, n, resetKey]);
     // dua jari = zoom: cegah halaman ikut bergulir / ter-zoom browser
     useEffect(() => {
         const el = svgRef.current;
@@ -257,8 +261,8 @@ function CandleChart({ candles, tf, mode, resetKey }) {
             [['O', act.o], ['H', act.h], ['L', act.l], ['C', act.c]].map(([l, v], j) => React.createElement("tspan", { key: l, fill: col(act), dx: j ? "9" : "0" },
                 React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, l + " "),
                 candleNum(v)))),
-        (Math.abs(o) > 0.5 || Math.abs(vy) > 2 || Math.abs(vs - 1) > .02 || Math.abs(cnt - CANDLE_DEF) > 1) && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, "tekan skala = reset"),
-        Math.abs(cnt - CANDLE_DEF) > 1 && React.createElement("text", { x: W - AX - 2, y: 29, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, Math.round(cnt) + " kandel"));
+        (Math.abs(o - def0) > 0.5 || Math.abs(vy) > 2 || Math.abs(vs - 1) > .02 || Math.abs(cnt - def) > 1) && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, "tekan skala = reset"),
+        Math.abs(cnt - def) > 1 && React.createElement("text", { x: W - AX - 2, y: 29, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, Math.round(cnt) + " kandel"));
 }
 
 function candleSavedGet(k, d) { try {
