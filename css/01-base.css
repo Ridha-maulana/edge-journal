@@ -221,3 +221,7 @@ button:focus,button:focus-visible,[role="button"]:focus,[role="button"]:focus-vi
 .candle-banner{background:var(--panel);border:1px solid #2f4a8a;border-radius:12px;padding:12px 14px;margin:0 0 12px}
 .candle-banner .cb-title{font-size:12px;color:#8a97b8;margin-bottom:8px}.candle-banner .cb-title b{color:#eef2ff;font-weight:800;margin-left:4px}
 .candle-banner .cb-title{display:flex;align-items:center}.candle-banner .cb-x{margin-left:auto;background:none;border:0;color:#8a97b8;padding:2px;display:grid;place-items:center}
+.week-head.gj-main{border-color:#2f4a8a;cursor:default}
+.gj-sec{font:500 10px 'DM Mono',monospace;color:#8590a8;letter-spacing:1px;margin:14px 2px 8px;text-transform:uppercase}
+.gj-chart{background:#0f1830;border:1px solid #243457;border-radius:12px;padding:10px;margin:8px 0 10px}
+.gj-chart .hero-chart{margin:0}

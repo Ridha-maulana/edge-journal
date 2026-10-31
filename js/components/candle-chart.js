@@ -84,9 +84,9 @@ function candleNum(v) {
 const CANDLE_DEF = 120, CANDLE_MIN = 5, CANDLE_FLOOR = 8;
 // tampilan awal: sebanyak kandel yang ada (maks 120); kurang dari 8 tetap selebar 8 slot, mulai dari kiri
 function candleDef(n) { return Math.max(CANDLE_FLOOR, Math.min(CANDLE_DEF, n)); }
-function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen }) {
+function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh }) {
     const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
-    const W = 500, H = 428, T = 68, B = 26, L = 6, AX = 46;
+    const W = 500, H = hh || 428, T = 68, B = 26, L = 6, AX = 46;
     const plotW = W - L - AX;
     const n = candles.length;
     const def = candleDef(n);
@@ -212,7 +212,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen }) {
                 const now = Date.now(), lt = lastTap.current;
                 if (lt.i === best && now - lt.t < 380 && onOpen && candles[best] && candles[best].ids) {
                     lastTap.current = { t: 0, i: -1 };
-                    onOpen(candles[best]);
+                    onOpen(candles[best], tf);
                 }
                 else
                     lastTap.current = { t: now, i: best };
@@ -228,7 +228,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen }) {
     const step = Math.max(1, Math.ceil(58 / SW));
     const col = c => c.c > c.o ? '#34d399' : c.c < c.o ? '#ff6b81' : '#9aa7c5';
     const bw = Math.max(1.4, SW * .62), wk = Math.max(.9, Math.min(1.6, bw * .55));
-    return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, ref: svgRef, className: "combo-chart candle-chart", onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerCancel: cancel },
+    return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, ref: svgRef, style: hh ? { aspectRatio: `500/${hh}` } : undefined, className: "combo-chart candle-chart", onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerCancel: cancel },
         React.createElement("defs", null,
             React.createElement("clipPath", { id: "cdclip" },
                 React.createElement("rect", { x: L, y: T - 4, width: plotW, height: H - T - B + 8 }))),
@@ -301,18 +301,20 @@ function candleSavedSet(k, v) { try {
     localStorage.setItem(k, v);
 }
 catch (_) { } }
-function HeroChart({ trades, line, startBal, onOpen }) {
+function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh }) {
     const [kind, setKind] = useState(() => candleSavedGet('ej3-chart-kind', 'line'));
-    const [tf, setTf] = useState(() => candleSavedGet('ej3-chart-tf', 'SES'));
+    const keep = persist !== false;
+    const tfList = tfs ? CANDLE_TFS.filter(([k]) => tfs.includes(k)) : CANDLE_TFS;
+    const [tf, setTf] = useState(() => keep ? candleSavedGet('ej3-chart-tf', 'SES') : (defTf || tfList[0][0]));
     const pick = (k) => { setKind(k); candleSavedSet('ej3-chart-kind', k); };
     const [rk, setRk] = useState(0);
-    const pickTf = (v) => { setTf(v); candleSavedSet('ej3-chart-tf', v); setRk(r => r + 1); };
+    const pickTf = (v) => { setTf(v); if (keep) candleSavedSet('ej3-chart-tf', v); setRk(r => r + 1); };
     const candles = useMemo(() => buildCandles(trades, tf), [trades, tf]);
     const isLine = kind !== 'candle';
     return React.createElement("div", { className: "hero-chart" },
-        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen })),
+        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen, hh: hh })),
         React.createElement("div", { className: "chart-tools" },
-            React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
+            React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala grafik" }, tfList.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
             React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },
                 React.createElement("span", { className: "ct-thumb" }),
                 React.createElement("svg", { className: "ct-ic ic-candle", viewBox: "0 0 24 24", width: "20", height: "20", "aria-hidden": "true" },

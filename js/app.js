@@ -19,7 +19,7 @@ function App() {
     const [scan, setScan] = useState(null);
     const [batch, setBatch] = useState(null);
     const [expanded, setExpanded] = useState(null);
-    const [journalFilters, setJournalFilters] = useState({ search: '', status: 'all', side: 'all', date: '', ids: null, idsLabel: '' });
+    const [journalFilters, setJournalFilters] = useState({ search: '', status: 'all', side: 'all', date: '', ids: null, idsLabel: '', groupKind: null });
     window.__applyRemoteState = text => {
         try {
             const d = JSON.parse(text);
@@ -98,8 +98,8 @@ function App() {
     catch {
         notify('File backup tidak valid.');
     } }; reader.readAsText(file); }
-    function openCandle(c) { const stop = e => { e.stopPropagation(); e.preventDefault(); }; document.addEventListener('click', stop, true); setTimeout(() => document.removeEventListener('click', stop, true), 600); setJournalFilters({ search: '', status: 'all', side: 'all', date: '', ids: c.ids, idsLabel: c.label }); setExpanded(null); setTab('journal'); window.scrollTo(0, 0); }
-    function chooseCalendarDate(date) { setJournalFilters({ ...journalFilters, date, ids: null, idsLabel: '' }); setTab('journal'); setShowCalendar(false); }
+    function openCandle(c, tf) { const stop = e => { e.stopPropagation(); e.preventDefault(); }; document.addEventListener('click', stop, true); setTimeout(() => document.removeEventListener('click', stop, true), 600); setJournalFilters({ search: '', status: 'all', side: 'all', date: '', ids: c.ids, idsLabel: c.label, groupKind: (tf === 'M1' || tf === 'Y1') ? tf : null }); setExpanded(null); setTab('journal'); window.scrollTo(0, 0); }
+    function chooseCalendarDate(date) { setJournalFilters({ ...journalFilters, date, ids: null, idsLabel: '', groupKind: null }); setTab('journal'); setShowCalendar(false); }
     return React.createElement("div", { className: "app-shell" },
         React.createElement("header", { className: "topbar" },
             React.createElement("div", { className: "brand" },
