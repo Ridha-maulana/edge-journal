@@ -1,6 +1,6 @@
 /* Halaman Performance */
 "use strict";
-function Performance({ onSelectDate, onWallet, account, trades, period, setPeriod, customStart, customEnd, setCustomStart, setCustomEnd }) {
+function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, period, setPeriod, customStart, customEnd, setCustomStart, setCustomEnd }) {
     const [rangeOpen, setRangeOpen] = useState(false);
     const [performanceView, setPerformanceView] = useState('overview');
     const [shareOpen, setShareOpen] = useState(false);
@@ -144,7 +144,7 @@ function Performance({ onSelectDate, onWallet, account, trades, period, setPerio
                     React.createElement("div", null,
                         React.createElement("span", null, "Hari aktif"),
                         React.createElement("b", null, activeDays))),
-                React.createElement(HeroChart, { startBal: startBal, trades: cs, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
+                React.createElement(HeroChart, { startBal: startBal, onOpen: onOpenCandle, trades: cs, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
                 React.createElement("div", { className: "combo-legend" },
                     React.createElement("span", null,
                         React.createElement("i", { style: { background: '#34d399' } }),

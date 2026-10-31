@@ -19,7 +19,7 @@ function App() {
     const [scan, setScan] = useState(null);
     const [batch, setBatch] = useState(null);
     const [expanded, setExpanded] = useState(null);
-    const [journalFilters, setJournalFilters] = useState({ search: '', status: 'all', side: 'all', date: '' });
+    const [journalFilters, setJournalFilters] = useState({ search: '', status: 'all', side: 'all', date: '', ids: null, idsLabel: '' });
     window.__applyRemoteState = text => {
         try {
             const d = JSON.parse(text);
@@ -98,7 +98,8 @@ function App() {
     catch {
         notify('File backup tidak valid.');
     } }; reader.readAsText(file); }
-    function chooseCalendarDate(date) { setJournalFilters({ ...journalFilters, date }); setTab('journal'); setShowCalendar(false); }
+    function openCandle(c) { const stop = e => { e.stopPropagation(); e.preventDefault(); }; document.addEventListener('click', stop, true); setTimeout(() => document.removeEventListener('click', stop, true), 600); setJournalFilters({ search: '', status: 'all', side: 'all', date: '', ids: c.ids, idsLabel: c.label }); setExpanded(null); setTab('journal'); window.scrollTo(0, 0); }
+    function chooseCalendarDate(date) { setJournalFilters({ ...journalFilters, date, ids: null, idsLabel: '' }); setTab('journal'); setShowCalendar(false); }
     return React.createElement("div", { className: "app-shell" },
         React.createElement("header", { className: "topbar" },
             React.createElement("div", { className: "brand" },
@@ -126,7 +127,7 @@ function App() {
                     React.createElement("strong", null, activeAccount.name),
                     React.createElement("small", null, money(activeAccount.balance, activeAccount.currency)))),
             React.createElement("main", { className: "main-content" },
-                tab === 'performance' && React.createElement(Performance, { onSelectDate: chooseCalendarDate, onWallet: () => { setAccountMode('capital'); setShowAccount(true); }, account: activeAccount, trades: trades, period: period, setPeriod: setPeriod, customStart: customStart, customEnd: customEnd, setCustomStart: setCustomStart, setCustomEnd: setCustomEnd }),
+                tab === 'performance' && React.createElement(Performance, { onOpenCandle: openCandle, onSelectDate: chooseCalendarDate, onWallet: () => { setAccountMode('capital'); setShowAccount(true); }, account: activeAccount, trades: trades, period: period, setPeriod: setPeriod, customStart: customStart, customEnd: customEnd, setCustomStart: setCustomStart, setCustomEnd: setCustomEnd }),
                 tab === 'journal' && React.createElement(Journal, { account: activeAccount, trades: trades, filters: journalFilters, setFilters: setJournalFilters, expanded: expanded, setExpanded: setExpanded, onAdd: openAdd, onScan: scanScreenshot, onDelete: deleteTrade, onClose: setClosingTrade, onEdit: setEditingTrade }),
                 tab === 'account' && React.createElement(AccountPage, { accounts: accounts, activeAccount: activeAccount, onSelect: selectAccount, onCreate: addAccount, onDelete: deleteAccount, onUpdate: updateAccount, onCapital: recordCapital, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson }),
                 tab === 'tools' && React.createElement(Tools, { account: activeAccount, trades: trades, onAdd: openAdd, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson, onNewAccount: () => setShowAccount(true) }))),

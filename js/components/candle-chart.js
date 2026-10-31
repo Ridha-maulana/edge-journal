@@ -67,9 +67,10 @@ function buildCandles(trades, tf) {
             cur.l = Math.min(cur.l, before, after);
             cur.n++;
             cur.pc = pa;
+            cur.ids.push(t.id);
         }
         else {
-            cur = { k, label, short, o: before, c: after, h: Math.max(before, after), l: Math.min(before, after), n: 1, po: pb, pc: pa };
+            cur = { k, label, short, o: before, c: after, h: Math.max(before, after), l: Math.min(before, after), n: 1, po: pb, pc: pa, ids: [t.id] };
             out.push(cur);
         }
     });
@@ -83,7 +84,7 @@ function candleNum(v) {
 const CANDLE_DEF = 120, CANDLE_MIN = 5, CANDLE_FLOOR = 8;
 // tampilan awal: sebanyak kandel yang ada (maks 120); kurang dari 8 tetap selebar 8 slot, mulai dari kiri
 function candleDef(n) { return Math.max(CANDLE_FLOOR, Math.min(CANDLE_DEF, n)); }
-function CandleChart({ candles, tf, mode, resetKey, startBal }) {
+function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen }) {
     const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
     const W = 500, H = 428, T = 68, B = 26, L = 6, AX = 46;
     const plotW = W - L - AX;
@@ -104,6 +105,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal }) {
     const drag = useRef(null);
     const ptrs = useRef(new Map());
     const pinch = useRef(null);
+    const lastTap = useRef({ t: 0, i: -1 });
     const svgRef = useRef(null);
     const [fresh, setFresh] = useState(true); // animasi tumbuh hanya saat jenis/skala berganti
     // ganti skala / data / tekan ulang tombol skala: kembali ke tampilan awal (120 kandel, terbaru di kanan)
@@ -204,8 +206,17 @@ function CandleChart({ candles, tf, mode, resetKey, startBal }) {
                 bd = dd;
                 best = i;
             } });
-            if (best >= 0 && bd < Math.max(SW, 9))
+            if (best >= 0 && bd < Math.max(SW, 9)) {
                 setSel(best);
+                // ketuk dua kali pada kandel yang sama: buka My Journal berisi posisi dalam kandel itu
+                const now = Date.now(), lt = lastTap.current;
+                if (lt.i === best && now - lt.t < 380 && onOpen && candles[best] && candles[best].ids) {
+                    lastTap.current = { t: 0, i: -1 };
+                    onOpen(candles[best]);
+                }
+                else
+                    lastTap.current = { t: now, i: best };
+            }
         }
     };
     const cancel = e => { ptrs.current.delete(e.pointerId); if (ptrs.current.size < 2)
@@ -290,7 +301,7 @@ function candleSavedSet(k, v) { try {
     localStorage.setItem(k, v);
 }
 catch (_) { } }
-function HeroChart({ trades, line, startBal }) {
+function HeroChart({ trades, line, startBal, onOpen }) {
     const [kind, setKind] = useState(() => candleSavedGet('ej3-chart-kind', 'line'));
     const [tf, setTf] = useState(() => candleSavedGet('ej3-chart-tf', 'SES'));
     const pick = (k) => { setKind(k); candleSavedSet('ej3-chart-kind', k); };
@@ -299,7 +310,7 @@ function HeroChart({ trades, line, startBal }) {
     const candles = useMemo(() => buildCandles(trades, tf), [trades, tf]);
     const isLine = kind !== 'candle';
     return React.createElement("div", { className: "hero-chart" },
-        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal })),
+        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen })),
         React.createElement("div", { className: "chart-tools" },
             React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
             React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },
