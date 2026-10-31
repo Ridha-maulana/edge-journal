@@ -87,8 +87,12 @@ function CandleChart({ candles, tf, mode, resetKey }) {
     const maxCount = Math.max(CANDLE_DEF, Math.min(500, n * 2));
     const cnt = Math.max(CANDLE_MIN, Math.min(maxCount, count));
     const SW = plotW / cnt;
-    const maxOff = Math.max(0, n - cnt);
+    const offMax = c => Math.max(0, n - 3); // boleh digeser sampai tinggal 3 kandel di sisi kanan
+    const offMin = c => -Math.max(3, c - 3); // dan ke ruang kosong di kanan (bebas seperti MT5)
+    const clampOff = (v, c) => Math.max(offMin(c), Math.min(offMax(c), v));
     const [off, setOff] = useState(0); // jumlah kandel digeser dari ujung kanan (terbaru)
+    const [vy, setVy] = useState(0); // geser vertikal (satuan viewBox)
+    const [vs, setVs] = useState(1); // skala vertikal (cubit dua jari vertikal)
     const [sel, setSel] = useState(null);
     const drag = useRef(null);
     const ptrs = useRef(new Map());
@@ -96,7 +100,7 @@ function CandleChart({ candles, tf, mode, resetKey }) {
     const svgRef = useRef(null);
     const [fresh, setFresh] = useState(true); // animasi tumbuh hanya saat jenis/skala berganti
     // ganti skala / data / tekan ulang tombol skala: kembali ke tampilan awal (120 kandel, terbaru di kanan)
-    useEffect(() => { setOff(0); setSel(null); setCount(CANDLE_DEF); setFresh(true); const tm = setTimeout(() => setFresh(false), 900); return () => clearTimeout(tm); }, [tf, n, resetKey]);
+    useEffect(() => { setOff(0); setVy(0); setVs(1); setSel(null); setCount(CANDLE_DEF); setFresh(true); const tm = setTimeout(() => setFresh(false), 900); return () => clearTimeout(tm); }, [tf, n, resetKey]);
     // dua jari = zoom: cegah halaman ikut bergulir / ter-zoom browser
     useEffect(() => {
         const el = svgRef.current;
@@ -108,20 +112,24 @@ function CandleChart({ candles, tf, mode, resetKey }) {
         el.addEventListener('touchmove', stop, { passive: false });
         return () => { el.removeEventListener('touchstart', stop); el.removeEventListener('touchmove', stop); };
     }, [n]);
-    const o = Math.max(0, Math.min(maxOff, off));
-    const shown = candles.slice(Math.max(0, Math.floor(n - o - cnt) - 1), Math.ceil(n - o) + 1);
+    const o = clampOff(off, cnt);
+    const shown = candles.slice(Math.max(0, Math.floor(n - o - cnt) - 1), Math.max(0, Math.min(n, Math.ceil(n - o) + 1)));
     let lo = Infinity, hi = -Infinity;
     shown.forEach(c => { lo = Math.min(lo, isL ? c.c : c.l); hi = Math.max(hi, isL ? c.c : c.h); });
     if (!isFinite(lo)) { lo = 0; hi = 1; }
     if (hi - lo < 1e-6) { hi += 1; lo -= 1; }
     const pad = (hi - lo) * .08;
     lo -= pad; hi += pad;
+    { // skala vertikal (di sekitar tengah) lalu geser vertikal bebas
+        const mid = (lo + hi) / 2, half = (hi - lo) / 2 / vs, d = vy * (hi - lo) / vs / (H - T - B);
+        lo = mid - half + d; hi = mid + half + d;
+    }
     const y = v => T + (hi - v) / (hi - lo) * (H - T - B);
     // posisi x: kandel terbaru di kanan, bergeser halus saat digeser
     const x = i => L + plotW - SW / 2 - ((n - 1 - i) - o) * SW;
     const ix = sel != null && sel >= 0 && sel < n ? sel : Math.min(n - 1, Math.max(0, n - 1 - Math.floor(o)));
     const act = candles[ix];
-    const dist = () => { const p = [...ptrs.current.values()]; return Math.max(8, Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y)); };
+    const pair = () => { const p = [...ptrs.current.values()]; return { dx: Math.abs(p[0].x - p[1].x), dy: Math.abs(p[0].y - p[1].y) }; };
     const down = e => {
         ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
         try {
@@ -134,34 +142,41 @@ function CandleChart({ candles, tf, mode, resetKey }) {
             const px = ((p[0].x + p[1].x) / 2 - r.left) / r.width * W;
             // kandel (indeks pecahan) tepat di antara dua jari — dijaga tetap di bawah jari saat zoom
             const idx = (n - 1) - o - (L + plotW - SW / 2 - px) / SW;
-            pinch.current = { d0: dist(), c0: cnt, px, idx, w: r.width };
+            const q = pair();
+            pinch.current = { dx0: q.dx, dy0: q.dy, c0: cnt, v0: vs, px, idx, w: r.width };
             drag.current = null;
             return;
         }
         if (ptrs.current.size === 1)
-            drag.current = { x: e.clientX, off: o, moved: false, w: r.width };
+            drag.current = { x: e.clientX, y: e.clientY, off: o, vy: vy, moved: false, w: r.width };
     };
     const move = e => {
         if (ptrs.current.has(e.pointerId))
             ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
         const pz = pinch.current;
         if (pz && ptrs.current.size >= 2) {
-            const nc = Math.max(CANDLE_MIN, Math.min(maxCount, pz.c0 * pz.d0 / dist()));
+            const q = pair();
+            let nc = pz.c0;
+            if (pz.dx0 >= 30)
+                nc = Math.max(CANDLE_MIN, Math.min(maxCount, pz.c0 * pz.dx0 / Math.max(8, q.dx)));
+            if (pz.dy0 >= 40)
+                setVs(Math.max(.25, Math.min(6, pz.v0 * Math.max(8, q.dy) / pz.dy0)));
             const sw2 = plotW / nc;
+            // titik di antara dua jari tidak bergerak (bebas, bukan terkunci ke kandel terbaru)
             const no = (n - 1) - pz.idx - (L + plotW - sw2 / 2 - pz.px) / sw2;
             setCount(nc);
-            setOff(Math.max(0, Math.min(Math.max(0, n - nc), no)));
+            setOff(clampOff(no, nc));
             return;
         }
         const d = drag.current;
         if (!d)
             return;
-        const dx = e.clientX - d.x;
-        if (Math.abs(dx) > 4)
+        const dx = e.clientX - d.x, dy = e.clientY - d.y;
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4)
             d.moved = true;
         if (d.moved) {
-            const unit = dx / d.w * W / SW;
-            setOff(Math.max(0, Math.min(maxOff, d.off + unit)));
+            setOff(clampOff(d.off + dx / d.w * W / SW, cnt));
+            setVy(Math.max(-H * .9, Math.min(H * .9, d.vy + dy / d.w * W)));
         }
     };
     const up = e => {
@@ -242,7 +257,7 @@ function CandleChart({ candles, tf, mode, resetKey }) {
             [['O', act.o], ['H', act.h], ['L', act.l], ['C', act.c]].map(([l, v], j) => React.createElement("tspan", { key: l, fill: col(act), dx: j ? "9" : "0" },
                 React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, l + " "),
                 candleNum(v)))),
-        o > 0.5 && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: "#7d8bab" }, "← geser →"),
+        (Math.abs(o) > 0.5 || Math.abs(vy) > 2 || Math.abs(vs - 1) > .02 || Math.abs(cnt - CANDLE_DEF) > 1) && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, "tekan skala = reset"),
         Math.abs(cnt - CANDLE_DEF) > 1 && React.createElement("text", { x: W - AX - 2, y: 29, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, Math.round(cnt) + " kandel"));
 }
 
