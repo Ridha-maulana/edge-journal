@@ -84,7 +84,7 @@ function candleNum(v) {
 const CANDLE_DEF = 120, CANDLE_MIN = 5, CANDLE_FLOOR = 8;
 // tampilan awal: sebanyak kandel yang ada (maks 120); kurang dari 8 tetap selebar 8 slot, mulai dari kiri
 function candleDef(n) { return Math.max(CANDLE_FLOOR, Math.min(CANDLE_DEF, n)); }
-function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed }) {
+function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed, onSelect }) {
     const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
     const W = 500, H = hh || 428, T = 68, B = 26, L = 6, AX = 46;
     const plotW = W - L - AX;
@@ -210,6 +210,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed 
             } });
             if (best >= 0 && bd < Math.max(SW, 9)) {
                 setSel(best);
+                if (onSelect && candles[best]) onSelect(candles[best], tf);
                 // ketuk dua kali pada kandel yang sama: buka My Journal berisi posisi dalam kandel itu
                 const now = Date.now(), lt = lastTap.current;
                 if (lt.i === best && now - lt.t < 380 && onOpen && candles[best] && candles[best].ids) {
@@ -303,18 +304,18 @@ function candleSavedSet(k, v) { try {
     localStorage.setItem(k, v);
 }
 catch (_) { } }
-function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fixed }) {
+function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fixed, onSelect }) {
     const [kind, setKind] = useState(() => candleSavedGet('ej3-chart-kind', 'line'));
     const keep = persist !== false;
     const tfList = tfs ? CANDLE_TFS.filter(([k]) => tfs.includes(k)) : CANDLE_TFS;
     const [tf, setTf] = useState(() => keep ? candleSavedGet('ej3-chart-tf', 'SES') : (defTf || tfList[0][0]));
-    const pick = (k) => { setKind(k); candleSavedSet('ej3-chart-kind', k); };
+    const pick = (k) => { setKind(k); candleSavedSet('ej3-chart-kind', k); if (onSelect) onSelect(null, tf); };
     const [rk, setRk] = useState(0);
-    const pickTf = (v) => { setTf(v); if (keep) candleSavedSet('ej3-chart-tf', v); setRk(r => r + 1); };
+    const pickTf = (v) => { if (onSelect) onSelect(null, v); setTf(v); if (keep) candleSavedSet('ej3-chart-tf', v); setRk(r => r + 1); };
     const candles = useMemo(() => buildCandles(trades, tf), [trades, tf]);
     const isLine = kind !== 'candle';
     return React.createElement("div", { className: "hero-chart" },
-        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen, hh: hh, fixed: fixed })),
+        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen, hh: hh, fixed: fixed, onSelect: onSelect })),
         React.createElement("div", { className: "chart-tools" },
             React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala grafik" }, tfList.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
             React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },

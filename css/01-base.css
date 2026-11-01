@@ -225,3 +225,5 @@ button:focus,button:focus-visible,[role="button"]:focus,[role="button"]:focus-vi
 .gj-sec{font:500 10px 'DM Mono',monospace;color:#8590a8;letter-spacing:1px;margin:14px 2px 8px;text-transform:uppercase}
 .gj-chart{background:#0f1830;border:1px solid #243457;border-radius:12px;padding:10px;margin:8px 0 10px}
 .gj-chart .hero-chart{margin:0}
+
+.week-head.wk-hl{border-color:#5d83ff;background:#15204a}
