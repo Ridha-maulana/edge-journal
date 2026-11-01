@@ -1,4 +1,4 @@
-const C='ej3-5.0.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.1.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -9,7 +9,7 @@ const SHELL=[
   './assets/login-art.webp',
   './css/01-base.css',
   './css/02-splash.css',
-  './css/15-header-variants.css',
+  './css/15-header-variants.css', './css/16-design-system.css',
   './css/03-nav-legacy.css',
   './css/04-drilldown.css',
   './css/05-nav-simple-fullscreen.css',

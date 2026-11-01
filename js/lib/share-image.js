@@ -5,7 +5,7 @@ function drawShareImage(d) {
     c.width = W;
     c.height = H;
     const x = c.getContext('2d');
-    const F = 'Manrope, system-ui, sans-serif', M = "'DM Mono', ui-monospace, monospace", G = '#34d399', R = '#ff6b81', col = d.total >= 0 ? G : R;
+    const F = 'Manrope, system-ui, sans-serif', M = F, G = '#34d399', R = '#ff6b81', col = d.total >= 0 ? G : R;
     const rr = (a, b, w, h, r) => { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); };
     const t = (str, px, py, size, color, weight, align, font) => { x.font = `${weight || 500} ${size}px ${font || F}`; x.fillStyle = color; x.textAlign = align || 'left'; x.fillText(str, px, py); };
     let g = x.createLinearGradient(0, 0, W, H);

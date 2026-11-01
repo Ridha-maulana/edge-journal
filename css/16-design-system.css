@@ -1,0 +1,42 @@
+/* ===== v5.1.0 — Design system: satu sumber nilai untuk sudut, ukuran, jarak, dan font =====
+   Ubah angka di :root ini, seluruh aplikasi ikut berubah. Jangan menulis angka sendiri di file CSS lain. */
+:root{
+  /* satu jenis font untuk seluruh aplikasi */
+  --font:Manrope,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  /* sudut: sedang — tidak kotak, tidak bulat (bulat penuh 50% hanya logo, avatar, titik) */
+  --r-xs:6px;   /* label kecil, batang */
+  --r-md:10px;  /* tombol, input, tombol ikon, pil akun, kotak isi */
+  --r-lg:14px;  /* kartu, panel */
+  --r-xl:20px;  /* lembar bawah (modal/sheet) */
+  /* skala font */
+  --fs-xs:10px; --fs-sm:12px; --fs-md:14px; --fs-lg:16px; --fs-xl:20px; --fs-2xl:28px;
+  /* tinggi kontrol */
+  --h-sm:32px; --h-md:40px; --h-lg:48px;
+  /* kelipatan 4px untuk jarak */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+}
+:root,body,button,input,select,textarea{font-family:var(--font)}
+/* angka sama lebar di seluruh aplikasi (pengganti font mono); !important karena shorthand "font" mereset varian angka */
+*,*:before,*:after{font-variant-numeric:tabular-nums!important}
+/* tombol & kontrol: satu tinggi */
+.header-icon,.icon-btn{width:var(--h-md);height:var(--h-md);border-radius:var(--r-md)}
+.account-switcher{height:var(--h-md);padding:0 var(--s3)}
+.search-box,.filter-chip,.journal-controls .tsel,.tsel,.dfield{min-height:var(--h-md);height:var(--h-md)}
+.primary-btn,.secondary-btn{min-height:var(--h-md);padding-top:0;padding-bottom:0}
+.pill{min-height:var(--h-sm);display:inline-flex;align-items:center;border-radius:var(--r-md)}
+.ct-chip,.ct-pill{min-height:var(--h-sm)}
+/* penyesuaian agar tidak ada teks yang turun baris setelah ukuran diseragamkan */
+.topbar:not([class*="hd-v"]){padding-left:var(--s4);padding-right:var(--s4)}
+.brand strong,.brand span{white-space:nowrap}
+.account-switcher .acc-name{font-size:var(--fs-sm);max-width:96px}
+.bottom-nav .nav-item,.bottom-nav .nav-item span{font-size:var(--fs-xs)}
+.hero-facts span{padding:var(--s2)}
+.brand{gap:var(--s2)}
+.brand span{letter-spacing:1px}
+.account-switcher{padding:0 10px;gap:var(--s1)}
+.hero-facts{gap:var(--s1) var(--s3)}
+.hero-facts span{gap:var(--s1);padding:var(--s1) 0}
+.hv-d .combo-legend{gap:var(--s1) var(--s2)}.hv-d .combo-legend i{margin-right:var(--s1)}.hv-d .combo-legend span{letter-spacing:-.01em}
+.hv-d .combo-legend{font-size:var(--fs-xs)}
+.hd-v2 .brand span,.hd-v5 .brand span,.hd-v7 .brand span{letter-spacing:.5px}
+.hd-v2 .account-switcher .acc-name,.hd-v5 .hd-two .acc-name{max-width:72px}

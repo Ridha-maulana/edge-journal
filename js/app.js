@@ -103,7 +103,7 @@ function App() {
     function openCandle(c, tf) { const stop = e => { e.stopPropagation(); e.preventDefault(); }; document.addEventListener('click', stop, true); setTimeout(() => document.removeEventListener('click', stop, true), 600); setJournalFilters({ search: '', status: 'all', side: 'all', date: '', ids: c.ids, idsLabel: c.label, groupKind: (tf === 'M1' || tf === 'Y1') ? tf : null }); setExpanded(null); setTab('journal'); window.scrollTo(0, 0); }
     function chooseCalendarDate(date) { setJournalFilters({ ...journalFilters, date, ids: null, idsLabel: '', groupKind: null }); setTab('journal'); setShowCalendar(false); }
     return React.createElement("div", { className: "app-shell" },
-        React.createElement(AppHeader, { variant: headerV, account: activeAccount, tabLabel: { performance: 'Performance', journal: 'My Journal', tools: 'Tools', account: 'Profil' }[tab] || '', onCalendar: () => setShowCalendar(true), onAccount: () => { setAccountMode('manage'); setShowAccount(true); } }),
+        React.createElement(AppHeader, { variant: headerV, account: activeAccount, onCalendar: () => setShowCalendar(true), onAccount: () => { setAccountMode('manage'); setShowAccount(true); } }),
         React.createElement("div", { className: "desktop-layout" },
             React.createElement("aside", { className: "side-nav" },
                 React.createElement("div", { className: "side-nav-title" }, "WORKSPACE"),

@@ -1,10 +1,10 @@
-/* Header atas aplikasi — 11 gaya (0 = standar, 1–10 = desain baru), dipilih di Profil → Tampilan header */
+/* Header atas aplikasi — 9 gaya (standar + 8 desain baru), dipilih di Profil → Tampilan header */
 "use strict";
 const HEADER_KEY = 'ej3-header';
-const HEADER_NAMES = ['Standar (lama)', 'Minimal satu baris', 'Bilah kaca', 'Akun jadi judul', 'Simetris tengah', 'Saldo di pil akun', 'Banner gradasi', 'Status sinkron', 'Judul besar halaman', 'Kartu mengambang', 'Strip tanggal'];
+const HEADER_LIST = [[0, 'Standar (lama)'], [1, 'Minimal satu baris'], [2, 'Bilah kaca'], [3, 'Akun jadi judul'], [5, 'Saldo di pil akun'], [6, 'Banner gradasi'], [7, 'Status sinkron'], [9, 'Kartu mengambang'], [10, 'Strip tanggal']];
 function headerVariantGet() { try {
     const v = localStorage.getItem(HEADER_KEY);
-    return v !== null && /^\d+$/.test(v) && Number(v) <= 10 ? Number(v) : 0;
+    return v !== null && /^\d+$/.test(v) && HEADER_LIST.some(x => x[0] === Number(v)) ? Number(v) : 0;
 }
 catch (_) {
     return 0;
@@ -40,7 +40,7 @@ function useSyncText() {
     return { ok: true, text: 'Tersinkron · ' + (ago === null || ago < 1 ? 'baru saja' : ago < 60 ? ago + ' mnt lalu' : ago < 1440 ? Math.round(ago / 60) + ' jam lalu' : Math.round(ago / 1440) + ' hari lalu') };
 }
 function headerSession() { const h = wib(new Date()).hour; return h >= 6 && h < 12 ? 'Asia' : h >= 12 && h < 20 ? 'London' : 'New York'; }
-function AppHeader({ variant, account, tabLabel, onCalendar, onAccount }) {
+function AppHeader({ variant, account, onCalendar, onAccount }) {
     const v = Number(variant) || 0;
     const sync = useSyncText();
     const name = account.name, initial = (name || '?').trim().charAt(0).toUpperCase();
@@ -57,13 +57,9 @@ function AppHeader({ variant, account, tabLabel, onCalendar, onAccount }) {
         case 1: return wrap('', [h("div", { className: "brand hd-name", key: 'b' }, logo(), h("strong", null, "Edge Journal")), h("div", { className: "top-actions", key: 'r' }, cal, acc([h("i", { className: "hd-dot", key: 'd' }), nameEl, chev]))]);
         case 2: return wrap('', [brand(true), h("div", { className: "top-actions", key: 'r' }, cal, acc([av, nameEl, chev]))]);
         case 3: return wrap('', [h("button", { className: "hd-acct-title", key: 't', onClick: onAccount, "aria-label": "Account management" }, h("small", null, "AKUN AKTIF · " + account.currency), h("span", null, h("strong", null, name), chev)), h("div", { className: "top-actions", key: 'r' }, cal, logo())]);
-        case 4: return wrap('', [acc([av, nameEl, chev]), h("div", { className: "hd-stack", key: 's' }, logo(), h("strong", null, "EDGE JOURNAL")), cal]);
         case 5: return wrap('', [brand(true), h("div", { className: "top-actions", key: 'r' }, cal, acc([h("span", { className: "hd-two", key: 'n' }, h("span", { className: "acc-name" }, name), h("em", null, money(acctNowBal(account), account.currency))), chev]))]);
         case 6: return wrap('', [brand(true), h("div", { className: "top-actions", key: 'r' }, cal, acc([h(UserRound, { size: 15, key: 'u' }), nameEl, chev]))]);
         case 7: return wrap('', [brand('sync'), h("div", { className: "top-actions", key: 'r' }, cal, acc([av, nameEl]))]);
-        case 8: return h(React.Fragment, null,
-            wrap('', [logo(), h("div", { className: "top-actions", key: 'r' }, cal, acc([av, chev]))]),
-            h("div", { className: "hd-title" }, h("h1", null, tabLabel), h("p", null, name + ' · ' + new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }))));
         case 9: return wrap('', h("div", { className: "hd-card" }, brand(true), h("div", { className: "top-actions" }, cal, h("i", { className: "hd-sep" }), acc([av, chev]))));
         case 10: return wrap('', [h("div", { className: "hd-row", key: 'a' }, brand(true), acc([h(UserRound, { size: 15, key: 'u' }), nameEl, chev])), h("div", { className: "hd-strip", key: 'b' }, h("button", { onClick: onCalendar }, h(CalendarDays, { size: 14 }), " " + new Date().toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })), h("span", { className: "hd-ses" }, h("i", { className: "hd-dot" }), "Sesi aktif: ", h("b", null, headerSession())))]);
         default: return h("header", { className: "topbar" }, h("div", { className: "brand" }, logo(), h("div", null, h("strong", null, "EDGE JOURNAL"), h("span", null, "TRADING LOGBOOK"))), h("div", { className: "top-actions" }, cal, acc([h(UserRound, { size: 15, key: 'u' }), nameEl, chev])));
@@ -76,6 +72,6 @@ function HeaderPicker({ value, onChange }) {
             React.createElement("div", { className: "tool-icon" }, React.createElement(UserRound, null)),
             React.createElement("div", null,
                 React.createElement("h2", null, "Tampilan header"),
-                React.createElement("p", null, "Coba 10 gaya header atas, langsung terlihat di bagian atas layar. Pilihan tersimpan di perangkat ini."))),
-        React.createElement("div", { className: "hd-picker" }, HEADER_NAMES.map((n, i) => React.createElement("button", { key: i, type: "button", className: value === i ? 'on' : '', onClick: () => onChange(i) }, React.createElement("b", null, i === 0 ? '·' : i), " ", n))));
+                React.createElement("p", null, "Coba 8 gaya header atas, langsung terlihat di bagian atas layar. Pilihan tersimpan di perangkat ini."))),
+        React.createElement("div", { className: "hd-picker" }, HEADER_LIST.map((x, i) => React.createElement("button", { key: x[0], type: "button", className: value === x[0] ? 'on' : '', onClick: () => onChange(x[0]) }, React.createElement("b", null, i === 0 ? '·' : i), " ", x[1]))));
 }
