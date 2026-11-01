@@ -375,3 +375,4 @@
 - v5.1.1: tab Account management satu baris; jarak tepi halaman (atas dan samping) dipersempit jadi 8px; semua gaya header setinggi standar (72px); pemilih "Tampilan header" dipindah dari Profil ke halaman Tools.
 - v5.1.2: halaman Advanced Statistics dan Trader DNA ikut jarak samping 8px; tinggi grafik di Performance menyesuaikan tinggi layar otomatis sehingga kartu utama dan tombol Share/Stats/DNA muat penuh di atas menu bawah (jarak 8px).
 - v5.1.3: kartu utama Performance langsung pas sejak tampilan pertama (tidak ada animasi menyesuaikan/menarik ke bawah): tinggi grafik dihitung sebelum layar digambar dan diingat per ukuran layar.
+- v5.1.4: tombol aksi di judul halaman (ikon di Tools, Add trade di My Journal) sejajar dengan judul; kotak tanggal kalender hampir persegi dengan "5 posisi" satu baris; kartu Restore Last Backup dirapikan (input file tidak tampil, tombol seragam).

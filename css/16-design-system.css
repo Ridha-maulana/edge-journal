@@ -49,3 +49,20 @@
 .account-tabs button{white-space:nowrap;padding:12px 6px;font-size:var(--fs-sm)}
 /* halaman Advanced Statistics dan Trader DNA: jarak samping sama dengan halaman lain */
 @media(max-width:760px){.performance-detail-page{padding-left:var(--s2);padding-right:var(--s2)}}
+/* judul halaman: tombol aksi (ikon pengaturan / Add trade) sejajar dengan baris judul */
+.page-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:var(--s3)}
+.page-heading>div:first-child{display:contents}
+.page-heading .eyebrow,.page-heading .muted{grid-column:1/-1}
+.page-heading h1{grid-column:1;grid-row:2}
+.page-heading>:last-child:not(:first-child){grid-column:2;grid-row:2;margin:0}
+/* kalender: kotak tanggal hampir persegi, isi di tengah, "5 posisi" satu baris */
+.pe-card .cal-week,.pe-card .cal-grid{gap:var(--s1)}
+.pe-card .cal-cell{min-height:0;height:52px;padding:var(--s1) 2px;align-items:center;justify-content:center;text-align:center;gap:1px;border-radius:var(--r-md)}
+.pe-card .cal-cell .cal-day{line-height:1.2}
+.pe-card .cal-cell b,.pe-card .cal-cell small{line-height:1.2;white-space:nowrap;letter-spacing:-.02em}
+.pe-card .cal-cell small{font-size:var(--fs-xs)}
+/* kartu backup: input file tidak boleh tampil, tombol rapi */
+.backup-row input[type=file]{display:none!important}
+.backup-row>div:nth-child(2){flex:1;min-width:0}
+.backup-row .secondary-btn,.backup-row label.secondary-btn{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:var(--s2);margin:0;min-width:96px;height:var(--h-md);padding:0 var(--s3);flex:none}
+.backup-row label.secondary-btn{font-size:var(--fs-sm);color:#cedaff}
