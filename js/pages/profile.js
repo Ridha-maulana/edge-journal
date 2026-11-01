@@ -1,11 +1,12 @@
 /* Halaman Profil (Account management, sinkron online, backup, export) */
 "use strict";
-function AccountPage({ accounts, activeAccount, onSelect, onCreate, onDelete, onUpdate, onCapital, onExport, onBackup, onRestore }) {
+function AccountPage({ headerVariant, onHeaderVariant, accounts, activeAccount, onSelect, onCreate, onDelete, onUpdate, onCapital, onExport, onBackup, onRestore }) {
     return React.createElement("section", null,
         React.createElement(PageHeading, { eyebrow: "PROFIL / PENGATURAN", title: "Profil", description: "Akun trading, sinkron online, backup, dan export." }),
         React.createElement("div", { className: "tool-grid" },
             React.createElement(AccountModal, { inline: true, key: activeAccount.id + ':' + accounts.length, accounts: accounts, activeAccount: activeAccount, onSelect: onSelect, onCreate: onCreate, onDelete: onDelete, onUpdate: onUpdate, onCapital: onCapital, onBackup: onBackup, onRestore: onRestore, onExport: onExport }),
             React.createElement(CloudSyncCard, null),
+            React.createElement(HeaderPicker, { value: headerVariant || 0, onChange: onHeaderVariant }),
         React.createElement("div", { className: "tool-card" },
             React.createElement("div", { className: "tool-head" },
                 React.createElement("div", { className: "tool-icon purple" },

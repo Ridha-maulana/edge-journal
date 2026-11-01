@@ -10,6 +10,7 @@ function App() {
     const [customEnd, setCustomEnd] = useState('');
     const [showCalendar, setShowCalendar] = useState(false);
     const [navHidden, setNavHidden] = useState(false);
+    const [headerV, setHeaderV] = useState(headerVariantGet);
     const [showAccount, setShowAccount] = useState(false);
     const [accountMode, setAccountMode] = useState('manage');
     const [showAdd, setShowAdd] = useState(false);
@@ -102,20 +103,7 @@ function App() {
     function openCandle(c, tf) { const stop = e => { e.stopPropagation(); e.preventDefault(); }; document.addEventListener('click', stop, true); setTimeout(() => document.removeEventListener('click', stop, true), 600); setJournalFilters({ search: '', status: 'all', side: 'all', date: '', ids: c.ids, idsLabel: c.label, groupKind: (tf === 'M1' || tf === 'Y1') ? tf : null }); setExpanded(null); setTab('journal'); window.scrollTo(0, 0); }
     function chooseCalendarDate(date) { setJournalFilters({ ...journalFilters, date, ids: null, idsLabel: '', groupKind: null }); setTab('journal'); setShowCalendar(false); }
     return React.createElement("div", { className: "app-shell" },
-        React.createElement("header", { className: "topbar" },
-            React.createElement("div", { className: "brand" },
-                React.createElement("div", { className: "brand-mark" },
-                    React.createElement(Zap, { size: 18 })),
-                React.createElement("div", null,
-                    React.createElement("strong", null, "EDGE JOURNAL"),
-                    React.createElement("span", null, "TRADING LOGBOOK"))),
-            React.createElement("div", { className: "top-actions" },
-                React.createElement("button", { className: "header-icon", onClick: () => setShowCalendar(true), "aria-label": "Buka kalender" },
-                    React.createElement(CalendarDays, { size: 17 })),
-                React.createElement("button", { className: "account-switcher", onClick: () => { setAccountMode('manage'); setShowAccount(true); }, "aria-label": "Account management" },
-                    React.createElement(UserRound, { size: 15 }),
-                    React.createElement("span", { className: "acc-name" }, activeAccount.name),
-                    React.createElement(ChevronDown, { size: 13 })))),
+        React.createElement(AppHeader, { variant: headerV, account: activeAccount, tabLabel: { performance: 'Performance', journal: 'My Journal', tools: 'Tools', account: 'Profil' }[tab] || '', onCalendar: () => setShowCalendar(true), onAccount: () => { setAccountMode('manage'); setShowAccount(true); } }),
         React.createElement("div", { className: "desktop-layout" },
             React.createElement("aside", { className: "side-nav" },
                 React.createElement("div", { className: "side-nav-title" }, "WORKSPACE"),
@@ -130,7 +118,7 @@ function App() {
             React.createElement("main", { className: "main-content" },
                 tab === 'performance' && React.createElement(Performance, { onOpenCandle: openCandle, onSelectDate: chooseCalendarDate, onWallet: () => { setAccountMode('capital'); setShowAccount(true); }, account: activeAccount, trades: trades, period: period, setPeriod: setPeriod, customStart: customStart, customEnd: customEnd, setCustomStart: setCustomStart, setCustomEnd: setCustomEnd }),
                 tab === 'journal' && React.createElement(Journal, { account: activeAccount, trades: trades, filters: journalFilters, setFilters: setJournalFilters, expanded: expanded, setExpanded: setExpanded, onAdd: openAdd, onScan: scanScreenshot, onDelete: deleteTrade, onClose: setClosingTrade, onEdit: setEditingTrade }),
-                tab === 'account' && React.createElement(AccountPage, { accounts: accounts, activeAccount: activeAccount, onSelect: selectAccount, onCreate: addAccount, onDelete: deleteAccount, onUpdate: updateAccount, onCapital: recordCapital, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson }),
+                tab === 'account' && React.createElement(AccountPage, { headerVariant: headerV, onHeaderVariant: v => { setHeaderV(v); headerVariantSet(v); window.scrollTo(0, 0); }, accounts: accounts, activeAccount: activeAccount, onSelect: selectAccount, onCreate: addAccount, onDelete: deleteAccount, onUpdate: updateAccount, onCapital: recordCapital, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson }),
                 tab === 'tools' && React.createElement(Tools, { account: activeAccount, trades: trades, onAdd: openAdd, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson, onNewAccount: () => setShowAccount(true) }))),
         React.createElement("nav", { className: navHidden ? "bottom-nav nav-hidden" : "bottom-nav" },
             React.createElement(NavItem, { active: tab === 'performance' && !showAdd, onClick: () => goTab('performance'), icon: React.createElement(BarChart3, null), label: "Performance" }),
