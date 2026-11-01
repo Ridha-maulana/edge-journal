@@ -32,3 +32,22 @@ html,body{background:#090d18}
 #splash .sp-text{display:flex;flex-direction:column;justify-content:center}
 #splash .sp-text strong{font-size:calc(13 * var(--k));letter-spacing:calc(1.2 * var(--k));line-height:normal}
 #splash .sp-text span{margin-top:calc(2 * var(--k));font-size:calc(8 * var(--k));letter-spacing:calc(1.5 * var(--k));line-height:normal}
+
+
+/* ===== v4.10.0 — layar pembuka baru (desain 8A): logo besar di tengah, nama di bawahnya, bilah pemuat di dasar =====
+   Warna mengikuti aplikasi: navy #090d18 dengan kilau biru lembut. */
+#splash{background:#090d18}
+#splash::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#17235c 0%,#0d1431 48%,#090d18 82%);animation:spBg .8s ease both!important}
+#splash .sp-glow{display:none}
+#splash .sp-lockup{flex-direction:column;align-items:center;gap:0;padding:0;margin-bottom:12vh}
+#splash .sp-mark{width:clamp(76px,22.5vw,96px);height:clamp(76px,22.5vw,96px);box-shadow:0 18px 50px rgba(69,100,232,.55)}
+#splash .sp-text{display:flex;flex-direction:column;align-items:center;text-align:center;margin-top:clamp(20px,6.6vw,28px)}
+#splash .sp-text strong{font-size:clamp(19px,6.2vw,26px);letter-spacing:.13em;line-height:1.1;animation:spTextUp .6s cubic-bezier(.16,1,.3,1) .5s both!important}
+#splash .sp-text span{margin-top:clamp(8px,2.4vw,11px);font-size:clamp(9.5px,2.9vw,12px);letter-spacing:.3em;line-height:1;animation:spTextUp .6s cubic-bezier(.16,1,.3,1) .62s both!important}
+#splash .sp-bar{position:absolute;left:24%;right:24%;bottom:8%;height:3px;border-radius:3px;background:#1a2342;overflow:hidden;opacity:0;animation:spBarIn .5s ease .8s both!important}
+#splash .sp-bar i{display:block;width:42%;height:100%;border-radius:3px;background:linear-gradient(90deg,#4564e8,#34d399);animation:spBarRun 1.25s cubic-bezier(.45,0,.35,1) .8s infinite!important}
+@keyframes spTextUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spBg{from{opacity:0}to{opacity:1}}
+@keyframes spBarIn{from{opacity:0}to{opacity:1}}
+@keyframes spBarRun{from{transform:translateX(-105%)}to{transform:translateX(250%)}}
+@media(prefers-reduced-motion:reduce){#splash .sp-text strong,#splash .sp-text span,#splash .sp-bar{opacity:1!important}}

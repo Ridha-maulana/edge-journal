@@ -13,12 +13,13 @@ window.__splashMin=1350;
     var W=innerWidth;
     var lk=mk.offsetParent.getBoundingClientRect(),w=mk.offsetWidth; if(!w)return;   /* ukuran layout, tidak terpengaruh transform */
     var mx=lk.left+mk.offsetLeft+w/2;
+    var my=lk.top+mk.offsetTop+w/2;     /* titik tengah logo di layout baru (bertumpuk): tidak lagi sejajar tengah layar */
     var size=Math.min(W*0.4722,520);    /* logo awal = lingkaran splash Android hasil ukur video (47,2% lebar layar, tepat di tengah LAYAR) */
     var native=false; try{native=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());}catch(e){}
     var standalone=false; try{standalone=!!((window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone);}catch(e){}
     /* Splash Android berpusat di tengah layar penuh, sedangkan halaman web berada di bawah bilah status.
        Geser titik awal animasi supaya lingkaran tidak melompat turun (bilah bawah dianggap rata dengan layar). */
-    var sy=0; if(native||standalone){var d=(innerHeight-screen.height)/2; if(d<0&&d>-90)sy=d;}
+    var sy=innerHeight/2-my; if(native||standalone){var d=(innerHeight-screen.height)/2; if(d<0&&d>-90)sy+=d;}
     sp.style.setProperty('--ss',(size/w).toFixed(4));
     sp.style.setProperty('--sx',(W/2-mx).toFixed(1)+'px');
     sp.style.setProperty('--sy',sy.toFixed(1)+'px');

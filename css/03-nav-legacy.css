@@ -21,7 +21,7 @@
 .tool-card .button-row button:disabled{opacity:.5}
 .gate{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));background:#090d18;overflow:auto}
 .gate-brand{display:flex;align-items:center;gap:14px}
-.gate-mark{display:grid;place-items:center;width:58px;height:58px;border-radius:28%;background:linear-gradient(135deg,#6a8bff,#4564e8);box-shadow:0 10px 38px rgba(69,100,232,.5);color:#fff}
+.gate-mark{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#6a8bff,#4564e8);box-shadow:0 12px 40px rgba(69,100,232,.55);color:#fff}
 .gate-brand strong{display:block;font-size:22px;font-weight:800;letter-spacing:.13em;color:#eef2ff;line-height:1.1;white-space:nowrap}
 .gate-brand span{display:block;margin-top:6px;font-size:11px;letter-spacing:.3em;color:#64708a;white-space:nowrap}
 .gate-box{width:100%;max-width:380px;background:#111729;border:1px solid #25304f;border-radius:20px;padding:20px}
@@ -40,7 +40,7 @@
 .gate-art>:first-child{margin-top:auto}.gate-art>:last-child{margin-bottom:auto}
 .gate-hero{--h:min(35vh,88vw);position:relative;flex:none;height:var(--h);width:calc(var(--h)*900/893);background:url(../assets/login-art.webp) center/100% 100% no-repeat;animation:gateArt .7s cubic-bezier(.16,1,.3,1) both!important}
 .gate-hero-brand{position:absolute;left:45%;top:45.3%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:calc(var(--h)*.028);white-space:nowrap}
-.gate-hero-mark{display:grid;place-items:center;width:calc(var(--h)*.13);height:calc(var(--h)*.13);border-radius:28%;background:linear-gradient(135deg,#6a8bff,#4564e8);box-shadow:0 6px 18px rgba(69,100,232,.45);color:#fff}
+.gate-hero-mark{display:grid;place-items:center;width:calc(var(--h)*.13);height:calc(var(--h)*.13);border-radius:50%;background:linear-gradient(135deg,#6a8bff,#4564e8);box-shadow:0 6px 18px rgba(69,100,232,.45);color:#fff}
 .gate-hero-mark svg{width:58%;height:58%}
 .gate-hero-brand strong{display:block;font-size:calc(var(--h)*.05);font-weight:800;letter-spacing:.08em;line-height:1.1;color:#0b1228}
 .gate-hero-brand span{display:block;margin-top:calc(var(--h)*.014);font-size:calc(var(--h)*.026);letter-spacing:.2em;line-height:1;color:#4b5676;font-weight:600}
