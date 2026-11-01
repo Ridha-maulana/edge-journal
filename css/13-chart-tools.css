@@ -21,3 +21,5 @@
 .candle-chart .cl-line.cd-in{stroke-dasharray:1;stroke-dashoffset:1;animation:clDraw .9s cubic-bezier(.4,0,.2,1) both}
 .candle-chart .cl-area.cd-in{animation:hcIn .8s ease .2s both}
 @keyframes clDraw{to{stroke-dashoffset:0}}
+
+.candle-chart.cc-fixed,.candle-chart.cc-fixed *{touch-action:pan-y}.candle-chart.cc-fixed{cursor:default}
