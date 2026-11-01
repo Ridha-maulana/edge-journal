@@ -7,6 +7,27 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
     const [shareHide, setShareHide] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
     const shareBlob = useRef(null);
+    /* tinggi grafik menyesuaikan layar: kartu utama + tombol Share/Stats/DNA muat penuh di atas menu bawah (jarak 8px) */
+    const [heroHH, setHeroHH] = useState(null);
+    useEffect(() => {
+        if (performanceView !== 'overview') return;
+        const fit = () => {
+            const card = document.querySelector('.perf-screen .hero-card'), svg = card && card.querySelector('.hero-chart svg'), nav = document.querySelector('.bottom-nav');
+            if (!card || !svg || !nav) return;
+            const w = svg.getBoundingClientRect().width;
+            if (!w) return;
+            const cardTop = card.getBoundingClientRect().top + window.scrollY;
+            const base = card.offsetHeight - svg.getBoundingClientRect().height;
+            const target = window.innerHeight - nav.offsetHeight - 8 - cardTop - base;
+            const hh = Math.max(320, Math.min(428, Math.round(target * 500 / w)));
+            setHeroHH(prev => prev === hh ? prev : hh);
+        };
+        fit();
+        const t = setTimeout(fit, 400);
+        window.addEventListener('resize', fit);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+        return () => { clearTimeout(t); window.removeEventListener('resize', fit); };
+    }, [performanceView, period, trades.length]);
     const [draft, setDraft] = useState({ s: '', e: '' });
     const [view, setView] = useState(() => { const n = new Date(); return { y: n.getFullYear(), m: n.getMonth() }; });
     useEffect(() => { if (performanceView !== 'overview')
@@ -144,7 +165,7 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
                     React.createElement("div", null,
                         React.createElement("span", null, "Hari aktif"),
                         React.createElement("b", null, activeDays))),
-                React.createElement(HeroChart, { startBal: startBal, onOpen: onOpenCandle, trades: cs, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
+                React.createElement(HeroChart, { startBal: startBal, onOpen: onOpenCandle, trades: cs, hh: heroHH || undefined, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
                 React.createElement("div", { className: "combo-legend" },
                     React.createElement("span", null,
                         React.createElement("i", { style: { background: '#34d399' } }),

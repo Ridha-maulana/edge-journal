@@ -47,3 +47,5 @@
 /* tab Account management satu baris */
 .account-tabs{gap:0;justify-content:space-between}
 .account-tabs button{white-space:nowrap;padding:12px 6px;font-size:var(--fs-sm)}
+/* halaman Advanced Statistics dan Trader DNA: jarak samping sama dengan halaman lain */
+@media(max-width:760px){.performance-detail-page{padding-left:var(--s2);padding-right:var(--s2)}}
