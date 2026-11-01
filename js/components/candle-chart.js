@@ -44,14 +44,14 @@ function buildCandles(trades, tf) {
             short = candleDayLabel(iso(md));
         }
         else if (tf === 'M1') {
-            k = tday.slice(0, 7);
-            label = `${CANDLE_BULAN[Number(tday.slice(5, 7)) - 1]} ${tday.slice(0, 4)}`;
-            short = CANDLE_BULAN[Number(tday.slice(5, 7)) - 1];
+            k = w.day.slice(0, 7); /* bulan & tahun mengikuti tanggal kalender (sama dengan Advanced Statistics), bukan hari trading */
+            label = `${CANDLE_BULAN[Number(w.day.slice(5, 7)) - 1]} ${w.day.slice(0, 4)}`;
+            short = CANDLE_BULAN[Number(w.day.slice(5, 7)) - 1];
         }
         else if (tf === 'Y1') {
-            k = tday.slice(0, 4);
-            label = `Tahun ${tday.slice(0, 4)}`;
-            short = tday.slice(0, 4);
+            k = w.day.slice(0, 4);
+            label = `Tahun ${w.day.slice(0, 4)}`;
+            short = w.day.slice(0, 4);
         }
         else {
             k = tday;

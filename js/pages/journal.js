@@ -11,6 +11,7 @@ function PosStrip({ n, pnl, pct, pips, cur }) {
 /* Pembantu tampilan bertingkat (Tahun -> Bulan -> Minggu) */
 function jSum(list) { return { pnl: list.reduce((x, t) => x + (t.status === 'closed' ? Number(t.pnl) || 0 : 0), 0), pips: list.reduce((x, t) => x + tradePips(t), 0) }; }
 function jDay(t) { return wib(new Date(new Date(t.date).getTime() - 6 * 3600 * 1000)).day; }
+function jCal(t) { return wib(new Date(t.date)).day; } /* tanggal kalender WIB: dipakai untuk kartu Tahun/Bulan agar sama dengan Advanced Statistics */
 function jMonday(day) { const md = new Date(Date.UTC(Number(day.slice(0, 4)), Number(day.slice(5, 7)) - 1, Number(day.slice(8, 10)))); md.setUTCDate(md.getUTCDate() - ((md.getUTCDay() + 6) % 7)); return md; }
 function jWeekLabel(md) { const en = new Date(md.getTime() + 6 * 86400000); const f = (d, y) => d.toLocaleDateString('en-GB', y ? { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' } : { day: 'numeric', month: 'short', timeZone: 'UTC' }); return `${f(md)} - ${f(en, true)}`; }
 function jMonthLabel(mk) { return new Date(Date.UTC(Number(mk.slice(0, 4)), Number(mk.slice(5, 7)) - 1, 1)).toLocaleDateString('id-ID', { month: 'long', year: 'numeric', timeZone: 'UTC' }); }
@@ -23,9 +24,9 @@ function HierJournal({ kind, status, list: allList, account, startBal, expanded,
     const list = allList.filter(t => t.status === 'closed'); // posisi open tidak ikut di tampilan bertingkat
     const cur = account.currency;
     const TFN = { H1: '1H', SES: '1S', D1: '1D', W1: '1W' };
-    const byY = list.length ? jGroup(list, t => jDay(t).slice(0, 4)) : {};
+    const byY = list.length ? jGroup(list, t => jCal(t).slice(0, 4)) : {};
     const years = Object.keys(byY).sort().reverse();
-    const lastMonth = list.length && list.map(t => jDay(t).slice(0, 7)).sort().pop();
+    const lastMonth = list.length && list.map(t => jCal(t).slice(0, 7)).sort().pop();
     const isOpen = (key, def) => key in open ? open[key] : def;
     const tog = (key, def) => setOpen(o => ({ ...o, [key]: !(key in o ? o[key] : def) }));
     const tradeCard = t => React.createElement(TradeCard, { key: t.id, trade: t, startBal: startBal, expanded: expanded === t.id, onToggle: () => setExpanded(expanded === t.id ? null : t.id), onDelete: () => onDelete(t.id), onClose: () => onClose(t), onEdit: () => onEdit(t) });
@@ -49,7 +50,13 @@ function HierJournal({ kind, status, list: allList, account, startBal, expanded,
                 wks.map(wk => { const W = byW[wk]; const hl = W.some(t => sel.c.ids.includes(t.id)); return React.createElement("div", { className: "week-block", key: wk },
                     React.createElement("div", { className: "week-head" + (hl ? " wk-hl" : "") },
                         React.createElement("div", null, React.createElement("strong", null, jWeekLabel(new Date(wk + 'T00:00:00Z')))),
-                        strip(W))); }));
+                        strip(W))); }),
+                (() => { const T = L.filter(t => sel.c.ids.includes(t.id)); const byD = jGroup(T, t => jDay(t)); const days = Object.keys(byD).sort().reverse();
+                    return React.createElement(React.Fragment, null,
+                        React.createElement("div", { className: "gj-sec" }, `Kandel 1W · ${sel.c.label} · ${T.length} posisi`),
+                        days.map(d => { const D = byD[d].sort((a, b) => new Date(b.date) - new Date(a.date)); return React.createElement(React.Fragment, { key: d },
+                            React.createElement("div", { className: "date-label" }, React.createElement("span", null, new Date(d + 'T12:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })), strip(D)),
+                            D.map(tradeCard)); })); })());
         }
         const T = L.filter(t => sel.c.ids.includes(t.id)).sort((a, b) => new Date(b.date) - new Date(a.date));
         return React.createElement(React.Fragment, null,
@@ -57,14 +64,14 @@ function HierJournal({ kind, status, list: allList, account, startBal, expanded,
             React.createElement("div", { className: "date-label" }, React.createElement("span", null, sel.c.label), strip(T)),
             T.map(tradeCard));
     };
-    const monthCards = (L0, ym) => { const byM = jGroup(L0, t => jDay(t).slice(0, 7)); return Object.keys(byM).sort().reverse().map(mk => { const L = byM[mk]; const key = 'm' + mk; const def = mk === ym; const op = isOpen(key, def); return React.createElement("div", { className: "week-block", key: key },
+    const monthCards = (L0, ym) => { const byM = jGroup(L0, t => jCal(t).slice(0, 7)); return Object.keys(byM).sort().reverse().map(mk => { const L = byM[mk]; const key = 'm' + mk; const def = mk === ym; const op = isOpen(key, def); return React.createElement("div", { className: "week-block", key: key },
         head(key, jMonthLabel(mk), L, op, def, false),
         op && React.createElement(React.Fragment, null,
             React.createElement("div", { className: "gj-chart" },
                 React.createElement(HeroChart, { trades: L.filter(t => t.status === 'closed').sort((a, b) => new Date(a.date) - new Date(b.date)), startBal: startBal, tfs: ['H1', 'SES', 'D1', 'W1'], defTf: 'D1', persist: false, hh: 330, fixed: true, onSelect: (c, tf) => setSels(s => ({ ...s, [key]: c ? { c, tf } : null })) })),
             selBlock(key, L))); }); };
     return React.createElement("div", { className: "gj" },
-        kind === 'M1' ? monthCards(list, lastMonth) : years.map((y, yi) => { const L = byY[y]; const key = 'y' + y; const def = yi === 0; const op = isOpen(key, def); const nM = Object.keys(jGroup(L, t => jDay(t).slice(0, 7))).length; return React.createElement("div", { className: "week-block", key: key },
+        kind === 'M1' ? monthCards(list, lastMonth) : years.map((y, yi) => { const L = byY[y]; const key = 'y' + y; const def = yi === 0; const op = isOpen(key, def); const nM = Object.keys(jGroup(L, t => jCal(t).slice(0, 7))).length; return React.createElement("div", { className: "week-block", key: key },
             head(key, `Tahun ${y}`, L, op, def, true),
             op && React.createElement(React.Fragment, null,
                 React.createElement("div", { className: "gj-sec" }, `Bulan dalam tahun ini · ${nM} kartu`),
