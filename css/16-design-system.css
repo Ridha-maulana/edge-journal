@@ -73,3 +73,11 @@
 .dd-tags{gap:var(--s1);margin-top:var(--s2)}
 .dd-tag{font-size:var(--fs-xs);padding:var(--s1) var(--s2);gap:var(--s1);border-radius:var(--r-xs);line-height:1.2}
 .dd-tag i{width:6px;height:6px}
+
+/* v5.1.7 — warna pembeda kartu Tahun (ungu) & Bulan (biru) di My Journal; Minggu tidak berubah */
+.week-head.lv-y{background:#1c1743;border-color:#4b3f8f}
+.week-head.lv-y>div strong{color:#d4c8ff}
+.week-head.lv-y>svg{color:#c4b5ff}
+.week-head.lv-m{background:#112250;border-color:#34509a}
+.week-head.lv-m>div strong{color:#b4c8ff}
+.week-head.lv-m>svg{color:#9db6ff}

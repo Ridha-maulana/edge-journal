@@ -34,7 +34,7 @@ function HierJournal({ kind, status, list: allList, account, startBal, expanded,
     if (!list.length)
         return allList.length ? React.createElement("div", { className: "empty-state" }, React.createElement("span", null, "Belum ada posisi closed. Posisi open ada di filter Open.")) : null;
     const strip = L => { const sm = jSum(L); return React.createElement(PosStrip, { n: L.length, pnl: sm.pnl, pct: sm.pnl / startBal * 100, pips: sm.pips, cur: cur }); };
-    const head = (key, title, L, op, def, main) => React.createElement("button", { className: "week-head" + (main ? " gj-main" : ""), onClick: () => tog(key, def) },
+    const head = (key, title, L, op, def, main) => React.createElement("button", { className: "week-head " + (main ? "gj-main lv-y" : "lv-m"), onClick: () => tog(key, def) },
         React.createElement("div", null, React.createElement("strong", null, title)),
         React.createElement(ChevronDown, { size: 17, className: op ? 'rotate' : '' }),
         strip(L));

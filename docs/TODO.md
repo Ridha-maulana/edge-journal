@@ -378,3 +378,4 @@
 - v5.1.4: tombol aksi di judul halaman (ikon di Tools, Add trade di My Journal) sejajar dengan judul; kotak tanggal kalender hampir persegi dengan "5 posisi" satu baris; kartu Restore Last Backup dirapikan (input file tidak tampil, tombol seragam).
 - v5.1.5: halaman Kalender dari header disamakan dengan kalender Advanced Statistics (bahasa Indonesia, kotak hampir persegi, jarak tepi 8px); penanda hari/minggu/bulan di Performa per bulan dikecilkan; di My Journal, ketuk kandel 1W menampilkan semua posisi minggu itu per hari (selain kartu minggu dalam bulan).
 - v5.1.6: kartu Tahun/Bulan di My Journal dan kandel 1M/1Y mengikuti tanggal kalender (sama dengan Advanced Statistics): posisi 1 Januari 2027 dini hari kini masuk Tahun 2027, bukan Desember 2026.
+- v5.1.7: kartu Tahun di My Journal berwarna ungu (seperti tombol DNA) dan kartu Bulan berwarna biru (seperti tombol Stats) supaya mudah dibedakan; kartu Minggu tidak berubah.
