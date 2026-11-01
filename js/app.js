@@ -40,7 +40,7 @@ function App() {
         return; lastEl = t; if (y <= 70)
         setNavHidden(false);
     else if (y > prev + 6)
-        setNavHidden(true); }; const onClick = () => setTimeout(() => { if (lastEl && !document.body.contains(lastEl)) { lastEl = null; setNavHidden(false); } }, 60); document.addEventListener('scroll', onScroll, { passive: true, capture: true }); document.addEventListener('click', onClick, true); return () => { document.removeEventListener('scroll', onScroll, true); document.removeEventListener('click', onClick, true); }; }, []);
+        setNavHidden(true); }; const onClick = () => setTimeout(() => { if (lastEl && lastEl !== document.documentElement && !document.body.contains(lastEl)) { lastEl = null; setNavHidden(false); } }, 60); document.addEventListener('scroll', onScroll, { passive: true, capture: true }); document.addEventListener('click', onClick, true); return () => { document.removeEventListener('scroll', onScroll, true); document.removeEventListener('click', onClick, true); }; }, []);
     useEffect(() => { document.body.classList.toggle('nav-is-hidden', navHidden); }, [navHidden]);
     useEffect(() => { document.body.classList.toggle('popup-open', !!(showAdd || editingTrade || closingTrade || showAccount)); }, [showAdd, editingTrade, closingTrade, showAccount]);
     useEffect(() => { const f = () => { const n = document.querySelector('.bottom-nav'); if (n) document.documentElement.style.setProperty('--nav-h', n.offsetHeight + 'px'); }; f(); window.addEventListener('resize', f); return () => window.removeEventListener('resize', f); }, []);
