@@ -366,3 +366,4 @@
 - v4.9.1: posisi open tidak lagi tampil di All/Closed (hanya posisi closed di tampilan Tahun→Bulan→Minggu); filter Open hanya menampilkan daftar posisi open, tanpa kartu tahun/bulan di bawahnya.
 - v4.9.2: tombol + (tambah trade) ikut bersembunyi bersama menu bawah saat scroll ke bawah, dan muncul lagi saat scroll ke atas / di kepala halaman.
 - v4.9.3: menu bawah dan tombol + tidak lagi muncul kembali saat layar diketuk; keduanya tetap tersembunyi sampai halaman kembali ke atas (perbaikan: ketukan dulu dianggap 'konten scroll hilang').
+- v4.9.4: saldo di Account management (Saldo saat ini, daftar akun, tab Deposit/WD) dan di menu akun kini sama dengan 'Sekarang' di Performance (modal setelah deposit/WD + total P&L trade closed); sebelumnya hanya menampilkan modal tanpa profit sehingga turun setelah WD profit.

@@ -34,3 +34,6 @@ function acctStartBal(account) { const h = (account && account.capitalHistory) |
 function tradePips(t) { return t && t.status === 'closed' ? pipsOf(t) : 0; }
 function fmtPctS(v) { const x = Number(v) || 0; return (x > 0 ? '+' : x < 0 ? '-' : '') + Math.abs(x).toFixed(2) + '%'; }
 function fmtPipsS(v) { const x = Number(v) || 0; return (x > 0 ? '+' : x < 0 ? '-' : '') + Math.abs(x).toFixed(1) + ' pips'; }
+
+/* Saldo akun saat ini = modal (setelah deposit/WD) + total P&L trade closed; sama dengan 'Sekarang' di Performance */
+function acctNowBal(account) { const tr = (account && account.trades) || []; return (Number(account && account.balance) || 0) + tr.reduce((a, t) => a + (t.status === 'closed' ? Number(t.pnl) || 0 : 0), 0); }

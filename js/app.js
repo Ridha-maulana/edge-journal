@@ -126,7 +126,7 @@ function App() {
                 React.createElement("div", { className: "side-nav-foot" },
                     React.createElement("span", null, "ACTIVE ACCOUNT"),
                     React.createElement("strong", null, activeAccount.name),
-                    React.createElement("small", null, money(activeAccount.balance, activeAccount.currency)))),
+                    React.createElement("small", null, money(acctNowBal(activeAccount), activeAccount.currency)))),
             React.createElement("main", { className: "main-content" },
                 tab === 'performance' && React.createElement(Performance, { onOpenCandle: openCandle, onSelectDate: chooseCalendarDate, onWallet: () => { setAccountMode('capital'); setShowAccount(true); }, account: activeAccount, trades: trades, period: period, setPeriod: setPeriod, customStart: customStart, customEnd: customEnd, setCustomStart: setCustomStart, setCustomEnd: setCustomEnd }),
                 tab === 'journal' && React.createElement(Journal, { account: activeAccount, trades: trades, filters: journalFilters, setFilters: setJournalFilters, expanded: expanded, setExpanded: setExpanded, onAdd: openAdd, onScan: scanScreenshot, onDelete: deleteTrade, onClose: setClosingTrade, onEdit: setEditingTrade }),
