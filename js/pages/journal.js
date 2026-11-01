@@ -49,19 +49,21 @@ function GroupedJournal({ kind, list, account, startBal, expanded, setExpanded, 
 }
 /* Halaman utama My Journal: Tahun -> Bulan (grafik 1H/1S/1D/1W) -> Minggu (tanpa grafik).
    Posisi hanya tampil untuk kandel yang diketuk (1D/1S/1H); ketuk kandel 1W = kartu semua minggu dalam bulan itu. */
-function HierJournal({ list, account, startBal, expanded, setExpanded, onDelete, onClose, onEdit }) {
+function HierJournal({ status, list: allList, account, startBal, expanded, setExpanded, onDelete, onClose, onEdit }) {
     const [open, setOpen] = useState({});
     const [sels, setSels] = useState({});
-    if (!list.length)
-        return null;
+    const list = allList.filter(t => t.status === 'closed'); // posisi open tidak ikut di tampilan bertingkat
     const cur = account.currency;
     const TFN = { H1: '1H', SES: '1S', D1: '1D', W1: '1W' };
-    const byY = jGroup(list, t => jDay(t).slice(0, 4));
+    const byY = list.length ? jGroup(list, t => jDay(t).slice(0, 4)) : {};
     const years = Object.keys(byY).sort().reverse();
-    const lastMonth = list.map(t => jDay(t).slice(0, 7)).sort().pop();
+    const lastMonth = list.length && list.map(t => jDay(t).slice(0, 7)).sort().pop();
     const isOpen = (key, def) => key in open ? open[key] : def;
     const tog = (key, def) => setOpen(o => ({ ...o, [key]: !(key in o ? o[key] : def) }));
     const tradeCard = t => React.createElement(TradeCard, { key: t.id, trade: t, startBal: startBal, expanded: expanded === t.id, onToggle: () => setExpanded(expanded === t.id ? null : t.id), onDelete: () => onDelete(t.id), onClose: () => onClose(t), onEdit: () => onEdit(t) });
+    if (status === 'open') { const O = allList.filter(t => t.status !== 'closed').sort((a, b) => new Date(b.date) - new Date(a.date)); return O.length ? React.createElement("div", { className: "gj" }, O.map(tradeCard)) : null; }
+    if (!list.length)
+        return allList.length ? React.createElement("div", { className: "empty-state" }, React.createElement("span", null, "Belum ada posisi closed. Posisi open ada di filter Open.")) : null;
     const strip = L => { const sm = jSum(L); return React.createElement(PosStrip, { n: L.length, pnl: sm.pnl, pct: sm.pnl / startBal * 100, pips: sm.pips, cur: cur }); };
     const head = (key, title, L, op, def, main) => React.createElement("button", { className: "week-head" + (main ? " gj-main" : ""), onClick: () => tog(key, def) },
         React.createElement("div", null, React.createElement("strong", null, title)),
@@ -93,11 +95,7 @@ function HierJournal({ list, account, startBal, expanded, setExpanded, onDelete,
             React.createElement("div", { className: "gj-chart" },
                 React.createElement(HeroChart, { trades: L.filter(t => t.status === 'closed').sort((a, b) => new Date(a.date) - new Date(b.date)), startBal: startBal, tfs: ['H1', 'SES', 'D1', 'W1'], defTf: 'D1', persist: false, hh: 330, fixed: true, onSelect: (c, tf) => setSels(s => ({ ...s, [key]: c ? { c, tf } : null })) })),
             selBlock(key, L))); }); };
-    const openTr = list.filter(t => t.status !== 'closed').sort((a, b) => new Date(b.date) - new Date(a.date));
     return React.createElement("div", { className: "gj" },
-        openTr.length > 0 && React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "gj-sec" }, `Posisi terbuka · ${openTr.length}`),
-            openTr.map(tradeCard)),
         years.map((y, yi) => { const L = byY[y]; const key = 'y' + y; const def = yi === 0; const op = isOpen(key, def); const nM = Object.keys(jGroup(L, t => jDay(t).slice(0, 7))).length; return React.createElement("div", { className: "week-block", key: key },
             head(key, `Tahun ${y}`, L, op, def, true),
             op && React.createElement(React.Fragment, null,
@@ -145,7 +143,7 @@ function Journal({ account, trades, filters, setFilters, expanded, setExpanded, 
                 " ",
                 filtered.length,
                 " shown")),
-        filters.ids && filters.groupKind ? React.createElement(GroupedJournal, { kind: filters.groupKind, list: filtered, account: account, startBal: startBal, expanded: expanded, setExpanded: setExpanded, onDelete: onDelete, onClose: onClose, onEdit: onEdit }) : (!filters.ids && !filters.date) ? React.createElement(HierJournal, { list: filtered, account: account, startBal: startBal, expanded: expanded, setExpanded: setExpanded, onDelete: onDelete, onClose: onClose, onEdit: onEdit }) : (() => { const isoOf = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; const weeks = {}; Object.keys(groups).forEach(day => { const d = new Date(`${day}T12:00`); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const wk = isoOf(d); (weeks[wk] || (weeks[wk] = {}))[day] = groups[day]; }); return Object.keys(weeks).sort().reverse().map((wk, wi) => { const w = weeks[wk]; const list = Object.values(w).flat(); const wsum = sumOf(list), pnl = wsum.pnl; const st = new Date(`${wk}T12:00`); const en = new Date(st); en.setDate(st.getDate() + 6); const open = openWeeks[wk] !== undefined ? openWeeks[wk] : !!(filters.date || filters.ids); const label = `${st.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} - ${en.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`; return React.createElement("div", { className: "week-block", key: wk },
+        filters.ids && filters.groupKind ? React.createElement(GroupedJournal, { kind: filters.groupKind, list: filtered, account: account, startBal: startBal, expanded: expanded, setExpanded: setExpanded, onDelete: onDelete, onClose: onClose, onEdit: onEdit }) : (!filters.ids && !filters.date) ? React.createElement(HierJournal, { status: filters.status, list: filtered, account: account, startBal: startBal, expanded: expanded, setExpanded: setExpanded, onDelete: onDelete, onClose: onClose, onEdit: onEdit }) : (() => { const isoOf = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; const weeks = {}; Object.keys(groups).forEach(day => { const d = new Date(`${day}T12:00`); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const wk = isoOf(d); (weeks[wk] || (weeks[wk] = {}))[day] = groups[day]; }); return Object.keys(weeks).sort().reverse().map((wk, wi) => { const w = weeks[wk]; const list = Object.values(w).flat(); const wsum = sumOf(list), pnl = wsum.pnl; const st = new Date(`${wk}T12:00`); const en = new Date(st); en.setDate(st.getDate() + 6); const open = openWeeks[wk] !== undefined ? openWeeks[wk] : !!(filters.date || filters.ids); const label = `${st.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} - ${en.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`; return React.createElement("div", { className: "week-block", key: wk },
             React.createElement("button", { className: "week-head", onClick: () => setOpenWeeks({ ...openWeeks, [wk]: !open }) },
                 React.createElement("div", null,
                     React.createElement("strong", null, label)),
