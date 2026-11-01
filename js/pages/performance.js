@@ -7,26 +7,40 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
     const [shareHide, setShareHide] = useState(false);
     const [shareUrl, setShareUrl] = useState('');
     const shareBlob = useRef(null);
-    /* tinggi grafik menyesuaikan layar: kartu utama + tombol Share/Stats/DNA muat penuh di atas menu bawah (jarak 8px) */
-    const [heroHH, setHeroHH] = useState(null);
-    useEffect(() => {
+    /* tinggi grafik menyesuaikan layar: kartu utama + tombol Share/Stats/DNA muat penuh di atas menu bawah (jarak 8px).
+       Nilai sudah benar sejak tampilan pertama (tanpa animasi menyesuaikan): diingat per ukuran layar, dan dihitung sebelum layar digambar. */
+    const heroKey = () => 'ej3-hh:' + window.innerWidth + 'x' + window.innerHeight;
+    const [heroHH, setHeroHH] = useState(() => {
+        try {
+            const c = Number(localStorage.getItem(heroKey()));
+            if (c >= 320 && c <= 428) return c;
+        } catch (_) { }
+        const hd = document.querySelector('header.topbar'), nv = document.querySelector('.bottom-nav');
+        const top = (hd ? hd.getBoundingClientRect().bottom : 72) + 8, navH = nv ? nv.offsetHeight : 74;
+        const w = Math.min(window.innerWidth, 620) - 50;
+        return Math.max(320, Math.min(428, Math.round((window.innerHeight - navH - 8 - top - 395) * 500 / w)));
+    });
+    React.useLayoutEffect(() => {
         if (performanceView !== 'overview') return;
         const fit = () => {
             const card = document.querySelector('.perf-screen .hero-card'), svg = card && card.querySelector('.hero-chart svg'), nav = document.querySelector('.bottom-nav');
             if (!card || !svg || !nav) return;
             const w = svg.getBoundingClientRect().width;
             if (!w) return;
-            const cardTop = card.getBoundingClientRect().top + window.scrollY;
+            let cardTop = 0;
+            for (let e = card; e; e = e.offsetParent) cardTop += e.offsetTop;  /* tidak terpengaruh animasi masuk */
             const base = card.offsetHeight - svg.getBoundingClientRect().height;
             const target = window.innerHeight - nav.offsetHeight - 8 - cardTop - base;
             const hh = Math.max(320, Math.min(428, Math.round(target * 500 / w)));
-            setHeroHH(prev => prev === hh ? prev : hh);
+            if (!isFinite(hh)) return;
+            try { localStorage.setItem(heroKey(), String(hh)); } catch (_) { }
+            setHeroHH(prev => Math.abs(prev - hh) < 3 ? prev : hh);
         };
         fit();
-        const t = setTimeout(fit, 400);
         window.addEventListener('resize', fit);
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-        return () => { clearTimeout(t); window.removeEventListener('resize', fit); };
+        let off = false;
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!off) fit(); });
+        return () => { off = true; window.removeEventListener('resize', fit); };
     }, [performanceView, period, trades.length]);
     const [draft, setDraft] = useState({ s: '', e: '' });
     const [view, setView] = useState(() => { const n = new Date(); return { y: n.getFullYear(), m: n.getMonth() }; });
@@ -165,7 +179,7 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
                     React.createElement("div", null,
                         React.createElement("span", null, "Hari aktif"),
                         React.createElement("b", null, activeDays))),
-                React.createElement(HeroChart, { startBal: startBal, onOpen: onOpenCandle, trades: cs, hh: heroHH || undefined, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
+                React.createElement(HeroChart, { startBal: startBal, onOpen: onOpenCandle, trades: cs, hh: heroHH, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
                 React.createElement("div", { className: "combo-legend" },
                     React.createElement("span", null,
                         React.createElement("i", { style: { background: '#34d399' } }),
