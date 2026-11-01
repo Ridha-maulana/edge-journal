@@ -1,6 +1,6 @@
 /* Halaman Tools (Risk calculator) */
 "use strict";
-function Tools({ account, trades, onAdd, onExport, onBackup, onRestore, onNewAccount }) { const [calc, setCalc] = useState({ symbol: 'XAUUSD', entry: '', sl: '', tp: '', lots: '0.01' }); const riskDistance = Math.abs(Number(calc.entry || 0) - Number(calc.sl || 0)); const riskUsd = riskFor(calc.entry, calc.sl, calc.lots, calc.symbol); const rewardUsd = rewardFor(calc.entry, calc.tp, calc.lots, calc.symbol); return React.createElement("section", null,
+function Tools({ headerVariant, onHeaderVariant, account, trades, onAdd, onExport, onBackup, onRestore, onNewAccount }) { const [calc, setCalc] = useState({ symbol: 'XAUUSD', entry: '', sl: '', tp: '', lots: '0.01' }); const riskDistance = Math.abs(Number(calc.entry || 0) - Number(calc.sl || 0)); const riskUsd = riskFor(calc.entry, calc.sl, calc.lots, calc.symbol); const rewardUsd = rewardFor(calc.entry, calc.tp, calc.lots, calc.symbol); return React.createElement("section", null,
     React.createElement(PageHeading, { eyebrow: "TOOLS / UTILITIES", title: "Trading Tools", description: "Kalkulator risk dan reward.", action: React.createElement("button", { className: "icon-btn" },
             React.createElement(Settings2, { size: 18 })) }),
     React.createElement("div", { className: "tool-card featured" },
@@ -41,4 +41,5 @@ function Tools({ account, trades, onAdd, onExport, onBackup, onRestore, onNewAcc
                 React.createElement("span", null, "Risk % formula"),
                 React.createElement("strong", null, calc.entry && calc.sl ? `${(riskDistance / Number(calc.entry) * 100).toFixed(2)}%` : '—'),
                 React.createElement("small", null, "distance / entry")))),
+    React.createElement(HeaderPicker, { value: headerVariant || 0, onChange: onHeaderVariant }),
 ); }

@@ -40,3 +40,10 @@
 .hv-d .combo-legend{font-size:var(--fs-xs)}
 .hd-v2 .brand span,.hd-v5 .brand span,.hd-v7 .brand span{letter-spacing:.5px}
 .hd-v2 .account-switcher .acc-name,.hd-v5 .hd-two .acc-name{max-width:72px}
+/* v5.1.1 — semua gaya header setinggi header standar */
+.topbar{height:72px}
+/* jarak tepi halaman (atas dan samping) dipersempit setengah di HP */
+@media(max-width:760px){.main-content{padding-top:var(--s2);padding-left:var(--s2);padding-right:var(--s2)}}
+/* tab Account management satu baris */
+.account-tabs{gap:0;justify-content:space-between}
+.account-tabs button{white-space:nowrap;padding:12px 6px;font-size:var(--fs-sm)}
