@@ -3,3 +3,8 @@
 .bottom-nav{transition:transform .22s ease!important;will-change:transform}
 .bottom-nav.nav-hidden{transform:translateY(110%)}
 body.popup-open .bottom-nav,body.confirm-open .bottom-nav{transform:none!important}
+
+/* v4.9.2 — tombol + (FAB) ikut bersembunyi bersama menu bawah saat scroll ke bawah */
+.fab{transition:transform .22s ease,opacity .22s ease}
+body.nav-is-hidden .fab:not(.open){transform:translateY(150px);opacity:0;pointer-events:none}
+body.popup-open .fab{transform:none;opacity:1}
