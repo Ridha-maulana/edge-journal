@@ -11,6 +11,7 @@ function App() {
     const [showCalendar, setShowCalendar] = useState(false);
     const [navHidden, setNavHidden] = useState(false);
     const [headerV, setHeaderV] = useState(headerVariantGet);
+    const [navV, setNavV] = useState(navVariantGet);
     const [showAccount, setShowAccount] = useState(false);
     const [accountMode, setAccountMode] = useState('manage');
     const [showAdd, setShowAdd] = useState(false);
@@ -44,7 +45,7 @@ function App() {
         setNavHidden(true); }; const onClick = () => setTimeout(() => { if (lastEl && lastEl !== document.documentElement && !document.body.contains(lastEl)) { lastEl = null; setNavHidden(false); } }, 60); document.addEventListener('scroll', onScroll, { passive: true, capture: true }); document.addEventListener('click', onClick, true); return () => { document.removeEventListener('scroll', onScroll, true); document.removeEventListener('click', onClick, true); }; }, []);
     useEffect(() => { document.body.classList.toggle('nav-is-hidden', navHidden); }, [navHidden]);
     useEffect(() => { document.body.classList.toggle('popup-open', !!(showAdd || editingTrade || closingTrade || showAccount)); }, [showAdd, editingTrade, closingTrade, showAccount]);
-    useEffect(() => { const f = () => { const n = document.querySelector('.bottom-nav'); if (n) document.documentElement.style.setProperty('--nav-h', n.offsetHeight + 'px'); }; f(); window.addEventListener('resize', f); return () => window.removeEventListener('resize', f); }, []);
+    useEffect(() => { const f = () => { const n = document.querySelector('.bottom-nav'); if (n) document.documentElement.style.setProperty('--nav-h', (n.offsetHeight + (parseFloat(getComputedStyle(n).bottom) || 0)) + 'px'); }; f(); const raf = requestAnimationFrame(f); window.addEventListener('resize', f); return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', f); }; }, [navV]);
     const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
     const trades = (activeAccount === null || activeAccount === void 0 ? void 0 : activeAccount.trades) || [];
     function persist(nextAccounts = accounts, nextActive = activeAccountId) { setAccounts(nextAccounts); setActiveAccountId(nextActive); saveStore(nextActive, nextAccounts); }
@@ -125,8 +126,8 @@ function App() {
                 tab === 'performance' && React.createElement(Performance, { onOpenCandle: openCandle, onSelectDate: chooseCalendarDate, onWallet: () => { setAccountMode('capital'); setShowAccount(true); }, account: activeAccount, trades: trades, period: period, setPeriod: setPeriod, customStart: customStart, customEnd: customEnd, setCustomStart: setCustomStart, setCustomEnd: setCustomEnd }),
                 tab === 'journal' && React.createElement(Journal, { account: activeAccount, trades: trades, filters: journalFilters, setFilters: setJournalFilters, expanded: expanded, setExpanded: setExpanded, onAdd: openAdd, onScan: scanScreenshot, onDelete: deleteTrade, onClose: setClosingTrade, onEdit: setEditingTrade }),
                 tab === 'account' && React.createElement(AccountPage, { accounts: accounts, activeAccount: activeAccount, onSelect: selectAccount, onCreate: addAccount, onDelete: deleteAccount, onUpdate: updateAccount, onCapital: recordCapital, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson }),
-                tab === 'tools' && React.createElement(Tools, { headerVariant: headerV, onHeaderVariant: v => { setHeaderV(v); headerVariantSet(v); window.scrollTo(0, 0); }, account: activeAccount, trades: trades, onAdd: openAdd, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson, onNewAccount: () => setShowAccount(true) }))),
-        React.createElement("nav", { className: navHidden ? "bottom-nav nav-hidden" : "bottom-nav" },
+                tab === 'tools' && React.createElement(Tools, { headerVariant: headerV, onHeaderVariant: v => { setHeaderV(v); headerVariantSet(v); window.scrollTo(0, 0); }, navVariant: navV, onNavVariant: v => { setNavV(v); navVariantSet(v); setNavHidden(false); }, account: activeAccount, trades: trades, onAdd: openAdd, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson, onNewAccount: () => setShowAccount(true) }))),
+        React.createElement("nav", { className: "bottom-nav" + (navHidden ? " nav-hidden" : "") + (navV ? " nv-" + navV : "") },
             React.createElement(NavItem, { active: tab === 'performance' && !showAdd, onClick: () => goTab('performance'), icon: React.createElement(BarChart3, null), label: "Performance" }),
             React.createElement(NavItem, { active: tab === 'journal' && !showAdd, onClick: () => goTab('journal'), icon: React.createElement(BookOpen, null), label: "My Journal" }),
             React.createElement("button", { type: "button", className: showAdd ? "nav-item nav-add active" : "nav-item nav-add", "aria-label": "Tambah posisi", onClick: openAdd }, React.createElement(CandlePlus, null), React.createElement("span", null, "Add trade")),

@@ -1,4 +1,4 @@
-const C='ej3-5.2.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.2.1';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -9,7 +9,7 @@ const SHELL=[
   './assets/login-art.webp',
   './css/01-base.css',
   './css/02-splash.css',
-  './css/15-header-variants.css', './css/16-design-system.css',
+  './css/15-header-variants.css', './css/16-design-system.css', './css/17-nav-variants.css',
   './css/03-nav-legacy.css',
   './css/04-drilldown.css',
   './css/05-nav-simple-fullscreen.css',
@@ -27,6 +27,7 @@ const SHELL=[
   './js/pwa.js',
   './js/splash.js',
   './js/components/app-header.js',
+  './js/components/nav-variants.js',
   './js/watchdog.js',
   './js/components/account-modal.js',
   './js/components/calendar-modal.js',

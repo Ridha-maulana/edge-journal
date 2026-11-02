@@ -384,3 +384,4 @@
 - v5.1.10: tulisan "Kandel 1W · Minggu … · N posisi" (dan versi untuk kandel lain) di My Journal dihapus karena infonya sudah ada di kartu di atasnya.
 - v5.1.11: My Journal saat pertama dibuka semua kartu tertutup (hanya kartu Tahun yang tampil); kartu Tahun, Bulan terbuka manual dengan diketuk. Pengecualian: saat dibuka dari Performance (ketuk kandel/kartu), kartu terkait tetap terbuka otomatis.
 - v5.2.0: Screenshot Trade Entry kini bisa membaca gambar GRAFIK MT5 yang menampilkan posisi open (garis BUY/SELL, TP, SL): entry, SL, TP, arah, lot, dan simbol terisi otomatis dan disimpan sebagai posisi OPEN (waktu buka diisi waktu sekarang karena tidak ada di gambar). Label "Beta" diganti "Pro".
+- v5.2.1: pilihan gaya menu bar bawah di Tools (di bawah Tampilan header): Standar (lama), Kapsul gelap, Datar + titik, Mengambang + chip. Pilihan tersimpan di perangkat.
