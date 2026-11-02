@@ -1,4 +1,4 @@
-const C='ej3-5.1.11';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.2.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -50,6 +50,7 @@ const SHELL=[
   './js/lib/react-hooks.js',
   './js/lib/share-image.js',
   './js/lib/mt5-parse.js',
+  './js/lib/mt5-chart.js',
   './js/lib/ocr.js',
   './js/lib/store.js',
   './js/lib/trading.js',

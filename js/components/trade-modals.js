@@ -22,8 +22,17 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
     const dupTicket = !!(pf && pf.ticket && (account.trades || []).some(t => t.mt5Ticket === pf.ticket));
     function changeTz(v) { mt5SetTz(v); setTzMode(v); setForm({ ...form, date: mt5ToWib(pf.rawOpen, v), closeDate: mt5ToWib(pf.rawClose, v) }); }
     function submit(e) { e.preventDefault(); const extra = pf ? { mt5Ticket: pf.ticket || undefined, mt5Net: form.exit && pf.net != null ? pf.net : null, source: 'screenshot' } : {}; onSave({ ...form, ...extra, pnl: form.exit ? pnlFor(form, form.exit) : 0 }); }
-    const scanBox = pf && React.createElement("div", { className: "scan-result" },
-        React.createElement("strong", null, "Hasil baca screenshot (Beta)"),
+    const cn = (pf && pf.notes) || [];
+    const scanBox = pf && (pf.chart ? React.createElement("div", { className: "scan-result" },
+        React.createElement("strong", null, "Hasil baca screenshot (Pro)"),
+        React.createElement("small", null, "Grafik MT5 terbaca sebagai posisi open. Periksa tiap kolom sebelum disimpan."),
+        React.createElement("small", { className: "warn" }, "Waktu buka tidak ada di gambar grafik, jadi diisi waktu sekarang. Sesuaikan di kolom Tanggal & waktu jika posisi dibuka lebih awal."),
+        cn.includes('lots') && React.createElement("small", { className: "warn" }, "Ukuran lot tidak terbaca jelas, diisi 0.01. Periksa kolom Lots."),
+        cn.includes('side') && React.createElement("small", { className: "warn" }, "Arah (Buy/Sell) tidak terbaca, dipilih Long. Periksa."),
+        !pf.symbolKnown && React.createElement("small", { className: "warn" }, "Simbol tidak terbaca, dipilih XAUUSD. Silakan ganti jika salah."),
+        cn.includes('nosl') && React.createElement("small", { className: "warn" }, "Garis SL tidak terbaca, kolom Stop loss dikosongkan."),
+        cn.includes('notp') && React.createElement("small", { className: "warn" }, "Garis TP tidak terbaca, kolom Take profit dikosongkan.")) : React.createElement("div", { className: "scan-result" },
+        React.createElement("strong", null, "Hasil baca screenshot (Pro)"),
         React.createElement("small", null, "Periksa tiap kolom sebelum disimpan \u2014 pembacaan teks bisa keliru."),
         pf.ticket && React.createElement("small", null, "Tiket MT5: #", pf.ticket),
         !pf.symbolKnown && React.createElement("small", { className: "warn" }, "Simbol \"", pf.symbolRaw, "\" tidak ada di daftar, dipilih XAUUSD. Silakan ganti jika salah."),
@@ -31,7 +40,7 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
         dupTicket && React.createElement("small", { className: "warn" }, "Peringatan: tiket ini sudah pernah dicatat di akun ini."),
         React.createElement("label", null, "Zona waktu server MT5",
             React.createElement("select", { value: tzMode, onChange: e => changeTz(e.target.value) }, MT5_TZ_OPTIONS.map(o => React.createElement("option", { key: o.v, value: o.v }, o.l)))),
-        React.createElement("small", null, "Waktu ditampilkan dalam WIB (UTC+7)."));
+        React.createElement("small", null, "Waktu ditampilkan dalam WIB (UTC+7).")));
     const closeBox = pf && form.exit !== '' && React.createElement("div", { className: "form-grid" },
         React.createElement("label", null, "Exit price", React.createElement("input", { inputMode: "decimal", value: form.exit, onChange: e => set('exit', e.target.value) })),
         React.createElement("label", null, "Waktu close (WIB)", React.createElement(DateField, { withTime: true, value: form.closeDate, onChange: v => set('closeDate', v) })),

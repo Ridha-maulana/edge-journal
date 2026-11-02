@@ -70,7 +70,13 @@ function App() {
         rows.sort((x, y) => String(y.closeTime).localeCompare(String(x.closeTime)));
         const pick = rows.find(r => r.detailed) || rows[0] || null;
         setScan(null);
-        if (!pick) { notify('Data trade tidak terbaca. Coba screenshot yang lebih jelas (Riwayat MT5, ketuk posisinya agar detail terbuka) atau isi manual.'); return; }
+        const charts = (texts.charts || []).filter(Boolean);
+        if (!pick && charts.length) { // gambar grafik MT5 dengan garis BUY/SELL, TP, SL -> posisi open
+            setEditingTrade(null); setClosingTrade(null);
+            if (charts.length > 1) notify(charts.length + ' gambar grafik terbaca. Yang pertama dimasukkan dulu; ulangi untuk gambar lainnya.');
+            setPrefill(buildChartPrefill(charts[0])); setShowAdd(true); return;
+        }
+        if (!pick) { notify('Data trade tidak terbaca. Coba screenshot yang lebih jelas (Riwayat MT5 dengan posisi diketuk, atau grafik MT5 yang menampilkan garis BUY/SELL, TP, SL) atau isi manual.'); return; }
         setEditingTrade(null); setClosingTrade(null);
         const full = rows.filter(r => r.detailed);
         if (full.length >= 2) { setBatch(rows); return; }
@@ -126,7 +132,7 @@ function App() {
             React.createElement("button", { type: "button", className: showAdd ? "nav-item nav-add active" : "nav-item nav-add", "aria-label": "Tambah posisi", onClick: openAdd }, React.createElement(CandlePlus, null), React.createElement("span", null, "Add trade")),
             React.createElement(NavItem, { active: tab === 'tools' && !showAdd, onClick: () => goTab('tools'), icon: React.createElement(SlidersHorizontal, null), label: "Tools" }),
             React.createElement(NavItem, { active: tab === 'account' && !showAdd, onClick: () => goTab('account'), icon: React.createElement(UserRound, null), label: "Profil" })),
-        showAdd && React.createElement(AddTradeModal, { account: activeAccount, prefill: prefill, onClose: () => { setShowAdd(false); setPrefill(null); }, onSave: addTrade }),
+        showAdd && React.createElement(AddTradeModal, { key: prefill ? 'pf' + prefill.entry : 'manual', account: activeAccount, prefill: prefill, onClose: () => { setShowAdd(false); setPrefill(null); }, onSave: addTrade }),
         batch && React.createElement(ImportListModal, { account: activeAccount, rows: batch, onClose: () => setBatch(null), onSave: addTrades }),
         scan && React.createElement(ScanOverlay, { progress: scan.p, text: scan.t }),
         editingTrade && React.createElement(AddTradeModal, { initial: editingTrade, account: activeAccount, onClose: () => setEditingTrade(null), onSave: updateTrade }),

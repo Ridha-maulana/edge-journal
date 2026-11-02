@@ -32,6 +32,11 @@ function prepareOcrCanvas(file) {
                 c.height = h;
                 const g = c.getContext('2d', { willReadFrequently: true });
                 g.drawImage(img, 0, 0, w, h);
+                const col = document.createElement('canvas'); // salinan berwarna untuk membaca garis TP/SL di grafik
+                col.width = w;
+                col.height = h;
+                col.getContext('2d').drawImage(c, 0, 0);
+                c._color = col;
                 const d = g.getImageData(0, 0, w, h), px = d.data;
                 let sum = 0;
                 const n = px.length / 4;
@@ -60,6 +65,7 @@ function prepareOcrCanvas(file) {
 /* Banyak gambar sekaligus: mesin dimuat sekali, gambar dibaca satu per satu. onProgress(0..1, teks) -> array teks per gambar */
 async function ocrImageFiles(files, onProgress) {
     const list = [...files], total = list.length, texts = [];
+    texts.charts = [];
     let cur = 0;
     const report = (p, t) => { try {
         onProgress && onProgress(Math.min(0.99, (cur + p) / total), (total > 1 ? 'Gambar ' + Math.min(cur + 1, total) + ' dari ' + total + ' \u00B7 ' : '') + t);
@@ -80,10 +86,26 @@ async function ocrImageFiles(files, onProgress) {
                 const canvas = await prepareOcrCanvas(list[cur]);
                 const { data } = await worker.recognize(canvas);
                 texts.push(data.text || '');
+                // bukan riwayat MT5 -> coba baca sebagai grafik posisi open (garis BUY/SELL, TP, SL)
+                let chart = null;
+                try {
+                    if (typeof readMt5Chart === 'function' && !(typeof parseMt5Text === 'function' && parseMt5Text(data.text || '').rows.length)) {
+                        report(0.9, 'Membaca grafik\u2026');
+                        chart = await readMt5Chart(worker, canvas._color);
+                        await worker.setParameters({ tessedit_pageseg_mode: '6', tessedit_char_whitelist: '' });
+                    }
+                }
+                catch (e) {
+                    chart = null;
+                }
+                texts.charts.push(chart);
+                if (canvas._color)
+                    canvas._color.width = canvas._color.height = 1;
                 canvas.width = canvas.height = 1; // lepaskan memori gambar
             }
             catch (e) {
                 texts.push('');
+                texts.charts.push(null);
             }
         }
         return texts;

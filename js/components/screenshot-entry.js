@@ -9,7 +9,7 @@ function AddMenu({ onManual, onScreenshot, onClose }) {
                 React.createElement("span", null, "Manual Trade Entry")),
             React.createElement("button", { type: "button", className: "add-menu-item", role: "menuitem", onClick: onScreenshot },
                 React.createElement("span", { className: "add-menu-ico" }, React.createElement(Camera, { size: 17 })),
-                React.createElement("span", null, "Screenshot Trade Entry ", React.createElement("em", { className: "beta-tag" }, "Beta"), React.createElement("small", { className: "add-menu-sub" }, "Bisa pilih banyak gambar")))));
+                React.createElement("span", null, "Screenshot Trade Entry ", React.createElement("em", { className: "beta-tag" }, "Pro"), React.createElement("small", { className: "add-menu-sub" }, "Riwayat MT5 atau chart posisi open")))));
 }
 function ScanOverlay({ progress, text }) {
     const pct = Math.max(0, Math.min(100, Math.round((progress || 0) * 100)));
@@ -32,6 +32,10 @@ function buildPrefill(row, tzMode) {
     const net = row.profit == null ? null : row.profit + (Number(row.swap) || 0) + (Number(row.commission) || 0);
     return { symbol: row.symbol || 'XAUUSD', symbolRaw: row.symbolRaw, symbolKnown: !!row.symbol, side: row.side, entry: row.entry, exit: row.exit, lots: row.lots, sl: row.sl, tp: row.tp, fees: Math.round(feeTotal * 100) / 100, exitMethod: method, ticket: row.ticket, profit: row.profit, net, rawOpen: row.openTime || row.closeTime, rawClose: row.closeTime, hasOpen, date: openW, closeDate: closeW };
 }
+/* hasil baca grafik MT5 (posisi open) -> isi awal form Tambah trade. Waktu buka tidak ada di grafik, jadi diisi waktu sekarang. */
+function buildChartPrefill(ch) {
+    return { chart: true, notes: ch.notes || [], symbol: ch.symbol || 'XAUUSD', symbolRaw: ch.symbolRaw, symbolKnown: !!ch.symbol, side: ch.side, entry: ch.entry, exit: null, lots: ch.lots || 0.01, sl: ch.sl, tp: ch.tp, fees: 0, exitMethod: undefined, ticket: '', profit: null, net: null, hasOpen: true, rawOpen: '', rawClose: '', date: isoNow(), closeDate: '' };
+}
 /* Layar daftar: beberapa posisi sekaligus dari satu screenshot. Hanya kartu berinformasi lengkap yang bisa dipilih. */
 function ImportListModal({ account, rows, onClose, onSave }) {
     const [tz, setTz] = useState(mt5GetTz());
@@ -49,7 +53,7 @@ function ImportListModal({ account, rows, onClose, onSave }) {
         React.createElement("div", { className: "modal wide-modal fs" },
             React.createElement("div", { className: "modal-head" },
                 React.createElement("div", null,
-                    React.createElement("p", { className: "eyebrow" }, "SCREENSHOT ENTRY / BETA"),
+                    React.createElement("p", { className: "eyebrow" }, "SCREENSHOT ENTRY / PRO"),
                     React.createElement("h2", null, items.length + " posisi terbaca")),
                 React.createElement("button", { className: "icon-btn", onClick: onClose }, React.createElement(X, { size: 19 }))),
             React.createElement("div", { className: "scan-result" },
