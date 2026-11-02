@@ -74,10 +74,35 @@
 .dd-tag{font-size:var(--fs-xs);padding:var(--s1) var(--s2);gap:var(--s1);border-radius:var(--r-xs);line-height:1.2}
 .dd-tag i{width:6px;height:6px}
 
-/* v5.1.7 — warna pembeda kartu Tahun (ungu) & Bulan (biru) di My Journal; Minggu tidak berubah */
-.week-head.lv-y{background:#1c1743;border-color:#4b3f8f}
-.week-head.lv-y>div strong{color:#d4c8ff}
-.week-head.lv-y>svg{color:#c4b5ff}
-.week-head.lv-m{background:#112250;border-color:#34509a}
-.week-head.lv-m>div strong{color:#b4c8ff}
-.week-head.lv-m>svg{color:#9db6ff}
+/* v5.1.8 — kartu Tahun/Bulan/Minggu/Posisi kembali ke ukuran lama; sudut kartu lebih bulat (seperti dulu) */
+:root{--r-xs:8px;--r-md:10px;--r-lg:16px;--r-xl:22px}
+.week-head,.gj-chart,.trade-card{border-radius:var(--r-lg)}
+.week-block{margin-bottom:12px}
+.week-head{gap:10px;padding:14px}
+.week-head strong{font-size:13px}
+.week-head small{font-size:10px;margin-top:4px}
+.week-head b{font:600 13px var(--font)}
+.week-head .pos-strip{margin-top:8px;font-size:11px}
+.pos-strip{font:600 11px var(--font)}
+.pos-strip>span{padding:0 2px}
+.pos-strip>span:first-child{padding-left:0}.pos-strip>span:last-child{padding-right:0}
+.date-label{font:600 10px var(--font);gap:7px;margin:14px 2px 9px}
+.gj-sec{font:600 10px var(--font);margin:14px 2px 8px}
+.gj-chart{padding:10px;margin:8px 0 10px}
+.trade-card{margin-bottom:10px}
+.trade-main{padding:14px 13px;gap:10px}
+.trade-info>div{gap:7px}
+.trade-info strong{font-size:13px}
+.trade-info small{font-size:10px;margin-top:6px}
+.trade-result strong{font:600 13px var(--font)}
+.trade-result small{font-size:9px}
+.trade-detail{padding:13px;gap:12px}
+.trade-detail>div:not(.screenshot-strip) span{font-size:10px;margin-bottom:4px}
+.trade-detail>div:not(.screenshot-strip) b{font-size:11px}
+.trade-actions{gap:18px;margin-top:10px}
+@media(max-width:420px){.trade-main{padding:12px 9px;gap:7px}.trade-result strong{font-size:11px}}
+/* warna: hanya kartu Tahun (biru); Bulan & Minggu polos */
+.week-head.gj-main.lv-y{background:#112250;border-color:#34509a}
+.week-head.gj-main.lv-y>div strong{color:#b4c8ff}
+.week-head.gj-main.lv-y>svg{color:#9db6ff}
+.week-head.wk-hl{background:var(--panel);border-color:var(--border)}

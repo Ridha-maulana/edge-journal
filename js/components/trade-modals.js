@@ -9,8 +9,9 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
     const [calculated, setCalculated] = useState(false);
     const risk = riskFor(form.entry, form.sl, form.lots, form.symbol);
     const reward = rewardFor(form.entry, form.tp, form.lots, form.symbol);
-    const riskPct = form.entry && form.sl ? Math.abs((Number(form.sl) - Number(form.entry)) / Number(form.entry) * 100) : 0;
-    const suggestedLots = Number(form.entry) && Number(form.sl) ? (Number(account.balance) * 0.01) / (Math.abs(Number(form.entry) - Number(form.sl)) * contractSize(form.symbol)) : 0;
+    const baseBal = acctStartBal(account);
+    const riskPct = risk ? risk / baseBal * 100 : 0;
+    const suggestedLots = Number(form.entry) && Number(form.sl) ? (baseBal * 0.01) / (Math.abs(Number(form.entry) - Number(form.sl)) * contractSize(form.symbol)) : 0;
     const set = (key, value) => setForm({ ...form, [key]: value });
     async function handlePaste(e) { var _a; const items = [...(((_a = e.clipboardData) === null || _a === void 0 ? void 0 : _a.items) || [])]; const images = items.filter(item => item.type.startsWith('image/')); if (images.length) {
         e.preventDefault();
