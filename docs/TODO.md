@@ -381,3 +381,4 @@
 - v5.1.7: kartu Tahun di My Journal berwarna ungu (seperti tombol DNA) dan kartu Bulan berwarna biru (seperti tombol Stats) supaya mudah dibedakan; kartu Minggu tidak berubah.
 - v5.1.8: warna My Journal: hanya kartu Tahun berwarna biru, Bulan dan Minggu polos (sorotan minggu dihapus); ukuran kartu Tahun/Bulan/Minggu/Posisi dikembalikan ke ukuran lama; sudut kartu lebih bulat seperti dulu (kartu 16px, tombol 10px, panel/sheet 22px).
 - v5.1.9: Risk % di form Tambah/Edit trade (manual & screenshot) kini = Risk USD / saldo awal akun x 100, jadi ikut berubah saat lot diubah dan sama dengan persen P&L di kartu posisi; saran lot 1% risiko memakai dasar yang sama.
+- v5.1.10: tulisan "Kandel 1W · Minggu … · N posisi" (dan versi untuk kandel lain) di My Journal dihapus karena infonya sudah ada di kartu di atasnya.

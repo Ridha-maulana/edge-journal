@@ -53,14 +53,12 @@ function HierJournal({ kind, status, list: allList, account, startBal, expanded,
                         strip(W))); }),
                 (() => { const T = L.filter(t => sel.c.ids.includes(t.id)); const byD = jGroup(T, t => jDay(t)); const days = Object.keys(byD).sort().reverse();
                     return React.createElement(React.Fragment, null,
-                        React.createElement("div", { className: "gj-sec" }, `Kandel 1W · ${sel.c.label} · ${T.length} posisi`),
                         days.map(d => { const D = byD[d].sort((a, b) => new Date(b.date) - new Date(a.date)); return React.createElement(React.Fragment, { key: d },
                             React.createElement("div", { className: "date-label" }, React.createElement("span", null, new Date(d + 'T12:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })), strip(D)),
                             D.map(tradeCard)); })); })());
         }
         const T = L.filter(t => sel.c.ids.includes(t.id)).sort((a, b) => new Date(b.date) - new Date(a.date));
         return React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "gj-sec" }, `Kandel ${TFN[sel.tf] || ''} · ${sel.c.label} · ${T.length} posisi`),
             React.createElement("div", { className: "date-label" }, React.createElement("span", null, sel.c.label), strip(T)),
             T.map(tradeCard));
     };
