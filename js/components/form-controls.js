@@ -17,6 +17,15 @@ function TSelect({ value, onChange, options, title }) {
                     React.createElement("i", null))))), document.body));
 }
 /* Baris pilihan datar: ikon bulat + judul + keterangan + nilai terpilih; sentuh untuk membuka lembar pilihan */
+/* Baris ringkas yang bisa dibuka: sentuh untuk menampilkan isinya di bawah baris */
+function AccRow({ icon, title, desc, open, onToggle, children }) {
+    return React.createElement("div", { className: "acc-item" },
+        React.createElement("button", { type: "button", className: "pick-row" + (open ? " open" : ""), "aria-expanded": !!open, onClick: onToggle },
+            React.createElement("span", { className: "pick-ic" }, icon),
+            React.createElement("span", { className: "pick-tx" }, React.createElement("b", null, title), desc && React.createElement("small", null, desc)),
+            React.createElement(ChevronDown, { size: 18 })),
+        open && React.createElement("div", { className: "acc-panel" }, children));
+}
 function PickRow({ icon, title, desc, value, options, onChange }) {
     const [open, setOpen] = useState(false);
     const opts = options.map(o => typeof o === 'string' ? { v: o, l: o } : o);

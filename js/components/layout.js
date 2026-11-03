@@ -3,7 +3,7 @@
 function NavItem({ active, onClick, icon, label }) { return React.createElement("button", { type: "button", className: active ? 'nav-item active' : 'nav-item', "aria-current": active ? 'page' : undefined, onClick: onClick },
     icon,
     React.createElement("span", null, label)); }
-function PageHeading({ eyebrow, title, description, action }) { return React.createElement("div", { className: "page-heading" },
+function PageHeading({ eyebrow, title, description, action, className }) { return React.createElement("div", { className: "page-heading" + (className ? " " + className : "") },
     React.createElement("div", null,
         React.createElement("h1", null, title),
         React.createElement("p", { className: "muted" }, description)),

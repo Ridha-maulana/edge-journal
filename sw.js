@@ -1,4 +1,4 @@
-const C='ej3-5.2.9';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.3.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -27,7 +27,7 @@ const SHELL=[
   './js/pwa.js',
   './js/splash.js',
   './js/components/app-header.js',
-  './js/components/nav-variants.js',
+  './js/components/nav-variants.js', './js/components/risk-calc.js',
   './js/watchdog.js',
   './js/components/account-modal.js',
   './js/components/calendar-modal.js',
