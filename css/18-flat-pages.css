@@ -113,4 +113,9 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 .rc-btns{display:flex;gap:var(--s2);margin-top:var(--s3)}
 .rc-btns button{flex:1;height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);font-size:var(--fs-sm);padding:0 var(--s2)}
 .rc-btns button:disabled{opacity:.45}
+/* isi baris yang dibuka di Profil: tanpa kepala kartu & bingkai ganda */
+.main-content .acc-panel>.tool-card{border:0!important;background:none!important;padding:0!important;margin:0!important}
+.acc-panel>.tool-card>.tool-head{display:none}
+.acc-panel .sync-note:first-child{margin-top:0}
+.main-content .tool-grid.acc-list>.pick-row{padding:var(--s3) 0}
 }

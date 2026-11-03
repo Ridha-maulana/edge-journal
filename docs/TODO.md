@@ -395,3 +395,4 @@
 - v5.2.8: My Journal, Tools, Profil didesain ulang (opsi A): tulisan kecil di atas judul dihapus, bagian datar tanpa kartu besar, ukuran lebih kecil; pilihan gaya header & menu bawah jadi baris yang membuka lembar pilihan. File baru css/18-flat-pages.css.
 - v5.2.9: Account management & Risk calculator jadi kartu; tombol Edit sejajar nama akun; ikon di judul Tools dan tombol '+ Add trade' di My Journal dihapus; jarak tepi kiri-kanan Tools, Profil, My Journal 20px (halaman utama tetap 8px).
 - v5.3.0: Account management & Risk calculator jadi baris ringkas yang dibuka dengan sentuhan; Risk calculator baru (Long/Short, lot atau risk %, saldo akun, risk/reward nominal dan %, saran lot, buat posisi); Profil punya sapaan dengan lingkaran inisial; judul Tools & Profil lebih lega. File baru js/components/risk-calc.js.
+- v5.3.1: di Profil, Sinkron online, Cloud backup, dan Export & share juga jadi baris ringkas yang dibuka dengan sentuhan (sebelumnya masih terbuka).
