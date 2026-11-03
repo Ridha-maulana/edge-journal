@@ -5,47 +5,47 @@
 .topbar[class*="hd-v"] .account-switcher{white-space:nowrap}
 .topbar[class*="hd-v"] .brand-mark{color:#fff}
 /* 1 · Minimal satu baris */
-.topbar.hd-v1{height:72px;padding:0 16px}
+.topbar.hd-v1{height:72px;padding:0 8px}
 .hd-v1 .hd-name strong{font-size:var(--fs-md);letter-spacing:.4px;font-weight:800}
 .hd-v1 .brand-mark{width:28px;height:28px}
 .hd-v1 .header-icon{border:0;background:none;width:var(--h-md);height:var(--h-md);color:#aab6d6}
 .hd-v1 .account-switcher{height:var(--h-md);border-radius:var(--r-md);padding:0 12px;gap:7px;background:#111a30;border-color:#243257}
 /* 2 · Bilah kaca */
-.topbar.hd-v2{height:72px;padding:0 14px;background:rgba(20,30,62,.55);border-bottom:0}
+.topbar.hd-v2{height:72px;padding:0 8px;background:rgba(20,30,62,.55);border-bottom:0}
 .hd-v2::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,#5d83ff,transparent);opacity:.7}
 .hd-v2 .brand-mark{width:32px;height:32px}
 .hd-v2 .header-icon{border-radius:var(--r-md);width:var(--h-md);height:var(--h-md)}
 .hd-v2 .account-switcher{height:var(--h-md);border-radius:var(--r-md);padding:0 8px 0 4px;gap:6px;background:#111a30;border-color:#243257}
 .hd-v2 .top-actions{gap:7px}
 /* 3 · Akun jadi judul */
-.topbar.hd-v3{height:72px;padding:0 16px}
+.topbar.hd-v3{height:72px;padding:0 8px}
 .hd-acct-title{background:none;border:0;color:#eef2ff;text-align:left;padding:0;font-family:inherit}
 .hd-acct-title small{display:block;font:600 var(--fs-xs) var(--font);letter-spacing:.18em;color:#64708a}
 .hd-acct-title span{display:flex;align-items:center;gap:6px;margin-top:3px}.hd-acct-title strong{font-size:var(--fs-xl);letter-spacing:-.2px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hd-v3 .brand-mark{width:38px;height:38px;box-shadow:0 8px 22px #4564e866}.hd-v3 .brand-mark svg{width:22px;height:22px}
 .hd-v3 .header-icon{width:var(--h-md);height:var(--h-md);border-radius:var(--r-md)}
 /* 5 · Saldo di pil akun */
-.topbar.hd-v5{height:72px;padding:0 14px}
+.topbar.hd-v5{height:72px;padding:0 8px}
 .hd-v5 .brand-mark{width:32px;height:32px}.hd-v5 .brand strong{font-size:var(--fs-sm)}
 .hd-v5 .account-switcher{height:var(--h-lg);border-radius:var(--r-md);padding:0 10px 0 12px;gap:9px;background:#111a30;border-color:#243257}
 .hd-two{display:flex;flex-direction:column;line-height:1.15;text-align:left}.hd-two .acc-name{padding:0;font-size:var(--fs-sm);font-weight:700;max-width:96px}
 .hd-two em{font:700 var(--fs-sm) var(--font);font-style:normal;color:#34d399}
 /* 6 · Banner gradasi */
-.topbar.hd-v6{height:72px;padding:0 14px;background:linear-gradient(135deg,#3b52d6 0%,#1d2a7a 55%,#0f1740 100%);border-bottom:0;box-shadow:inset 0 -30px 40px -30px rgba(0,0,0,.5);backdrop-filter:none}
+.topbar.hd-v6{height:72px;padding:0 8px;background:linear-gradient(135deg,#3b52d6 0%,#1d2a7a 55%,#0f1740 100%);border-bottom:0;box-shadow:inset 0 -30px 40px -30px rgba(0,0,0,.5);backdrop-filter:none}
 .topbar.hd-v6 .brand-mark{width:34px;height:34px;background:#fff;color:#4564e8;box-shadow:0 6px 18px rgba(0,0,0,.3)}
 .hd-v6 .brand strong{font-size:var(--fs-md);color:#fff;white-space:nowrap}.hd-v6 .brand span{white-space:nowrap}.hd-v6 .account-switcher .acc-name{max-width:74px}.hd-v6 .brand span{color:#b9c6ff}
 .hd-v6 .header-icon,.hd-v6 .account-switcher{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.22);color:#fff}
 .hd-v6 .account-switcher{height:var(--h-md);border-radius:var(--r-md);padding:0 11px}.hd-v6 .account-switcher .acc-name{color:#fff}
 .hd-v6 .header-icon{width:var(--h-md);height:var(--h-md);border-radius:var(--r-md)}
 /* 7 · Status sinkron */
-.topbar.hd-v7{height:72px;padding:0 14px}
+.topbar.hd-v7{height:72px;padding:0 8px}
 .hd-v7 .brand-mark{width:32px;height:32px}
 .hd-v7 .acc-name{max-width:72px;padding:0 2px}.hd-sync{max-width:128px;overflow:hidden;text-overflow:ellipsis;display:flex!important;align-items:center;gap:5px;color:#8590a8!important;letter-spacing:.04em!important;font-size:var(--fs-xs)!important;margin-top:3px!important;white-space:nowrap}
 .hd-sync.ok{color:#34d399!important}.hd-sync .hd-dot{width:6px;height:6px;background:#64708a;box-shadow:none}.hd-sync.ok .hd-dot{background:#34d399;box-shadow:0 0 8px #34d399aa}
 .hd-v7 .header-icon{border-radius:var(--r-md);width:var(--h-md);height:var(--h-md)}
 .hd-v7 .account-switcher{height:var(--h-md);border-radius:var(--r-md);padding:0 10px 0 5px;gap:7px;background:#111a30;border-color:#243257}.hd-v7 .hd-av{width:30px;height:30px}
 /* 9 · Kartu mengambang */
-.topbar.hd-v9{height:72px;padding:8px 12px;background:linear-gradient(180deg,#090d18 75%,rgba(9,13,24,0));border-bottom:0;backdrop-filter:none}
+.topbar.hd-v9{height:64px;padding:8px 8px 0;background:linear-gradient(180deg,#090d18 75%,rgba(9,13,24,0));border-bottom:0;backdrop-filter:none}
 .hd-card{display:flex;align-items:center;justify-content:space-between;width:100%;height:56px;padding:0 10px 0 12px;border-radius:var(--r-lg);background:linear-gradient(180deg,#141e3d,#0f1730);border:1px solid #243257;box-shadow:0 14px 34px rgba(0,0,0,.45)}
 .hd-v9 .brand-mark{width:34px;height:34px}.hd-v9 .brand strong{font-size:var(--fs-sm)}
 .hd-v9 .top-actions{gap:0}.hd-v9 .header-icon{background:none;border:0;width:var(--h-md)}
@@ -53,9 +53,9 @@
 .hd-sep{width:1px;height:26px;background:#2a3a66;display:block}
 /* 10 · Strip tanggal */
 .topbar.hd-v10{height:72px;flex-direction:column;align-items:stretch;padding:0;border-bottom:0}
-.hd-row{display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 14px}
+.hd-row{display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 8px}
 .hd-v10 .account-switcher{height:var(--h-sm);border-radius:var(--r-md);padding:0 10px;gap:7px;background:#111a30;border-color:#243257}
-.hd-strip{display:flex;align-items:center;justify-content:space-between;height:32px;padding:0 16px;font-size:var(--fs-sm);color:#9aa8c8;background:#0c1328;border-top:1px solid #161e36;border-bottom:1px solid #161e36}
+.hd-strip{display:flex;align-items:center;justify-content:space-between;height:32px;padding:0 8px;font-size:var(--fs-sm);color:#9aa8c8;background:#0c1328;border-top:1px solid #161e36;border-bottom:1px solid #161e36}
 .hd-strip button{background:none;border:0;color:#9aa8c8;display:flex;align-items:center;gap:6px;font:inherit;padding:0}.hd-strip b{color:#eef2ff}.hd-ses{display:flex;align-items:center;gap:6px}
 /* pemilih di Profil */
 .hd-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}

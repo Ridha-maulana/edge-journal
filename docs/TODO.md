@@ -388,3 +388,5 @@
 - v5.2.2: menu bawah gaya Kapsul gelap & Mengambang + chip tidak lagi menabrak kartu paling bawah: ruang bawah halaman kini otomatis mengikuti tinggi menu bawah (termasuk jaraknya dari tepi layar).
 - v5.2.3: kartu utama Performance saat belum ada data (akun kosong / periode tanpa trade) kini juga menyesuaikan tinggi layar seperti saat ada data, tidak lagi menembus menu bawah.
 - v5.2.3 (tambahan): tinggi kartu utama juga memperhitungkan jarak menu bawah mengambang (gaya Kapsul/Chip), dan nilainya diingat per gaya menu.
+- v5.2.4: menu bawah gaya Kapsul/Chip kini berjarak 8px dari tepi kiri, kanan, dan bawah (sama dengan jarak kartu); header Kartu mengambang jarak sisinya 8px dan tanpa spasi tambahan di bawahnya (jarak ke kartu utama 8px).
+- v5.2.5: jarak tepi kiri-kanan disamakan 8px di SEMUA varian header (standar, 1, 2, 3, 5, 6, 7, 9, 10) dan semua halaman (sebelumnya 0–16px); header detail Performance tidak lagi menjorok 1px.

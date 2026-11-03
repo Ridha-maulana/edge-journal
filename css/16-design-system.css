@@ -26,7 +26,7 @@
 .pill{min-height:var(--h-sm);display:inline-flex;align-items:center;border-radius:var(--r-md)}
 .ct-chip,.ct-pill{min-height:var(--h-sm)}
 /* penyesuaian agar tidak ada teks yang turun baris setelah ukuran diseragamkan */
-.topbar:not([class*="hd-v"]){padding-left:var(--s4);padding-right:var(--s4)}
+.topbar:not([class*="hd-v"]){padding-left:var(--s2);padding-right:var(--s2)}
 .brand strong,.brand span{white-space:nowrap}
 .account-switcher .acc-name{font-size:var(--fs-sm);max-width:96px}
 .bottom-nav .nav-item,.bottom-nav .nav-item span{font-size:var(--fs-xs)}
@@ -106,3 +106,11 @@
 .week-head.gj-main.lv-y>div strong{color:#b4c8ff}
 .week-head.gj-main.lv-y>svg{color:#9db6ff}
 .week-head.wk-hl{background:var(--panel);border-color:var(--border)}
+
+/* v5.2.5 — satu jarak tepi (8px) untuk semua header & halaman */
+:root{--edge:8px}
+.topbar,.topbar[class*="hd-v"]:not(.hd-v9):not(.hd-v10){padding-left:var(--edge)!important;padding-right:var(--edge)!important}
+.topbar.hd-v9{padding-left:var(--edge)!important;padding-right:var(--edge)!important}
+.topbar.hd-v10{padding-left:0!important;padding-right:0!important}
+.hd-row,.hd-strip{padding-left:var(--edge)!important;padding-right:var(--edge)!important}
+@media(max-width:760px){.performance-detail-top{margin-left:0!important;margin-right:0!important}}

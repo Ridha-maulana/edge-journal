@@ -1,7 +1,7 @@
 /* Gaya menu bar bawah pilihan (kelas nv-1..3 pada .bottom-nav). Standar (tanpa kelas) tidak berubah. Hanya layar HP. */
 @media(max-width:760px){
 /* ---------- umum untuk gaya mengambang (1 dan 3) ---------- */
-.bottom-nav.nv-1,.bottom-nav.nv-3{left:12px!important;right:12px!important;width:auto!important;bottom:calc(14px + env(safe-area-inset-bottom,0px))!important;border:1px solid #26335a!important;box-shadow:0 10px 26px rgba(0,0,0,.55)!important;padding:0 6px!important;align-items:center!important;justify-content:space-between!important;overflow:visible!important;backdrop-filter:none!important}
+.bottom-nav.nv-1,.bottom-nav.nv-3{left:8px!important;right:8px!important;width:auto!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;border:1px solid #26335a!important;box-shadow:0 10px 26px rgba(0,0,0,.55)!important;padding:0 6px!important;align-items:center!important;justify-content:space-between!important;overflow:visible!important;backdrop-filter:none!important}
 .bottom-nav.nv-1.nav-hidden,.bottom-nav.nv-3.nav-hidden{transform:translateY(calc(100% + 40px))!important}
 .bottom-nav.nv-1 .nav-item:nth-child(3) svg,.bottom-nav.nv-2 .nav-item:nth-child(3) svg,.bottom-nav.nv-3 .nav-item:nth-child(3) svg{width:22px!important;height:22px!important;padding:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:#8fa9ff!important;stroke-width:2.2!important}
 /* ---------- 1: kapsul gelap + lingkaran aktif ---------- */
@@ -32,8 +32,8 @@
 }
 @media(max-width:760px){
 /* ruang bawah halaman mengikuti tinggi menu bawah (termasuk jarak mengambang) supaya kartu terakhir tidak tertabrak */
-body[data-nv="1"] .app-shell,body[data-nv="2"] .app-shell,body[data-nv="3"] .app-shell{padding-bottom:calc(var(--nav-h,78px) + 18px)!important}
-body[data-nv="1"] .performance-detail-page,body[data-nv="2"] .performance-detail-page,body[data-nv="3"] .performance-detail-page{padding-bottom:calc(var(--nav-h,78px) + 18px)!important}
-body[data-nv="1"] .fab,body[data-nv="3"] .fab{bottom:calc(var(--nav-h,78px) + 14px)!important}
+body[data-nv="1"] .app-shell,body[data-nv="2"] .app-shell,body[data-nv="3"] .app-shell{padding-bottom:calc(var(--nav-h,72px) + 16px)!important}
+body[data-nv="1"] .performance-detail-page,body[data-nv="2"] .performance-detail-page,body[data-nv="3"] .performance-detail-page{padding-bottom:calc(var(--nav-h,72px) + 16px)!important}
+body[data-nv="1"] .fab,body[data-nv="3"] .fab{bottom:calc(var(--nav-h,72px) + 12px)!important}
 }
 .tool-card.nav-picker{margin-top:16px}
