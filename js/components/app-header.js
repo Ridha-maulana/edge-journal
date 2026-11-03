@@ -67,11 +67,5 @@ function AppHeader({ variant, account, onCalendar, onAccount }) {
 }
 /* kartu pemilih di Profil */
 function HeaderPicker({ value, onChange }) {
-    return React.createElement("div", { className: "tool-card" },
-        React.createElement("div", { className: "tool-head" },
-            React.createElement("div", { className: "tool-icon" }, React.createElement(UserRound, null)),
-            React.createElement("div", null,
-                React.createElement("h2", null, "Tampilan header"),
-                React.createElement("p", null, "Coba 8 gaya header atas, langsung terlihat di bagian atas layar. Pilihan tersimpan di perangkat ini."))),
-        React.createElement("div", { className: "hd-picker" }, HEADER_LIST.map((x, i) => React.createElement("button", { key: x[0], type: "button", className: value === x[0] ? 'on' : '', onClick: () => onChange(x[0]) }, React.createElement("b", null, i === 0 ? '·' : i), " ", x[1]))));
+    return React.createElement(PickRow, { icon: React.createElement(UserRound, { size: 18 }), title: "Tampilan header", desc: "Gaya header atas, hanya di halaman utama", value: value, options: HEADER_LIST.map(x => ({ v: x[0], l: x[1] })), onChange: onChange });
 }

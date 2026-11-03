@@ -12,7 +12,7 @@ function AccountPage({ accounts, activeAccount, onSelect, onCreate, onDelete, on
                     React.createElement(FileJson, null)),
                 React.createElement("div", null,
                     React.createElement("h2", null, "Cloud backup"),
-                    React.createElement("p", null, "Backup JSON tersimpan sebagai file yang bisa dipulihkan di perangkat lain."))),
+                    React.createElement("p", null, "Buat atau pulihkan file backup JSON."))),
             React.createElement("div", { className: "button-row" },
                 React.createElement("button", { className: "secondary-btn", onClick: onBackup },
                     React.createElement(Cloud, { size: 15 }),
@@ -34,7 +34,10 @@ function AccountPage({ accounts, activeAccount, onSelect, onCreate, onDelete, on
             React.createElement("button", { className: "secondary-btn", onClick: onExport },
                 React.createElement(Download, { size: 16 }),
                 " Share CSV")),
-            React.createElement("button", { className: "secondary-btn", type: "button", onClick: () => hapticTest().then(msg => notify(msg)) },
-                " Tes getar"),
-            React.createElement("p", { className: "sync-note" }, "Edge Journal v" + APP_VERSION + " \u00B7 React " + React.version + " \u00B7 data tersimpan lokal di perangkat ini")));
+        React.createElement("div", { className: "tool-card" },
+            React.createElement("button", { className: "pick-row", type: "button", onClick: () => hapticTest().then(msg => notify(msg)) },
+                React.createElement("span", { className: "pick-ic" }, React.createElement(Zap, { size: 18 })),
+                React.createElement("span", { className: "pick-tx" }, React.createElement("b", null, "Tes getar")),
+                React.createElement(ChevronRight, { size: 18 }))),
+        React.createElement("p", { className: "sync-note foot" }, "Edge Journal v" + APP_VERSION + " \u00B7 data tersimpan lokal di perangkat ini")));
 }

@@ -5,7 +5,6 @@ function NavItem({ active, onClick, icon, label }) { return React.createElement(
     React.createElement("span", null, label)); }
 function PageHeading({ eyebrow, title, description, action }) { return React.createElement("div", { className: "page-heading" },
     React.createElement("div", null,
-        React.createElement("p", { className: "eyebrow" }, eyebrow),
         React.createElement("h1", null, title),
         React.createElement("p", { className: "muted" }, description)),
     action); }

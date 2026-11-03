@@ -1,0 +1,59 @@
+/* v5.2.8 — My Journal, Tools, Profil: judul langsung, daftar datar (tanpa kartu besar), ukuran kecil. Hanya HP. */
+@media(max-width:760px){
+.main-content .page-heading{margin:0 0 var(--s4);padding:0 var(--s1)}
+.main-content .page-heading h1{grid-row:1!important;font-size:var(--fs-2xl);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0}
+.main-content .page-heading .muted{grid-row:2!important;font-size:var(--fs-sm);line-height:1.4;margin:6px 0 0}
+.main-content .page-heading>:last-child:not(:first-child){grid-row:1!important;align-self:start}
+.main-content .page-heading .primary-btn,.main-content .page-heading .icon-btn{height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);padding-top:0;padding-bottom:0}
+.main-content .page-heading .icon-btn{width:var(--h-md);padding:0}
+/* bagian datar */
+.flat-sec{padding:var(--s4) var(--s1) var(--s2);border-top:1px solid #1a2339}
+.flat-sec:first-of-type{border-top:0;padding-top:var(--s1)}
+.flat-sec>h3{margin:0 0 var(--s3);font-size:var(--fs-lg);font-weight:700}
+/* kolom isian kecil */
+.flat-sec .calc-grid{grid-template-columns:1fr 1fr!important;gap:var(--s2)!important;margin:0}
+.flat-sec .calc-grid label{font-size:var(--fs-xs);color:#8590a8;margin:0}
+.flat-sec .calc-grid input,.flat-sec .calc-grid .tsel{height:var(--h-md);min-height:var(--h-md);margin-top:4px;border-radius:var(--r-md);padding:0 var(--s3);font-size:var(--fs-sm)}
+/* hasil: satu baris tiga kolom */
+.flat-sec .calculator-results{grid-template-columns:repeat(3,1fr)!important;gap:0!important;margin:var(--s3) 0 0;background:none;border:0;border-top:1px solid #1a2339;border-bottom:1px solid #1a2339;border-radius:0;padding:0}
+.flat-sec .calculator-results>div{grid-column:auto!important;background:none!important;border:0!important;border-right:1px solid #1a2339!important;border-radius:0!important;padding:var(--s3) var(--s2) var(--s3) var(--s3)!important;margin:0}
+.flat-sec .calculator-results>div:first-child{padding-left:0!important}
+.flat-sec .calculator-results>div:last-child{border-right:0!important}
+.flat-sec .calculator-results span{font-size:var(--fs-xs);letter-spacing:0;text-transform:none;color:#8590a8}
+.flat-sec .calculator-results strong{font-size:var(--fs-xl);margin-top:4px}
+.flat-sec .calculator-results small{font-size:var(--fs-xs);margin-top:3px;color:#71809c}
+/* baris pilihan */
+.pick-row{display:flex;align-items:center;gap:var(--s3);width:100%;padding:var(--s2) 0;background:none;border:0;color:#eef2ff;text-align:left;font-family:inherit;cursor:pointer}
+.pick-ic{width:36px;height:36px;border-radius:50%;background:#161f36;color:#cfd8ee;display:flex;align-items:center;justify-content:center;flex:none}
+.pick-tx{flex:1;min-width:0}.pick-tx b{display:block;font-size:var(--fs-md);font-weight:600}.pick-tx small{display:block;font-size:var(--fs-xs);color:#8590a8;margin-top:2px;font-weight:400}
+.pick-val{font-size:var(--fs-xs);font-weight:600;color:#8fa9ff;white-space:nowrap}
+.pick-row>svg:last-child{color:#6b7a99;flex:none}
+/* kartu Profil → bagian datar */
+.main-content .tool-grid{display:block}
+.main-content .tool-card{background:none!important;border:0!important;border-top:1px solid #1a2339!important;border-radius:0!important;box-shadow:none!important;padding:var(--s4) var(--s1)!important;margin:0!important;animation:none!important}
+.main-content .tool-grid>.tool-card:first-child{border-top:0!important;padding-top:var(--s1)!important}
+.main-content .tool-head{display:flex;align-items:center;gap:var(--s3);margin:0 0 var(--s3)}
+.main-content .tool-icon{width:36px;height:36px;border-radius:50%!important;background:#161f36!important;color:#cfd8ee!important;display:flex;align-items:center;justify-content:center;flex:none}
+.main-content .tool-icon svg{width:18px;height:18px}
+.main-content .tool-head h2{margin:0;font-size:var(--fs-md);font-weight:600}
+.main-content .tool-head p{margin:2px 0 0;font-size:var(--fs-xs);line-height:1.4;color:#8590a8}
+.main-content .tool-card .button-row{display:flex;gap:var(--s2);margin:0!important;flex-wrap:wrap}
+.main-content .tool-card .secondary-btn{margin:0!important;height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);padding:0 var(--s3);font-size:var(--fs-sm);width:auto}
+.main-content .tool-card .sync-note{font-size:var(--fs-sm);margin:var(--s2) 0 0}
+.main-content .tool-card .sync-status{font-size:var(--fs-sm);margin:var(--s2) 0}
+.main-content .sync-note.foot{font-size:var(--fs-xs);color:#71809c;padding:var(--s3) var(--s1);margin:0}
+/* Account management (bagian pertama Profil) */
+.acct-inline .modal-head{margin:0 0 var(--s3)}
+.acct-inline .modal-head .eyebrow{display:none}
+.acct-inline .modal-head h2{font-size:var(--fs-lg);font-weight:700;margin:0}
+.acct-inline .account-tabs{gap:6px!important;justify-content:flex-start!important;overflow-x:auto;border:0!important;margin:0 0 var(--s3)!important;padding:0!important;scrollbar-width:none}
+.acct-inline .account-tabs::-webkit-scrollbar{display:none}
+.acct-inline .account-tabs button{flex:none;padding:8px var(--s3)!important;border-radius:999px!important;background:#111a30!important;border:0!important;color:#8590a8!important;font-size:var(--fs-sm)!important;font-weight:600}
+.acct-inline .account-tabs button.active{background:#1c2744!important;color:#fff!important}
+.acct-inline .account-summary{background:none!important;border:0!important;padding:0!important;margin:0 0 var(--s3)!important}
+.acct-inline .account-list-item{border-radius:var(--r-lg);padding:var(--s3)}
+.acct-inline .account-list-item.selected{background:#101a36;border-color:#2a3f7a}
+.acct-inline .account-list{gap:var(--s2)}
+/* My Journal: pencarian & filter lebih ringkas */
+.main-content .page-heading+*{margin-top:0}
+}

@@ -16,6 +16,25 @@ function TSelect({ value, onChange, options, title }) {
                     React.createElement("span", null, o.l),
                     React.createElement("i", null))))), document.body));
 }
+/* Baris pilihan datar: ikon bulat + judul + keterangan + nilai terpilih; sentuh untuk membuka lembar pilihan */
+function PickRow({ icon, title, desc, value, options, onChange }) {
+    const [open, setOpen] = useState(false);
+    const opts = options.map(o => typeof o === 'string' ? { v: o, l: o } : o);
+    const cur = opts.find(o => o.v === value) || opts[0];
+    return React.createElement(React.Fragment, null,
+        React.createElement("button", { type: "button", className: "pick-row", onClick: () => setOpen(true) },
+            React.createElement("span", { className: "pick-ic" }, icon),
+            React.createElement("span", { className: "pick-tx" }, React.createElement("b", null, title), desc && React.createElement("small", null, desc)),
+            React.createElement("span", { className: "pick-val" }, cur.l),
+            React.createElement(ChevronRight, { size: 18 })),
+        open && ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop center top sheet-layer", onClick: e => { if (e.target === e.currentTarget)
+                setOpen(false); } },
+            React.createElement("div", { className: "tsel-sheet" },
+                React.createElement("div", { className: "tsel-title" }, title),
+                opts.map(o => React.createElement("button", { type: "button", key: o.v, className: o.v === value ? 'on' : '', onClick: () => { setOpen(false); onChange(o.v); } },
+                    React.createElement("span", null, o.l),
+                    React.createElement("i", null))))), document.body));
+}
 function DateField({ value, onChange, withTime, min }) {
     const p2 = n => String(n).padStart(2, '0');
     const parse = v => { const x = v ? new Date(withTime ? v : v + 'T12:00') : new Date(); return isNaN(x) ? new Date() : x; };

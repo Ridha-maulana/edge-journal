@@ -392,3 +392,4 @@
 - v5.2.5: jarak tepi kiri-kanan disamakan 8px di SEMUA varian header (standar, 1, 2, 3, 5, 6, 7, 9, 10) dan semua halaman (sebelumnya 0–16px); header detail Performance tidak lagi menjorok 1px.
 - v5.2.6: gaya menu bawah ke-4 'Datar + pil' (bar penuh, garis tipis di atas, hanya ikon, pil lebar di menu aktif seperti contoh).
 - v5.2.7: header atas hanya tampil di halaman utama (Performance); My Journal, Tools, Profil tanpa header (langsung judul halaman). Warna bilah status atas kini otomatis sama dengan warna layar di bawahnya di semua halaman dan modal (satu warna, tanpa pita beda warna).
+- v5.2.8: My Journal, Tools, Profil didesain ulang (opsi A): tulisan kecil di atas judul dihapus, bagian datar tanpa kartu besar, ukuran lebih kecil; pilihan gaya header & menu bawah jadi baris yang membuka lembar pilihan. File baru css/18-flat-pages.css.
