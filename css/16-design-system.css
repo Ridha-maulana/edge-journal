@@ -114,3 +114,8 @@
 .topbar.hd-v10{padding-left:0!important;padding-right:0!important}
 .hd-row,.hd-strip{padding-left:var(--edge)!important;padding-right:var(--edge)!important}
 @media(max-width:760px){.performance-detail-top{margin-left:0!important;margin-right:0!important}}
+/* v5.2.7 — header atas hanya di halaman utama (Performance); My Journal, Tools, Profil langsung ke judul halaman */
+@media(max-width:760px){
+body[data-tab="journal"] .topbar,body[data-tab="tools"] .topbar,body[data-tab="account"] .topbar{display:none!important}
+body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body[data-tab="account"] .main-content{padding-top:var(--s4)}
+}
