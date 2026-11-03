@@ -35,7 +35,7 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 .flat-sec .calculator-results strong{font-size:var(--fs-xl);margin-top:4px}
 .flat-sec .calculator-results small{font-size:var(--fs-xs);margin-top:3px;color:#71809c}
 /* baris pilihan */
-.pick-row{display:flex;align-items:center;gap:var(--s3);width:100%;padding:var(--s2) 0;background:none;border:0;color:#eef2ff;text-align:left;font-family:inherit;cursor:pointer}
+.pick-row{display:flex;align-items:center;gap:var(--s3);width:100%;padding:var(--s4) 0;background:none;border:0;color:#eef2ff;text-align:left;font-family:inherit;cursor:pointer}
 .pick-ic{width:36px;height:36px;border-radius:50%;background:#161f36;color:#cfd8ee;display:flex;align-items:center;justify-content:center;flex:none}
 .pick-tx{flex:1;min-width:0}.pick-tx b{display:block;font-size:var(--fs-md);font-weight:600}.pick-tx small{display:block;font-size:var(--fs-xs);color:#8590a8;margin-top:2px;font-weight:400}
 .pick-val{font-size:var(--fs-xs);font-weight:600;color:#8fa9ff;white-space:nowrap}
@@ -85,7 +85,7 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 /* baris ringkas yang bisa dibuka */
 .acc-list>*+*,.tool-grid>.acc-item+*{border-top:1px solid #1a2339}
 .pick-row.open>svg:last-child{transform:rotate(180deg);color:#8fa9ff}
-.acc-panel{background:#0f1629;border:1px solid #1c2640;border-radius:var(--r-lg);padding:var(--s3);margin:var(--s2) 0 var(--s3)}
+.acc-panel{background:#0f1629;border:1px solid #1c2640;border-radius:var(--r-lg);padding:var(--s3);margin:0 0 var(--s4)}
 .acc-panel .tool-card.acct-inline{background:none!important;border:0!important;padding:0!important;margin:0!important}
 .acct-inline .modal-head{display:none!important}
 .main-content .tool-grid>.acc-item+.tool-card{padding-top:var(--s3)!important}
@@ -117,5 +117,4 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 .main-content .acc-panel>.tool-card{border:0!important;background:none!important;padding:0!important;margin:0!important}
 .acc-panel>.tool-card>.tool-head{display:none}
 .acc-panel .sync-note:first-child{margin-top:0}
-.main-content .tool-grid.acc-list>.pick-row{padding:var(--s3) 0}
 }
