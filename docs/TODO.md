@@ -393,3 +393,4 @@
 - v5.2.6: gaya menu bawah ke-4 'Datar + pil' (bar penuh, garis tipis di atas, hanya ikon, pil lebar di menu aktif seperti contoh).
 - v5.2.7: header atas hanya tampil di halaman utama (Performance); My Journal, Tools, Profil tanpa header (langsung judul halaman). Warna bilah status atas kini otomatis sama dengan warna layar di bawahnya di semua halaman dan modal (satu warna, tanpa pita beda warna).
 - v5.2.8: My Journal, Tools, Profil didesain ulang (opsi A): tulisan kecil di atas judul dihapus, bagian datar tanpa kartu besar, ukuran lebih kecil; pilihan gaya header & menu bawah jadi baris yang membuka lembar pilihan. File baru css/18-flat-pages.css.
+- v5.2.9: Account management & Risk calculator jadi kartu; tombol Edit sejajar nama akun; ikon di judul Tools dan tombol '+ Add trade' di My Journal dihapus; jarak tepi kiri-kanan Tools, Profil, My Journal 20px (halaman utama tetap 8px).

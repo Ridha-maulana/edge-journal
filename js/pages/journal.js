@@ -84,9 +84,7 @@ function Journal({ account, trades, filters, setFilters, expanded, setExpanded, 
     const filtered = trades.filter(t => (filters.status === 'all' || t.status === filters.status) && (filters.side === 'all' || t.side === filters.side) && (!filters.search || t.symbol.toLowerCase().includes(filters.search.toLowerCase()) || String(t.setup || '').toLowerCase().includes(filters.search.toLowerCase())) && (!filters.date || dateOnly(t.date) === filters.date) && (!filters.ids || filters.ids.includes(t.id)));
     const groups = filtered.reduce((acc, t) => { const key = dateOnly(t.date); (acc[key] || (acc[key] = [])).push(t); return acc; }, {});
     return React.createElement("section", null,
-        React.createElement(PageHeading, { eyebrow: "LOGBOOK / TRADE HISTORY", title: "My Journal", description: `Semua transaksi akun ${account.name}.`, action: React.createElement("button", { className: "primary-btn compact", onClick: onAdd },
-                React.createElement(Plus, { size: 16 }),
-                " Add trade") }),
+        React.createElement(PageHeading, { eyebrow: "LOGBOOK / TRADE HISTORY", title: "My Journal", description: `Semua transaksi akun ${account.name}.` }),
         React.createElement("div", { className: "journal-controls" },
             React.createElement("div", { className: "search-box" },
                 React.createElement(Search, { size: 15 }),

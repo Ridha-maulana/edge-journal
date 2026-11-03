@@ -1,14 +1,26 @@
 /* v5.2.8 — My Journal, Tools, Profil: judul langsung, daftar datar (tanpa kartu besar), ukuran kecil. Hanya HP. */
+.as-namerow{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-top:var(--s2)}
+.as-namerow strong{margin:0!important;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.as-namerow .as-edit-row{flex:1;min-width:0}
+.as-namerow .as-edit{flex:none}
 @media(max-width:760px){
-.main-content .page-heading{margin:0 0 var(--s4);padding:0 var(--s1)}
+/* jarak tepi halaman Tools, Profil, My Journal (halaman utama tidak diubah) */
+body{--pg-edge:20px}
+body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body[data-tab="account"] .main-content{padding-left:var(--pg-edge)!important;padding-right:var(--pg-edge)!important}
+.main-content .page-heading{margin:0 0 var(--s4);padding:0}
 .main-content .page-heading h1{grid-row:1!important;font-size:var(--fs-2xl);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0}
 .main-content .page-heading .muted{grid-row:2!important;font-size:var(--fs-sm);line-height:1.4;margin:6px 0 0}
 .main-content .page-heading>:last-child:not(:first-child){grid-row:1!important;align-self:start}
 .main-content .page-heading .primary-btn,.main-content .page-heading .icon-btn{height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);padding-top:0;padding-bottom:0}
 .main-content .page-heading .icon-btn{width:var(--h-md);padding:0}
 /* bagian datar */
-.flat-sec{padding:var(--s4) var(--s1) var(--s2);border-top:1px solid #1a2339}
-.flat-sec:first-of-type{border-top:0;padding-top:var(--s1)}
+.flat-sec{padding:var(--s4) 0 var(--s2);border-top:1px solid #1a2339}
+.flat-sec:first-of-type{border-top:0;padding-top:0}
+/* kartu (Risk calculator & Account management) */
+.flat-sec.card-sec,.main-content .tool-card.acct-inline{background:#0f1629!important;border:1px solid #1c2640!important;border-radius:var(--r-lg)!important;padding:var(--s4)!important;margin:0 0 var(--s2)!important}
+.flat-sec.card-sec+.flat-sec{border-top:0;padding-top:var(--s3)}
+.flat-sec.card-sec .calculator-results>div:first-child{padding-left:0!important}
+.main-content .tool-card.acct-inline+.tool-card{border-top:0!important;padding-top:var(--s3)!important}
 .flat-sec>h3{margin:0 0 var(--s3);font-size:var(--fs-lg);font-weight:700}
 /* kolom isian kecil */
 .flat-sec .calc-grid{grid-template-columns:1fr 1fr!important;gap:var(--s2)!important;margin:0}
@@ -30,8 +42,8 @@
 .pick-row>svg:last-child{color:#6b7a99;flex:none}
 /* kartu Profil → bagian datar */
 .main-content .tool-grid{display:block}
-.main-content .tool-card{background:none!important;border:0!important;border-top:1px solid #1a2339!important;border-radius:0!important;box-shadow:none!important;padding:var(--s4) var(--s1)!important;margin:0!important;animation:none!important}
-.main-content .tool-grid>.tool-card:first-child{border-top:0!important;padding-top:var(--s1)!important}
+.main-content .tool-card{background:none!important;border:0!important;border-top:1px solid #1a2339!important;border-radius:0!important;box-shadow:none!important;padding:var(--s4) 0!important;margin:0!important;animation:none!important}
+.main-content .tool-grid>.tool-card:first-child{border-top:0!important}
 .main-content .tool-head{display:flex;align-items:center;gap:var(--s3);margin:0 0 var(--s3)}
 .main-content .tool-icon{width:36px;height:36px;border-radius:50%!important;background:#161f36!important;color:#cfd8ee!important;display:flex;align-items:center;justify-content:center;flex:none}
 .main-content .tool-icon svg{width:18px;height:18px}
@@ -41,18 +53,22 @@
 .main-content .tool-card .secondary-btn{margin:0!important;height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);padding:0 var(--s3);font-size:var(--fs-sm);width:auto}
 .main-content .tool-card .sync-note{font-size:var(--fs-sm);margin:var(--s2) 0 0}
 .main-content .tool-card .sync-status{font-size:var(--fs-sm);margin:var(--s2) 0}
-.main-content .sync-note.foot{font-size:var(--fs-xs);color:#71809c;padding:var(--s3) var(--s1);margin:0}
+.main-content .sync-note.foot{font-size:var(--fs-xs);color:#71809c;padding:var(--s3) 0;margin:0}
 /* Account management (bagian pertama Profil) */
-.acct-inline .modal-head{margin:0 0 var(--s3)}
+.acct-inline .modal-head{margin:0 0 var(--s3)!important}
 .acct-inline .modal-head .eyebrow{display:none}
 .acct-inline .modal-head h2{font-size:var(--fs-lg);font-weight:700;margin:0}
 .acct-inline .account-tabs{gap:6px!important;justify-content:flex-start!important;overflow-x:auto;border:0!important;margin:0 0 var(--s3)!important;padding:0!important;scrollbar-width:none}
 .acct-inline .account-tabs::-webkit-scrollbar{display:none}
-.acct-inline .account-tabs button{flex:none;padding:8px var(--s3)!important;border-radius:999px!important;background:#111a30!important;border:0!important;color:#8590a8!important;font-size:var(--fs-sm)!important;font-weight:600}
+.acct-inline .account-tabs button{flex:none;padding:8px 10px!important;border-radius:999px!important;background:#111a30!important;border:0!important;color:#8590a8!important;font-size:var(--fs-sm)!important;font-weight:600}
 .acct-inline .account-tabs button.active{background:#1c2744!important;color:#fff!important}
 .acct-inline .account-summary{background:none!important;border:0!important;padding:0!important;margin:0 0 var(--s3)!important}
-.acct-inline .account-list-item{border-radius:var(--r-lg);padding:var(--s3)}
-.acct-inline .account-list-item.selected{background:#101a36;border-color:#2a3f7a}
+.acct-inline .account-summary .as-head span{font-size:var(--fs-xs);letter-spacing:.08em}
+.acct-inline .account-summary .as-namerow strong{font-size:var(--fs-lg);font-weight:700}
+.acct-inline .as-edit{height:32px;padding:0 var(--s3);border-radius:var(--r-xs);font-size:var(--fs-sm);border-color:#2a3f7a}
+.acct-inline .account-summary small{font-size:var(--fs-sm);margin-top:var(--s1)}
+.acct-inline .account-list-item{border-radius:var(--r-md);padding:10px var(--s3);background:#0b1121;border-color:#1c2640}
+.acct-inline .account-list-item.selected{background:#101a36!important;border-color:#2a3f7a!important}
 .acct-inline .account-list{gap:var(--s2)}
 /* My Journal: pencarian & filter lebih ringkas */
 .main-content .page-heading+*{margin-top:0}

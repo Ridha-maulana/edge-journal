@@ -1,9 +1,8 @@
 /* Halaman Tools (Risk calculator) */
 "use strict";
 function Tools({ headerVariant, onHeaderVariant, navVariant, onNavVariant, account, trades, onAdd, onExport, onBackup, onRestore, onNewAccount }) { const [calc, setCalc] = useState({ symbol: 'XAUUSD', entry: '', sl: '', tp: '', lots: '0.01' }); const riskDistance = Math.abs(Number(calc.entry || 0) - Number(calc.sl || 0)); const riskUsd = riskFor(calc.entry, calc.sl, calc.lots, calc.symbol); const rewardUsd = rewardFor(calc.entry, calc.tp, calc.lots, calc.symbol); return React.createElement("section", null,
-    React.createElement(PageHeading, { eyebrow: "TOOLS / UTILITIES", title: "Trading Tools", description: "Kalkulator risk dan reward.", action: React.createElement("button", { className: "icon-btn" },
-            React.createElement(Settings2, { size: 18 })) }),
-    React.createElement("div", { className: "flat-sec" },
+    React.createElement(PageHeading, { eyebrow: "TOOLS / UTILITIES", title: "Trading Tools", description: "Kalkulator risk dan reward." }),
+    React.createElement("div", { className: "flat-sec card-sec" },
         React.createElement("h3", null, "Risk calculator"),
         React.createElement("div", { className: "calc-grid compact-calc" },
             React.createElement("label", null,
