@@ -225,7 +225,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
     const cancel = e => { ptrs.current.delete(e.pointerId); if (ptrs.current.size < 2)
         pinch.current = null; drag.current = null; };
     if (!n)
-        return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, className: "combo-chart candle-chart" },
+        return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, style: hh ? { aspectRatio: `500/${hh}` } : undefined, className: "combo-chart candle-chart" },
             React.createElement("text", { x: W / 2, y: H / 2, textAnchor: "middle", fontSize: "12", fill: "#7d8bab" }, "Belum ada trade pada periode ini"));
     const grid = [0, 1, 2, 3].map(i => lo + (hi - lo) * (i + .5) / 4);
     const step = Math.max(1, Math.ceil(58 / SW));

@@ -385,3 +385,6 @@
 - v5.1.11: My Journal saat pertama dibuka semua kartu tertutup (hanya kartu Tahun yang tampil); kartu Tahun, Bulan terbuka manual dengan diketuk. Pengecualian: saat dibuka dari Performance (ketuk kandel/kartu), kartu terkait tetap terbuka otomatis.
 - v5.2.0: Screenshot Trade Entry kini bisa membaca gambar GRAFIK MT5 yang menampilkan posisi open (garis BUY/SELL, TP, SL): entry, SL, TP, arah, lot, dan simbol terisi otomatis dan disimpan sebagai posisi OPEN (waktu buka diisi waktu sekarang karena tidak ada di gambar). Label "Beta" diganti "Pro".
 - v5.2.1: pilihan gaya menu bar bawah di Tools (di bawah Tampilan header): Standar (lama), Kapsul gelap, Datar + titik, Mengambang + chip. Pilihan tersimpan di perangkat.
+- v5.2.2: menu bawah gaya Kapsul gelap & Mengambang + chip tidak lagi menabrak kartu paling bawah: ruang bawah halaman kini otomatis mengikuti tinggi menu bawah (termasuk jaraknya dari tepi layar).
+- v5.2.3: kartu utama Performance saat belum ada data (akun kosong / periode tanpa trade) kini juga menyesuaikan tinggi layar seperti saat ada data, tidak lagi menembus menu bawah.
+- v5.2.3 (tambahan): tinggi kartu utama juga memperhitungkan jarak menu bawah mengambang (gaya Kapsul/Chip), dan nilainya diingat per gaya menu.

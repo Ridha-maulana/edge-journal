@@ -30,4 +30,10 @@
 .bottom-nav.nv-3 .nav-item.active svg,.bottom-nav.nv-3 .nav-item.active:nth-child(3) svg{color:#fff!important}
 .bottom-nav.nv-1 .nav-item.active:nth-child(3) svg{color:#fff!important}
 }
+@media(max-width:760px){
+/* ruang bawah halaman mengikuti tinggi menu bawah (termasuk jarak mengambang) supaya kartu terakhir tidak tertabrak */
+body[data-nv="1"] .app-shell,body[data-nv="2"] .app-shell,body[data-nv="3"] .app-shell{padding-bottom:calc(var(--nav-h,78px) + 18px)!important}
+body[data-nv="1"] .performance-detail-page,body[data-nv="2"] .performance-detail-page,body[data-nv="3"] .performance-detail-page{padding-bottom:calc(var(--nav-h,78px) + 18px)!important}
+body[data-nv="1"] .fab,body[data-nv="3"] .fab{bottom:calc(var(--nav-h,78px) + 14px)!important}
+}
 .tool-card.nav-picker{margin-top:16px}

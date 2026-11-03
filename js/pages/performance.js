@@ -9,14 +9,16 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
     const shareBlob = useRef(null);
     /* tinggi grafik menyesuaikan layar: kartu utama + tombol Share/Stats/DNA muat penuh di atas menu bawah (jarak 8px).
        Nilai sudah benar sejak tampilan pertama (tanpa animasi menyesuaikan): diingat per ukuran layar, dan dihitung sebelum layar digambar. */
-    const heroKey = () => 'ej3-hh:' + window.innerWidth + 'x' + window.innerHeight;
+    const heroKey = () => 'ej3-hh:' + window.innerWidth + 'x' + window.innerHeight + ':' + (document.body.getAttribute('data-nv') || '0');
+    /* tinggi yang dipakai menu bawah dari tepi layar (menu mengambang punya jarak dari tepi) */
+    const navSpace = nv => nv ? nv.offsetHeight + (parseFloat(getComputedStyle(nv).bottom) || 0) : 74;
     const [heroHH, setHeroHH] = useState(() => {
         try {
             const c = Number(localStorage.getItem(heroKey()));
             if (c >= 320 && c <= 428) return c;
         } catch (_) { }
         const hd = document.querySelector('header.topbar'), nv = document.querySelector('.bottom-nav');
-        const top = (hd ? hd.getBoundingClientRect().bottom : 72) + 8, navH = nv ? nv.offsetHeight : 74;
+        const top = (hd ? hd.getBoundingClientRect().bottom : 72) + 8, navH = navSpace(nv);
         const w = Math.min(window.innerWidth, 620) - 50;
         return Math.max(320, Math.min(428, Math.round((window.innerHeight - navH - 8 - top - 395) * 500 / w)));
     });
@@ -30,7 +32,7 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
             let cardTop = 0;
             for (let e = card; e; e = e.offsetParent) cardTop += e.offsetTop;  /* tidak terpengaruh animasi masuk */
             const base = card.offsetHeight - svg.getBoundingClientRect().height;
-            const target = window.innerHeight - nav.offsetHeight - 8 - cardTop - base;
+            const target = window.innerHeight - navSpace(nav) - 8 - cardTop - base;
             const hh = Math.max(320, Math.min(428, Math.round(target * 500 / w)));
             if (!isFinite(hh)) return;
             try { localStorage.setItem(heroKey(), String(hh)); } catch (_) { }
