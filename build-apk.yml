@@ -112,13 +112,13 @@ jobs:
           cp -r splash-res/. android/app/src/main/res/
           find android/app/src/main/res -name 'ic_launcher_splash*' -o -name 'splash_bg*' -o -name 'splash_fg*'
 
-      - name: Tema splash gelap (Android 12+)
+      - name: Tema splash (Android 12+), ikut mode terang/gelap HP
         if: steps.zip.outputs.build == 'true'
         working-directory: android-app
         run: |
           S=android/app/src/main/res/values/styles.xml
           if grep -q 'AppTheme.NoActionBarLaunch' "$S"; then
-            sed -i 's#<style name="AppTheme.NoActionBarLaunch"[^>]*>#&\n        <item name="windowSplashScreenBackground">\#090d18</item>\n        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_splash</item>#' "$S"
+            sed -i 's#<style name="AppTheme.NoActionBarLaunch"[^>]*>#&\n        <item name="windowSplashScreenBackground">@color/ej_splash_bg</item>\n        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_splash</item>#' "$S"
           fi
           cat "$S"
           grep -q 'ic_launcher_splash' "$S" || { echo 'GAGAL: tema splash tidak terpasang'; exit 1; }
