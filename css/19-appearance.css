@@ -45,5 +45,11 @@
 .ap-hex:focus{border-color:var(--c218)}.ap-hex.bad{border-color:var(--c119)}
 .ap-foot{display:flex;justify-content:space-between;margin:6px 22px 0}
 .ap-foot button{background:none;border:0;padding:10px 0;font:700 var(--fs-md) var(--font);color:var(--c5);cursor:pointer}.ap-foot button.ok{color:var(--c218)}
-.ap-pager{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16px);mask-image:linear-gradient(90deg,transparent 0,#000 16px)}
-.ap-page:last-child{flex-basis:calc(100% - 22px)}
+.brand-mark{color:var(--onacc)}.brand-mark svg{stroke:currentColor}
+/* v5.6.1: halaman tema/font pas selebar kartu (tanpa intipan), tiap halaman 5 baris sama tinggi */
+.ap-pager{gap:0;padding:0;scroll-padding:0}
+.ap-page{flex:0 0 100%;padding:0 10px;box-sizing:border-box}
+.ap-grp{margin:2px 12px 6px}
+.ap-pager .ap-list>button{height:58px;box-sizing:border-box;padding-top:0;padding-bottom:0}
+.ap-pager .ap-nm{min-width:0;flex:1;line-height:1.25}
+.ap-pager .ap-nm small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
