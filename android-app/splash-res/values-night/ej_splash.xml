@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Latar splash awal: hitam polos saat HP mode gelap -->
+    <color name="ej_splash_bg">#0B0B0C</color>
+</resources>

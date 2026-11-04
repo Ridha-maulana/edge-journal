@@ -18,8 +18,24 @@
         ocean: { name: 'Ocean Cyan', h: 193, ns: .95, ah: 188, sw: ['#22d3ee', '#07141a'],
             dark: { '#090d18': '#07141a', '#0f1629': '#0c1f28', '#111729': '#0c1f28', '#151d32': '#102933', '#1c2640': '#17353f', '#202b43': '#17353f', '#5d83ff': '#22d3ee' },
             light: { '#090d18': '#eff8fb', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f5fbfd', '#1c2640': '#d3e8ef', '#202b43': '#d3e8ef', '#5d83ff': '#0891b2' } }
+,
+        white: { name: 'Putih \u00B7 Hitam', h: 0, ns: 0, mono: { s: 0, sd: 0 }, ah: 0, sw: ['#111111', '#ffffff'],
+            dark: { '#090d18': '#0c0c0d', '#0f1629': '#151516', '#111729': '#151516', '#151d32': '#1b1b1d', '#1c2640': '#262628', '#202b43': '#262628', '#5d83ff': '#f4f4f5' },
+            light: { '#090d18': '#ffffff', '#0f1629': '#f5f5f6', '#111729': '#f5f5f6', '#151d32': '#eeeeef', '#1c2640': '#e4e4e7', '#202b43': '#e4e4e7', '#5d83ff': '#111111' } },
+        grey: { name: 'Abu-abu \u00B7 Hitam', h: 220, ns: .06, mono: { s: 0, sd: 0 }, ah: 220, sw: ['#111111', '#9a9ca1'],
+            dark: { '#090d18': '#17181a', '#0f1629': '#1f2023', '#111729': '#1f2023', '#151d32': '#26272a', '#1c2640': '#303236', '#202b43': '#303236', '#5d83ff': '#e5e6e8' },
+            light: { '#090d18': '#e9eaec', '#0f1629': '#f6f6f7', '#111729': '#f6f6f7', '#151d32': '#f9f9fa', '#1c2640': '#d4d6d9', '#202b43': '#d4d6d9', '#5d83ff': '#1c1d1f' } },
+        midblack: { name: 'Midnight \u00B7 Hitam', h: 222, ns: 1, mono: { s: .3, sd: .3 }, ah: 222, sw: ['#0b0f1a', '#12204a'],
+            dark: { '#090d18': '#090d18', '#5d83ff': '#cfd8f5' },
+            light: { '#090d18': '#eef1f8', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f6f8fc', '#1c2640': '#d9dfec', '#202b43': '#d9dfec', '#5d83ff': '#0b0f1a' } },
+        midwhite: { name: 'Midnight \u00B7 Putih', h: 222, ns: 1, mono: { s: .45, sd: 0 }, ah: 222, sw: ['#ffffff', '#12204a'],
+            dark: { '#090d18': '#090d18', '#5d83ff': '#ffffff' },
+            light: { '#090d18': '#f2f5fb', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f7f9fd', '#1c2640': '#dde4f2', '#202b43': '#dde4f2', '#5d83ff': '#1a2a55' } },
+        blackwhite: { name: 'Pure Black \u00B7 Putih', h: 220, ns: .12, lk: .7, mono: { s: 0, sd: 0 }, ah: 220, sw: ['#ffffff', '#000000'],
+            dark: { '#090d18': '#000000', '#0f1629': '#0d0f14', '#111729': '#0d0f14', '#151d32': '#12151b', '#1c2640': '#1d2027', '#202b43': '#1d2027', '#5d83ff': '#ffffff' },
+            light: { '#090d18': '#ffffff', '#0f1629': '#f4f5f7', '#111729': '#f4f5f7', '#151d32': '#eceef1', '#1c2640': '#e2e5ea', '#202b43': '#e2e5ea', '#5d83ff': '#0a0a0a' } }
     };
-    var THEME_ORDER = ['midnight', 'black', 'emerald', 'amber', 'ocean'];
+    var THEME_ORDER = ['midnight', 'black', 'emerald', 'amber', 'ocean', 'white', 'grey', 'midblack', 'midwhite', 'blackwhite'];
     var STACK = "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
     var FONTS = {
         manrope: { name: 'Manrope', desc: 'Bawaan aplikasi', gf: 'Manrope:wght@400;500;600;700;800', css: "Manrope," + STACK },
@@ -27,9 +43,15 @@
         poppins: { name: 'Poppins', desc: 'Bulat, tegas', gf: 'Poppins:wght@400;500;600;700;800', css: "Poppins," + STACK },
         nunito: { name: 'Nunito', desc: 'Lembut, ramah', gf: 'Nunito:wght@400;500;600;700;800', css: "Nunito," + STACK },
         jakarta: { name: 'Plus Jakarta Sans', desc: 'Modern, rapi', gf: 'Plus+Jakarta+Sans:wght@400;500;600;700;800', css: "'Plus Jakarta Sans'," + STACK },
+        roboto: { name: 'Roboto', desc: 'Netral, ringkas', gf: 'Roboto:wght@400;500;700;900', css: "Roboto," + STACK },
+        montserrat: { name: 'Montserrat', desc: 'Lebar, tegas', gf: 'Montserrat:wght@400;500;600;700;800', css: "Montserrat," + STACK },
+        dmsans: { name: 'DM Sans', desc: 'Geometris, bersih', gf: 'DM+Sans:wght@400;500;600;700', css: "'DM Sans'," + STACK },
+        lexend: { name: 'Lexend', desc: 'Lega, mudah dibaca', gf: 'Lexend:wght@400;500;600;700;800', css: "Lexend," + STACK },
+        plex: { name: 'IBM Plex Sans', desc: 'Teknis, serius', gf: 'IBM+Plex+Sans:wght@400;500;600;700', css: "'IBM Plex Sans'," + STACK },
+        jetbrains: { name: 'JetBrains Mono', desc: 'Mono, angka sejajar', gf: 'JetBrains+Mono:wght@400;500;600;700;800', css: "'JetBrains Mono',ui-monospace,Menlo,monospace" },
         system: { name: 'Sistem', desc: 'Font bawaan HP, paling hemat', gf: '', css: STACK }
     };
-    var FONT_ORDER = ['manrope', 'inter', 'poppins', 'nunito', 'jakarta', 'system'];
+    var FONT_ORDER = ['manrope', 'inter', 'poppins', 'nunito', 'jakarta', 'system', 'roboto', 'montserrat', 'dmsans', 'lexend', 'plex', 'jetbrains'];
 
     function get(k, def, ok) { try { var v = localStorage.getItem(KEY[k]); if (v && ok(v)) return v; } catch (e) { } return def; }
     var state = {
@@ -73,8 +95,13 @@
                 else { l = lmap(l); if (s >= .06) s = Math.min(1, s * .95); }
                 out = toHex(rgb(h, s, l));
             } else if (cls === 'a') {
-                if (th.ah !== 225) { h = th.ah; l = withLum(h, s, Y); }
-                if (!dark) l = l * .8;
+                if (th.mono) {
+                    h = th.ah; s = dark ? th.mono.sd : th.mono.s;
+                    l = dark ? Math.max(.6, Math.min(.96, .72 + (l - .5) * .5)) : Math.max(.05, Math.min(.32, l * .35));
+                } else {
+                    if (th.ah !== 225) { h = th.ah; l = withLum(h, s, Y); }
+                    if (!dark) l = l * .8;
+                }
                 out = toHex(rgb(h, s, l));
             } else if (cls === 't') {
                 if (!dark) { l = 1 - l * .55; s = s * .7; }
@@ -97,6 +124,7 @@
         var mode = resolveMode(), th = THEMES[state.theme], root = document.documentElement, st = root.style, H = window.EJ_HEX || [], R = window.EJ_RGB || [], i, v;
         for (i = 0; i < H.length; i++) st.setProperty('--c' + i, (state.theme === 'midnight' && mode === 'dark') ? H[i] : xf(H[i], th, mode));
         for (i = 0; i < R.length; i++) { var p = R[i].split(','); var hx = toHex([+p[0], +p[1], +p[2]]); if (hx === '#000000' && mode === 'light') { st.setProperty('--r' + i, '70,85,130'); continue; } v = (state.theme === 'midnight' && mode === 'dark') ? hx : xf(hx, th, mode); st.setProperty('--r' + i, parseInt(v.substr(1, 2), 16) + ',' + parseInt(v.substr(3, 2), 16) + ',' + parseInt(v.substr(5, 2), 16)); }
+        st.setProperty('--onacc', (th.mono && mode === 'dark') ? '#0a0a0a' : '#fff');
         st.colorScheme = mode;
         root.setAttribute('data-mode', mode); root.setAttribute('data-theme', state.theme);
         var bg = xf('#090d18', th, mode);

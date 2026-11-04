@@ -11,11 +11,11 @@ function add(name, color) {
   const block = new RegExp('<style name="' + esc + '"[^>]*>[\\s\\S]*?</style>').exec(s);
   if (!block) { console.log('patch-theme: gaya ' + name + ' tidak ditemukan'); return; }
   if (block[0].includes('android:statusBarColor')) { console.log('patch-theme: ' + name + ' sudah berwarna'); return; }
-  s = s.replace(open, '$1\n        <item name="android:statusBarColor">' + color + '</item>');
+  s = s.replace(open, '$1\n        <item name="android:statusBarColor">' + color + '</item>\n        <item name="android:windowBackground">' + color + '</item>');
   console.log('patch-theme: ' + name + ' -> ' + color);
 }
-add('AppTheme.NoActionBarLaunch', '#090d18');
-add('AppTheme.NoActionBar', '#0b1020');
+add('AppTheme.NoActionBarLaunch', '@color/ej_splash_bg');
+add('AppTheme.NoActionBar', '@color/ej_splash_bg');
 fs.writeFileSync(p, s);
 
 /* Nomor versi aplikasi: ikuti "version" di android-app/package.json (mis. 1.0.9) */

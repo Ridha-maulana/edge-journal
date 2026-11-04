@@ -15,3 +15,6 @@
 .ap-rad{width:20px;height:20px;border-radius:50%;border:2px solid var(--c136);flex:none}.ap-list>button.on .ap-rad{border-color:var(--c137);background:radial-gradient(var(--c137) 45%,transparent 50%)}
 /* Mode terang: bayangan lebih halus */
 :root[data-mode="light"] .bottom-nav,:root[data-mode="light"] .bottom-nav.nv-1,:root[data-mode="light"] .bottom-nav.nv-2,:root[data-mode="light"] .bottom-nav.nv-3,:root[data-mode="light"] .bottom-nav.nv-4{box-shadow:0 -4px 18px rgba(40,55,100,.07)!important}
+.ap-more{display:flex!important;align-items:center;justify-content:center;gap:6px;width:calc(100% - 4px);margin:8px 2px 0;padding:14px 12px;background:none;border:0;border-top:1px solid var(--c76);border-radius:0!important;color:var(--c218);font:700 var(--fs-sm) var(--font);cursor:pointer}
+.ap-grp{margin:12px 12px 4px;font:700 10px var(--font);letter-spacing:.12em;text-transform:uppercase;color:var(--c5)}.ap-grp:first-child{margin-top:2px}
+.ap-dot{border:1px solid rgba(128,128,128,.45)}

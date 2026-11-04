@@ -398,3 +398,4 @@
 - v5.3.1: di Profil, Sinkron online, Cloud backup, dan Export & share juga jadi baris ringkas yang dibuka dengan sentuhan (sebelumnya masih terbuka).
 - v5.3.2: jarak antar baris di Profil dan Tools dilonggarkan (padding atas-bawah 16px, tinggi baris 68px).
 - v5.4.0: Tools > Tampilan aplikasi: mode terang/gelap/otomatis, 5 tema warna (Midnight Blue, Pure Black, Emerald, Amber, Ocean Cyan), pilihan font (Manrope, Inter, Poppins, Nunito, Plus Jakarta Sans, Sistem). Semua warna CSS/grafik jadi variabel (css/00-colors.css + js/lib/color-table.js + js/lib/appearance.js).
+- v5.5.0: 5 tema hitam-putih baru (Putih·Hitam, Abu-abu·Hitam, Midnight·Hitam, Midnight·Putih, Pure Black·Putih), 6 font baru (Roboto, Montserrat, DM Sans, Lexend, IBM Plex Sans, JetBrains Mono), 'Lihat selengkapnya' di dialog tema & font; --onacc untuk teks di atas aksen. APK 1.1.0: splash awal Android 12+ ikut mode terang/gelap HP (workflow build-apk.yml perlu diganti manual).

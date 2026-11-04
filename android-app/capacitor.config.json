@@ -13,13 +13,13 @@
     ]
   },
   "android": {
-    "backgroundColor": "#090d18",
+    "backgroundColor": "#00000000",
     "allowMixedContent": false
   },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0,
-      "backgroundColor": "#090d18",
+      "backgroundColor": "#FFFFFF",
       "showSpinner": false
     },
     "StatusBar": {

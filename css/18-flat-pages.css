@@ -79,7 +79,7 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 .prof-head{margin:0 0 var(--s4)}
 .prof-head h1{font-size:var(--fs-2xl);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0}
 .prof-hello{display:flex;align-items:center;gap:var(--s4);margin:var(--s5) 0 var(--s5)}
-.prof-av{width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,var(--c248),var(--c249));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:var(--fs-xl);color:#fff;box-shadow:0 6px 18px rgba(var(--r24),.35);flex:none}
+.prof-av{width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,var(--c248),var(--c249));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:var(--fs-xl);color:var(--onacc);box-shadow:0 6px 18px rgba(var(--r24),.35);flex:none}
 .prof-name{font-size:var(--fs-xl);line-height:1.2}.prof-name b{font-weight:800}
 .prof-mail{font-size:var(--fs-sm);color:var(--c5);margin-top:5px;word-break:break-all}
 /* baris ringkas yang bisa dibuka */

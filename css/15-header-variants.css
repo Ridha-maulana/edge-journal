@@ -3,7 +3,7 @@
 .hd-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--c118),var(--c224));display:grid;place-items:center;font-weight:800;font-size:var(--fs-sm);color:var(--c225);flex:none}
 .top-actions{display:flex;align-items:center;gap:8px}
 .topbar[class*="hd-v"] .account-switcher{white-space:nowrap}
-.topbar[class*="hd-v"] .brand-mark{color:var(--c85)}
+.topbar[class*="hd-v"] .brand-mark{color:var(--onacc)}
 /* 1 · Minimal satu baris */
 .topbar.hd-v1{height:72px;padding:0 8px}
 .hd-v1 .hd-name strong{font-size:var(--fs-md);letter-spacing:.4px;font-weight:800}
@@ -61,4 +61,4 @@
 .hd-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .hd-picker button{display:flex;align-items:center;gap:7px;text-align:left;padding:10px 11px;border-radius:var(--r-md);background:var(--c227);border:1px solid var(--c228);color:var(--c239);font:600 var(--fs-sm) var(--font)}
 .hd-picker button b{display:grid;place-items:center;width:22px;height:22px;border-radius:var(--r-md);background:var(--c240);color:var(--c241);font-size:var(--fs-sm);flex:none}
-.hd-picker button.on{border-color:var(--c6);background:var(--c242);color:var(--c85)}.hd-picker button.on b{background:var(--c6);color:#fff}
+.hd-picker button.on{border-color:var(--c6);background:var(--c242);color:var(--c85)}.hd-picker button.on b{background:var(--c6);color:var(--onacc)}
