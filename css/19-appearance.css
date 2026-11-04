@@ -15,6 +15,35 @@
 .ap-rad{width:20px;height:20px;border-radius:50%;border:2px solid var(--c136);flex:none}.ap-list>button.on .ap-rad{border-color:var(--c137);background:radial-gradient(var(--c137) 45%,transparent 50%)}
 /* Mode terang: bayangan lebih halus */
 :root[data-mode="light"] .bottom-nav,:root[data-mode="light"] .bottom-nav.nv-1,:root[data-mode="light"] .bottom-nav.nv-2,:root[data-mode="light"] .bottom-nav.nv-3,:root[data-mode="light"] .bottom-nav.nv-4{box-shadow:0 -4px 18px rgba(40,55,100,.07)!important}
-.ap-more{display:flex!important;align-items:center;justify-content:center;gap:6px;width:calc(100% - 4px);margin:8px 2px 0;padding:14px 12px;background:none;border:0;border-top:1px solid var(--c76);border-radius:0!important;color:var(--c218);font:700 var(--fs-sm) var(--font);cursor:pointer}
-.ap-grp{margin:12px 12px 4px;font:700 10px var(--font);letter-spacing:.12em;text-transform:uppercase;color:var(--c5)}.ap-grp:first-child{margin-top:2px}
 .ap-dot{border:1px solid rgba(128,128,128,.45)}
+
+/* Daftar geser ke samping (tema, font) */
+.ap-pager{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 22px;scroll-padding:0 22px;overscroll-behavior-x:contain}
+.ap-pager::-webkit-scrollbar{display:none}
+.ap-page{flex:0 0 calc(100% - 22px);scroll-snap-align:start;min-width:0}
+.ap-pager .ap-list{padding:0}
+.ap-grp{display:flex;justify-content:space-between;align-items:center;margin:2px 4px 8px;font:700 10px var(--font);letter-spacing:.12em;text-transform:uppercase;color:var(--c5)}.ap-grp b{color:var(--c218)}
+.ap-dots{display:flex;justify-content:center;gap:7px;margin:12px 0 2px}
+.ap-dots button{width:7px;height:7px;padding:0;border:0;border-radius:4px;background:var(--c76);cursor:pointer;transition:width .2s,background .2s}.ap-dots button.on{width:20px;background:var(--c218)}
+.ap-swipe{text-align:center;font-size:var(--fs-xs);color:var(--c5);margin-top:4px}
+.ap-wide{width:min(380px,100%)}
+.ap-edit{margin-left:auto;font-size:18px;color:var(--c5)}
+/* Warna sendiri */
+.ap-custom{padding-bottom:16px}
+.ap-prev{margin:8px 22px 14px;padding:14px;border:1px solid transparent;border-radius:var(--r-lg)}
+.ap-pc{border:1px solid transparent;border-radius:var(--r-md);padding:12px}.ap-pc b{display:block;font-size:var(--fs-md)}.ap-pc small{display:block;margin-top:3px;font-size:var(--fs-xs)}
+.ap-pb{display:inline-flex;align-items:center;height:34px;margin-top:10px;padding:0 14px;border-radius:var(--r-md);font-weight:700;font-size:var(--fs-sm)}
+.ap-cf{margin:0 22px 14px}.ap-cl{font:700 10px var(--font);letter-spacing:.12em;text-transform:uppercase;color:var(--c5);margin-bottom:8px}
+.ap-cr{display:flex;flex-wrap:wrap;gap:10px}
+.ap-cd{position:relative;width:34px;height:34px;padding:0;border-radius:50%;border:2px solid transparent;outline:1px solid rgba(128,128,128,.4);cursor:pointer}
+.ap-cd.on{border-color:var(--c75);outline:2px solid var(--c218)}
+.ap-pick{display:flex;align-items:center;justify-content:center;background:conic-gradient(#ff5d5d,#ffd45d,#5dff8a,#5dd6ff,#6a7bff,#ff5dd1,#ff5d5d);color:#111;font-weight:800;font-size:18px;overflow:hidden}
+.ap-pick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
+.ap-hexrow{display:flex;align-items:center;gap:10px;margin-top:10px}
+.ap-hsw{width:30px;height:30px;border-radius:var(--r-xs);border:1px solid rgba(128,128,128,.4);flex:none}
+.ap-hex{flex:1;min-width:0;height:var(--h-md);padding:0 12px;background:var(--c123);border:1px solid var(--c76);border-radius:var(--r-md);color:var(--c0);font:600 var(--fs-md) ui-monospace,Menlo,monospace;text-transform:lowercase;outline:none}
+.ap-hex:focus{border-color:var(--c218)}.ap-hex.bad{border-color:var(--c119)}
+.ap-foot{display:flex;justify-content:space-between;margin:6px 22px 0}
+.ap-foot button{background:none;border:0;padding:10px 0;font:700 var(--fs-md) var(--font);color:var(--c5);cursor:pointer}.ap-foot button.ok{color:var(--c218)}
+.ap-pager{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16px);mask-image:linear-gradient(90deg,transparent 0,#000 16px)}
+.ap-page:last-child{flex-basis:calc(100% - 22px)}

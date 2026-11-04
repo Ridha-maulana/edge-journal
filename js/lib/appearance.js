@@ -18,24 +18,9 @@
         ocean: { name: 'Ocean Cyan', h: 193, ns: .95, ah: 188, sw: ['#22d3ee', '#07141a'],
             dark: { '#090d18': '#07141a', '#0f1629': '#0c1f28', '#111729': '#0c1f28', '#151d32': '#102933', '#1c2640': '#17353f', '#202b43': '#17353f', '#5d83ff': '#22d3ee' },
             light: { '#090d18': '#eff8fb', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f5fbfd', '#1c2640': '#d3e8ef', '#202b43': '#d3e8ef', '#5d83ff': '#0891b2' } }
-,
-        white: { name: 'Putih \u00B7 Hitam', h: 0, ns: 0, mono: { s: 0, sd: 0 }, ah: 0, sw: ['#111111', '#ffffff'],
-            dark: { '#090d18': '#0c0c0d', '#0f1629': '#151516', '#111729': '#151516', '#151d32': '#1b1b1d', '#1c2640': '#262628', '#202b43': '#262628', '#5d83ff': '#f4f4f5' },
-            light: { '#090d18': '#ffffff', '#0f1629': '#f5f5f6', '#111729': '#f5f5f6', '#151d32': '#eeeeef', '#1c2640': '#e4e4e7', '#202b43': '#e4e4e7', '#5d83ff': '#111111' } },
-        grey: { name: 'Abu-abu \u00B7 Hitam', h: 220, ns: .06, mono: { s: 0, sd: 0 }, ah: 220, sw: ['#111111', '#9a9ca1'],
-            dark: { '#090d18': '#17181a', '#0f1629': '#1f2023', '#111729': '#1f2023', '#151d32': '#26272a', '#1c2640': '#303236', '#202b43': '#303236', '#5d83ff': '#e5e6e8' },
-            light: { '#090d18': '#e9eaec', '#0f1629': '#f6f6f7', '#111729': '#f6f6f7', '#151d32': '#f9f9fa', '#1c2640': '#d4d6d9', '#202b43': '#d4d6d9', '#5d83ff': '#1c1d1f' } },
-        midblack: { name: 'Midnight \u00B7 Hitam', h: 222, ns: 1, mono: { s: .3, sd: .3 }, ah: 222, sw: ['#0b0f1a', '#12204a'],
-            dark: { '#090d18': '#090d18', '#5d83ff': '#cfd8f5' },
-            light: { '#090d18': '#eef1f8', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f6f8fc', '#1c2640': '#d9dfec', '#202b43': '#d9dfec', '#5d83ff': '#0b0f1a' } },
-        midwhite: { name: 'Midnight \u00B7 Putih', h: 222, ns: 1, mono: { s: .45, sd: 0 }, ah: 222, sw: ['#ffffff', '#12204a'],
-            dark: { '#090d18': '#090d18', '#5d83ff': '#ffffff' },
-            light: { '#090d18': '#f2f5fb', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f7f9fd', '#1c2640': '#dde4f2', '#202b43': '#dde4f2', '#5d83ff': '#1a2a55' } },
-        blackwhite: { name: 'Pure Black \u00B7 Putih', h: 220, ns: .12, lk: .7, mono: { s: 0, sd: 0 }, ah: 220, sw: ['#ffffff', '#000000'],
-            dark: { '#090d18': '#000000', '#0f1629': '#0d0f14', '#111729': '#0d0f14', '#151d32': '#12151b', '#1c2640': '#1d2027', '#202b43': '#1d2027', '#5d83ff': '#ffffff' },
-            light: { '#090d18': '#ffffff', '#0f1629': '#f4f5f7', '#111729': '#f4f5f7', '#151d32': '#eceef1', '#1c2640': '#e2e5ea', '#202b43': '#e2e5ea', '#5d83ff': '#0a0a0a' } }
+
     };
-    var THEME_ORDER = ['midnight', 'black', 'emerald', 'amber', 'ocean', 'white', 'grey', 'midblack', 'midwhite', 'blackwhite'];
+    var THEME_ORDER = ['midnight', 'black', 'emerald', 'amber', 'ocean'];
     var STACK = "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
     var FONTS = {
         manrope: { name: 'Manrope', desc: 'Bawaan aplikasi', gf: 'Manrope:wght@400;500;600;700;800', css: "Manrope," + STACK },
@@ -49,9 +34,80 @@
         lexend: { name: 'Lexend', desc: 'Lega, mudah dibaca', gf: 'Lexend:wght@400;500;600;700;800', css: "Lexend," + STACK },
         plex: { name: 'IBM Plex Sans', desc: 'Teknis, serius', gf: 'IBM+Plex+Sans:wght@400;500;600;700', css: "'IBM Plex Sans'," + STACK },
         jetbrains: { name: 'JetBrains Mono', desc: 'Mono, angka sejajar', gf: 'JetBrains+Mono:wght@400;500;600;700;800', css: "'JetBrains Mono',ui-monospace,Menlo,monospace" },
+        opensans: { name: 'Open Sans', desc: 'Ramah, klasik', gf: 'Open+Sans:wght@400;500;600;700;800', css: "'Open Sans'," + STACK },
+        lato: { name: 'Lato', desc: 'Hangat, seimbang', gf: 'Lato:wght@400;700;900', css: "Lato," + STACK },
+        source: { name: 'Source Sans 3', desc: 'Ringkas, profesional', gf: 'Source+Sans+3:wght@400;500;600;700;800', css: "'Source Sans 3'," + STACK },
+        worksans: { name: 'Work Sans', desc: 'Tegas, modern', gf: 'Work+Sans:wght@400;500;600;700;800', css: "'Work Sans'," + STACK },
+        outfit: { name: 'Outfit', desc: 'Geometris, tipis', gf: 'Outfit:wght@400;500;600;700;800', css: "Outfit," + STACK },
+        grotesk: { name: 'Space Grotesk', desc: 'Teknis, unik', gf: 'Space+Grotesk:wght@400;500;600;700', css: "'Space Grotesk'," + STACK },
+        sora: { name: 'Sora', desc: 'Futuristik, lebar', gf: 'Sora:wght@400;500;600;700;800', css: "Sora," + STACK },
+        rubik: { name: 'Rubik', desc: 'Sudut halus', gf: 'Rubik:wght@400;500;600;700;800', css: "Rubik," + STACK },
+        mulish: { name: 'Mulish', desc: 'Minimal, lembut', gf: 'Mulish:wght@400;500;600;700;800', css: "Mulish," + STACK },
+        quicksand: { name: 'Quicksand', desc: 'Bulat, ringan', gf: 'Quicksand:wght@400;500;600;700', css: "Quicksand," + STACK },
+        figtree: { name: 'Figtree', desc: 'Ramah, bersih', gf: 'Figtree:wght@400;500;600;700;800', css: "Figtree," + STACK },
+        vietnam: { name: 'Be Vietnam Pro', desc: 'Rapi, tegas', gf: 'Be+Vietnam+Pro:wght@400;500;600;700;800', css: "'Be Vietnam Pro'," + STACK },
+        noto: { name: 'Noto Sans', desc: 'Netral, lengkap', gf: 'Noto+Sans:wght@400;500;600;700;800', css: "'Noto Sans'," + STACK },
         system: { name: 'Sistem', desc: 'Font bawaan HP, paling hemat', gf: '', css: STACK }
     };
-    var FONT_ORDER = ['manrope', 'inter', 'poppins', 'nunito', 'jakarta', 'system', 'roboto', 'montserrat', 'dmsans', 'lexend', 'plex', 'jetbrains'];
+    var FONT_ORDER = ['manrope', 'inter', 'poppins', 'nunito', 'jakarta', 'system', 'roboto', 'montserrat', 'dmsans', 'lexend', 'plex', 'jetbrains', 'opensans', 'lato', 'source', 'worksans', 'outfit', 'grotesk', 'sora', 'rubik', 'mulish', 'quicksand', 'figtree', 'vietnam', 'noto'];
+
+
+    /* ---- tema berbasis pasangan warna (latar + aksen): tema baru & "Warna sendiri" ---- */
+    function mix(a, b, k) { var i, o = []; for (i = 0; i < 3; i++) o.push(Math.round(parseInt(a.substr(1 + 2 * i, 2), 16) * (1 - k) + parseInt(b.substr(1 + 2 * i, 2), 16) * k)); return toHex(o); }
+    function fill(sp, dark) {
+        var b = hsl(sp.bg), h = b[0], s = b[1], f = {}, k;
+        for (k in sp) f[k] = sp[k];
+        if (dark) {
+            f.pn = f.pn || toHex(rgb(h, s, Math.min(b[2] + .04, .5)));
+            f.bd = f.bd || toHex(rgb(h, s, Math.min(b[2] + .11, .6)));
+            f.tx = f.tx || toHex(rgb(h, Math.min(s, .2), .9));
+            f.mu = f.mu || toHex(rgb(h, Math.min(s, .14), .6));
+        } else {
+            f.pn = f.pn || toHex(rgb(h, s * .5, .99));
+            f.bd = f.bd || toHex(rgb(h, s, Math.max(b[2] - .09, 0)));
+            f.tx = f.tx || toHex(rgb(h, Math.min(s, .3), .12));
+            f.mu = f.mu || toHex(rgb(h, Math.min(s, .15), .42));
+        }
+        f.p2 = f.p2 || mix(f.pn, f.bd, .3);
+        return f;
+    }
+    function side(sp, dark) {
+        var f = fill(sp, dark), b = hsl(f.bg), a = hsl(f.ac), an = {}, ay = lum([parseInt(f.ac.substr(1, 2), 16), parseInt(f.ac.substr(3, 2), 16), parseInt(f.ac.substr(5, 2), 16)]);
+        an['#090d18'] = f.bg; an['#0f1629'] = f.pn; an['#111729'] = f.pn; an['#151d32'] = f.p2; an['#1c2640'] = f.bd; an['#202b43'] = f.bd; an['#5d83ff'] = f.ac;
+        an['#eef2ff'] = f.tx; an['#ffffff'] = f.tx; an['#8590a8'] = f.mu; an['#7d8bab'] = f.mu; an['#8a94ab'] = f.mu;
+        return { anch: an, h: b[0], ns: Math.min(1.3, b[1] / .45), ah: a[0], aL: a[2], ac: (1 - Math.abs(2 * a[2] - 1)) * a[1], txl: hsl(f.tx)[2], on: ay > .4 ? (dark ? f.bg : f.tx) : '#ffffff', f: f };
+    }
+    function gen(name, sw, d, l) { return { name: name, sw: sw, gen: { dark: side(d, true), light: side(l, false) } }; }
+    function derive(bg, ac) {
+        var b = hsl(bg), a = hsl(ac), dk = b[2] < .5, D, L;
+        var dac = a[2] < .55 ? toHex(rgb(a[0], a[1], .66)) : ac, lac = a[2] > .42 ? toHex(rgb(a[0], a[1], .36)) : ac;
+        if (dk) { D = { bg: bg, ac: dac }; L = { bg: toHex(rgb(b[0], Math.min(b[1], .35), .95)), ac: lac }; }
+        else { L = { bg: bg, ac: lac }; D = { bg: toHex(rgb(b[0], Math.min(b[1], .4), .085)), ac: dac }; }
+        return [D, L];
+    }
+    function buildCustom(c) { var dl = derive(c.bg, c.ac); THEMES.custom = gen('Warna sendiri', [c.ac, c.bg], dl[0], dl[1]); }
+    function validHex(v) { return typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v); }
+    var custom = { bg: '#0a0a0a', ac: '#c9c6bf' };
+    try { var cj = JSON.parse(localStorage.getItem('ej3-custom') || 'null'); if (cj && validHex(cj.bg) && validHex(cj.ac)) custom = { bg: cj.bg.toLowerCase(), ac: cj.ac.toLowerCase() }; } catch (e) { }
+    THEMES.white = gen('Putih · Hitam', ['#2e2c29', '#f4f3ef'], { bg: '#151515', pn: '#1c1c1c', bd: '#2b2b2b', ac: '#c9c6bf', tx: '#e4e2dd', mu: '#8f8c86' }, { bg: '#f4f3ef', pn: '#fbfaf7', bd: '#e2e0d9', ac: '#2e2c29', tx: '#232220', mu: '#6b6862' });
+    THEMES.grey = gen('Abu-abu · Hitam', ['#33373c', '#a9adb3'], { bg: '#1b1d20', pn: '#23262a', bd: '#33373c', ac: '#aeb4bd', tx: '#e0e3e7', mu: '#8a9099' }, { bg: '#e8e9eb', pn: '#f4f5f6', bd: '#d5d8db', ac: '#33373c', tx: '#1f2226', mu: '#656b73' });
+    THEMES.midblack = gen('Midnight · Hitam', ['#9fb0d6', '#1c2a52'], { bg: '#0e1320', pn: '#151c2e', bd: '#243049', ac: '#9fb0d6', tx: '#e1e6f2', mu: '#8590a8' }, { bg: '#eceff5', pn: '#f8f9fc', bd: '#d9dfeb', ac: '#1c2640', tx: '#161d30', mu: '#5f6b85' });
+    THEMES.midwhite = gen('Midnight · Putih', ['#dbe3f4', '#1c2a52'], { bg: '#0e1320', pn: '#151c2e', bd: '#243049', ac: '#dbe3f4', tx: '#e1e6f2', mu: '#8590a8' }, { bg: '#edf0f7', pn: '#f9fafd', bd: '#dadfec', ac: '#2a3b6b', tx: '#161d30', mu: '#5f6b85' });
+    THEMES.blackwhite = gen('Pure Black · Putih', ['#cfd0d4', '#050505'], { bg: '#050505', pn: '#0e0e0f', bd: '#1e1e20', ac: '#cfd0d4', tx: '#e6e6e8', mu: '#86868c' }, { bg: '#f7f7f8', pn: '#ffffff', bd: '#e4e4e7', ac: '#18181b', tx: '#18181b', mu: '#6a6a70' });
+    THEMES.forest = gen('Forest', ['#86c79a', '#0c1410'], { bg: '#0c1410', pn: '#121c16', bd: '#1f2e25', ac: '#86c79a', tx: '#e3ece6', mu: '#85978b' }, { bg: '#f0f4ef', pn: '#fbfdfa', bd: '#d9e3d6', ac: '#3f7a52', tx: '#16201a', mu: '#5d7064' });
+    THEMES.coffee = gen('Coffee', ['#d4a574', '#15100d'], { bg: '#15100d', pn: '#1d1713', bd: '#2f251e', ac: '#d4a574', tx: '#eae2d9', mu: '#9a8b7d' }, { bg: '#f6f1ea', pn: '#fdfaf5', bd: '#e6dccf', ac: '#8a5a2b', tx: '#2a201a', mu: '#7a6a5c' });
+    THEMES.slate = gen('Slate', ['#7fb4d9', '#0f1419'], { bg: '#0f1419', pn: '#161d25', bd: '#25303b', ac: '#7fb4d9', tx: '#e1e8ee', mu: '#87939f' }, { bg: '#eef2f5', pn: '#fbfcfd', bd: '#d8e0e7', ac: '#2f6c93', tx: '#16202a', mu: '#5f6c78' });
+    THEMES.teal = gen('Teal Lembut', ['#6ccbc3', '#0b1415'], { bg: '#0b1415', pn: '#111e1f', bd: '#1e3234', ac: '#6ccbc3', tx: '#e0eeec', mu: '#84989a' }, { bg: '#eef6f5', pn: '#fbfefd', bd: '#d3e6e4', ac: '#1d7d78', tx: '#13201f', mu: '#5b7270' });
+    THEMES.slatesalju = gen('Slate Salju', ['#50586c', '#dce2f0'], { bg: '#12151c', pn: '#1a1e27', bd: '#272c38', ac: '#c3cde4' }, { bg: '#edf0f7', pn: '#fafbfd', bd: '#d5dbe9', ac: '#50586c' });
+    THEMES.rose = gen('Rose Krem', ['#815854', '#f9ebde'], { bg: '#19110f', pn: '#221816', bd: '#35261f', ac: '#e6c3ad' }, { bg: '#f9f1ea', pn: '#fffaf6', bd: '#ecdccf', ac: '#815854' });
+    THEMES.sakura = gen('Biru Sakura', ['#6a7ba2', '#ffdfde'], { bg: '#11141d', pn: '#191d29', bd: '#272d3e', ac: '#f3c9c8' }, { bg: '#fdf1f0', pn: '#fffafa', bd: '#f0d8d7', ac: '#5a6b94' });
+    THEMES.navymint = gen('Navy Mint', ['#00203f', '#adefd1'], { bg: '#021a30', pn: '#06243f', bd: '#0f3556', ac: '#adefd1' }, { bg: '#eef9f4', pn: '#fbfffd', bd: '#cfeade', ac: '#00203f' });
+    THEMES.terakota = gen('Terakota', ['#cf8360', '#f5c7b8'], { bg: '#1a100c', pn: '#241812', bd: '#3a261d', ac: '#e08c68' }, { bg: '#fcf1ec', pn: '#fff9f6', bd: '#f1d9cd', ac: '#b5603a' });
+    THEMES.navyamber = gen('Navy Amber', ['#f2aa4c', '#101820'], { bg: '#101820', pn: '#17212c', bd: '#253240', ac: '#f2aa4c' }, { bg: '#fbf5ea', pn: '#fffcf6', bd: '#efe2c9', ac: '#b46a0f' });
+    THEMES.pasir = gen('Pasir', ['#a07855', '#d4b996'], { bg: '#17120d', pn: '#201a14', bd: '#33291f', ac: '#d4b996' }, { bg: '#f6efe3', pn: '#fcf8f0', bd: '#e5d9c4', ac: '#8c6a45' });
+    THEMES.hitamputih = gen('Hitam Putih', ['#ffffff', '#000000'], { bg: '#000000', pn: '#0b0b0b', bd: '#1a1a1a', ac: '#ffffff', tx: '#ffffff', mu: '#8a8a8a' }, { bg: '#ffffff', pn: '#f5f5f5', bd: '#e5e5e5', ac: '#000000', tx: '#000000', mu: '#6b6b6b' });
+    buildCustom(custom);
+    THEME_ORDER = THEME_ORDER.concat(['white', 'grey', 'midblack', 'midwhite', 'blackwhite', 'forest', 'coffee', 'slate', 'teal', 'slatesalju', 'rose', 'sakura', 'navymint', 'terakota', 'navyamber', 'pasir', 'hitamputih', 'custom']);
 
     function get(k, def, ok) { try { var v = localStorage.getItem(KEY[k]); if (v && ok(v)) return v; } catch (e) { } return def; }
     var state = {
@@ -81,7 +137,7 @@
     var cache = {};
     function xf(hex, th, mode) {
         var key = hex + mode + th.name; if (cache[key]) return cache[key];
-        var an = th[mode] && th[mode][hex], out;
+        var g = th.gen && th.gen[mode], an = g ? g.anch[hex] : (th[mode] && th[mode][hex]), out;
         if (an) out = an;
         else if (hex === '#000000') out = hex;
         else {
@@ -90,14 +146,21 @@
             if (bluish) cls = (l < .3 || l > .82 || s < .35 || (s < .6 && l < .35)) ? 'n' : 'a'; else cls = (s > .2 && l < .3) ? 't' : 'c';
             var rgb0 = rgb(h, s, l), Y = lum(rgb0);
             if (cls === 'n') {
-                if (s >= .06) { h = th.h; s = Math.min(1, s * th.ns); }
-                if (dark) { if (th.lk) l = l * th.lk; }
-                else { l = lmap(l); if (s >= .06) s = Math.min(1, s * .95); }
+                if (g) {
+                    if (s >= .06) { h = g.h; s = Math.min(1, s * g.ns); }
+                    if (dark) { if (l > .82) l = Math.min(l, g.txl); }
+                    else { var l0 = l; l = lmap(l); if (l0 > .82 && l < g.txl) l = g.txl; }
+                } else {
+                    if (s >= .06) { h = th.h; s = Math.min(1, s * th.ns); }
+                    if (dark) { if (th.lk) l = l * th.lk; }
+                    else { l = lmap(l); if (s >= .06) s = Math.min(1, s * .95); }
+                }
                 out = toHex(rgb(h, s, l));
             } else if (cls === 'a') {
-                if (th.mono) {
-                    h = th.ah; s = dark ? th.mono.sd : th.mono.s;
-                    l = dark ? Math.max(.6, Math.min(.96, .72 + (l - .5) * .5)) : Math.max(.05, Math.min(.32, l * .35));
+                if (g) {
+                    h = g.ah;
+                    if (l < .55) { s = Math.min(s, .5) * .5; l = dark ? l * .85 : lmap(l); }
+                    else { l = Math.max(.06, Math.min(.96, g.aL * l / .6804)); s = Math.min(.9, g.ac / (1 - Math.abs(2 * l - 1) + .001)); }
                 } else {
                     if (th.ah !== 225) { h = th.ah; l = withLum(h, s, Y); }
                     if (!dark) l = l * .8;
@@ -124,7 +187,7 @@
         var mode = resolveMode(), th = THEMES[state.theme], root = document.documentElement, st = root.style, H = window.EJ_HEX || [], R = window.EJ_RGB || [], i, v;
         for (i = 0; i < H.length; i++) st.setProperty('--c' + i, (state.theme === 'midnight' && mode === 'dark') ? H[i] : xf(H[i], th, mode));
         for (i = 0; i < R.length; i++) { var p = R[i].split(','); var hx = toHex([+p[0], +p[1], +p[2]]); if (hx === '#000000' && mode === 'light') { st.setProperty('--r' + i, '70,85,130'); continue; } v = (state.theme === 'midnight' && mode === 'dark') ? hx : xf(hx, th, mode); st.setProperty('--r' + i, parseInt(v.substr(1, 2), 16) + ',' + parseInt(v.substr(3, 2), 16) + ',' + parseInt(v.substr(5, 2), 16)); }
-        st.setProperty('--onacc', (th.mono && mode === 'dark') ? '#0a0a0a' : '#fff');
+        st.setProperty('--onacc', th.gen ? th.gen[mode].on : '#fff');
         st.colorScheme = mode;
         root.setAttribute('data-mode', mode); root.setAttribute('data-theme', state.theme);
         var bg = xf('#090d18', th, mode);
@@ -148,8 +211,17 @@
         if (k === 'font') applyFont(); else applyColors();
         notify();
     }
+    function setCustom(c) {
+        if (c.bg && validHex(c.bg)) custom.bg = c.bg.toLowerCase();
+        if (c.ac && validHex(c.ac)) custom.ac = c.ac.toLowerCase();
+        try { localStorage.setItem('ej3-custom', JSON.stringify(custom)); } catch (e) { }
+        buildCustom(custom); cache = {};
+        if (state.theme !== 'custom') { state.theme = 'custom'; try { localStorage.setItem(KEY.theme, 'custom'); } catch (e) { } }
+        applyColors(); notify();
+    }
+    function preview(bg, ac, mode) { var dl = derive(bg, ac), s = side(dl[mode === 'light' ? 1 : 0], mode !== 'light'); var f = s.f; return { bg: f.bg, pn: f.pn, bd: f.bd, tx: f.tx, mu: f.mu, ac: f.ac, on: s.on }; }
     var api = {
-        THEMES: THEMES, THEME_ORDER: THEME_ORDER, FONTS: FONTS, FONT_ORDER: FONT_ORDER, state: state, set: set, preload: preload, bg: '#090d18', bgRGB: [9, 13, 24, 1], resolved: 'dark',
+        THEMES: THEMES, THEME_ORDER: THEME_ORDER, FONTS: FONTS, FONT_ORDER: FONT_ORDER, state: state, set: set, preload: preload, custom: custom, validHex: validHex, setCustom: setCustom, preview: preview, bg: '#090d18', bgRGB: [9, 13, 24, 1], resolved: 'dark',
         idx: {}
     };
     (window.EJ_HEX || []).forEach(function (h, i) { api.idx[h] = i; });
