@@ -8,8 +8,8 @@ const DD_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', '
 const DD_MONF = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 const DD_DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
 const DD_WKND = 'Akhir pekan (Sab–Min)';
-const DD_SCOL = { 'Asia': '#34d399', 'London': '#6b8dff', 'New York': '#f5b84b', 'Overlap': '#9b82ff' };
-const DD_LCOL = ['#6b8dff', '#9b82ff', '#f5b84b'];   // dot level: bulan (biru), minggu (ungu), hari (kuning) = warna kotak info
+const DD_SCOL = { 'Asia': EJC("#34d399"), 'London': EJC("#6b8dff"), 'New York': EJC("#f5b84b"), 'Overlap': EJC("#9b82ff") };
+const DD_LCOL = [EJC("#6b8dff"), EJC("#9b82ff"), EJC("#f5b84b")];   // dot level: bulan (biru), minggu (ungu), hari (kuning) = warna kotak info
 const DD_LV = ['Bulan', 'Minggu', 'Hari', 'Sesi', 'Win/Loss'];
 const DD_LOCK_MSG = ['Menampilkan semua bulan pada periode terpilih', 'Data per nomor minggu dari semua bulan', 'Data per hari dari semua minggu', '4 sesi dengan data agregat dari semua hari', 'Distribusi win/loss agregat dari semua hari'];
 const DD_BEST = ['Bulan terbaik', 'Minggu terbaik', 'Hari terbaik', 'Sesi terbaik'];
@@ -55,11 +55,11 @@ function DdDonut({ st }) {
     const h = React.createElement;
     const r = 70, c = 2 * Math.PI * r, tot = st.n;
     const wA = tot ? c * st.wins / tot : 0, lA = tot ? c * st.losses / tot : 0;
-    const col = !tot ? '#8590a8' : st.wr >= 50 ? '#34d399' : '#ff6b81';
+    const col = !tot ? EJC("#8590a8") : st.wr >= 50 ? EJC("#34d399") : EJC("#ff6b81");
     return h('svg', { viewBox: '0 0 180 180', className: 'dd-donut', role: 'img', 'aria-label': `Win rate ${st.wr.toFixed(1)}%` },
-        h('circle', { cx: 90, cy: 90, r, fill: 'none', stroke: '#233252', strokeWidth: 24 }),
-        lA > 0 && h('circle', { cx: 90, cy: 90, r, fill: 'none', stroke: '#ff6b81', strokeWidth: 24, strokeDasharray: `${lA} ${c}`, strokeDashoffset: -wA, transform: 'rotate(-90 90 90)' }),
-        wA > 0 && h('circle', { cx: 90, cy: 90, r, fill: 'none', stroke: '#34d399', strokeWidth: 24, strokeDasharray: `${wA} ${c}`, transform: 'rotate(-90 90 90)' }),
+        h('circle', { cx: 90, cy: 90, r, fill: 'none', stroke: EJC("#233252"), strokeWidth: 24 }),
+        lA > 0 && h('circle', { cx: 90, cy: 90, r, fill: 'none', stroke: EJC("#ff6b81"), strokeWidth: 24, strokeDasharray: `${lA} ${c}`, strokeDashoffset: -wA, transform: 'rotate(-90 90 90)' }),
+        wA > 0 && h('circle', { cx: 90, cy: 90, r, fill: 'none', stroke: EJC("#34d399"), strokeWidth: 24, strokeDasharray: `${wA} ${c}`, transform: 'rotate(-90 90 90)' }),
         h('text', { x: 90, y: 100, textAnchor: 'middle', fontSize: 28, fontWeight: 800, fill: col }, `${st.wr.toFixed(1)}%`));
 }
 function DrillDown({ account, trades, rangeText }) {
@@ -217,13 +217,13 @@ function DrillDown({ account, trades, rangeText }) {
                 h('div', { className: 'dd-row' },
                     h('span', { className: 'dd-meta' }, h('span', null, `${i.st.n} posisi`), h('span', null, `${Math.round(i.st.wr)}% WR`), h('span', { className: tn(i.st.profit) }, pct(i.st.profit))),
                     h('b', { className: 'dd-pr ' + tn(i.st.profit) }, sg(i.st.profit))),
-                h('div', { className: 'dd-bar' }, h('i', { style: { width: `${i.st.n ? Math.max(3, i.st.n / maxN * 100) : 0}%`, background: i.st.profit < 0 ? '#ff6b81' : '#34d399' } })));
+                h('div', { className: 'dd-bar' }, h('i', { style: { width: `${i.st.n ? Math.max(3, i.st.n / maxN * 100) : 0}%`, background: i.st.profit < 0 ? EJC("#ff6b81") : EJC("#34d399") } })));
         });
     } else if (locked) {
         const total = ddStat(recs);
         body = [...items.map(i => h('div', { key: i.key, className: 'dd-item' }, head(i), tagEls(i.tags), table(rowsOf(i.st)))),
         h('div', { key: 'total', className: 'dd-item dd-total' },
-            h('div', { className: 'dd-ihead' }, h('i', { className: 'dd-dot', style: { background: '#eef2ff' } }), h('strong', null, 'Ringkasan Total'), h('span', { className: 'dd-small' }, 'semua sesi')),
+            h('div', { className: 'dd-ihead' }, h('i', { className: 'dd-dot', style: { background: EJC("#eef2ff") } }), h('strong', null, 'Ringkasan Total'), h('span', { className: 'dd-small' }, 'semua sesi')),
             table([['Total posisi', String(total.n), ''], ...rowsOf(total), ['Profit', `${sg(total.profit)} · ${pct(total.profit)}`, tn(total.profit)]]))];
     } else {
         const i = items[0];

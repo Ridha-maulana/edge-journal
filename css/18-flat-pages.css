@@ -14,61 +14,61 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 .main-content .page-heading .primary-btn,.main-content .page-heading .icon-btn{height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);padding-top:0;padding-bottom:0}
 .main-content .page-heading .icon-btn{width:var(--h-md);padding:0}
 /* bagian datar */
-.flat-sec{padding:var(--s4) 0 var(--s2);border-top:1px solid #1a2339}
+.flat-sec{padding:var(--s4) 0 var(--s2);border-top:1px solid var(--c255)}
 .flat-sec:first-of-type{border-top:0;padding-top:0}
 /* kartu (Risk calculator & Account management) */
-.flat-sec.card-sec,.main-content .tool-card.acct-inline{background:#0f1629!important;border:1px solid #1c2640!important;border-radius:var(--r-lg)!important;padding:var(--s4)!important;margin:0 0 var(--s2)!important}
+.flat-sec.card-sec,.main-content .tool-card.acct-inline{background:var(--c256)!important;border:1px solid var(--c257)!important;border-radius:var(--r-lg)!important;padding:var(--s4)!important;margin:0 0 var(--s2)!important}
 .flat-sec.card-sec+.flat-sec{border-top:0;padding-top:var(--s3)}
 .flat-sec.card-sec .calculator-results>div:first-child{padding-left:0!important}
 .main-content .tool-card.acct-inline+.tool-card{border-top:0!important;padding-top:var(--s3)!important}
 .flat-sec>h3{margin:0 0 var(--s3);font-size:var(--fs-lg);font-weight:700}
 /* kolom isian kecil */
 .flat-sec .calc-grid{grid-template-columns:1fr 1fr!important;gap:var(--s2)!important;margin:0}
-.flat-sec .calc-grid label{font-size:var(--fs-xs);color:#8590a8;margin:0}
+.flat-sec .calc-grid label{font-size:var(--fs-xs);color:var(--c5);margin:0}
 .flat-sec .calc-grid input,.flat-sec .calc-grid .tsel{height:var(--h-md);min-height:var(--h-md);margin-top:4px;border-radius:var(--r-md);padding:0 var(--s3);font-size:var(--fs-sm)}
 /* hasil: satu baris tiga kolom */
-.flat-sec .calculator-results{grid-template-columns:repeat(3,1fr)!important;gap:0!important;margin:var(--s3) 0 0;background:none;border:0;border-top:1px solid #1a2339;border-bottom:1px solid #1a2339;border-radius:0;padding:0}
-.flat-sec .calculator-results>div{grid-column:auto!important;background:none!important;border:0!important;border-right:1px solid #1a2339!important;border-radius:0!important;padding:var(--s3) var(--s2) var(--s3) var(--s3)!important;margin:0}
+.flat-sec .calculator-results{grid-template-columns:repeat(3,1fr)!important;gap:0!important;margin:var(--s3) 0 0;background:none;border:0;border-top:1px solid var(--c255);border-bottom:1px solid var(--c255);border-radius:0;padding:0}
+.flat-sec .calculator-results>div{grid-column:auto!important;background:none!important;border:0!important;border-right:1px solid var(--c255)!important;border-radius:0!important;padding:var(--s3) var(--s2) var(--s3) var(--s3)!important;margin:0}
 .flat-sec .calculator-results>div:first-child{padding-left:0!important}
 .flat-sec .calculator-results>div:last-child{border-right:0!important}
-.flat-sec .calculator-results span{font-size:var(--fs-xs);letter-spacing:0;text-transform:none;color:#8590a8}
+.flat-sec .calculator-results span{font-size:var(--fs-xs);letter-spacing:0;text-transform:none;color:var(--c5)}
 .flat-sec .calculator-results strong{font-size:var(--fs-xl);margin-top:4px}
-.flat-sec .calculator-results small{font-size:var(--fs-xs);margin-top:3px;color:#71809c}
+.flat-sec .calculator-results small{font-size:var(--fs-xs);margin-top:3px;color:var(--c56)}
 /* baris pilihan */
-.pick-row{display:flex;align-items:center;gap:var(--s3);width:100%;padding:var(--s4) 0;background:none;border:0;color:#eef2ff;text-align:left;font-family:inherit;cursor:pointer}
-.pick-ic{width:36px;height:36px;border-radius:50%;background:#161f36;color:#cfd8ee;display:flex;align-items:center;justify-content:center;flex:none}
-.pick-tx{flex:1;min-width:0}.pick-tx b{display:block;font-size:var(--fs-md);font-weight:600}.pick-tx small{display:block;font-size:var(--fs-xs);color:#8590a8;margin-top:2px;font-weight:400}
-.pick-val{font-size:var(--fs-xs);font-weight:600;color:#8fa9ff;white-space:nowrap}
-.pick-row>svg:last-child{color:#6b7a99;flex:none}
+.pick-row{display:flex;align-items:center;gap:var(--s3);width:100%;padding:var(--s4) 0;background:none;border:0;color:var(--c0);text-align:left;font-family:inherit;cursor:pointer}
+.pick-ic{width:36px;height:36px;border-radius:50%;background:var(--c192);color:var(--c239);display:flex;align-items:center;justify-content:center;flex:none}
+.pick-tx{flex:1;min-width:0}.pick-tx b{display:block;font-size:var(--fs-md);font-weight:600}.pick-tx small{display:block;font-size:var(--fs-xs);color:var(--c5);margin-top:2px;font-weight:400}
+.pick-val{font-size:var(--fs-xs);font-weight:600;color:var(--c218);white-space:nowrap}
+.pick-row>svg:last-child{color:var(--c258);flex:none}
 /* kartu Profil → bagian datar */
 .main-content .tool-grid{display:block}
-.main-content .tool-card{background:none!important;border:0!important;border-top:1px solid #1a2339!important;border-radius:0!important;box-shadow:none!important;padding:var(--s4) 0!important;margin:0!important;animation:none!important}
+.main-content .tool-card{background:none!important;border:0!important;border-top:1px solid var(--c255)!important;border-radius:0!important;box-shadow:none!important;padding:var(--s4) 0!important;margin:0!important;animation:none!important}
 .main-content .tool-grid>.tool-card:first-child{border-top:0!important}
 .main-content .tool-head{display:flex;align-items:center;gap:var(--s3);margin:0 0 var(--s3)}
-.main-content .tool-icon{width:36px;height:36px;border-radius:50%!important;background:#161f36!important;color:#cfd8ee!important;display:flex;align-items:center;justify-content:center;flex:none}
+.main-content .tool-icon{width:36px;height:36px;border-radius:50%!important;background:var(--c192)!important;color:var(--c239)!important;display:flex;align-items:center;justify-content:center;flex:none}
 .main-content .tool-icon svg{width:18px;height:18px}
 .main-content .tool-head h2{margin:0;font-size:var(--fs-md);font-weight:600}
-.main-content .tool-head p{margin:2px 0 0;font-size:var(--fs-xs);line-height:1.4;color:#8590a8}
+.main-content .tool-head p{margin:2px 0 0;font-size:var(--fs-xs);line-height:1.4;color:var(--c5)}
 .main-content .tool-card .button-row{display:flex;gap:var(--s2);margin:0!important;flex-wrap:wrap}
 .main-content .tool-card .secondary-btn{margin:0!important;height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);padding:0 var(--s3);font-size:var(--fs-sm);width:auto}
 .main-content .tool-card .sync-note{font-size:var(--fs-sm);margin:var(--s2) 0 0}
 .main-content .tool-card .sync-status{font-size:var(--fs-sm);margin:var(--s2) 0}
-.main-content .sync-note.foot{font-size:var(--fs-xs);color:#71809c;padding:var(--s3) 0;margin:0}
+.main-content .sync-note.foot{font-size:var(--fs-xs);color:var(--c56);padding:var(--s3) 0;margin:0}
 /* Account management (bagian pertama Profil) */
 .acct-inline .modal-head{margin:0 0 var(--s3)!important}
 .acct-inline .modal-head .eyebrow{display:none}
 .acct-inline .modal-head h2{font-size:var(--fs-lg);font-weight:700;margin:0}
 .acct-inline .account-tabs{gap:6px!important;justify-content:flex-start!important;overflow-x:auto;border:0!important;margin:0 0 var(--s3)!important;padding:0!important;scrollbar-width:none}
 .acct-inline .account-tabs::-webkit-scrollbar{display:none}
-.acct-inline .account-tabs button{flex:none;padding:8px 10px!important;border-radius:999px!important;background:#111a30!important;border:0!important;color:#8590a8!important;font-size:var(--fs-sm)!important;font-weight:600}
-.acct-inline .account-tabs button.active{background:#1c2744!important;color:#fff!important}
+.acct-inline .account-tabs button{flex:none;padding:8px 10px!important;border-radius:999px!important;background:var(--c227)!important;border:0!important;color:var(--c5)!important;font-size:var(--fs-sm)!important;font-weight:600}
+.acct-inline .account-tabs button.active{background:var(--c254)!important;color:var(--c85)!important}
 .acct-inline .account-summary{background:none!important;border:0!important;padding:0!important;margin:0 0 var(--s3)!important}
 .acct-inline .account-summary .as-head span{font-size:var(--fs-xs);letter-spacing:.08em}
 .acct-inline .account-summary .as-namerow strong{font-size:var(--fs-lg);font-weight:700}
-.acct-inline .as-edit{height:32px;padding:0 var(--s3);border-radius:var(--r-xs);font-size:var(--fs-sm);border-color:#2a3f7a}
+.acct-inline .as-edit{height:32px;padding:0 var(--s3);border-radius:var(--r-xs);font-size:var(--fs-sm);border-color:var(--c259)}
 .acct-inline .account-summary small{font-size:var(--fs-sm);margin-top:var(--s1)}
-.acct-inline .account-list-item{border-radius:var(--r-md);padding:10px var(--s3);background:#0b1121;border-color:#1c2640}
-.acct-inline .account-list-item.selected{background:#101a36!important;border-color:#2a3f7a!important}
+.acct-inline .account-list-item{border-radius:var(--r-md);padding:10px var(--s3);background:var(--c260);border-color:var(--c257)}
+.acct-inline .account-list-item.selected{background:var(--c261)!important;border-color:var(--c259)!important}
 .acct-inline .account-list{gap:var(--s2)}
 /* My Journal: pencarian & filter lebih ringkas */
 .main-content .page-heading+*{margin-top:0}
@@ -79,37 +79,37 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 .prof-head{margin:0 0 var(--s4)}
 .prof-head h1{font-size:var(--fs-2xl);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0}
 .prof-hello{display:flex;align-items:center;gap:var(--s4);margin:var(--s5) 0 var(--s5)}
-.prof-av{width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,#7d9bff,#4d73f0);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:var(--fs-xl);color:#fff;box-shadow:0 6px 18px rgba(77,115,240,.35);flex:none}
+.prof-av{width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,var(--c248),var(--c249));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:var(--fs-xl);color:#fff;box-shadow:0 6px 18px rgba(var(--r24),.35);flex:none}
 .prof-name{font-size:var(--fs-xl);line-height:1.2}.prof-name b{font-weight:800}
-.prof-mail{font-size:var(--fs-sm);color:#8590a8;margin-top:5px;word-break:break-all}
+.prof-mail{font-size:var(--fs-sm);color:var(--c5);margin-top:5px;word-break:break-all}
 /* baris ringkas yang bisa dibuka */
-.acc-list>*+*,.tool-grid>.acc-item+*{border-top:1px solid #1a2339}
-.pick-row.open>svg:last-child{transform:rotate(180deg);color:#8fa9ff}
-.acc-panel{background:#0f1629;border:1px solid #1c2640;border-radius:var(--r-lg);padding:var(--s3);margin:0 0 var(--s4)}
+.acc-list>*+*,.tool-grid>.acc-item+*{border-top:1px solid var(--c255)}
+.pick-row.open>svg:last-child{transform:rotate(180deg);color:var(--c218)}
+.acc-panel{background:var(--c256);border:1px solid var(--c257);border-radius:var(--r-lg);padding:var(--s3);margin:0 0 var(--s4)}
 .acc-panel .tool-card.acct-inline{background:none!important;border:0!important;padding:0!important;margin:0!important}
 .acct-inline .modal-head{display:none!important}
 .main-content .tool-grid>.acc-item+.tool-card{padding-top:var(--s3)!important}
 /* kalkulator */
 .rc .calc-grid{grid-template-columns:1fr 1fr!important;gap:var(--s2)!important;margin:0}
-.rc .calc-grid label,.rc .rc-side>span,.rc .rc-cur>span,.rc-adj label{display:block;font-size:var(--fs-xs);color:#8590a8;margin:0}
+.rc .calc-grid label,.rc .rc-side>span,.rc .rc-cur>span,.rc-adj label{display:block;font-size:var(--fs-xs);color:var(--c5);margin:0}
 .rc .calc-grid input,.rc .calc-grid .tsel,.rc-adj input,.rc-cur>div{height:var(--h-md);min-height:var(--h-md);margin-top:4px;border-radius:var(--r-md);padding:0 var(--s3);font-size:var(--fs-sm);width:100%}
-.rc-cur>div{display:flex;align-items:center;background:#0b1121;border:1px solid #243257;color:#8590a8}
-.rc-seg{display:grid;grid-template-columns:1fr 1fr;height:var(--h-md);margin-top:4px;border-radius:var(--r-md);overflow:hidden;border:1px solid #243257}
-.rc-seg button{border:0;background:#0c1324;color:#8590a8;font:700 var(--fs-sm) var(--font);padding:0}
-.rc-seg button.on.long{background:#12382f;color:#34d399}.rc-seg button.on.short{background:#3a1d2a;color:#ff6b81}
+.rc-cur>div{display:flex;align-items:center;background:var(--c260);border:1px solid var(--c228);color:var(--c5)}
+.rc-seg{display:grid;grid-template-columns:1fr 1fr;height:var(--h-md);margin-top:4px;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--c228)}
+.rc-seg button{border:0;background:var(--c262);color:var(--c5);font:700 var(--fs-sm) var(--font);padding:0}
+.rc-seg button.on.long{background:var(--c263);color:var(--c118)}.rc-seg button.on.short{background:var(--c264);color:var(--c119)}
 .rc-lots{position:relative}.rc-lots input{padding-right:40px!important}
-.rc-swap{position:absolute;right:6px;bottom:7px;width:26px;height:26px;border-radius:var(--r-xs);border:0;background:#16224a;color:#9db6ff;display:flex;align-items:center;justify-content:center;padding:0}
-.rc-hint{margin:var(--s2) 0 0;font-size:var(--fs-xs);color:#8590a8}.rc-hint b{color:#eef2ff}
+.rc-swap{position:absolute;right:6px;bottom:7px;width:26px;height:26px;border-radius:var(--r-xs);border:0;background:var(--c265);color:var(--c141);display:flex;align-items:center;justify-content:center;padding:0}
+.rc-hint{margin:var(--s2) 0 0;font-size:var(--fs-xs);color:var(--c5)}.rc-hint b{color:var(--c0)}
 .rc-res{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s3)}
-.rc-res>div{background:#0b1121;border-radius:var(--r-md);padding:10px var(--s3)}
-.rc-res small{display:block;font-size:var(--fs-xs);color:#8590a8}.rc-res b{display:block;font-size:var(--fs-xl);margin-top:4px}.rc-res i{display:block;font-style:normal;font-size:var(--fs-sm);font-weight:600;min-height:1em}
-.rc-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:var(--s2)}.rc-meta span{font-size:var(--fs-xs);font-weight:600;color:#9db6ff;background:#111a30;border-radius:999px;padding:5px 9px}
-.rc-warn{margin:var(--s2) 0 0;font-size:var(--fs-xs);color:#ffb4a8;line-height:1.4}
-.rc-adj{margin-top:var(--s3);border-top:1px solid #1a2339;padding-top:var(--s3)}
+.rc-res>div{background:var(--c260);border-radius:var(--r-md);padding:10px var(--s3)}
+.rc-res small{display:block;font-size:var(--fs-xs);color:var(--c5)}.rc-res b{display:block;font-size:var(--fs-xl);margin-top:4px}.rc-res i{display:block;font-style:normal;font-size:var(--fs-sm);font-weight:600;min-height:1em}
+.rc-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:var(--s2)}.rc-meta span{font-size:var(--fs-xs);font-weight:600;color:var(--c141);background:var(--c227);border-radius:999px;padding:5px 9px}
+.rc-warn{margin:var(--s2) 0 0;font-size:var(--fs-xs);color:var(--c173);line-height:1.4}
+.rc-adj{margin-top:var(--s3);border-top:1px solid var(--c255);padding-top:var(--s3)}
 .rc-adj h4{margin:0 0 var(--s2);font-size:var(--fs-sm);font-weight:700;display:flex;align-items:center;gap:6px}
 .rc-adj-row{display:flex;gap:var(--s2);align-items:flex-end}.rc-adj-row label{flex:1}
-.rc-out{flex:1.3;height:var(--h-md);background:#0b1121;border-radius:var(--r-md);display:flex;align-items:center;justify-content:space-between;padding:0 var(--s3);font-size:var(--fs-xs);color:#8590a8}.rc-out b{color:#eef2ff;font-size:var(--fs-md)}
-.rc-note{margin:var(--s2) 0 0;font-size:var(--fs-xs);color:#8590a8;line-height:1.4}
+.rc-out{flex:1.3;height:var(--h-md);background:var(--c260);border-radius:var(--r-md);display:flex;align-items:center;justify-content:space-between;padding:0 var(--s3);font-size:var(--fs-xs);color:var(--c5)}.rc-out b{color:var(--c0);font-size:var(--fs-md)}
+.rc-note{margin:var(--s2) 0 0;font-size:var(--fs-xs);color:var(--c5);line-height:1.4}
 .rc-btns{display:flex;gap:var(--s2);margin-top:var(--s3)}
 .rc-btns button{flex:1;height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);font-size:var(--fs-sm);padding:0 var(--s2)}
 .rc-btns button:disabled{opacity:.45}

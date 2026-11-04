@@ -5,8 +5,8 @@ if("serviceWorker" in navigator){try{if(navigator.storage&&navigator.storage.per
 (function(){
 var cap=null;try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){cap=(c.Plugins&&c.Plugins.StatusBar)||c.registerPlugin('StatusBar');}}catch(e){}
 var run=function(f){try{Promise.resolve(f()).catch(function(){});}catch(e){}};
-if(cap){run(function(){return cap.setOverlaysWebView({overlay:false});});run(function(){return cap.setStyle({style:'DARK'});});}
-var BASE=[9,13,24,1],last='';
+if(cap){run(function(){return cap.setOverlaysWebView({overlay:false});});run(function(){return cap.setStyle({style:(window.EJ&&window.EJ.resolved==='light')?'LIGHT':'DARK'});});}
+var BASE=(window.EJ&&window.EJ.bgRGB||[9,13,24,1]).slice(),last='';
 function parse(str){var m=String(str||'').match(/rgba?\(([^)]+)\)/);if(!m)return null;var a=m[1].split(/[ ,\/]+/).filter(Boolean).map(Number);return [a[0],a[1],a[2],a.length>3?a[3]:1];}
 function over(top,bot){var a=top[3];return [top[0]*a+bot[0]*(1-a),top[1]*a+bot[1]*(1-a),top[2]*a+bot[2]*(1-a),1];}
 function layerColor(el){var cs=getComputedStyle(el),bg=parse(cs.backgroundColor);
@@ -24,6 +24,8 @@ function sync(){try{var h=hex(topColor());if(h===last)return;last=h;
  if(cap)run(function(){return cap.setBackgroundColor({color:h});});}catch(e){}}
 var q=0;function queue(){if(q)return;q=requestAnimationFrame(function(){q=0;sync();});}
 window.syncStatusBar=queue;
+function onAp(){try{BASE=(window.EJ.bgRGB||BASE).slice();last='';if(cap)run(function(){return cap.setStyle({style:window.EJ.resolved==='light'?'LIGHT':'DARK'});});}catch(e){}queue();}
+window.addEventListener('ej-appearance',onAp);
 function start(){try{new MutationObserver(queue).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','data-tab','data-nv']});}catch(e){}
  window.addEventListener('resize',queue);window.addEventListener('orientationchange',queue);setInterval(sync,1500);queue();}
 if(document.body)start();else document.addEventListener('DOMContentLoaded',start);

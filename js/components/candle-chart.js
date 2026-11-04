@@ -226,23 +226,23 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
         pinch.current = null; drag.current = null; };
     if (!n)
         return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, style: hh ? { aspectRatio: `500/${hh}` } : undefined, className: "combo-chart candle-chart" },
-            React.createElement("text", { x: W / 2, y: H / 2, textAnchor: "middle", fontSize: "12", fill: "#7d8bab" }, "Belum ada trade pada periode ini"));
+            React.createElement("text", { x: W / 2, y: H / 2, textAnchor: "middle", fontSize: "12", fill: EJC("#7d8bab") }, "Belum ada trade pada periode ini"));
     const grid = [0, 1, 2, 3].map(i => lo + (hi - lo) * (i + .5) / 4);
     const step = Math.max(1, Math.ceil(58 / SW));
-    const col = c => c.c > c.o ? '#34d399' : c.c < c.o ? '#ff6b81' : '#9aa7c5';
+    const col = c => c.c > c.o ? EJC("#34d399") : c.c < c.o ? EJC("#ff6b81") : EJC("#9aa7c5");
     const bw = Math.max(1.4, SW * .62), wk = Math.max(.9, Math.min(1.6, bw * .55));
     return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, ref: svgRef, style: hh ? { aspectRatio: `500/${hh}` } : undefined, className: "combo-chart candle-chart" + (fixed ? " cc-fixed" : ""), onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerCancel: cancel },
         React.createElement("defs", null,
             React.createElement("clipPath", { id: "cdclip" },
                 React.createElement("rect", { x: L, y: T - 4, width: plotW, height: H - T - B + 8 }))),
         grid.map((g, i) => React.createElement("g", { key: i },
-            React.createElement("line", { x1: L, x2: W - AX, y1: y(g), y2: y(g), stroke: "#2a3a60", strokeWidth: "1", strokeDasharray: "3 6" }),
-            React.createElement("text", { x: W - 2, y: y(g) + 3.5, textAnchor: "end", fontSize: "10", fill: "#7d8bab" }, candleNum(g)))),
-        React.createElement("line", { x1: L, x2: W - AX, y1: H - B, y2: H - B, stroke: "#33466f", strokeWidth: "1" }),
-        lo < 0 && hi > 0 && React.createElement("line", { x1: L, x2: W - AX, y1: y(0), y2: y(0), stroke: "#4a5f91", strokeWidth: "1", strokeDasharray: "2 3" }),
+            React.createElement("line", { x1: L, x2: W - AX, y1: y(g), y2: y(g), stroke: EJC("#2a3a60"), strokeWidth: "1", strokeDasharray: "3 6" }),
+            React.createElement("text", { x: W - 2, y: y(g) + 3.5, textAnchor: "end", fontSize: "10", fill: EJC("#7d8bab") }, candleNum(g)))),
+        React.createElement("line", { x1: L, x2: W - AX, y1: H - B, y2: H - B, stroke: EJC("#33466f"), strokeWidth: "1" }),
+        lo < 0 && hi > 0 && React.createElement("line", { x1: L, x2: W - AX, y1: y(0), y2: y(0), stroke: EJC("#4a5f91"), strokeWidth: "1", strokeDasharray: "2 3" }),
         isL && React.createElement("g", { clipPath: "url(#cdclip)" }, (() => {
             const P = shown.map(c => [x(candles.indexOf(c)), y(c.c)]);
-            const lc = candles[n - 1].c >= 0 ? '#34d399' : '#ff6b81';
+            const lc = candles[n - 1].c >= 0 ? EJC("#34d399") : EJC("#ff6b81");
             const base = H - B, cls = fresh ? "cd-in" : "";
             const d = P.length > 1 ? smoothPath(P) : `M${L},${P[0][1]} L${W - AX},${P[0][1]}`;
             return React.createElement(React.Fragment, null,
@@ -252,8 +252,8 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
                         React.createElement("stop", { offset: "1", stopColor: lc, stopOpacity: "0" }))),
                 P.length > 1 && React.createElement("path", { d: `${d} L${P[P.length - 1][0]},${base} L${P[0][0]},${base} Z`, fill: "url(#cdg)", className: `cl-area ${cls}` }),
                 React.createElement("path", { d: d, pathLength: "1", className: `cl-line ${cls}`, fill: "none", stroke: lc, strokeWidth: "2.8", strokeLinecap: "round", strokeLinejoin: "round" }),
-                React.createElement("line", { x1: x(ix), x2: x(ix), y1: T - 4, y2: base, stroke: "#fff", strokeOpacity: ".28", strokeDasharray: "3 3" }),
-                React.createElement("circle", { cx: x(ix), cy: y(act.c), r: "4.6", fill: lc, stroke: "#0f172a", strokeWidth: "2.2" }));
+                React.createElement("line", { x1: x(ix), x2: x(ix), y1: T - 4, y2: base, stroke: EJC("#ffffff"), strokeOpacity: ".28", strokeDasharray: "3 3" }),
+                React.createElement("circle", { cx: x(ix), cy: y(act.c), r: "4.6", fill: lc, stroke: EJC("#0f172a"), strokeWidth: "2.2" }));
         })()),
         !isL && React.createElement("g", { clipPath: "url(#cdclip)" }, shown.map(c => {
             const i = candles.indexOf(c);
@@ -261,22 +261,22 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
             const top = y(Math.max(c.o, c.c)), bot = y(Math.min(c.o, c.c));
             const k = col(c);
             return React.createElement("g", { key: c.k, className: fresh ? "cd cd-in" : "cd", style: { "--i": Math.max(0, shown.indexOf(c)) }, opacity: i === ix ? 1 : .92 },
-                i === ix && React.createElement("rect", { x: cx - SW / 2, y: T - 4, width: SW, height: H - T - B + 8, fill: "#fff", opacity: ".06" }),
+                i === ix && React.createElement("rect", { x: cx - SW / 2, y: T - 4, width: SW, height: H - T - B + 8, fill: EJC("#ffffff"), opacity: ".06" }),
                 React.createElement("line", { x1: cx, x2: cx, y1: y(c.h), y2: y(c.l), stroke: k, strokeWidth: wk, strokeLinecap: "round" }),
                 React.createElement("rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(1.8, bot - top), rx: bw > 4 ? "1.2" : "0", fill: k }));
         })),
-        shown.map(c => { const i = candles.indexOf(c); return (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14) ? React.createElement("text", { key: c.k, x: x(i), y: H - 8, textAnchor: "middle", fontSize: "9.5", fill: "#7d8bab" }, c.short) : null; }),
-        React.createElement("text", { x: L, y: 13, fontSize: "11.5", fontWeight: "700", fill: "#eef2ff" },
+        shown.map(c => { const i = candles.indexOf(c); return (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14) ? React.createElement("text", { key: c.k, x: x(i), y: H - 8, textAnchor: "middle", fontSize: "9.5", fill: EJC("#7d8bab") }, c.short) : null; }),
+        React.createElement("text", { x: L, y: 13, fontSize: "11.5", fontWeight: "700", fill: EJC("#eef2ff") },
             act.label,
-            React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500", dx: "6" },
+            React.createElement("tspan", { fill: EJC("#7d8bab"), fontWeight: "500", dx: "6" },
                 act.n,
                 " trade")),
         (() => { // bentuk E: angka perubahan besar + % di sampingnya, lalu pips | O H L C
             const dv = act.c - act.o, dpips = (act.pc || 0) - (act.po || 0), base = startBal || 1;
-            const cc = dv > 0 ? '#34d399' : dv < 0 ? '#ff6b81' : '#9aa7c5';
+            const cc = dv > 0 ? EJC("#34d399") : dv < 0 ? EJC("#ff6b81") : EJC("#9aa7c5");
             const y0 = 27, hh = 11; // segitiga naik / turun (ikon)
             const tri = dv > 0 ? `M${L},${y0 + hh} L${L + 12},${y0 + hh} L${L + 6},${y0} Z` : dv < 0 ? `M${L},${y0} L${L + 12},${y0} L${L + 6},${y0 + hh} Z` : `M${L},${y0 + 6} L${L + 12},${y0 + 6}`;
-            const vc = isL ? (act.c >= 0 ? '#34d399' : '#ff6b81') : col(act);
+            const vc = isL ? (act.c >= 0 ? EJC("#34d399") : EJC("#ff6b81")) : col(act);
             return React.createElement("g", null,
                 dv === 0 ? React.createElement("path", { d: tri, stroke: cc, strokeWidth: "2.4", strokeLinecap: "round" }) : React.createElement("path", { d: tri, fill: cc }),
                 React.createElement("text", { x: L + 19, y: 39, fontSize: "21", fontWeight: "800", fill: cc },
@@ -284,14 +284,14 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
                     React.createElement("tspan", { fontSize: "13.5", fontWeight: "700", dx: "9" }, fmtPctS(dv / base * 100))),
                 React.createElement("text", { x: L, y: 58, fontSize: "10.5", fontWeight: "700", fill: cc },
                     fmtPipsS(dpips),
-                    React.createElement("tspan", { fill: "#2b3a60", fontWeight: "400", dx: "8" }, "|"),
-                    isL ? [React.createElement("tspan", { key: "pl", fill: "#7d8bab", fontWeight: "500", dx: "8" }, "P&L "), React.createElement("tspan", { key: "pv", fill: vc, fontWeight: "600" }, candleNum(act.c))]
+                    React.createElement("tspan", { fill: EJC("#2b3a60"), fontWeight: "400", dx: "8" }, "|"),
+                    isL ? [React.createElement("tspan", { key: "pl", fill: EJC("#7d8bab"), fontWeight: "500", dx: "8" }, "P&L "), React.createElement("tspan", { key: "pv", fill: vc, fontWeight: "600" }, candleNum(act.c))]
                         : [['O', act.o], ['H', act.h], ['L', act.l], ['C', act.c]].map(([l, v], j) => React.createElement("tspan", { key: l, fill: vc, fontWeight: "600", dx: j ? "9" : "8" },
-                            React.createElement("tspan", { fill: "#7d8bab", fontWeight: "500" }, l + " "),
+                            React.createElement("tspan", { fill: EJC("#7d8bab"), fontWeight: "500" }, l + " "),
                             candleNum(v)))));
         })(),
-        (Math.abs(o - def0) > 0.5 || Math.abs(vy) > 2 || Math.abs(vs - 1) > .02 || Math.abs(cnt - def) > 1) && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, "tekan skala = reset"),
-        Math.abs(cnt - def) > 1 && React.createElement("text", { x: W - AX - 2, y: 29, textAnchor: "end", fontSize: "10", fill: "#5f6f94" }, Math.round(cnt) + " kandel"));
+        (Math.abs(o - def0) > 0.5 || Math.abs(vy) > 2 || Math.abs(vs - 1) > .02 || Math.abs(cnt - def) > 1) && React.createElement("text", { x: W - AX - 2, y: 13, textAnchor: "end", fontSize: "10", fill: EJC("#5f6f94") }, "tekan skala = reset"),
+        Math.abs(cnt - def) > 1 && React.createElement("text", { x: W - AX - 2, y: 29, textAnchor: "end", fontSize: "10", fill: EJC("#5f6f94") }, Math.round(cnt) + " kandel"));
 }
 
 function candleSavedGet(k, d) { try {
@@ -321,10 +321,10 @@ function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fi
             React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },
                 React.createElement("span", { className: "ct-thumb" }),
                 React.createElement("svg", { className: "ct-ic ic-candle", viewBox: "0 0 24 24", width: "20", height: "20", "aria-hidden": "true" },
-                    React.createElement("path", { d: "M7 3v3M7 18v3", stroke: "#ff6b81", strokeWidth: "2", strokeLinecap: "round" }),
-                    React.createElement("rect", { x: 4.5, y: 6, width: 5, height: 12, rx: 1.2, fill: "#ff6b81" }),
-                    React.createElement("path", { d: "M17 2v3M17 17v4", stroke: "#34d399", strokeWidth: "2", strokeLinecap: "round" }),
-                    React.createElement("rect", { x: 14.5, y: 5, width: 5, height: 12, rx: 1.2, fill: "#34d399" })),
+                    React.createElement("path", { d: "M7 3v3M7 18v3", stroke: EJC("#ff6b81"), strokeWidth: "2", strokeLinecap: "round" }),
+                    React.createElement("rect", { x: 4.5, y: 6, width: 5, height: 12, rx: 1.2, fill: EJC("#ff6b81") }),
+                    React.createElement("path", { d: "M17 2v3M17 17v4", stroke: EJC("#34d399"), strokeWidth: "2", strokeLinecap: "round" }),
+                    React.createElement("rect", { x: 14.5, y: 5, width: 5, height: 12, rx: 1.2, fill: EJC("#34d399") })),
                 React.createElement("svg", { className: "ct-ic ic-line", viewBox: "0 0 24 24", width: "20", height: "20", "aria-hidden": "true" },
                     React.createElement("path", { d: "M3 16c2-4 3-5 5-3s3 3 5-1 3-6 5-3 2 3 3 2", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round" })))));
 }

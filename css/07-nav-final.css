@@ -11,10 +11,10 @@
 .acct-inline .modal-head{margin-bottom:16px}
 /* ===== v2.8.9 — pilihan Symbol / Tanggal tampil di atas popup layar penuh; form Account management di Profil sama cantik dengan popup ===== */
 .modal-backdrop.sheet-layer{z-index:99000!important}
-.acct-inline label,.acct-inline form>label{display:block;color:#9aa8c0;font-size:var(--fs-xs)}
+.acct-inline label,.acct-inline form>label{display:block;color:var(--c50);font-size:var(--fs-xs)}
 .acct-inline label{margin-bottom:15px}
-.acct-inline input,.acct-inline textarea,.acct-inline select{display:block;width:100%;margin-top:8px;background:#0c1322;border:1px solid #26334e;color:#edf2ff;border-radius:var(--r-md);padding:12px 13px;outline:none}
-.acct-inline input:focus,.acct-inline textarea:focus{border-color:#597cff}
+.acct-inline input,.acct-inline textarea,.acct-inline select{display:block;width:100%;margin-top:8px;background:var(--c51);border:1px solid var(--c52);color:var(--c53);border-radius:var(--r-md);padding:12px 13px;outline:none}
+.acct-inline input:focus,.acct-inline textarea:focus{border-color:var(--c54)}
 .acct-inline input[type=number]{font-family:var(--font)}
 .acct-inline .as-edit-row input{margin-top:10px}
 .acct-inline form>.primary-btn{width:100%;justify-content:center;margin-top:8px}

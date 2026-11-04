@@ -1,43 +1,43 @@
 /* Gaya menu bar bawah pilihan (kelas nv-1..4 pada .bottom-nav). Standar (tanpa kelas) tidak berubah. Hanya layar HP. */
 @media(max-width:760px){
 /* ---------- umum untuk gaya mengambang (1 dan 3) ---------- */
-.bottom-nav.nv-1,.bottom-nav.nv-3{left:8px!important;right:8px!important;width:auto!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;border:1px solid #26335a!important;box-shadow:0 10px 26px rgba(0,0,0,.55)!important;padding:0 6px!important;align-items:center!important;justify-content:space-between!important;overflow:visible!important;backdrop-filter:none!important}
+.bottom-nav.nv-1,.bottom-nav.nv-3{left:8px!important;right:8px!important;width:auto!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;border:1px solid var(--c245)!important;box-shadow:0 10px 26px rgba(var(--r7),.55)!important;padding:0 6px!important;align-items:center!important;justify-content:space-between!important;overflow:visible!important;backdrop-filter:none!important}
 .bottom-nav.nv-1.nav-hidden,.bottom-nav.nv-3.nav-hidden{transform:translateY(calc(100% + 40px))!important}
-.bottom-nav.nv-1 .nav-item:nth-child(3) svg,.bottom-nav.nv-2 .nav-item:nth-child(3) svg,.bottom-nav.nv-3 .nav-item:nth-child(3) svg{width:22px!important;height:22px!important;padding:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:#8fa9ff!important;stroke-width:2.2!important}
+.bottom-nav.nv-1 .nav-item:nth-child(3) svg,.bottom-nav.nv-2 .nav-item:nth-child(3) svg,.bottom-nav.nv-3 .nav-item:nth-child(3) svg{width:22px!important;height:22px!important;padding:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:var(--c218)!important;stroke-width:2.2!important}
 /* ---------- 1: kapsul gelap + lingkaran aktif ---------- */
-.bottom-nav.nv-1{height:64px!important;border-radius:32px!important;background:#10172b!important;padding:0 8px!important}
-.bottom-nav.nv-1 .nav-item{flex:0 0 48px!important;width:48px!important;height:48px!important;align-self:center!important;padding:0!important;border-radius:50%!important;justify-content:center!important;align-items:center!important;color:#7f8ba6!important}
+.bottom-nav.nv-1{height:64px!important;border-radius:32px!important;background:var(--c246)!important;padding:0 8px!important}
+.bottom-nav.nv-1 .nav-item{flex:0 0 48px!important;width:48px!important;height:48px!important;align-self:center!important;padding:0!important;border-radius:50%!important;justify-content:center!important;align-items:center!important;color:var(--c247)!important}
 .bottom-nav.nv-1 .nav-item span,.bottom-nav.nv-1 .nav-item:nth-child(3) span{display:none!important}
 .bottom-nav.nv-1 .nav-item svg{width:22px!important;height:22px!important;stroke-width:2!important}
-.bottom-nav.nv-1 .nav-item.active{background:linear-gradient(145deg,#7d9bff,#4d73f0)!important;color:#fff!important;box-shadow:0 4px 16px rgba(77,115,240,.45)!important}
-.bottom-nav.nv-1 .nav-item.active svg{color:#fff!important}
+.bottom-nav.nv-1 .nav-item.active{background:linear-gradient(145deg,var(--c248),var(--c249))!important;color:#fff!important;box-shadow:0 4px 16px rgba(var(--r24),.45)!important}
+.bottom-nav.nv-1 .nav-item.active svg{color:var(--c85)!important}
 /* ---------- 2: bar datar + titik di bawah aktif ---------- */
-.bottom-nav.nv-2{height:calc(76px + env(safe-area-inset-bottom,0px))!important;background:#0d1322!important;border-top:1px solid #202b43!important;padding:0 4px calc(6px + env(safe-area-inset-bottom,0px))!important}
-.bottom-nav.nv-2 .nav-item{padding:10px 2px 14px!important;gap:4px!important;color:#7f8ba6!important}
+.bottom-nav.nv-2{height:calc(76px + env(safe-area-inset-bottom,0px))!important;background:var(--c250)!important;border-top:1px solid var(--c4)!important;padding:0 4px calc(6px + env(safe-area-inset-bottom,0px))!important}
+.bottom-nav.nv-2 .nav-item{padding:10px 2px 14px!important;gap:4px!important;color:var(--c247)!important}
 .bottom-nav.nv-2 .nav-item svg{width:22px!important;height:22px!important;stroke-width:2!important}
 .bottom-nav.nv-2 .nav-item span,.bottom-nav.nv-2 .nav-item:nth-child(3) span{position:static!important;width:auto!important;height:auto!important;overflow:visible!important;clip:auto!important;margin:0!important;font-size:var(--fs-xs)!important;font-weight:600!important;white-space:nowrap!important}
-.bottom-nav.nv-2 .nav-item:nth-child(3){color:#8fa9ff!important}
-.bottom-nav.nv-2 .nav-item.active{color:#eef2ff!important}
-.bottom-nav.nv-2 .nav-item.active svg{color:#eef2ff!important;stroke-width:2.2!important}
-.bottom-nav.nv-2 .nav-item.active:after{display:block!important;content:''!important;position:absolute!important;left:50%!important;bottom:5px!important;top:auto!important;width:5px!important;height:5px!important;margin-left:-2.5px!important;border-radius:50%!important;background:#6f93ff!important}
+.bottom-nav.nv-2 .nav-item:nth-child(3){color:var(--c218)!important}
+.bottom-nav.nv-2 .nav-item.active{color:var(--c0)!important}
+.bottom-nav.nv-2 .nav-item.active svg{color:var(--c0)!important;stroke-width:2.2!important}
+.bottom-nav.nv-2 .nav-item.active:after{display:block!important;content:''!important;position:absolute!important;left:50%!important;bottom:5px!important;top:auto!important;width:5px!important;height:5px!important;margin-left:-2.5px!important;border-radius:50%!important;background:var(--c251)!important}
 /* ---------- 3: bar mengambang + chip aktif ---------- */
-.bottom-nav.nv-3{height:66px!important;border-radius:var(--r-xl)!important;background:#131b32!important}
-.bottom-nav.nv-3 .nav-item{flex:1 1 0!important;height:52px!important;align-self:center!important;padding:0 2px!important;margin:0 1px!important;gap:3px!important;border-radius:var(--r-lg)!important;justify-content:center!important;color:#7f8ba6!important}
+.bottom-nav.nv-3{height:66px!important;border-radius:var(--r-xl)!important;background:var(--c252)!important}
+.bottom-nav.nv-3 .nav-item{flex:1 1 0!important;height:52px!important;align-self:center!important;padding:0 2px!important;margin:0 1px!important;gap:3px!important;border-radius:var(--r-lg)!important;justify-content:center!important;color:var(--c247)!important}
 .bottom-nav.nv-3 .nav-item svg{width:22px!important;height:22px!important;stroke-width:2!important}
 .bottom-nav.nv-3 .nav-item span,.bottom-nav.nv-3 .nav-item:nth-child(3) span{position:static!important;width:auto!important;height:auto!important;overflow:visible!important;clip:auto!important;margin:0!important;font-size:var(--fs-xs)!important;font-weight:600!important;white-space:nowrap!important}
-.bottom-nav.nv-3 .nav-item:nth-child(3){color:#8fa9ff!important}
-.bottom-nav.nv-3 .nav-item.active{background:linear-gradient(145deg,#7d9bff,#4d73f0)!important;color:#fff!important;box-shadow:0 4px 16px rgba(77,115,240,.4)!important}
-.bottom-nav.nv-3 .nav-item.active svg,.bottom-nav.nv-3 .nav-item.active:nth-child(3) svg{color:#fff!important}
-.bottom-nav.nv-1 .nav-item.active:nth-child(3) svg{color:#fff!important}
+.bottom-nav.nv-3 .nav-item:nth-child(3){color:var(--c218)!important}
+.bottom-nav.nv-3 .nav-item.active{background:linear-gradient(145deg,var(--c248),var(--c249))!important;color:#fff!important;box-shadow:0 4px 16px rgba(var(--r24),.4)!important}
+.bottom-nav.nv-3 .nav-item.active svg,.bottom-nav.nv-3 .nav-item.active:nth-child(3) svg{color:var(--c85)!important}
+.bottom-nav.nv-1 .nav-item.active:nth-child(3) svg{color:var(--c85)!important}
 /* ---------- 4: bar datar penuh (garis tipis di atas) + pil lebar di item aktif, hanya ikon ---------- */
-.bottom-nav.nv-4{height:calc(68px + env(safe-area-inset-bottom,0px))!important;background:#0a0f1c!important;border-top:1px solid #1d2742!important;box-shadow:none!important;padding:0 6px env(safe-area-inset-bottom,0px)!important;align-items:center!important;backdrop-filter:none!important}
-.bottom-nav.nv-4 .nav-item{flex:1 1 0!important;height:44px!important;align-self:center!important;padding:0!important;margin:0 4px!important;border-radius:22px!important;justify-content:center!important;align-items:center!important;color:#dfe6fb!important;background:none!important;box-shadow:none!important}
+.bottom-nav.nv-4{height:calc(68px + env(safe-area-inset-bottom,0px))!important;background:var(--c253)!important;border-top:1px solid var(--c117)!important;box-shadow:none!important;padding:0 6px env(safe-area-inset-bottom,0px)!important;align-items:center!important;backdrop-filter:none!important}
+.bottom-nav.nv-4 .nav-item{flex:1 1 0!important;height:44px!important;align-self:center!important;padding:0!important;margin:0 4px!important;border-radius:22px!important;justify-content:center!important;align-items:center!important;color:var(--c95)!important;background:none!important;box-shadow:none!important}
 .bottom-nav.nv-4 .nav-item span,.bottom-nav.nv-4 .nav-item:nth-child(3) span{display:none!important}
 .bottom-nav.nv-4 .nav-item svg{width:24px!important;height:24px!important;stroke-width:2!important;color:inherit!important}
-.bottom-nav.nv-4 .nav-item:nth-child(3) svg{width:24px!important;height:24px!important;padding:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:#8fa9ff!important;stroke-width:2!important}
-.bottom-nav.nv-4 .nav-item.active{background:#1c2744!important;color:#fff!important}
-.bottom-nav.nv-4 .nav-item.active svg{color:#fff!important;stroke-width:2.4!important}
-.bottom-nav.nv-4 .nav-item.active:nth-child(3) svg{color:#fff!important}
+.bottom-nav.nv-4 .nav-item:nth-child(3) svg{width:24px!important;height:24px!important;padding:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:var(--c218)!important;stroke-width:2!important}
+.bottom-nav.nv-4 .nav-item.active{background:var(--c254)!important;color:var(--c85)!important}
+.bottom-nav.nv-4 .nav-item.active svg{color:var(--c85)!important;stroke-width:2.4!important}
+.bottom-nav.nv-4 .nav-item.active:nth-child(3) svg{color:var(--c85)!important}
 }
 @media(max-width:760px){
 /* ruang bawah halaman mengikuti tinggi menu bawah (termasuk jarak mengambang) supaya kartu terakhir tidak tertabrak */

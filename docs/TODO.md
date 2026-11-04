@@ -397,3 +397,4 @@
 - v5.3.0: Account management & Risk calculator jadi baris ringkas yang dibuka dengan sentuhan; Risk calculator baru (Long/Short, lot atau risk %, saldo akun, risk/reward nominal dan %, saran lot, buat posisi); Profil punya sapaan dengan lingkaran inisial; judul Tools & Profil lebih lega. File baru js/components/risk-calc.js.
 - v5.3.1: di Profil, Sinkron online, Cloud backup, dan Export & share juga jadi baris ringkas yang dibuka dengan sentuhan (sebelumnya masih terbuka).
 - v5.3.2: jarak antar baris di Profil dan Tools dilonggarkan (padding atas-bawah 16px, tinggi baris 68px).
+- v5.4.0: Tools > Tampilan aplikasi: mode terang/gelap/otomatis, 5 tema warna (Midnight Blue, Pure Black, Emerald, Amber, Ocean Cyan), pilihan font (Manrope, Inter, Poppins, Nunito, Plus Jakarta Sans, Sistem). Semua warna CSS/grafik jadi variabel (css/00-colors.css + js/lib/color-table.js + js/lib/appearance.js).

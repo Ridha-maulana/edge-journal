@@ -65,7 +65,7 @@
 .backup-row input[type=file]{display:none!important}
 .backup-row>div:nth-child(2){flex:1;min-width:0}
 .backup-row .secondary-btn,.backup-row label.secondary-btn{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:var(--s2);margin:0;min-width:96px;height:var(--h-md);padding:0 var(--s3);flex:none}
-.backup-row label.secondary-btn{font-size:var(--fs-sm);color:#cedaff}
+.backup-row label.secondary-btn{font-size:var(--fs-sm);color:var(--c25)}
 
 /* halaman Kalender (tombol kalender di header): jarak tepi 8px, sama dengan halaman lain */
 .calendar-page{padding-left:var(--s2);padding-right:var(--s2)}
@@ -102,9 +102,9 @@
 .trade-actions{gap:18px;margin-top:10px}
 @media(max-width:420px){.trade-main{padding:12px 9px;gap:7px}.trade-result strong{font-size:11px}}
 /* warna: hanya kartu Tahun (biru); Bulan & Minggu polos */
-.week-head.gj-main.lv-y{background:#112250;border-color:#34509a}
-.week-head.gj-main.lv-y>div strong{color:#b4c8ff}
-.week-head.gj-main.lv-y>svg{color:#9db6ff}
+.week-head.gj-main.lv-y{background:var(--c243);border-color:var(--c197)}
+.week-head.gj-main.lv-y>div strong{color:var(--c244)}
+.week-head.gj-main.lv-y>svg{color:var(--c141)}
 .week-head.wk-hl{background:var(--panel);border-color:var(--border)}
 
 /* v5.2.5 — satu jarak tepi (8px) untuk semua header & halaman */

@@ -1,20 +1,20 @@
 /* v3.7.0 - kartu utama Performance: baris rincian periode desain D "Ringkas" */
 .hero-facts{display:flex;flex-wrap:wrap;gap:8px}
-.hero-facts span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:#0e1730;border:1px solid #223357;font-size:var(--fs-sm);color:#9aa7c5;white-space:nowrap}
-.hero-facts b{color:#eef2ff;font-weight:800}
+.hero-facts span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--c150);border:1px solid var(--c151);font-size:var(--fs-sm);color:var(--c138);white-space:nowrap}
+.hero-facts b{color:var(--c0);font-weight:800}
 .perf-screen>.hero-card.combo .combo-top{order:1}.perf-screen>.hero-card.combo .hero-facts{order:2}.perf-screen>.hero-card.combo .combo-stats{order:3}.perf-screen>.hero-card.combo .hero-chart{order:4}.perf-screen>.hero-card.combo .combo-legend{order:5}.perf-screen>.hero-card.combo .combo-mini{order:6}.perf-screen>.hero-card.combo .performance-actions{order:7}
 
 /* ===== D  RINGKAS : padat, rincian periode satu baris teks, statistik satu strip ===== */
-.perf-screen>.hero-card.combo.hv-d{background:#0e1630;border:1px solid #243457;border-radius:var(--r-lg);padding:16px;gap:10px}
+.perf-screen>.hero-card.combo.hv-d{background:var(--c222);border:1px solid var(--c142);border-radius:var(--r-lg);padding:16px;gap:10px}
 .hv-d .hero-number{font-size:var(--fs-2xl)}
 .hv-d .combo-top{order:1}.hv-d .combo-stats{order:2}.hv-d .hero-chart{order:3}.hv-d .hero-facts{order:4}
 .hv-d .combo-stats{grid-template-columns:repeat(4,1fr);gap:8px;margin:0;padding:12px 0 0}
 .hv-d .combo-stats>div{background:none!important;border:0!important;padding:0;box-shadow:none!important}
 .hv-d .combo-stats span{font-size:var(--fs-xs)}.hv-d .combo-stats b{font-size:var(--fs-md);margin-top:2.0px}
-.hv-d .hero-facts{display:flex;flex-wrap:nowrap;justify-content:center;gap:0;padding:10px 0 1.0px;border-top:1px solid #1f2d4d}
-.hv-d .hero-facts span{flex-direction:row;gap:6px;background:none;border:0;border-left:1px solid #2a3a60;border-radius:0;padding:0 11px;font-size:var(--fs-sm);line-height:1.3;color:#9aa7c5;white-space:nowrap}
+.hv-d .hero-facts{display:flex;flex-wrap:nowrap;justify-content:center;gap:0;padding:10px 0 1.0px;border-top:1px solid var(--c223)}
+.hv-d .hero-facts span{flex-direction:row;gap:6px;background:none;border:0;border-left:1px solid var(--c29);border-radius:0;padding:0 11px;font-size:var(--fs-sm);line-height:1.3;color:var(--c138);white-space:nowrap}
 .hv-d .hero-facts span:first-child{border-left:0}
-.hv-d .hero-facts b{font-size:inherit;font-weight:800;color:#eef2ff}
+.hv-d .hero-facts b{font-size:inherit;font-weight:800;color:var(--c0)}
 @media(max-width:380px){.hv-d .hero-facts span{padding:0 8px;font-size:var(--fs-xs);gap:3.0px}}
 /* info Bulan terbaik & Drawdown terdalam: tetap sejajar satu baris seperti sebelumnya */
 .hv-d .combo-legend{flex-wrap:wrap;justify-content:space-between;gap:6px 10px;font-size:var(--fs-sm);margin-top:2.0px}
@@ -23,13 +23,13 @@
 .hv-d .combo-legend i{margin-right:7px}
 
 /* v4.0.0 - enam metrik jadi satu strip bergaris tegak (tanpa kotak) dan tiga tombol aksi satu baris: Share / Stats / DNA */
-.hv-d .combo-mini{display:flex;align-items:stretch;gap:0;border-top:1px solid #1f2d4d;padding-top:11px;margin-top:2.0px}
-.hv-d .combo-mini>div{flex:1 1 auto;min-width:0;background:none!important;border:0;border-left:1px solid #243457;border-radius:0;padding:0 clamp(3px,1.1vw,8px);box-shadow:none!important;white-space:nowrap}
+.hv-d .combo-mini{display:flex;align-items:stretch;gap:0;border-top:1px solid var(--c223);padding-top:11px;margin-top:2.0px}
+.hv-d .combo-mini>div{flex:1 1 auto;min-width:0;background:none!important;border:0;border-left:1px solid var(--c142);border-radius:0;padding:0 clamp(3px,1.1vw,8px);box-shadow:none!important;white-space:nowrap}
 .hv-d .combo-mini>div:first-child{border-left:0;padding-left:0}
 .hv-d .combo-mini>div:last-child{padding-right:0}
-.hv-d .combo-mini span{font-size:clamp(6.6px,2.05vw,9px);margin-bottom:2.0px;color:#8a97b8;font-weight:500}
+.hv-d .combo-mini span{font-size:clamp(6.6px,2.05vw,9px);margin-bottom:2.0px;color:var(--c143);font-weight:500}
 .hv-d .combo-mini b{font-size:clamp(9.5px,2.8vw,13px);font-weight:700}
 .perf-screen .hv-d .performance-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.1vw,6px)}
-.perf-screen .hv-d .performance-actions .share-btn{grid-column:auto;margin:0;background:#111d3b;border:1px solid #334f91;color:#cfe0ff}
+.perf-screen .hv-d .performance-actions .share-btn{grid-column:auto;margin:0;background:var(--c153);border:1px solid var(--c154);color:var(--c146)}
 .hv-d .performance-action{min-height:clamp(30px,8.2vw,36px);font-size:clamp(9px,2.5vw,11.5px);font-weight:600;gap:7px;border-radius:var(--r-md);padding:0 6px}
 .hv-d .performance-action svg,.hv-d .performance-action img{width:13px;height:13px}

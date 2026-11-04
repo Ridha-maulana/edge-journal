@@ -2,61 +2,61 @@
 /* ===== v2.8.0/v2.8.1 — Drill-down performa (Bulan > Minggu > Hari > Sesi > Win/Loss) =====
    Warna & efek tekan mengikuti kartu lain (tab Growth/Balance/Profit, .pe-best, .pe-banner, .pe-bar). */
 .dd{scroll-margin-top:78px}
-.dd .pos{color:#34d399}.dd .neg{color:#ff6b81}.dd .zero{color:#8a94ab}
+.dd .pos{color:var(--c118)}.dd .neg{color:var(--c119)}.dd .zero{color:var(--c109)}
 .dd-crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.dd-crumb,.dd-lock,.dd-btn{background:#0b1222;border:1px solid #202d47;color:#8a94ab;border-radius:var(--r-md);padding:9px 12px;font-size:var(--fs-sm);font-weight:500;display:inline-flex;align-items:center;gap:7px;line-height:1.2;white-space:nowrap}
+.dd-crumb,.dd-lock,.dd-btn{background:var(--c123);border:1px solid var(--c82);color:var(--c109);border-radius:var(--r-md);padding:9px 12px;font-size:var(--fs-sm);font-weight:500;display:inline-flex;align-items:center;gap:7px;line-height:1.2;white-space:nowrap}
 .dd-crumb i{font-style:normal;opacity:.55;font-size:var(--fs-sm)}
 .dd-crumb:disabled{cursor:default;opacity:.85}
-.dd-crumb.seen{color:#cfd8f3;border-color:#2c3c66}
-.dd-crumb.on{background:#1d2c57;color:#fff;border-color:#4a68c8;box-shadow:0 0 0 1px #4a68c8,0 6px 18px #1d2c5766}
+.dd-crumb.seen{color:var(--c126);border-color:var(--c191)}
+.dd-crumb.on{background:var(--c124);color:var(--c85);border-color:var(--c125);box-shadow:0 0 0 1px var(--c125),0 6px 18px rgba(var(--r10),.4)}
 .dd-lockrow{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin:12px 0 2.0px}
-.dd-year{display:flex;align-items:center;gap:10px;font-size:var(--fs-md);font-weight:700;color:#e8edff}
+.dd-year{display:flex;align-items:center;gap:10px;font-size:var(--fs-md);font-weight:700;color:var(--c90)}
 .dd-year .dd-lock{padding:8px 14px;font-size:var(--fs-md);line-height:1}
 .dd-lock:disabled{opacity:.35;cursor:default}
-.dd-item.sel{border-color:#4a68c8;box-shadow:0 0 0 1px #4a68c855}
-.dd-lock.on{background:#3a2f12;border-color:#f5b84b99;color:#f5b84b;box-shadow:0 0 0 1px #f5b84b66}
+.dd-item.sel{border-color:var(--c125);box-shadow:0 0 0 1px rgba(var(--r20),.33)}
+.dd-lock.on{background:var(--c134);border-color:rgba(var(--r21),.6);color:var(--c133);box-shadow:0 0 0 1px rgba(var(--r21),.4)}
 .dd-title{margin:14px 0 14px!important;font-size:var(--fs-md)!important}
-.dd-best{background:#10342b;border:1px solid #2f8f6f;border-radius:var(--r-md);padding:13px 14px;font-size:var(--fs-md);margin-bottom:14px;line-height:1.5}
-.dd-info{display:block;background:#162144;border:1px solid #405a9a;color:#cbd8ff;border-radius:var(--r-md);padding:12px 14px;font-size:var(--fs-sm);margin-bottom:14px;line-height:1.5}
-.dd-item{display:block;background:#0b1222;border:1px solid #202d47;border-radius:var(--r-lg);padding:15px 16px;margin-bottom:12px;outline:none}
+.dd-best{background:var(--c127);border:1px solid var(--c112);border-radius:var(--r-md);padding:13px 14px;font-size:var(--fs-md);margin-bottom:14px;line-height:1.5}
+.dd-info{display:block;background:var(--c129);border:1px solid var(--c58);color:var(--c59);border-radius:var(--r-md);padding:12px 14px;font-size:var(--fs-sm);margin-bottom:14px;line-height:1.5}
+.dd-item{display:block;background:var(--c123);border:1px solid var(--c82);border-radius:var(--r-lg);padding:15px 16px;margin-bottom:12px;outline:none}
 .dd-item.click{cursor:pointer}
 .dd-item.dim{opacity:.6}
 .dd-ihead{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px}
-.dd-ihead strong{font-size:var(--fs-md);font-weight:700;color:#eef2ff}
+.dd-ihead strong{font-size:var(--fs-md);font-weight:700;color:var(--c0)}
 .dd-dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
-.dd-small{font-size:var(--fs-sm);color:#7d8bab;font-weight:400}
-.dd-sub{font-size:var(--fs-sm);color:#7d8bab;margin-top:7px;line-height:1.4}
+.dd-small{font-size:var(--fs-sm);color:var(--c122);font-weight:400}
+.dd-sub{font-size:var(--fs-sm);color:var(--c122);margin-top:7px;line-height:1.4}
 .dd-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
 .dd-tag{display:inline-flex;align-items:center;gap:7px;font-size:var(--fs-sm);line-height:1;padding:8px 11px;border-radius:var(--r-xs);border:1px solid transparent}
 .dd-tag i{width:7px;height:7px;border-radius:50%;display:inline-block;flex:none}
-.dd-tag.day{background:#161f36;border-color:#26324f;color:#9aa6c4}
-.dd-tag.week{background:#241f45;border-color:#4b3f8f;color:#c4b5ff}
-.dd-tag.month{background:#14224a;border-color:#34509a;color:#9db6ff}
-.dd-tag.ses{background:#10192f;border-color:#26324f;color:#cfd8f3}
-.dd-tag.cnt{background:#121b33;border-color:#26345a;color:#aab6cf}
-.dd-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:13px;font-size:var(--fs-sm);color:#8a94ab}
+.dd-tag.day{background:var(--c192);border-color:var(--c193);color:var(--c171)}
+.dd-tag.week{background:var(--c194);border-color:var(--c195);color:var(--c131)}
+.dd-tag.month{background:var(--c196);border-color:var(--c197);color:var(--c141)}
+.dd-tag.ses{background:var(--c198);border-color:var(--c193);color:var(--c126)}
+.dd-tag.cnt{background:var(--c199);border-color:var(--c200);color:var(--c110)}
+.dd-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:13px;font-size:var(--fs-sm);color:var(--c109)}
 .dd-meta{display:flex;gap:8px 14px;flex-wrap:wrap}
 .dd-meta span.pos,.dd-meta span.neg{font-weight:700}
 .dd-pr{font-size:var(--fs-lg);font-weight:800;white-space:nowrap}
-.dd-bar{height:8px;border-radius:var(--r-xs);background:#151f3b;margin-top:12px;overflow:hidden}
+.dd-bar{height:8px;border-radius:var(--r-xs);background:var(--c201);margin-top:12px;overflow:hidden}
 .dd-bar i{display:block;height:100%;border-radius:var(--r-xs)}
 .dd-tbl{margin-top:10px}
-.dd-tbl>div{display:flex;justify-content:space-between;gap:14px;padding:12px 2.0px;border-bottom:1px solid #18243f;font-size:var(--fs-md)}
+.dd-tbl>div{display:flex;justify-content:space-between;gap:14px;padding:12px 2.0px;border-bottom:1px solid var(--c152);font-size:var(--fs-md)}
 .dd-tbl>div:last-child{border-bottom:0}
-.dd-tbl span{color:#8a94ab}.dd-tbl b{font-weight:800;color:#eef2ff;text-align:right}
-.dd-tbl b span{color:inherit}.dd-tbl b span.pos{color:#34d399}.dd-tbl b span.neg{color:#ff6b81}.dd-tbl b span.zero{color:#8a94ab}
-.dd-total{border-color:#2c3c66;background:#0e1730}
+.dd-tbl span{color:var(--c109)}.dd-tbl b{font-weight:800;color:var(--c0);text-align:right}
+.dd-tbl b span{color:inherit}.dd-tbl b span.pos{color:var(--c118)}.dd-tbl b span.neg{color:var(--c119)}.dd-tbl b span.zero{color:var(--c109)}
+.dd-total{border-color:var(--c191);background:var(--c150)}
 .dd-donutwrap{display:flex;justify-content:center;margin:8px 0 16px}
 .dd-donut{width:190px;height:190px}
-.dd-nav{display:flex;justify-content:space-between;gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid #1c2a47}
+.dd-nav{display:flex;justify-content:space-between;gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid var(--c149)}
 .dd-btn{font-weight:700;padding:11px 15px}
-.dd-btn.back{color:#cfd8f3}
-.dd-btn.next{background:#1a2a55;border-color:#405a9a;color:#cfe0ff}
+.dd-btn.back{color:var(--c126)}
+.dd-btn.next{background:var(--c18);border-color:var(--c58);color:var(--c146)}
 .dd-btn:disabled{opacity:.4;cursor:default}
 /* efek hover & tekan sama seperti tab Growth / Balance / Profit dan tombol Performance */
 .dd-crumb,.dd-lock,.dd-btn,.dd-item{transition:transform .25s cubic-bezier(.16,1,.3,1),background .25s ease,border-color .25s ease,box-shadow .25s ease}
-.dd-crumb:not(:disabled):hover,.dd-lock:not(:disabled):hover,.dd-btn:not(:disabled):hover,.dd-item.click:hover,.dd-item.click:focus-visible{transform:translateY(-2px);box-shadow:0 8px 20px #5b7fff2b;border-color:#5c7fe0}
-.dd-crumb.on:hover{box-shadow:0 0 0 1px #4a68c8,0 8px 20px #5b7fff2b}
+.dd-crumb:not(:disabled):hover,.dd-lock:not(:disabled):hover,.dd-btn:not(:disabled):hover,.dd-item.click:hover,.dd-item.click:focus-visible{transform:translateY(-2px);box-shadow:0 8px 20px rgba(var(--r8),.17);border-color:var(--c144)}
+.dd-crumb.on:hover{box-shadow:0 0 0 1px var(--c125),0 8px 20px rgba(var(--r8),.17)}
 .dd-crumb:not(:disabled):active,.dd-lock:not(:disabled):active,.dd-btn:not(:disabled):active{transform:scale(.95)}
 .dd-item.click:active{transform:scale(.985)}
 @media(max-width:600px){.dd-crumb{padding:9px 9px;font-size:var(--fs-sm);gap:3.0px}.dd-crumbs{gap:6px;flex-wrap:nowrap}.dd-crumb i{font-size:var(--fs-sm)}}

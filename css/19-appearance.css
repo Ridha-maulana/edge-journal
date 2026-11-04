@@ -1,0 +1,17 @@
+/* Bagian "Tampilan aplikasi" (Tools): label bagian, dialog mode / tema / font */
+.sec-label{padding:var(--s5) 0 var(--s2);font-size:var(--fs-xs);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c5);border-bottom:1px solid var(--c255)}
+.acc-list>.sec-label{border-top:0}.acc-list>.sec-label+*{border-top:0}
+.ap-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.ap-sheet{padding:6px 0 14px}
+.ap-note{margin:14px 22px 6px;font-size:var(--fs-sm);line-height:1.5;color:var(--c5)}
+.ap-seg{display:grid;grid-template-columns:repeat(3,1fr);margin:6px 22px 0;border:1px solid var(--c76);border-radius:var(--r-md);overflow:hidden;background:var(--c123)}
+.tsel-sheet>.ap-seg button,.ap-seg button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;background:none;border:0;color:var(--c5);font-size:var(--fs-md);font-weight:600;font-family:inherit}
+.ap-seg button.on{background:var(--c129);color:var(--c218)}
+.ap-list{display:flex;flex-direction:column;padding:2px 10px 0}
+.tsel-sheet .ap-list>button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 12px;margin:0;border:0;border-radius:var(--r-md);background:none;color:var(--c0);text-align:left;font-size:var(--fs-lg)}
+.ap-list>button.on{background:var(--c129)}
+.ap-sw{display:flex;flex:none}.ap-sw i{width:22px;height:22px;border-radius:50%;border:1px solid rgba(var(--r0),.15)}.ap-sw i+i{margin-left:-6px}
+.ap-nm{flex:1;min-width:0}.ap-nm b{display:block;font-weight:700;font-size:var(--fs-lg)}.ap-nm small{display:block;margin-top:3px;font-size:var(--fs-xs);color:var(--c5);font-weight:400}
+.ap-rad{width:20px;height:20px;border-radius:50%;border:2px solid var(--c136);flex:none}.ap-list>button.on .ap-rad{border-color:var(--c137);background:radial-gradient(var(--c137) 45%,transparent 50%)}
+/* Mode terang: bayangan lebih halus */
+:root[data-mode="light"] .bottom-nav,:root[data-mode="light"] .bottom-nav.nv-1,:root[data-mode="light"] .bottom-nav.nv-2,:root[data-mode="light"] .bottom-nav.nv-3,:root[data-mode="light"] .bottom-nav.nv-4{box-shadow:0 -4px 18px rgba(40,55,100,.07)!important}

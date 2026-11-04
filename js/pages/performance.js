@@ -81,7 +81,7 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
     const cn = cv.length;
     const cpts = cv.map((v, i) => `${cn === 1 ? 0 : i / (cn - 1) * 500},${12 + (chi - v) / csp * 100}`);
     const cy0 = 12 + (chi - 0) / csp * 100;
-    const ccol = cr >= 0 ? '#34d399' : '#ff6b81';
+    const ccol = cr >= 0 ? EJC("#34d399") : EJC("#ff6b81");
     const mm = {};
     cs.forEach(t => { const k = dateOnly(t.date).slice(0, 7); mm[k] = (mm[k] || 0) + (Number(t.pnl) || 0); });
     const mKs = Object.keys(mm);
@@ -184,11 +184,11 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
                 React.createElement(HeroChart, { startBal: startBal, onOpen: onOpenCandle, trades: cs, hh: heroHH, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
                 React.createElement("div", { className: "combo-legend" },
                     React.createElement("span", null,
-                        React.createElement("i", { style: { background: '#34d399' } }),
+                        React.createElement("i", { style: { background: EJC("#34d399") } }),
                         "Bulan terbaik: ",
                         React.createElement("b", null, bestMk ? `${MS[Number(bestMk.slice(5, 7)) - 1]} ${mm[bestMk] >= 0 ? '+' : ''}${(mm[bestMk] / startBal * 100).toFixed(1)}%` : '—')),
                     React.createElement("span", null,
-                        React.createElement("i", { style: { background: '#ff6b81' } }),
+                        React.createElement("i", { style: { background: EJC("#ff6b81") } }),
                         "Drawdown terdalam: ",
                         React.createElement("b", null, maxDd ? `-${(maxDd / (account.balance || 1) * 100).toFixed(1)}%` : '0%'))),
                 React.createElement("div", { className: "combo-mini" }, [['Win rate', `${winRate}%`, filtered.length ? (winRate >= 50 ? 'positive' : 'negative') : ''], ['Profit Factor', pf0 === Infinity ? '∞' : pf0.toFixed(2), filtered.length ? (pf0 >= 1 ? 'positive' : 'negative') : ''], ['Total Trades', String(filtered.length), ''], ['Avg. R:R', avgRR0 ? avgRR0.toFixed(1) : '—', ''], ['Perolehan Pips', `${pips0 > 0 ? '+' : ''}${pips0.toFixed(1)}`, pips0 > 0 ? 'positive' : pips0 < 0 ? 'negative' : ''], ['Best Day', bd0 > 0 ? `+${money(bd0, account.currency)}` : '—', bd0 > 0 ? 'positive' : '']].map(([l, v, t]) => React.createElement("div", { key: l },
