@@ -8,7 +8,7 @@
 body{--pg-edge:20px}
 body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body[data-tab="account"] .main-content{padding-left:var(--pg-edge)!important;padding-right:var(--pg-edge)!important}
 .main-content .page-heading{margin:0 0 var(--s4);padding:0}
-.main-content .page-heading h1{grid-row:1!important;font-size:var(--fs-2xl);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0}
+.main-content .page-heading h1{grid-row:1!important;font-size:var(--fs-2xl);font-weight:700;letter-spacing:-.02em;line-height:1.1;margin:0}
 .main-content .page-heading .muted{grid-row:2!important;font-size:var(--fs-sm);line-height:1.4;margin:6px 0 0}
 .main-content .page-heading>:last-child:not(:first-child){grid-row:1!important;align-self:start}
 .main-content .page-heading .primary-btn,.main-content .page-heading .icon-btn{height:var(--h-md);min-height:var(--h-md);border-radius:var(--r-md);padding-top:0;padding-bottom:0}
@@ -77,10 +77,10 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 .main-content .page-heading.relaxed{margin-bottom:var(--s5)}
 .main-content .page-heading.relaxed .muted{margin-top:var(--s2)}
 .prof-head{margin:0 0 var(--s4)}
-.prof-head h1{font-size:var(--fs-2xl);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0}
+.prof-head h1{font-size:var(--fs-2xl);font-weight:700;letter-spacing:-.02em;line-height:1.1;margin:0}
 .prof-hello{display:flex;align-items:center;gap:var(--s4);margin:var(--s5) 0 var(--s5)}
-.prof-av{width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,var(--c248),var(--c249));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:var(--fs-xl);color:var(--onacc);box-shadow:0 6px 18px rgba(var(--r24),.35);flex:none}
-.prof-name{font-size:var(--fs-xl);line-height:1.2}.prof-name b{font-weight:800}
+.prof-av{width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,var(--c248),var(--c249));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--fs-xl);color:var(--onacc);box-shadow:0 6px 18px rgba(var(--r24),.35);flex:none}
+.prof-name{font-size:var(--fs-xl);line-height:1.2}.prof-name b{font-weight:700}
 .prof-mail{font-size:var(--fs-sm);color:var(--c5);margin-top:5px;word-break:break-all}
 /* baris ringkas yang bisa dibuka */
 .acc-list>*+*,.tool-grid>.acc-item+*{border-top:1px solid var(--c255)}

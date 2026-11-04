@@ -1,26 +1,9 @@
 /* Tampilan aplikasi: mode (terang/gelap/otomatis), tema warna, font. Dimuat di <head> agar diterapkan sebelum layar tampil pertama kali.
    Semua warna di CSS/JS berupa var(--cN) dari color-table.js; di sini nilainya dihitung ulang per mode + tema. */
 (function () {
-    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font' };
-    var THEMES = {
-        midnight: { name: 'Midnight Blue', h: 222, ns: 1, ah: 225, sw: ['#5d83ff', '#090d18'],
-            dark: { '#090d18': '#090d18' },
-            light: { '#090d18': '#f2f5fb', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f7f9fd', '#1c2640': '#dde4f2', '#202b43': '#dde4f2', '#5d83ff': '#3b5fe0' } },
-        black: { name: 'Pure Black', h: 220, ns: .12, lk: .7, ah: 226, sw: ['#6f8cff', '#000000'],
-            dark: { '#090d18': '#000000', '#0f1629': '#0d0f14', '#111729': '#0d0f14', '#151d32': '#12151b', '#1c2640': '#1d2027', '#202b43': '#1d2027', '#5d83ff': '#6f8cff' },
-            light: { '#090d18': '#ffffff', '#0f1629': '#f4f5f7', '#111729': '#f4f5f7', '#151d32': '#eceef1', '#1c2640': '#e2e5ea', '#202b43': '#e2e5ea', '#5d83ff': '#2f4fd0' } },
-        emerald: { name: 'Emerald', h: 156, ns: .9, ah: 160, sw: ['#34d399', '#08130f'],
-            dark: { '#090d18': '#08130f', '#0f1629': '#0d1d17', '#111729': '#0d1d17', '#151d32': '#12261e', '#1c2640': '#1a3328', '#202b43': '#1a3328', '#5d83ff': '#34d399' },
-            light: { '#090d18': '#f1f8f5', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f6fbf8', '#1c2640': '#d7eadf', '#202b43': '#d7eadf', '#5d83ff': '#059669' } },
-        amber: { name: 'Amber', h: 38, ns: .95, ah: 33, sw: ['#f7af5c', '#130f08'],
-            dark: { '#090d18': '#130f08', '#0f1629': '#1c150b', '#111729': '#1c150b', '#151d32': '#241b0f', '#1c2640': '#33270f', '#202b43': '#33270f', '#5d83ff': '#f7af5c' },
-            light: { '#090d18': '#fbf6ee', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#fdf9f3', '#1c2640': '#efe2cb', '#202b43': '#efe2cb', '#5d83ff': '#c26a0a' } },
-        ocean: { name: 'Ocean Cyan', h: 193, ns: .95, ah: 188, sw: ['#22d3ee', '#07141a'],
-            dark: { '#090d18': '#07141a', '#0f1629': '#0c1f28', '#111729': '#0c1f28', '#151d32': '#102933', '#1c2640': '#17353f', '#202b43': '#17353f', '#5d83ff': '#22d3ee' },
-            light: { '#090d18': '#eff8fb', '#0f1629': '#ffffff', '#111729': '#ffffff', '#151d32': '#f5fbfd', '#1c2640': '#d3e8ef', '#202b43': '#d3e8ef', '#5d83ff': '#0891b2' } }
-
-    };
-    var THEME_ORDER = ['midnight', 'black', 'emerald', 'amber', 'ocean'];
+    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx' };
+    var THEMES = {};
+    var THEME_ORDER = [];
     var STACK = "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
     var FONTS = {
         manrope: { name: 'Manrope', desc: 'Bawaan aplikasi', gf: 'Manrope:wght@400;500;600;700;800', css: "Manrope," + STACK },
@@ -69,13 +52,15 @@
             f.mu = f.mu || toHex(rgb(h, Math.min(s, .15), .42));
         }
         f.p2 = f.p2 || mix(f.pn, f.bd, .3);
+        f.so = f.so || mix(f.pn, f.ac, dark ? .2 : .14);
         return f;
     }
     function side(sp, dark) {
         var f = fill(sp, dark), b = hsl(f.bg), a = hsl(f.ac), an = {}, ay = lum([parseInt(f.ac.substr(1, 2), 16), parseInt(f.ac.substr(3, 2), 16), parseInt(f.ac.substr(5, 2), 16)]);
         an['#090d18'] = f.bg; an['#0f1629'] = f.pn; an['#111729'] = f.pn; an['#151d32'] = f.p2; an['#1c2640'] = f.bd; an['#202b43'] = f.bd; an['#5d83ff'] = f.ac;
+        an['#18284b'] = f.pn; an['#131c35'] = f.pn; an['#10182b'] = f.pn; an['#10182a'] = f.pn; an['#2a3a60'] = f.bd; an['#202d47'] = f.bd; an['#162144'] = f.so; an['#112250'] = f.so; an['#172454'] = f.so;
         an['#eef2ff'] = f.tx; an['#ffffff'] = f.tx; an['#8590a8'] = f.mu; an['#7d8bab'] = f.mu; an['#8a94ab'] = f.mu;
-        return { anch: an, h: b[0], ns: Math.min(1.3, b[1] / .45), ah: a[0], aL: a[2], ac: (1 - Math.abs(2 * a[2] - 1)) * a[1], txl: hsl(f.tx)[2], on: ay > .4 ? (dark ? f.bg : f.tx) : '#ffffff', f: f };
+        return { anch: an, h: b[0], ns: Math.min(1.3, b[1] / .45), ah: a[0], aL: a[2], ac: (1 - Math.abs(2 * a[2] - 1)) * a[1], txl: hsl(f.tx)[2], on: ay > .4 ? (dark ? f.bg : f.tx) : '#ffffff', f: f, dk: dark };
     }
     function gen(name, sw, d, l) { return { name: name, sw: sw, gen: { dark: side(d, true), light: side(l, false) } }; }
     function derive(bg, ac) {
@@ -85,35 +70,58 @@
         else { L = { bg: bg, ac: lac }; D = { bg: toHex(rgb(b[0], Math.min(b[1], .4), .085)), ac: dac }; }
         return [D, L];
     }
-    function buildCustom(c) { var dl = derive(c.bg, c.ac); THEMES.custom = gen('Warna sendiri', [c.ac, c.bg], dl[0], dl[1]); }
+    function buildCustom(c) { var dl = derive(c.bg, c.ac); THEMES.custom = gen('Warna sendiri', [c.ac, c.bg], dl[0], dl[1]); THEMES.custom.grad = [dl[1].ac, dl[0].ac]; THEMES.custom.tag = 'Pilih latar dan aksen sendiri'; THEMES.custom.cat = 'Kustom'; }
     function validHex(v) { return typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v); }
     var custom = { bg: '#0a0a0a', ac: '#c9c6bf' };
     try { var cj = JSON.parse(localStorage.getItem('ej3-custom') || 'null'); if (cj && validHex(cj.bg) && validHex(cj.ac)) custom = { bg: cj.bg.toLowerCase(), ac: cj.ac.toLowerCase() }; } catch (e) { }
-    THEMES.white = gen('Putih · Hitam', ['#2e2c29', '#f4f3ef'], { bg: '#151515', pn: '#1c1c1c', bd: '#2b2b2b', ac: '#c9c6bf', tx: '#e4e2dd', mu: '#8f8c86' }, { bg: '#f4f3ef', pn: '#fbfaf7', bd: '#e2e0d9', ac: '#2e2c29', tx: '#232220', mu: '#6b6862' });
-    THEMES.grey = gen('Abu-abu · Hitam', ['#33373c', '#a9adb3'], { bg: '#1b1d20', pn: '#23262a', bd: '#33373c', ac: '#aeb4bd', tx: '#e0e3e7', mu: '#8a9099' }, { bg: '#e8e9eb', pn: '#f4f5f6', bd: '#d5d8db', ac: '#33373c', tx: '#1f2226', mu: '#656b73' });
-    THEMES.midblack = gen('Midnight · Hitam', ['#9fb0d6', '#1c2a52'], { bg: '#0e1320', pn: '#151c2e', bd: '#243049', ac: '#9fb0d6', tx: '#e1e6f2', mu: '#8590a8' }, { bg: '#eceff5', pn: '#f8f9fc', bd: '#d9dfeb', ac: '#1c2640', tx: '#161d30', mu: '#5f6b85' });
-    THEMES.midwhite = gen('Midnight · Putih', ['#dbe3f4', '#1c2a52'], { bg: '#0e1320', pn: '#151c2e', bd: '#243049', ac: '#dbe3f4', tx: '#e1e6f2', mu: '#8590a8' }, { bg: '#edf0f7', pn: '#f9fafd', bd: '#dadfec', ac: '#2a3b6b', tx: '#161d30', mu: '#5f6b85' });
-    THEMES.blackwhite = gen('Pure Black · Putih', ['#cfd0d4', '#050505'], { bg: '#050505', pn: '#0e0e0f', bd: '#1e1e20', ac: '#cfd0d4', tx: '#e6e6e8', mu: '#86868c' }, { bg: '#f7f7f8', pn: '#ffffff', bd: '#e4e4e7', ac: '#18181b', tx: '#18181b', mu: '#6a6a70' });
-    THEMES.forest = gen('Forest', ['#86c79a', '#0c1410'], { bg: '#0c1410', pn: '#121c16', bd: '#1f2e25', ac: '#86c79a', tx: '#e3ece6', mu: '#85978b' }, { bg: '#f0f4ef', pn: '#fbfdfa', bd: '#d9e3d6', ac: '#3f7a52', tx: '#16201a', mu: '#5d7064' });
-    THEMES.coffee = gen('Coffee', ['#d4a574', '#15100d'], { bg: '#15100d', pn: '#1d1713', bd: '#2f251e', ac: '#d4a574', tx: '#eae2d9', mu: '#9a8b7d' }, { bg: '#f6f1ea', pn: '#fdfaf5', bd: '#e6dccf', ac: '#8a5a2b', tx: '#2a201a', mu: '#7a6a5c' });
-    THEMES.slate = gen('Slate', ['#7fb4d9', '#0f1419'], { bg: '#0f1419', pn: '#161d25', bd: '#25303b', ac: '#7fb4d9', tx: '#e1e8ee', mu: '#87939f' }, { bg: '#eef2f5', pn: '#fbfcfd', bd: '#d8e0e7', ac: '#2f6c93', tx: '#16202a', mu: '#5f6c78' });
-    THEMES.teal = gen('Teal Lembut', ['#6ccbc3', '#0b1415'], { bg: '#0b1415', pn: '#111e1f', bd: '#1e3234', ac: '#6ccbc3', tx: '#e0eeec', mu: '#84989a' }, { bg: '#eef6f5', pn: '#fbfefd', bd: '#d3e6e4', ac: '#1d7d78', tx: '#13201f', mu: '#5b7270' });
-    THEMES.slatesalju = gen('Slate Salju', ['#50586c', '#dce2f0'], { bg: '#12151c', pn: '#1a1e27', bd: '#272c38', ac: '#c3cde4' }, { bg: '#edf0f7', pn: '#fafbfd', bd: '#d5dbe9', ac: '#50586c' });
-    THEMES.rose = gen('Rose Krem', ['#815854', '#f9ebde'], { bg: '#19110f', pn: '#221816', bd: '#35261f', ac: '#e6c3ad' }, { bg: '#f9f1ea', pn: '#fffaf6', bd: '#ecdccf', ac: '#815854' });
-    THEMES.sakura = gen('Biru Sakura', ['#6a7ba2', '#ffdfde'], { bg: '#11141d', pn: '#191d29', bd: '#272d3e', ac: '#f3c9c8' }, { bg: '#fdf1f0', pn: '#fffafa', bd: '#f0d8d7', ac: '#5a6b94' });
-    THEMES.navymint = gen('Navy Mint', ['#00203f', '#adefd1'], { bg: '#021a30', pn: '#06243f', bd: '#0f3556', ac: '#adefd1' }, { bg: '#eef9f4', pn: '#fbfffd', bd: '#cfeade', ac: '#00203f' });
-    THEMES.terakota = gen('Terakota', ['#cf8360', '#f5c7b8'], { bg: '#1a100c', pn: '#241812', bd: '#3a261d', ac: '#e08c68' }, { bg: '#fcf1ec', pn: '#fff9f6', bd: '#f1d9cd', ac: '#b5603a' });
-    THEMES.navyamber = gen('Navy Amber', ['#f2aa4c', '#101820'], { bg: '#101820', pn: '#17212c', bd: '#253240', ac: '#f2aa4c' }, { bg: '#fbf5ea', pn: '#fffcf6', bd: '#efe2c9', ac: '#b46a0f' });
-    THEMES.pasir = gen('Pasir', ['#a07855', '#d4b996'], { bg: '#17120d', pn: '#201a14', bd: '#33291f', ac: '#d4b996' }, { bg: '#f6efe3', pn: '#fcf8f0', bd: '#e5d9c4', ac: '#8c6a45' });
-    THEMES.hitamputih = gen('Hitam Putih', ['#ffffff', '#000000'], { bg: '#000000', pn: '#0b0b0b', bd: '#1a1a1a', ac: '#ffffff', tx: '#ffffff', mu: '#8a8a8a' }, { bg: '#ffffff', pn: '#f5f5f5', bd: '#e5e5e5', ac: '#000000', tx: '#000000', mu: '#6b6b6b' });
+    /* 28 tema aplikasi (sumber: gambar rujukan). Tiap tema: [id, nama, sifat, kategori, terang[canvas,surface,ink,primary,soft], gelap[...]] */
+    var RAW = [
+        ['mint', 'Mint Finance', 'Bersih · profesional · terpercaya', 'Dashboard & finance', ['#f4f8f6', '#ffffff', '#19312f', '#20a67a', '#ddf4ec'], ['#0d1f1b', '#142c27', '#f1fbf7', '#3fd09c', '#173c34']],
+        ['indigo', 'Indigo SaaS', 'Teknologis · fokus · premium', 'SaaS & productivity', ['#f5f7ff', '#ffffff', '#18233d', '#5b67f1', '#e9ecff'], ['#0f1225', '#1a1f3d', '#f4f5ff', '#7d8aff', '#283064']],
+        ['coral', 'Warm Coral', 'Humanis · kreatif · berani', 'Brand & commerce', ['#fff8f4', '#ffffff', '#2b1c1a', '#f27d61', '#ffe9e0'], ['#241310', '#351e19', '#fff3ee', '#ff9c82', '#532a20']],
+        ['ocean', 'Ocean Blue', 'Tenang · kredibel · digital', 'Fintech & digital', ['#f3f8fc', '#ffffff', '#17314a', '#2789c4', '#ddeffb'], ['#0b1e2c', '#123149', '#eef8ff', '#4db7f0', '#194969']],
+        ['sage', 'Forest Sage', 'Natural · stabil · sustainable', 'Climate & wellness', ['#f4f8f3', '#ffffff', '#21382a', '#5b9b72', '#e1f1e5'], ['#102117', '#183524', '#f0fbf2', '#76c98d', '#214b31']],
+        ['violet', 'Violet Night', 'Kreatif · premium · eksperimental', 'Creative tools', ['#f8f6ff', '#ffffff', '#29213f', '#8b6cf2', '#eee9ff'], ['#171126', '#251a3f', '#f8f3ff', '#a996ff', '#3a2a61']],
+        ['amber', 'Solar Amber', 'Optimistis · hangat · energetic', 'Events & lifestyle', ['#fffaef', '#ffffff', '#3b2d16', '#e6a629', '#fff0c8'], ['#241a08', '#3a290d', '#fff8e6', '#ffc94d', '#5b410e']],
+        ['berry', 'Rose Berry', 'Humanis · fashionable · expressive', 'Fashion & social', ['#fff5f8', '#ffffff', '#3b1e2c', '#d85c83', '#fbe0ea'], ['#26111b', '#3c1828', '#fff1f6', '#f47fa3', '#5b2540']],
+        ['cyan', 'Slate Cyan', 'Modern · teknis · jelas', 'Analytics & hardware', ['#f2fafb', '#ffffff', '#1c343a', '#2aaec0', '#d9f4f6'], ['#0e2024', '#15363b', '#f3fcfd', '#58d0de', '#1c555d']],
+        ['lemon', 'Lemon Graphite', 'Berani · editorial · kontras', 'Editorial & media', ['#f8faf0', '#ffffff', '#252a1a', '#a9b938', '#eef3cd'], ['#191d14', '#2b321a', '#f4f7e8', '#d4e24d', '#424b1d']],
+        ['plum', 'Plum Luxe', 'Elegan · artsy · sophisticated', 'Luxury & portfolio', ['#fbf7fc', '#ffffff', '#33203a', '#a567c2', '#f0e1f5'], ['#1e1222', '#321b39', '#fff4ff', '#c58adf', '#522c5e']],
+        ['aqua', 'Aqua Breeze', 'Segar · ringan · friendly', 'Travel & health', ['#f0faf9', '#ffffff', '#163a39', '#26a69a', '#d7f2ef'], ['#0d2423', '#133b39', '#effffd', '#55d2c5', '#1c514d']],
+        ['mono', 'Mono Minimal', 'Fokus · timeless · universal', 'System & portfolio', ['#f5f6f7', '#ffffff', '#1c2328', '#5d6870', '#e3e7e9'], ['#121517', '#20272b', '#f2f5f6', '#aab8be', '#36434a']],
+        ['github', 'GitHub', 'Developer · open source', 'Code & documentation', ['#f6f8fa', '#ffffff', '#24292f', '#2f81f7', '#ddf4ff'], ['#0d1117', '#161b22', '#f0f6fc', '#58a6ff', '#1f6feb']],
+        ['facebook', 'Facebook', 'Social · community', 'Community & social', ['#f0f2f5', '#ffffff', '#1c1e21', '#1877f2', '#e7f3ff'], ['#18191a', '#242526', '#f5f6f7', '#4599ff', '#263951']],
+        ['youtube', 'YouTube', 'Video · creator', 'Video & creator', ['#fff7f7', '#ffffff', '#0f0f0f', '#ff0000', '#ffe5e5'], ['#0f0f0f', '#212121', '#ffffff', '#ff0000', '#4a1717']],
+        ['telegram', 'Telegram', 'Messaging · fast', 'Messaging & community', ['#f2fafe', '#ffffff', '#17212b', '#229ed9', '#ddf3ff'], ['#17212b', '#202b36', '#f5fbff', '#2aabee', '#1f4b65']],
+        ['x', 'X / Twitter', 'Minimal · conversation', 'News & conversation', ['#f7f7f7', '#ffffff', '#0f1419', '#000000', '#e7e7e7'], ['#000000', '#16181c', '#f7f9f9', '#ffffff', '#2f3336']],
+        ['instagram', 'Instagram', 'Visual · expressive', 'Visual & creator', ['#fff5fa', '#ffffff', '#262626', '#d62976', '#fde3ef'], ['#121212', '#1f1f1f', '#f5f5f5', '#e1306c', '#4a2035']],
+        ['whatsapp', 'WhatsApp', 'Messaging · friendly', 'Chat & customer care', ['#f0fbf5', '#ffffff', '#111b21', '#25d366', '#d9fdd3'], ['#111b21', '#202c33', '#e9edef', '#25d366', '#075e54']],
+        ['discord', 'Discord', 'Community · gaming', 'Gaming & community', ['#f4f5ff', '#ffffff', '#23272a', '#5865f2', '#e3e5ff'], ['#1e1f22', '#2b2d31', '#f2f3f5', '#5865f2', '#3f437a']],
+        ['linkedin', 'LinkedIn', 'Career · professional', 'Career & business', ['#f3f6f8', '#ffffff', '#172b4d', '#0a66c2', '#d9edff'], ['#101214', '#1d2226', '#f3f6f8', '#70b5f9', '#16437e']],
+        ['spotify', 'Spotify', 'Music · energetic', 'Music & audio', ['#f2fbf5', '#ffffff', '#191414', '#1db954', '#d6f5e0'], ['#121212', '#181818', '#ffffff', '#1db954', '#1e5d35']],
+        ['tiktok', 'TikTok', 'Short video · bold', 'Video & youth', ['#fff4f6', '#ffffff', '#121212', '#fe2c55', '#e6fafa'], ['#121212', '#1f1f1f', '#ffffff', '#25f4ee', '#fe2c55']],
+        ['reddit', 'Reddit', 'Forum · playful', 'Forum & discussion', ['#fff6f2', '#ffffff', '#1a1a1b', '#ff4500', '#ffe1d3'], ['#1a1a1b', '#272729', '#f6f7f8', '#ff4500', '#63301e']],
+        ['slack', 'Slack', 'Work · collaborative', 'Team & productivity', ['#fcf7fc', '#ffffff', '#1d1c1d', '#611f69', '#f1e3f3'], ['#1a1d21', '#222529', '#f8f8f8', '#e01e5a', '#3f2a45']],
+        ['netflix', 'Netflix', 'Entertainment · cinematic', 'Streaming & media', ['#fff6f6', '#ffffff', '#221f1f', '#e50914', '#ffe0e0'], ['#141414', '#221f1f', '#f5f5f1', '#e50914', '#5b1a1d']],
+        ['google', 'Google', 'Universal · optimistic', 'Search & productivity', ['#f5f8ff', '#ffffff', '#202124', '#4285f4', '#e8f0fe'], ['#202124', '#303134', '#e8eaed', '#8ab4f8', '#3c4043']]
+    ];
+    function spec(a, dark) {
+        return { bg: a[0], pn: a[1], tx: a[2], ac: a[3], so: a[4], bd: mix(a[1], a[2], dark ? .14 : .10), mu: mix(a[1], a[2], .70), p2: mix(a[1], a[4], dark ? .55 : .4) };
+    }
+    RAW.forEach(function (r) {
+        var th = gen(r[1], [r[5][3], r[4][0]], spec(r[5], true), spec(r[4], false));
+        th.tag = r[2]; th.cat = r[3]; th.no = THEME_ORDER.length + 1; th.grad = [r[4][3], r[5][3]]; th.lt = r[4]; th.dk = r[5];
+        THEMES[r[0]] = th; THEME_ORDER.push(r[0]);
+    });
     buildCustom(custom);
-    THEME_ORDER = THEME_ORDER.concat(['white', 'grey', 'midblack', 'midwhite', 'blackwhite', 'forest', 'coffee', 'slate', 'teal', 'slatesalju', 'rose', 'sakura', 'navymint', 'terakota', 'navyamber', 'pasir', 'hitamputih', 'custom']);
+    THEME_ORDER.push('custom');
 
     function get(k, def, ok) { try { var v = localStorage.getItem(KEY[k]); if (v && ok(v)) return v; } catch (e) { } return def; }
     var state = {
         mode: get('mode', 'dark', function (v) { return v === 'light' || v === 'dark' || v === 'auto'; }),
-        theme: get('theme', 'midnight', function (v) { return !!THEMES[v]; }),
-        font: get('font', 'manrope', function (v) { return !!FONTS[v]; })
+        theme: get('theme', 'mint', function (v) { return !!THEMES[v]; }),
+        font: get('font', 'manrope', function (v) { return !!FONTS[v]; }),
+        fx: get('fx', 'on', function (v) { return v === 'on' || v === 'off'; })
     };
 
     /* ---- warna ---- */
@@ -159,7 +167,7 @@
             } else if (cls === 'a') {
                 if (g) {
                     h = g.ah;
-                    if (l < .55) { s = Math.min(s, .5) * .5; l = dark ? l * .85 : lmap(l); }
+                    if (l < .55) { var tt = Math.max(0, Math.min(1, (l - .08) / .42)); cache[key] = mix(g.f.pn, g.f.so, .12 + .88 * tt); return cache[key]; }
                     else { l = Math.max(.06, Math.min(.96, g.aL * l / .6804)); s = Math.min(.9, g.ac / (1 - Math.abs(2 * l - 1) + .001)); }
                 } else {
                     if (th.ah !== 225) { h = th.ah; l = withLum(h, s, Y); }
@@ -185,9 +193,25 @@
     }
     function applyColors() {
         var mode = resolveMode(), th = THEMES[state.theme], root = document.documentElement, st = root.style, H = window.EJ_HEX || [], R = window.EJ_RGB || [], i, v;
-        for (i = 0; i < H.length; i++) st.setProperty('--c' + i, (state.theme === 'midnight' && mode === 'dark') ? H[i] : xf(H[i], th, mode));
-        for (i = 0; i < R.length; i++) { var p = R[i].split(','); var hx = toHex([+p[0], +p[1], +p[2]]); if (hx === '#000000' && mode === 'light') { st.setProperty('--r' + i, '70,85,130'); continue; } v = (state.theme === 'midnight' && mode === 'dark') ? hx : xf(hx, th, mode); st.setProperty('--r' + i, parseInt(v.substr(1, 2), 16) + ',' + parseInt(v.substr(3, 2), 16) + ',' + parseInt(v.substr(5, 2), 16)); }
-        st.setProperty('--onacc', th.gen ? th.gen[mode].on : '#fff');
+        for (i = 0; i < H.length; i++) st.setProperty('--c' + i, xf(H[i], th, mode));
+        for (i = 0; i < R.length; i++) { var p = R[i].split(','); var hx = toHex([+p[0], +p[1], +p[2]]); if (hx === '#000000' && mode === 'light') { st.setProperty('--r' + i, '70,85,130'); continue; } v = xf(hx, th, mode); st.setProperty('--r' + i, parseInt(v.substr(1, 2), 16) + ',' + parseInt(v.substr(3, 2), 16) + ',' + parseInt(v.substr(5, 2), 16)); }
+        var gs = th.gen[mode], f = gs.f, dk = mode === 'dark', fxOn = state.fx === 'on';
+        var ga = th.grad[0], gb = th.grad[1], inkD = dk ? f.bg : f.tx;
+        function cr(a, b) { var la = lum([parseInt(a.substr(1, 2), 16), parseInt(a.substr(3, 2), 16), parseInt(a.substr(5, 2), 16)]), lb = lum([parseInt(b.substr(1, 2), 16), parseInt(b.substr(3, 2), 16), parseInt(b.substr(5, 2), 16)]); return (Math.max(la, lb) + .05) / (Math.min(la, lb) + .05); }
+        var stops = fxOn ? [f.ac, mix(ga, gb, .5)] : [f.ac];
+        function worst(c) { return Math.min.apply(null, stops.map(function (s) { return cr(c, s); })); }
+        st.setProperty('--onacc', worst('#ffffff') >= worst(inkD) ? '#ffffff' : inkD);
+        function rgb2(h) { return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
+        function trip(h) { return parseInt(h.substr(1, 2), 16) + ',' + parseInt(h.substr(3, 2), 16) + ',' + parseInt(h.substr(5, 2), 16); }
+        st.setProperty('--accg', fxOn ? 'linear-gradient(135deg,' + ga + ',' + gb + ')' : f.ac);
+        st.setProperty('--ej-cv', f.bg); st.setProperty('--ej-sf', f.pn); st.setProperty('--ej-ik', f.tx); st.setProperty('--ej-pr', f.ac); st.setProperty('--ej-so', f.so);
+        st.setProperty('--fx-a', f.pn); st.setProperty('--fx-b', f.pn);
+        st.setProperty('--ej-bd', f.bd); st.setProperty('--fx-bd', f.bd); st.setProperty('--fx-gl', trip(f.ac)); st.setProperty('--fx-so', trip(f.so));
+        var ds = Math.abs(lum(rgb2(f.so)) - lum(rgb2(f.bg))), kk = ds < .06 ? 1 : Math.max(.22, .06 / ds);
+        function sa(al) { return 'rgba(' + trip(f.so) + ',' + (al * kk).toFixed(2) + ')'; }
+        st.setProperty('--fx-s95', sa(.95)); st.setProperty('--fx-s60', sa(.6)); st.setProperty('--fx-s55', sa(.55)); st.setProperty('--fx-s90', sa(.9)); st.setProperty('--fx-sh', 'rgba(0,0,0,.10)');
+        st.setProperty('--fx-hi', dk ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.85)');
+        root.setAttribute('data-fx', state.fx);
         st.colorScheme = mode;
         root.setAttribute('data-mode', mode); root.setAttribute('data-theme', state.theme);
         var bg = xf('#090d18', th, mode);

@@ -1,12 +1,12 @@
 /* ===== v5.0.0 — 8 gaya header atas (pilih di Profil → Tampilan header) ===== */
 .hd-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c118);box-shadow:0 0 8px rgba(var(--r22),.67);flex:none}
-.hd-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--c118),var(--c224));display:grid;place-items:center;font-weight:800;font-size:var(--fs-sm);color:var(--c225);flex:none}
+.hd-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--c118),var(--c224));display:grid;place-items:center;font-weight:700;font-size:var(--fs-sm);color:var(--c225);flex:none}
 .top-actions{display:flex;align-items:center;gap:8px}
 .topbar[class*="hd-v"] .account-switcher{white-space:nowrap}
 .topbar[class*="hd-v"] .brand-mark{color:var(--onacc)}
 /* 1 · Minimal satu baris */
 .topbar.hd-v1{height:72px;padding:0 8px}
-.hd-v1 .hd-name strong{font-size:var(--fs-md);letter-spacing:.4px;font-weight:800}
+.hd-v1 .hd-name strong{font-size:var(--fs-md);letter-spacing:.4px;font-weight:700}
 .hd-v1 .brand-mark{width:28px;height:28px}
 .hd-v1 .header-icon{border:0;background:none;width:var(--h-md);height:var(--h-md);color:var(--c226)}
 .hd-v1 .account-switcher{height:var(--h-md);border-radius:var(--r-md);padding:0 12px;gap:7px;background:var(--c227);border-color:var(--c228)}

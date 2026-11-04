@@ -6,7 +6,7 @@
   /* sudut: sedang — tidak kotak, tidak bulat (bulat penuh 50% hanya logo, avatar, titik) */
   --r-xs:6px;   /* label kecil, batang */
   --r-md:10px;  /* tombol, input, tombol ikon, pil akun, kotak isi */
-  --r-lg:14px;  /* kartu, panel */
+  --r-lg:18px;  /* kartu, panel (sesuai rujukan tema: radius 18px) */
   --r-xl:20px;  /* lembar bawah (modal/sheet) */
   /* skala font */
   --fs-xs:10px; --fs-sm:12px; --fs-md:14px; --fs-lg:16px; --fs-xl:20px; --fs-2xl:28px;
@@ -75,7 +75,7 @@
 .dd-tag i{width:6px;height:6px}
 
 /* v5.1.8 — kartu Tahun/Bulan/Minggu/Posisi kembali ke ukuran lama; sudut kartu lebih bulat (seperti dulu) */
-:root{--r-xs:8px;--r-md:10px;--r-lg:16px;--r-xl:22px}
+:root{--r-xs:8px;--r-md:10px;--r-lg:18px;--r-xl:22px}
 .week-head,.gj-chart,.trade-card{border-radius:var(--r-lg)}
 .week-block{margin-bottom:12px}
 .week-head{gap:10px;padding:14px}

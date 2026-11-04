@@ -37,13 +37,13 @@
 .dd-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:13px;font-size:var(--fs-sm);color:var(--c109)}
 .dd-meta{display:flex;gap:8px 14px;flex-wrap:wrap}
 .dd-meta span.pos,.dd-meta span.neg{font-weight:700}
-.dd-pr{font-size:var(--fs-lg);font-weight:800;white-space:nowrap}
+.dd-pr{font-size:var(--fs-lg);font-weight:700;white-space:nowrap}
 .dd-bar{height:8px;border-radius:var(--r-xs);background:var(--c201);margin-top:12px;overflow:hidden}
 .dd-bar i{display:block;height:100%;border-radius:var(--r-xs)}
 .dd-tbl{margin-top:10px}
 .dd-tbl>div{display:flex;justify-content:space-between;gap:14px;padding:12px 2.0px;border-bottom:1px solid var(--c152);font-size:var(--fs-md)}
 .dd-tbl>div:last-child{border-bottom:0}
-.dd-tbl span{color:var(--c109)}.dd-tbl b{font-weight:800;color:var(--c0);text-align:right}
+.dd-tbl span{color:var(--c109)}.dd-tbl b{font-weight:700;color:var(--c0);text-align:right}
 .dd-tbl b span{color:inherit}.dd-tbl b span.pos{color:var(--c118)}.dd-tbl b span.neg{color:var(--c119)}.dd-tbl b span.zero{color:var(--c109)}
 .dd-total{border-color:var(--c191);background:var(--c150)}
 .dd-donutwrap{display:flex;justify-content:center;margin:8px 0 16px}

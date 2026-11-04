@@ -37,7 +37,7 @@
 .ap-cr{display:flex;flex-wrap:wrap;gap:10px}
 .ap-cd{position:relative;width:34px;height:34px;padding:0;border-radius:50%;border:2px solid transparent;outline:1px solid rgba(128,128,128,.4);cursor:pointer}
 .ap-cd.on{border-color:var(--c75);outline:2px solid var(--c218)}
-.ap-pick{display:flex;align-items:center;justify-content:center;background:conic-gradient(#ff5d5d,#ffd45d,#5dff8a,#5dd6ff,#6a7bff,#ff5dd1,#ff5d5d);color:#111;font-weight:800;font-size:18px;overflow:hidden}
+.ap-pick{display:flex;align-items:center;justify-content:center;background:conic-gradient(#ff5d5d,#ffd45d,#5dff8a,#5dd6ff,#6a7bff,#ff5dd1,#ff5d5d);color:#111;font-weight:700;font-size:18px;overflow:hidden}
 .ap-pick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
 .ap-hexrow{display:flex;align-items:center;gap:10px;margin-top:10px}
 .ap-hsw{width:30px;height:30px;border-radius:var(--r-xs);border:1px solid rgba(128,128,128,.4);flex:none}
@@ -53,3 +53,8 @@
 .ap-pager .ap-list>button{height:58px;box-sizing:border-box;padding-top:0;padding-bottom:0}
 .ap-pager .ap-nm{min-width:0;flex:1;line-height:1.25}
 .ap-pager .ap-nm small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+/* v5.7.0: daftar tema bernomor (sesuai gambar rujukan) */
+.ap-no{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;font:700 13px var(--font);color:#fff;letter-spacing:.02em}
+.ap-pair{display:flex;flex:none;margin-left:auto;margin-right:2px}.ap-pair i{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(128,128,128,.45);margin-left:-5px}.ap-pair i:nth-child(3){display:none}
+.ap-th .ap-nm{flex:1;min-width:0}
+.ap-seg2{grid-template-columns:repeat(2,1fr)}

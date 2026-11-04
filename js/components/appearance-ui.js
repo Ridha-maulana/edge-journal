@@ -43,6 +43,7 @@ function ApPager({ pages, titles, start, onPage }) {
         React.createElement("div", { className: "ap-dots" }, pages.map((_, i) => React.createElement("button", { type: "button", key: i, "aria-label": "Halaman " + (i + 1), className: i === idx ? 'on' : '', onClick: () => go(i) }))),
         React.createElement("div", { className: "ap-swipe" }, "← geser ke samping →"));
 }
+function apInk(h) { const v = [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16) / 255).map(c => c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4)); const L = .2126 * v[0] + .7152 * v[1] + .0722 * v[2]; return L > .4 ? '#111' : '#fff'; }
 const AP_BGS = ['#000000', '#0a0a0a', '#121212', '#1a1a1a', '#1c1c1e', '#0e1320', '#f4f3ef', '#e8e9eb'];
 const AP_ACS = ['#cfd0d4', '#c9c6bf', '#9fb0d6', '#86c79a', '#d4a574', '#7fb4d9', '#6ccbc3', '#f7af5c'];
 function ColorField({ label, value, presets, onChange }) {
@@ -76,7 +77,7 @@ function CustomEditor({ EJ, onClose }) {
             React.createElement("button", { type: "button", onClick: () => EJ.setCustom({ bg: '#0a0a0a', ac: '#c9c6bf' }) }, "Atur ulang"),
             React.createElement("button", { type: "button", className: "ok", onClick: onClose }, "Selesai")));
 }
-const AP_THEME_TITLES = ['Berwarna', 'Netral nyaman', 'Tema tambahan', 'Palet pilihan', 'Palet pilihan & warna sendiri'];
+
 function AppearanceRows() {
     const EJ = useAppearance();
     const [dlg, setDlg] = useState(null);
@@ -90,15 +91,16 @@ function AppearanceRows() {
     const startT = Math.max(0, themeKeys.findIndex(p => p.indexOf(st.theme) >= 0)), startF = Math.max(0, fontKeys.findIndex(p => p.indexOf(st.font) >= 0));
     const themePages = themeKeys.map(p => React.createElement("div", { className: "ap-list" }, p.map(k => {
         const t = EJ.THEMES[k], cust = k === 'custom';
-        return React.createElement("button", { type: "button", key: k, className: st.theme === k ? 'on' : '', onClick: () => { if (cust) {
+        return React.createElement("button", { type: "button", key: k, className: (st.theme === k ? 'on ' : '') + 'ap-th', onClick: () => { if (cust) {
                 EJ.setCustom({});
                 setDlg('custom');
             }
             else
                 EJ.set('theme', k); } },
-            React.createElement("span", { className: "ap-sw" }, React.createElement("i", { style: { background: cust ? 'conic-gradient(#ff5d5d,#ffd45d,#5dff8a,#5dd6ff,#6a7bff,#ff5dd1,#ff5d5d)' : t.sw[1] } }), React.createElement("i", { style: { background: t.sw[0] } })),
-            React.createElement("span", { className: "ap-nm" }, t.name, cust && React.createElement("small", null, "Pilih latar dan aksen sendiri")),
-            cust ? React.createElement("span", { className: "ap-edit" }, "✎") : React.createElement("i", { className: "ap-rad" }));
+            React.createElement("span", { className: "ap-no", style: cust ? { background: 'conic-gradient(#ff5d5d,#ffd45d,#5dff8a,#5dd6ff,#6a7bff,#ff5dd1,#ff5d5d)', color: '#111' } : { background: t.grad[0], color: apInk(t.grad[0]) } }, cust ? "+" : String(t.no).padStart(2, '0')),
+            React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, t.name), React.createElement("small", null, t.tag)),
+            React.createElement("span", { className: "ap-pair" }, React.createElement("i", { style: { background: cust ? EJ.custom.bg : t.lt[0] } }), React.createElement("i", { style: { background: cust ? EJ.custom.ac : t.dk[0] } }), React.createElement("i", { style: { background: cust ? EJ.custom.ac : t.dk[3] } })),
+            cust ? React.createElement("span", { className: "ap-edit" }, "\u270E") : React.createElement("i", { className: "ap-rad" }));
     })));
     const fontPages = fontKeys.map(p => React.createElement("div", { className: "ap-list" }, p.map(k => React.createElement("button", { type: "button", key: k, className: (st.font === k ? 'on ' : '') + 'ap-font', style: { fontFamily: EJ.FONTS[k].css }, onClick: () => EJ.set('font', k) },
         React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, EJ.FONTS[k].name), React.createElement("small", null, EJ.FONTS[k].desc + " · Rp 1.234 · +$592.73")),
@@ -108,13 +110,17 @@ function AppearanceRows() {
     return React.createElement(React.Fragment, null,
         React.createElement("div", { className: "sec-label" }, "Tampilan aplikasi"),
         React.createElement(ApRow, { icon: st.mode === 'light' || (st.mode === 'auto' && EJ.resolved === 'light') ? React.createElement(Sun, { size: 18 }) : React.createElement(Moon, { size: 18 }), title: "Mode tampilan", desc: "Terang, gelap, atau otomatis", value: modeLabel, onOpen: () => setDlg('mode') }),
-        React.createElement(ApRow, { icon: React.createElement(Palette, { size: 18 }), title: "Tema warna", desc: "Warna dasar dan aksen aplikasi", value: th.name, dot: th.sw[0], onOpen: () => setDlg('theme') }),
+        React.createElement(ApRow, { icon: React.createElement(Palette, { size: 18 }), title: "Tema aplikasi", desc: "28 tema, masing-masing terang & gelap", value: th.name, dot: th.grad[0], onOpen: () => setDlg('theme') }),
         React.createElement(ApRow, { icon: React.createElement(TypeIcon, { size: 18 }), title: "Font aplikasi", desc: "Jenis huruf di seluruh aplikasi", value: fo.name, onOpen: () => { preFont(startF); setDlg('font'); } }),
+        React.createElement(ApRow, { icon: React.createElement(Sparkles, { size: 18 }), title: "Bandingkan rasa kartu", desc: "Ubah tampilan seluruh kartu dalam satu ketukan", value: st.fx === 'on' ? 'Ber-efek' : 'Tanpa efek', onOpen: () => setDlg('fx') }),
+        dlg === 'fx' && React.createElement(ApDialog, { title: "Bandingkan rasa kartu", onClose: close, note: st.fx === 'on' ? "Ber-efek: kedalaman, cahaya, dan gerak halus pada kartu dan tombol." : "Tanpa efek: border tipis, fokus ke data. Semua bayangan, cahaya, dan gerak dimatikan." },
+            React.createElement("div", { className: "ap-seg ap-seg2" }, [['on', 'Ber-efek', Sparkles], ['off', 'Tanpa efek', SlidersHorizontal]].map(([v, l, Ic]) => React.createElement("button", { type: "button", key: v, className: st.fx === v ? 'on' : '', onClick: () => EJ.set('fx', v) },
+                React.createElement(Ic, { size: 18 }), React.createElement("span", null, l))))),
         dlg === 'mode' && React.createElement(ApDialog, { title: "Mode tampilan", onClose: close, note: "Otomatis mengikuti pengaturan terang/gelap di HP kamu. Perubahan langsung terlihat." },
             React.createElement("div", { className: "ap-seg" }, seg.map(([v, l, Ic]) => React.createElement("button", { type: "button", key: v, className: st.mode === v ? 'on' : '', onClick: () => EJ.set('mode', v) },
                 React.createElement(Ic, { size: 18 }), React.createElement("span", null, l))))),
-        dlg === 'theme' && React.createElement(ApDialog, { title: "Tema warna", onClose: close, className: "ap-wide", note: "Tema berlaku di mode terang maupun gelap. Mode tampilan dipilih terpisah." },
-            React.createElement(ApPager, { pages: themePages, titles: AP_THEME_TITLES, start: startT })),
+        dlg === 'theme' && React.createElement(ApDialog, { title: "Tema aplikasi", onClose: close, className: "ap-wide", note: "Setiap tema punya warna terang dan gelap sendiri. Pilih terang/gelap/otomatis di Mode tampilan." },
+            React.createElement(ApPager, { pages: themePages, titles: themeKeys.map((p, i) => p.indexOf('custom') >= 0 ? (p.length > 1 ? "Tema " + (i * 5 + 1) + "\u2013" + (i * 5 + p.length - 1) + " & kustom" : "Kustom") : "Tema " + (i * 5 + 1) + "\u2013" + (i * 5 + 5)), start: startT })),
         dlg === 'custom' && React.createElement(CustomEditor, { EJ: EJ, onClose: close }),
         dlg === 'font' && React.createElement(ApDialog, { title: "Font aplikasi", onClose: close, className: "ap-wide", note: "Font dimuat dari internet saat pertama dipakai, lalu tersimpan. “Sistem” selalu bisa dipakai tanpa internet." },
             React.createElement(ApPager, { pages: fontPages, titles: fontKeys.map((_, i) => "Font " + (i * 5 + 1) + "–" + (i * 5 + 5)), start: startF, onPage: preFont })));
