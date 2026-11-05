@@ -6,6 +6,7 @@ const tpS = v => v > 0.005 ? '+' : v < -0.005 ? '-' : '';
 const tpM = (v, cur) => tpS(v) + money(Math.abs(v), cur);
 const tpM2 = (v, cur) => tpS(v) + new Intl.NumberFormat('en-US', { style: 'currency', currency: cur || 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Math.abs(v));
 const tpDay = iso => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+const tpDayS = iso => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 const tpIc = (n, s, w) => tpE(Icon, { name: n, size: s || 18, strokeWidth: w || 2 });
 /* skala tick bulat */
 function tpNice(lo, hi, n) { if (!(hi > lo)) { hi = lo + 1; } const raw = (hi - lo) / n, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p, st = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; const a = Math.floor(lo / st) * st, b = Math.ceil(hi / st) * st, t = []; for (let v = a; v <= b + st / 2; v += st)
@@ -101,10 +102,10 @@ function HomeT1({ d }) {
             tpE("div", { className: "t1-eh" }, tpE("span", { className: "t1-ti" }, tpIc('FileText', 22), "RECENT TRADES"), tpE("button", { type: "button", className: "t1-va", onClick: () => tpGo('journal') }, "View All", tpIc('ChevronRight', 16, 2.4))),
             tpE("div", { className: "t1-tb", role: "table" },
                 tpE("div", { className: "t1-tr0", role: "row" }, ['DATE', 'PAIR', 'TYPE', 'LOTS', 'ENTRY', 'EXIT', 'PIPS', 'P&L'].map(x => tpE("span", { key: x }, x))),
-                recent.map(t => { const pp = pipsOf(t), pl = Number(t.pnl) || 0; return tpE("div", { key: t.id, className: "t1-trr", role: "row" }, tpE("span", null, tpDay(t.date)), tpE("span", null, t.symbol), tpE("span", null, tpE("i", { className: t.side === 'Long' ? 'buy' : 'sell' }, t.side === 'Long' ? 'BUY' : 'SELL')), tpE("span", null, Number(t.lots).toFixed(2)), tpE("span", null, Number(t.entry).toFixed(2)), tpE("span", null, Number(t.exit).toFixed(2)), tpE("span", { className: tpC(pp) }, tpS(pp) + Math.abs(pp).toFixed(2)), tpE("span", { className: tpC(pl) }, tpM2(pl, c))); }),
+                recent.map(t => { const pp = pipsOf(t), pl = Number(t.pnl) || 0; return tpE("div", { key: t.id, className: "t1-trr", role: "row" }, tpE("span", null, tpDayS(t.date)), tpE("span", null, t.symbol), tpE("span", null, tpE("i", { className: t.side === 'Long' ? 'buy' : 'sell' }, t.side === 'Long' ? 'BUY' : 'SELL')), tpE("span", null, Number(t.lots).toFixed(2)), tpE("span", null, Number(t.entry).toFixed(2)), tpE("span", null, Number(t.exit).toFixed(2)), tpE("span", { className: tpC(pp) }, tpS(pp) + Math.abs(pp).toFixed(2)), tpE("span", { className: tpC(pl) }, tpM2(pl, c))); }),
                 !recent.length && tpE("div", { className: "t1-none" }, "Belum ada trade pada periode ini"))),
         tpE("div", { className: "t1-two" },
-            tpE("section", { className: "tp-card t1-dp" }, tpE("span", { className: "t1-ti" }, tpIc('BarsFill', 22), "DAILY P&L"), days.map(([k, v]) => tpE("div", { key: k, className: "t1-dr" }, tpE("span", null, tpDay(k)), tpE("b", { className: tpC(v) }, tpM2(v, c)), tpE("div", { className: "t1-bar" }, tpE("i", { className: v < 0 ? 'neg' : '', style: { width: Math.max(4, Math.abs(v) / dmax * 100) + '%' } })))), !days.length && tpE("small", { className: "t1-none" }, "Belum ada data")),
+            tpE("section", { className: "tp-card t1-dp" }, tpE("span", { className: "t1-ti" }, tpIc('BarsFill', 22), "DAILY P&L"), days.map(([k, v]) => tpE("div", { key: k, className: "t1-dr" }, tpE("span", null, tpDayS(k)), tpE("b", { className: tpC(v) }, tpM2(v, c)), tpE("div", { className: "t1-bar" }, tpE("i", { className: v < 0 ? 'neg' : '', style: { width: Math.max(4, Math.abs(v) / dmax * 100) + '%' } })))), !days.length && tpE("small", { className: "t1-none" }, "Belum ada data")),
             tpE("section", { className: "tp-card t1-rk" }, tpE("span", { className: "t1-ti" }, tpIc('Shield', 22), "RISK METRICS"),
                 tpE("div", { className: "t1-rkg" }, [['Max Drawdown', d.ddTxt, ''], ['Expectancy (R)', d.expR == null ? '—' : tpS(d.expR) + Math.abs(d.expR).toFixed(2), d.expR == null ? '' : tpC(d.expR)], ['Sharpe Ratio', d.sharpe == null ? '-' : d.sharpe.toFixed(2), ''], ['Avg. Trade (Pips)', d.nTrades ? tpS(d.pips / d.nTrades) + Math.abs(d.pips / d.nTrades).toFixed(1) : '—', d.nTrades ? tpC(d.pips) : '']].map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))))),
         tpE("div", { className: "tp-card t1-ac" }, tpActions(d)));
@@ -126,8 +127,8 @@ function T2Area({ pts, cur, start }) {
         tpE("path", { d: area, fill: "url(#t2g)" }),
         tpE("path", { d: ln, fill: "none", stroke: "var(--ej-pr)", strokeWidth: "3.6", strokeLinecap: "round" }),
         tpE("circle", { cx: last[0], cy: last[1], r: 7, fill: "var(--ej-pr)", stroke: "var(--ej-sf)", strokeWidth: "2.5" }),
-        tpE("g", { transform: `translate(${Math.min(last[0] - 40, W - 90)},${last[1] - 44})` }, tpE("rect", { width: 80, height: 28, rx: 9, fill: "var(--ej-pr)" }), tpE("text", { x: 40, y: 19.5, textAnchor: "middle", className: "g-b2", style: { fill: 'var(--onacc)' } }, tpS(lastV) + Math.abs(lastV).toFixed(2))),
-        xt.map((dd, i) => { const lb = dd.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }).replace('.', ''), prev = i ? xt[i - 1].toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }).replace('.', '') : ''; return lb === prev ? null : tpE("text", { key: 'x' + i, x: [L + 4, L + (W - L - R) * .25, L + (W - L - R) * .5, L + (W - L - R) * .75, W - R - 14][i], y: H - 8, textAnchor: "middle", className: "g-t", style: i === 4 ? { fontWeight: 700, fill: 'var(--ej-ik)' } : null }, lb); }));
+        tpE("g", { transform: `translate(${Math.min(last[0] - 56, W - 118)},${last[1] - 54})` }, tpE("rect", { width: 112, height: 38, rx: 11, fill: "var(--ej-pr)" }), tpE("text", { x: 56, y: 27, textAnchor: "middle", className: "g-b2", style: { fill: 'var(--onacc)' } }, tpS(lastV) + Math.abs(lastV).toFixed(2))),
+        xt.map((dd, i) => { const lb = dd.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }).replace('.', ''), prev = i ? xt[i - 1].toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }).replace('.', '') : ''; return lb === prev ? null : tpE("text", { key: 'x' + i, x: [L + 4, L + (W - L - R) * .25, L + (W - L - R) * .5, L + (W - L - R) * .75, W - R][i], y: H - 8, textAnchor: i === 4 ? "end" : "middle", className: "g-t", style: i === 4 ? { fontWeight: 700, fill: 'var(--ej-ik)' } : null }, lb); }));
 }
 function HomeT2({ d }) {
     const [rg, setRg] = useState('S');
@@ -175,7 +176,7 @@ function HomeT3({ d }) {
                 tpE("div", { className: "t3-ac" }, tpE("span", { className: "t3-cap" }, "ACTIVE ACCOUNT"), tpE("strong", null, d.acc.name), tpE("button", { type: "button", className: "t3-wl", onClick: d.onWallet, "aria-label": "Deposit dan Withdraw" }, tpIc('Wallet', 18)))),
             tpFacts(d, sel, setSel),
             tpE("div", { className: "t3-st" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
-            tpE("div", { className: "t3-ch" }, tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 330, upCol: 'var(--t-dk)', ext: ctl, hideTools: true, persist: true })),
+            tpE("div", { className: "t3-ch" }, tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 360, ro: 1.3, fs: 1.45, upCol: 'var(--t-dk)', ext: ctl, hideTools: true, persist: true })),
             tpE("div", { className: "t3-tools" }, tpE(TplChips, { ctl }), tpE(TplKind, { ctl })),
             tpBest(d),
             tpE("div", { className: "t3-m" }, m.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
@@ -197,14 +198,14 @@ function HomeT4({ d }) {
                 tpE("div", { className: "t4-chips" }, tpE(TplChips, { ctl, order: ['SES', 'H1', 'D1', 'W1', 'M1', 'Y1'] }))),
             tpE("div", { className: "t4-acc" }, tpE("div", { className: "t4-ah" }, tpE("span", null, "ACTIVE ACCOUNT"), tpE("strong", null, d.acc.name), tpE("button", { type: "button", onClick: d.onWallet, "aria-label": "Deposit dan Withdraw" }, tpIc('Wallet', 18))), tpE("div", { className: "t4-ar" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))), tpBars())),
         tpE("div", { className: "t4-mid" },
-            tpE("section", { className: "tp-card t4-chart" }, tpE("div", { className: "t4-ch" }, tpE("button", { type: "button", className: "t4-sel", onClick: () => ctl.setKind(ctl.kind === 'candle' ? 'line' : 'candle'), title: "Ganti kandel / garis" }, "P&L (pips)", tpIc('ChevronDown', 14, 2.4)), tpE("div", { className: "t4-cb" }, tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 500, ro: 1.5, upCol: 'var(--ej-pr)', ext: ctl, hideTools: true, persist: true }))),
+            tpE("section", { className: "tp-card t4-chart" }, tpE("div", { className: "t4-ch" }, tpE("button", { type: "button", className: "t4-sel", onClick: () => ctl.setKind(ctl.kind === 'candle' ? 'line' : 'candle'), title: "Ganti kandel / garis" }, "P&L (pips)", tpIc('ChevronDown', 14, 2.4)), tpE("div", { className: "t4-cb" }, tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 470, ro: 1.6, fs: 1.6, upCol: 'var(--ej-pr)', ext: ctl, hideTools: true, persist: true }))),
                 tpE("div", { className: "t4-sd" }, side.map(([l, v, ic, t]) => tpE("div", { key: l }, tpE("span", { className: "t4-si" }, tpIc(ic, 15)), tpE("small", null, l), tpE("b", { className: t }, v)))))),
         tpE("div", { className: "t4-strip" }, tpE("div", null, tpE("small", null, "Win rate"), tpE("b", { className: wr }, d.winRate + '%')), tpE("div", null, tpE("small", null, "Profit factor"), tpE("b", { className: d.pf >= 1 ? 'pos' : '' }, d.pf === Infinity ? '∞' : d.pf.toFixed(2))), tpE("div", null, tpE("small", null, "Bulan terbaik"), tpE("b", { className: d.bestMonthVal > 0 ? 'pos' : '' }, d.bestTxt)), tpE("div", null, tpE("small", null, "Drawdown"), tpE("b", { className: d.ddVal > 0 ? 'neg' : '' }, d.ddTxt))),
         tpActions(d, ['BAGIKAN HASIL', 'LIHAT DETAIL', 'ANALISA TRADING'], ['Upload', 'BarsThin', 'Activity']));
 }
 /* ===== T5: hijau bersih ===== */
 function T5Bars({ vals, act, cur }) {
-    const W = 1000, H = 400, T = 70, B = 44, AX = 98, PW = W - AX - 6;
+    const W = 1000, H = 430, T = 78, B = 64, AX = 150, PW = W - AX - 6;
     const n = vals.length;
     if (!n) return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t5-ch" }, tpE("text", { x: W / 2, y: H / 2, textAnchor: "middle", className: "g-t" }, "Belum ada trade pada periode ini"));
     const lo0 = Math.min(0, ...vals.map(v => v.v)), hi0 = Math.max(0, ...vals.map(v => v.v)), pad = (hi0 - lo0) * .06 || 1, lo = lo0 < 0 ? lo0 - pad : 0, hi = hi0 + pad;
@@ -213,11 +214,11 @@ function T5Bars({ vals, act, cur }) {
     const lastIx = n - 1, bx = lastIx * slot + slot / 2, dv = act ? act.c - act.o : vals[lastIx].v - (vals[lastIx - 1] ? vals[lastIx - 1].v : 0);
     return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t5-ch", role: "img", "aria-label": "Grafik batang P&L kumulatif" },
         tpE("defs", null, tpE("linearGradient", { id: "t5g", x1: "0", x2: "0", y1: "0", y2: "1" }, tpE("stop", { offset: "0", stopColor: "var(--ej-pr)" }), tpE("stop", { offset: "1", stopColor: "var(--ej-pr)", stopOpacity: ".04" }))),
-        ticks.map((v, i) => tpE("g", { key: i }, tpE("line", { x1: 0, x2: PW, y1: y(v), y2: y(v), className: "g-l" }), tpE("text", { x: W - 4, y: y(v) + 7, textAnchor: "end", className: "g-t" }, candleNum(v)))),
+        ticks.map((v, i) => tpE("g", { key: i }, tpE("line", { x1: 0, x2: PW, y1: y(v), y2: y(v), className: "g-l" }), tpE("text", { x: W - 4, y: y(v) + 11, textAnchor: "end", className: "g-t" }, candleNum(v)))),
         vals.map((p, i) => { const y0 = y(Math.max(lo, 0)), y1 = y(p.v), top = Math.min(y0, y1), h = Math.max(4, Math.abs(y0 - y1)); return tpE("rect", { key: i, x: i * slot + (slot - bw) / 2, y: top, width: bw, height: h, rx: 8, fill: "url(#t5g)", opacity: i === lastIx ? 1 : .88 }); }),
         tpE("circle", { cx: bx, cy: y(vals[lastIx].v) - 2, r: 9, fill: "var(--ej-sf)", stroke: "var(--ej-pr)", strokeWidth: "5" }),
-        tpE("g", { transform: `translate(${Math.min(Math.max(bx - 62, 0), PW - 126)},${Math.max(4, y(vals[lastIx].v) - 62)})` }, tpE("rect", { width: 124, height: 46, rx: 12, fill: "var(--ej-pr)" }), tpE("text", { x: 62, y: 31, textAnchor: "middle", className: "g-b2", style: { fill: "var(--onacc)" } }, tpS(dv) + Math.abs(dv).toFixed(2))),
-        [0, .5, 1].map((f, i) => { const ix = Math.min(n - 1, Math.round((n - 1) * f)); return tpE("text", { key: 'x' + i, x: ix * slot + slot / 2, y: H - 10, textAnchor: i === 0 ? "start" : i === 2 ? "end" : "middle", className: "g-t" }, vals[ix].lb); }));
+        tpE("g", { transform: `translate(${Math.min(Math.max(bx - 88, 0), PW - 178)},${Math.max(4, y(vals[lastIx].v) - 82)})` }, tpE("rect", { width: 176, height: 62, rx: 16, fill: "var(--ej-pr)" }), tpE("text", { x: 88, y: 43, textAnchor: "middle", className: "g-b2", style: { fill: "var(--onacc)" } }, tpS(dv) + Math.abs(dv).toFixed(2))),
+        [0, .5, 1].map((f, i) => { const ix = Math.min(n - 1, Math.round((n - 1) * f)); return tpE("text", { key: 'x' + i, x: ix * slot + slot / 2, y: H - 14, textAnchor: i === 0 ? "start" : i === 2 ? "end" : "middle", className: "g-t" }, vals[ix].lb); }));
 }
 function HomeT5({ d }) {
     const [sel, setSel] = useState('sesi'), c = d.cur;
@@ -249,7 +250,7 @@ function HomeT6({ d }) {
         tpE("section", { className: "tp-card t6-pl" }, tpE("div", { className: "t6-l" }, tpE("span", { className: "t6-cap" }, "TOTAL P&L"), tpE("div", { className: "t6-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t6-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 14, 2.4), d.trendTxt + " in selected period")), tpE("div", { className: "t6-r" }, tpE("span", { className: "t6-cap" }, "ACTIVE ACCOUNT"), tpE("strong", null, d.acc.name), tpE("button", { type: "button", onClick: d.onWallet, "aria-label": "Deposit dan Withdraw" }, tpIc('Wallet', 18)))),
         tpFacts(d, sel, setSel),
         tpE("div", { className: "tp-card t6-st" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
-        tpE("section", { className: "tp-card t6-ch" }, tpE("button", { type: "button", className: "t6-more", onClick: d.onStats, "aria-label": "Statistik lanjutan" }, tpIc('MoreHorizontal', 20)), tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 330, ro: 1.2, upCol: 'var(--t-dk)', ext: ctl, hideTools: true, persist: true }), tpE("div", { className: "t6-ft" }, tpE(TplChips, { ctl }), tpE(TplKind, { ctl }))),
+        tpE("section", { className: "tp-card t6-ch" }, tpE("button", { type: "button", className: "t6-more", onClick: d.onStats, "aria-label": "Statistik lanjutan" }, tpIc('MoreHorizontal', 20)), tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 360, ro: 1.3, fs: 1.45, upCol: 'var(--t-dk)', ext: ctl, hideTools: true, persist: true }), tpE("div", { className: "t6-ft" }, tpE(TplChips, { ctl }), tpE(TplKind, { ctl }))),
         tpE("div", { className: "tp-card t6-m" }, m.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
         tpActions(d));
 }

@@ -84,10 +84,10 @@ function candleNum(v) {
 const CANDLE_DEF = 120, CANDLE_MIN = 5, CANDLE_FLOOR = 8;
 // tampilan awal: sebanyak kandel yang ada (maks 120); kurang dari 8 tetap selebar 8 slot, mulai dari kiri
 function candleDef(n) { return Math.max(CANDLE_FLOOR, Math.min(CANDLE_DEF, n)); }
-function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed, onSelect, upCol, ro }) {
+function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed, onSelect, upCol, ro, fs }) {
     const UP = upCol || EJC("#34d399");
     const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
-    const RO = ro || 1, W = 500, H = hh || 428, T = Math.round(68 * RO), B = 26, L = 6, AX = 46;
+    const RO = ro || 1, FS = fs || 1, W = 500, H = hh || 428, T = Math.round(68 * RO), B = Math.round(26 * (1 + (FS - 1) * .7)), L = 6, AX = Math.round(46 * (1 + (FS - 1) * .75));
     const plotW = W - L - AX;
     const n = candles.length;
     const def = fixed ? Math.max(CANDLE_FLOOR, Math.min(500, n)) : candleDef(n); // fixed: semua kandel periode tampil, tanpa zoom/geser
@@ -229,7 +229,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
         return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, style: hh ? { aspectRatio: `500/${hh}` } : undefined, className: "combo-chart candle-chart" },
             React.createElement("text", { x: W / 2, y: H / 2, textAnchor: "middle", fontSize: "12", fill: EJC("#7d8bab") }, "Belum ada trade pada periode ini"));
     const grid = [0, 1, 2, 3].map(i => lo + (hi - lo) * (i + .5) / 4);
-    const step = Math.max(1, Math.ceil(58 / SW));
+    const step = Math.max(1, Math.ceil(58 * FS / SW));
     const col = c => c.c > c.o ? UP : c.c < c.o ? EJC("#ff6b81") : EJC("#9aa7c5");
     const bw = Math.max(1.4, SW * .62), wk = Math.max(.9, Math.min(1.6, bw * .55));
     return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, ref: svgRef, style: hh ? { aspectRatio: `500/${hh}` } : undefined, className: "combo-chart candle-chart" + (fixed ? " cc-fixed" : ""), onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerCancel: cancel },
@@ -238,7 +238,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
                 React.createElement("rect", { x: L, y: T - 4, width: plotW, height: H - T - B + 8 }))),
         grid.map((g, i) => React.createElement("g", { key: i },
             React.createElement("line", { x1: L, x2: W - AX, y1: y(g), y2: y(g), stroke: EJC("#2a3a60"), strokeWidth: "1", strokeDasharray: "3 6" }),
-            React.createElement("text", { x: W - 2, y: y(g) + 3.5, textAnchor: "end", fontSize: "10", fill: EJC("#7d8bab") }, candleNum(g)))),
+            React.createElement("text", { x: W - 2, y: y(g) + 3.5, textAnchor: "end", fontSize: String(10 * FS), fill: EJC("#7d8bab") }, candleNum(g)))),
         React.createElement("line", { x1: L, x2: W - AX, y1: H - B, y2: H - B, stroke: EJC("#33466f"), strokeWidth: "1" }),
         lo < 0 && hi > 0 && React.createElement("line", { x1: L, x2: W - AX, y1: y(0), y2: y(0), stroke: EJC("#4a5f91"), strokeWidth: "1", strokeDasharray: "2 3" }),
         isL && React.createElement("g", { clipPath: "url(#cdclip)" }, (() => {
@@ -266,7 +266,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
                 React.createElement("line", { x1: cx, x2: cx, y1: y(c.h), y2: y(c.l), stroke: k, strokeWidth: wk, strokeLinecap: "round" }),
                 React.createElement("rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(1.8, bot - top), rx: bw > 4 ? "1.2" : "0", fill: k }));
         })),
-        shown.map(c => { const i = candles.indexOf(c); return (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14) ? React.createElement("text", { key: c.k, x: x(i), y: H - 8, textAnchor: "middle", fontSize: "9.5", fill: EJC("#7d8bab") }, c.short) : null; }),
+        shown.map(c => { const i = candles.indexOf(c); return (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14) ? React.createElement("text", { key: c.k, x: x(i), y: H - 8 * FS, textAnchor: "middle", fontSize: String(9.5 * FS), fill: EJC("#7d8bab") }, c.short) : null; }),
         React.createElement("g", { transform: RO !== 1 ? `scale(${RO})` : undefined },
         React.createElement("text", { x: L, y: 13, fontSize: "11.5", fontWeight: "700", fill: EJC("#eef2ff") },
             act.label,
@@ -306,7 +306,7 @@ function candleSavedSet(k, v) { try {
     localStorage.setItem(k, v);
 }
 catch (_) { } }
-function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fixed, onSelect, ext, hideTools, upCol, ro }) {
+function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fixed, onSelect, ext, hideTools, upCol, ro, fs }) {
     const [kind0, setKind0] = useState(() => candleSavedGet('ej3-chart-kind', 'line'));
     const keep = persist !== false;
     const tfList = tfs ? CANDLE_TFS.filter(([k]) => tfs.includes(k)) : CANDLE_TFS;
@@ -318,7 +318,7 @@ function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fi
     const candles = useMemo(() => buildCandles(trades, tf), [trades, tf]);
     const isLine = kind !== 'candle';
     return React.createElement("div", { className: "hero-chart" },
-        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { upCol: upCol, ro: ro, candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen, hh: hh, fixed: fixed, onSelect: onSelect })),
+        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { upCol: upCol, ro: ro, fs: fs, candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen, hh: hh, fixed: fixed, onSelect: onSelect })),
         !hideTools && React.createElement("div", { className: "chart-tools" },
             React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala grafik" }, tfList.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
             React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },
