@@ -111,16 +111,17 @@ function HomeT1({ d }) {
         tpE("div", { className: "tp-card t1-ac" }, tpActions(d)));
 }
 /* ===== T2: organik hijau ===== */
-function T2Area({ pts, cur, start }) {
+function T2Area({ pts }) {
     const W = 640, H = 300, L = 70, R = 14, T = 36, B = 36;
     if (!pts.length) return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t2-ch" }, tpE("text", { x: W / 2, y: H / 2, textAnchor: "middle", className: "g-t" }, "Belum ada trade pada periode ini"));
     const vals = pts.map(p => p.v), lo0 = Math.min(0, ...vals), hi0 = Math.max(0, ...vals), nz = tpNice(lo0, hi0 + (hi0 - lo0) * .1, 4);
-    const t0 = pts[0].t, t1 = pts[pts.length - 1].t, span = Math.max(t1 - t0, 36e5);
-    const x = t => L + (t - t0) / span * (W - L - R - 8), y = v => T + (nz.hi - v) / (nz.hi - nz.lo) * (H - T - B);
-    const P = pts.map(p => [x(p.t), y(p.v)]), ln = smoothPath(P), last = P[P.length - 1], first = P[0];
+    const n = pts.length, x = i => L + (n > 1 ? i / (n - 1) : 1) * (W - L - R - 8), y = v => T + (nz.hi - v) / (nz.hi - nz.lo) * (H - T - B);
+    const P = pts.map((p, i) => [x(i), y(p.v)]), ln = smoothPath(P), last = P[P.length - 1], first = P[0];
     const area = `${ln} L${last[0]},${y(Math.max(nz.lo, 0))} L${first[0]},${y(Math.max(nz.lo, 0))} Z`;
-    const xt = [0, .25, .5, .75, 1].map(f => new Date(t0 + span * f));
-    const lastV = pts[pts.length - 1].v;
+    const lastV = pts[n - 1].v;
+    const ix = n > 4 ? [0, .25, .5, .75, 1].map(f => Math.round((n - 1) * f)) : pts.map((_, i) => i), lab = ix.filter((v, i) => ix.indexOf(v) === i && pts[v].lb);
+    const cand = lab.map(i => { const w = pts[i].lb.length * 12.6 + 14, a = i === n - 1 ? "end" : i === 0 ? "start" : "middle", cx = Math.min(Math.max(x(i), L + 20), W - R - 22); return { i, a, x: cx, l: a === "end" ? cx - w : a === "start" ? cx : cx - w / 2, r: a === "end" ? cx : a === "start" ? cx + w : cx + w / 2 }; });
+    const xl = []; [cand[cand.length - 1]].concat(cand.slice(0, -1)).forEach(o => { if (o && !xl.some(q => o.l < q.r && o.r > q.l)) xl.push(o); });
     return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t2-ch", role: "img", "aria-label": "Grafik total P&L" },
         tpE("defs", null, tpE("linearGradient", { id: "t2g", x1: "0", x2: "0", y1: "0", y2: "1" }, tpE("stop", { offset: "0", stopColor: "var(--ej-pr)", stopOpacity: ".32" }), tpE("stop", { offset: "1", stopColor: "var(--ej-pr)", stopOpacity: ".02" }))),
         nz.ticks.map((v, i) => tpE("g", { key: i }, tpE("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), className: v === 0 ? "g-a" : "g-l" }), tpE("text", { x: L - 12, y: y(v) + 6, textAnchor: "end", className: "g-t" }, tpS(v) + Math.abs(v).toFixed(v % 1 ? 1 : 0)))),
@@ -128,20 +129,15 @@ function T2Area({ pts, cur, start }) {
         tpE("path", { d: ln, fill: "none", stroke: "var(--ej-pr)", strokeWidth: "3.6", strokeLinecap: "round" }),
         tpE("circle", { cx: last[0], cy: last[1], r: 7, fill: "var(--ej-pr)", stroke: "var(--ej-sf)", strokeWidth: "2.5" }),
         tpE("g", { transform: `translate(${Math.min(last[0] - 56, W - 118)},${last[1] - 54})` }, tpE("rect", { width: 112, height: 38, rx: 11, fill: "var(--ej-pr)" }), tpE("text", { x: 56, y: 27, textAnchor: "middle", className: "g-b2", style: { fill: 'var(--onacc)' } }, tpS(lastV) + Math.abs(lastV).toFixed(2))),
-        xt.map((dd, i) => { const lb = dd.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }).replace('.', ''), prev = i ? xt[i - 1].toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }).replace('.', '') : ''; return lb === prev ? null : tpE("text", { key: 'x' + i, x: [L + 4, L + (W - L - R) * .25, L + (W - L - R) * .5, L + (W - L - R) * .75, W - R][i], y: H - 8, textAnchor: i === 4 ? "end" : "middle", className: "g-t", style: i === 4 ? { fontWeight: 700, fill: 'var(--ej-ik)' } : null }, lb); }));
+        xl.map(o => tpE("text", { key: 'x' + o.i, x: o.x, y: H - 8, textAnchor: o.a, className: "g-t", style: o.i === n - 1 ? { fontWeight: 700, fill: 'var(--ej-ik)' } : null }, pts[o.i].lb)));
 }
 function HomeT2({ d }) {
-    const [rg, setRg] = useState('S');
-    const c = d.cur;
+    const ctl = useTplChart('line'), c = d.cur;
     const pts = useMemo(() => {
-        const days = { H: 1, S: 7, B: 30, M: 90, Y: 365 }[rg], all = d.cs.map(t => ({ t: +new Date(t.date), pnl: Number(t.pnl) || 0 })).filter(p => isFinite(p.t));
-        if (!all.length) return [];
-        const lastT = Math.max(...all.map(p => p.t)), cut = days ? lastT - days * 864e5 : -Infinity;
-        let v = 0; all.filter(p => p.t < cut).forEach(p => { v += p.pnl; });
-        const inn = all.filter(p => p.t >= cut), first = inn.length ? inn[0].t : lastT, out = [{ t: first - Math.max(lastT - first, 864e5) * .12, v }];
-        inn.forEach(p => { v += p.pnl; out.push({ t: p.t, v }); });
-        return out;
-    }, [d.cs, rg]);
+        const cd = buildCandles(d.cs, ctl.tf);
+        if (!cd.length) return [];
+        return [{ v: 0, lb: '' }].concat(cd.map(x => ({ v: x.c, lb: x.short })));
+    }, [d.cs, ctl.tf]);
     const k = [['Saldo Awal', money(d.startBal, c), '', 'Coins', 'k1'], ['Saldo Sekarang', money(d.aNow, c), tpC(d.total), 'BarsThin', 'k2'], ['Pertumbuhan', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct), 'TrendingUp', 'k3'], ['Hari Aktif', String(d.activeDays), '', 'Calendar', 'k4']];
     const st = [['Win Rate', d.winRate + '%', 'Trophy'], ['Profit Factor', d.pf === Infinity ? '∞' : d.pf.toFixed(2), 'LineChart'], ['Total Trade', String(d.nTrades), 'BarsFill'], ['Rata-rata R:R', d.avgRR ? d.avgRR.toFixed(1) : '—', 'TrendingUp'], ['Perolehan Pips', tpS(d.pips).replace('-', '') + d.pips.toFixed(1), 'Target'], ['Hari Terbaik', d.bestDay > 0 ? '+' + money(d.bestDay, c) : '—', 'Star']];
     const good = d.total >= 0;
@@ -152,8 +148,8 @@ function HomeT2({ d }) {
             tpE("div", { className: "t2-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)),
             tpE("span", { className: "t2-tr " + tpC(d.total) }, tpIc(good ? 'TrendingUp' : 'TrendingDown', 16, 2.4), tpE("b", null, d.trendTxt), " dalam periode ini"),
             tpE("div", { className: "t2-q" }, "Proses kecil setiap hari,", tpE("br"), "hasil besar nanti."),
-            tpE(T2Area, { pts: pts, cur: c }),
-            tpE("div", { className: "t2-rg", role: "group", "aria-label": "Rentang grafik" }, [['H', '1H'], ['S', '1S'], ['B', '1B'], ['M', '1M'], ['Y', '1Y'], ['ALL', 'Semua']].map(([key, l]) => tpE("button", { key: key, type: "button", className: rg === key ? 'on' : '', onClick: () => setRg(key) }, l)))),
+            tpE(T2Area, { pts: pts }),
+            tpE("div", { className: "t2-rg", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([key, l]) => tpE("button", { key: key, type: "button", className: ctl.tf === key ? 'on' : '', onClick: () => ctl.setTf(key) }, l)))),
         tpE("div", { className: "t2-k4" }, k.map(([l, v, t, ic, cl]) => tpE("div", { key: l, className: "tp-card t2-k" }, tpE("span", { className: "t2-ki " + cl }, tpIc(ic, 20)), tpE("small", null, l), tpE("b", { className: t }, v)))),
         tpE("div", { className: "t2-two" },
             tpE("section", { className: "tp-card t2-in" }, tpE("div", { className: "t2-ih" }, tpE("span", { className: "t2-ti" }, tpE("i", { className: "t2-ii" }, tpIc('BarsFill', 14, 2.2)), "Insight Minggu Ini"), tpE("span", { className: "t2-bd " + (good ? '' : 'warn') }, tpIc(good ? 'Star' : 'Info', 14, 2.2), good ? "Performa Solid" : "Perlu Evaluasi")),
@@ -163,46 +159,9 @@ function HomeT2({ d }) {
             tpE("div", { className: "t2-sg" }, st.map(([l, v, ic], i) => tpE("div", { key: l }, tpE("span", { className: "t2-si" }, tpIc(ic, 16)), tpE("small", null, l), tpE("b", { className: i < 2 ? (i === 0 ? (d.winRate >= 50 ? 'pos' : 'neg') : (d.pf >= 1 ? 'pos' : 'neg')) : (i === 4 ? tpC(d.pips) : i === 5 ? (d.bestDay > 0 ? 'pos' : '') : '') }, v)))),
             tpActions(d)));
 }
-/* ===== T3: serif emas ===== */
+/* ===== bagian bersama T5/T6 ===== */
 function tpFacts(d, sel, setSel) { const f = d.heroFx || {}; return tpE("div", { className: "tp-fx", role: "group", "aria-label": "Rentang data" }, [['tahun', f.years], ['bulan', f.months], ['minggu', f.weeks], ['hari', f.days], ['sesi', f.sessions]].map(([k, v]) => tpE("button", { key: k, type: "button", className: sel === k ? 'on' : '', onClick: () => setSel(k) }, tpE("b", null, v == null ? 0 : v), " ", k))); }
 function tpBest(d) { return tpE("div", { className: "tp-bd" }, tpE("span", null, tpE("i", { className: "dt-g" }), "Bulan terbaik: ", tpE("b", null, d.bestTxt)), tpE("span", null, tpE("i", { className: "dt-r" }), "Drawdown terdalam: ", tpE("b", null, d.ddTxt))); }
-function HomeT3({ d }) {
-    const ctl = useTplChart('candle'), [sel, setSel] = useState('bulan'), c = d.cur;
-    const rows = [['Saldo awal', money(d.startBal, c), ''], ['Sekarang', money(d.aNow, c), tpC(d.total)], ['Pertumbuhan', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct)], ['Hari aktif', String(d.activeDays), '']];
-    const m = tpMetrics(d);
-    return tpE("div", { className: "tp tp3" },
-        tpE("section", { className: "tp-card t3-card" },
-            tpE("div", { className: "t3-top" }, tpE("div", { className: "t3-pl" }, tpE("span", { className: "t3-cap" }, "TOTAL P&L"), tpE("div", { className: "t3-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t3-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 14, 2.4), d.trendTxt)),
-                tpE("div", { className: "t3-ac" }, tpE("span", { className: "t3-cap" }, "ACTIVE ACCOUNT"), tpE("strong", null, d.acc.name), tpE("button", { type: "button", className: "t3-wl", onClick: d.onWallet, "aria-label": "Deposit dan Withdraw" }, tpIc('Wallet', 18)))),
-            tpFacts(d, sel, setSel),
-            tpE("div", { className: "t3-st" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
-            tpE("div", { className: "t3-ch" }, tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 360, ro: 1.3, fs: 1.45, upCol: 'var(--t-dk)', ext: ctl, hideTools: true, persist: true })),
-            tpE("div", { className: "t3-tools" }, tpE(TplChips, { ctl }), tpE(TplKind, { ctl })),
-            tpBest(d),
-            tpE("div", { className: "t3-m" }, m.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
-            tpActions(d)));
-}
-/* ===== T4: tegas biru ===== */
-function tpBars(c) { const gid = 'gb' + Math.random().toString(36).slice(2, 6); return tpE("svg", { className: "t4-gold", viewBox: "0 0 260 200", "aria-hidden": "true" }, tpE("defs", null, tpE("linearGradient", { id: gid + 'a', x1: "0", x2: "1", y1: "0", y2: "1" }, tpE("stop", { offset: "0", stopColor: "#fff3b0" }), tpE("stop", { offset: ".45", stopColor: "#f2c14e" }), tpE("stop", { offset: "1", stopColor: "#b8801f" })), tpE("linearGradient", { id: gid + 'b', x1: "0", x2: "0", y1: "0", y2: "1" }, tpE("stop", { offset: "0", stopColor: "#e8b13c" }), tpE("stop", { offset: "1", stopColor: "#8f5f12" })), tpE("linearGradient", { id: gid + 'c', x1: "0", x2: "1", y1: "0", y2: "0" }, tpE("stop", { offset: "0", stopColor: "#c9962b" }), tpE("stop", { offset: "1", stopColor: "#7d520e" }))),
-    tpE("g", { transform: "translate(8 70)" }, tpE("polygon", { points: "20,20 150,0 240,36 110,66", fill: `url(#${gid}a)` }), tpE("polygon", { points: "20,20 110,66 110,104 20,58", fill: `url(#${gid}b)` }), tpE("polygon", { points: "110,66 240,36 240,74 110,104", fill: `url(#${gid}c)` }), tpE("text", { x: 124, y: 52, fontSize: "11", fontWeight: "800", fill: "#7d520e", transform: "rotate(-13 124 52)", textAnchor: "middle", letterSpacing: "1" }, "GOLD 999.9")),
-    tpE("g", { transform: "translate(40 28)" }, tpE("polygon", { points: "16,14 130,0 200,28 86,50", fill: `url(#${gid}a)` }), tpE("polygon", { points: "16,14 86,50 86,82 16,46", fill: `url(#${gid}b)` }), tpE("polygon", { points: "86,50 200,28 200,60 86,82", fill: `url(#${gid}c)` })),
-    tpE("g", { transform: "translate(96 -2)" }, tpE("polygon", { points: "10,10 100,0 150,18 60,34", fill: `url(#${gid}a)` }), tpE("polygon", { points: "10,10 60,34 60,58 10,34", fill: `url(#${gid}b)` }), tpE("polygon", { points: "60,34 150,18 150,42 60,58", fill: `url(#${gid}c)` }))); }
-function HomeT4({ d }) {
-    const ctl = useTplChart('candle'), c = d.cur;
-    const rows = [['Saldo awal', money(d.startBal, c), ''], ['Sekarang', money(d.aNow, c), ''], ['Pertumbuhan', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', 'pos'], ['Hari aktif', String(d.activeDays), '']];
-    const side = [['Total trades', String(d.nTrades), 'FileText', ''], ['Avg R:R', d.avgRR ? d.avgRR.toFixed(1) : '—', 'Scale', ''], ['Perolehan pips', tpS(d.pips).replace('-', '') + d.pips.toFixed(1), 'Target', tpC(d.pips)], ['Best day', d.bestDay > 0 ? '+' + money(d.bestDay, c) : '—', 'Star', d.bestDay > 0 ? 'pos' : '']];
-    const wr = d.nTrades ? (d.winRate >= 50 ? 'pos' : 'neg') : '';
-    return tpE("div", { className: "tp tp4" },
-        tpE("div", { className: "t4-top" },
-            tpE("div", { className: "t4-pl" }, tpE("span", { className: "t4-cap" }, "TOTAL P&L"), tpE("div", { className: "t4-big" }, tpFit(tpS(d.aTotal) + money(Math.abs(d.aTotal), c), 175, .37)), tpE("span", { className: "t4-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 16, 2.6), tpE("b", null, d.trendTxt), tpE("span", { className: "t4-trs" }, "in selected period")),
-                tpE("div", { className: "t4-chips" }, tpE(TplChips, { ctl, order: ['SES', 'H1', 'D1', 'W1', 'M1', 'Y1'] }))),
-            tpE("div", { className: "t4-acc" }, tpE("div", { className: "t4-ah" }, tpE("span", null, "ACTIVE ACCOUNT"), tpE("strong", null, d.acc.name), tpE("button", { type: "button", onClick: d.onWallet, "aria-label": "Deposit dan Withdraw" }, tpIc('Wallet', 18))), tpE("div", { className: "t4-ar" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))), tpBars())),
-        tpE("div", { className: "t4-mid" },
-            tpE("section", { className: "tp-card t4-chart" }, tpE("div", { className: "t4-ch" }, tpE("button", { type: "button", className: "t4-sel", onClick: () => ctl.setKind(ctl.kind === 'candle' ? 'line' : 'candle'), title: "Ganti kandel / garis" }, "P&L (pips)", tpIc('ChevronDown', 14, 2.4)), tpE("div", { className: "t4-cb" }, tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 470, ro: 1.6, fs: 1.6, upCol: 'var(--ej-pr)', ext: ctl, hideTools: true, persist: true }))),
-                tpE("div", { className: "t4-sd" }, side.map(([l, v, ic, t]) => tpE("div", { key: l }, tpE("span", { className: "t4-si" }, tpIc(ic, 15)), tpE("small", null, l), tpE("b", { className: t }, v)))))),
-        tpE("div", { className: "t4-strip" }, tpE("div", null, tpE("small", null, "Win rate"), tpE("b", { className: wr }, d.winRate + '%')), tpE("div", null, tpE("small", null, "Profit factor"), tpE("b", { className: d.pf >= 1 ? 'pos' : '' }, d.pf === Infinity ? '∞' : d.pf.toFixed(2))), tpE("div", null, tpE("small", null, "Bulan terbaik"), tpE("b", { className: d.bestMonthVal > 0 ? 'pos' : '' }, d.bestTxt)), tpE("div", null, tpE("small", null, "Drawdown"), tpE("b", { className: d.ddVal > 0 ? 'neg' : '' }, d.ddTxt))),
-        tpActions(d, ['BAGIKAN HASIL', 'LIHAT DETAIL', 'ANALISA TRADING'], ['Upload', 'BarsThin', 'Activity']));
-}
 /* ===== T5: hijau bersih ===== */
 function T5Bars({ vals, act, cur }) {
     const W = 1000, H = 430, T = 78, B = 64, AX = 150, PW = W - AX - 6;
@@ -254,4 +213,4 @@ function HomeT6({ d }) {
         tpE("div", { className: "tp-card t6-m" }, m.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
         tpActions(d));
 }
-function HomeTemplate({ n, d }) { useEffect(() => { tplFontLoad(n); }, [n]); return [null, HomeT1, HomeT2, HomeT3, HomeT4, HomeT5, HomeT6][n] ? React.createElement([null, HomeT1, HomeT2, HomeT3, HomeT4, HomeT5, HomeT6][n], { d }) : null; }
+function HomeTemplate({ n, d }) { useEffect(() => { tplFontLoad(n); }, [n]); return [null, HomeT1, HomeT2, null, null, HomeT5, HomeT6][n] ? React.createElement([null, HomeT1, HomeT2, null, null, HomeT5, HomeT6][n], { d }) : null; }
