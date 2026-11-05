@@ -12,6 +12,7 @@ function App() {
     const [navHidden, setNavHidden] = useState(false);
     const [headerV, setHeaderV] = useState(headerVariantGet);
     const [navV, setNavV] = useState(navVariantGet);
+    const [homeT, setHomeT] = useState(homeGet);
     const [showAccount, setShowAccount] = useState(false);
     const [accountMode, setAccountMode] = useState('manage');
     const [showAdd, setShowAdd] = useState(false);
@@ -35,6 +36,7 @@ function App() {
         } catch (e) { return false; }
     };
     useEffect(() => { if (window.__hideSplash) window.__hideSplash(); }, []);
+    useEffect(() => { const g = e => goTab(e.detail), a = () => { setAccountMode('manage'); setShowAccount(true); }; window.addEventListener('ej-goto', g); window.addEventListener('ej-account', a); return () => { window.removeEventListener('ej-goto', g); window.removeEventListener('ej-account', a); }; });
     useEffect(() => { setExpanded(null); }, [tab]);
     useEffect(() => { const lastY = new WeakMap(); let lastEl = null; const onScroll = e => { const t = e.target === document ? document.documentElement : e.target; if (!t || t.nodeType !== 1)
         return; if (t.closest && t.closest('.modal-backdrop,.dp-sheet,.tsel-sheet,[data-confirm]'))
@@ -46,7 +48,7 @@ function App() {
     useEffect(() => { document.body.classList.toggle('nav-is-hidden', navHidden); }, [navHidden]);
     useEffect(() => { document.body.classList.toggle('popup-open', !!(showAdd || editingTrade || closingTrade || showAccount)); }, [showAdd, editingTrade, closingTrade, showAccount]);
     useEffect(() => { document.body.setAttribute('data-tab', tab); if (window.syncStatusBar) window.syncStatusBar(); }, [tab]);
-    useEffect(() => { document.body.setAttribute('data-nv', String(navV)); const f = () => { const n = document.querySelector('.bottom-nav'); if (n) document.documentElement.style.setProperty('--nav-h', (n.offsetHeight + (parseFloat(getComputedStyle(n).bottom) || 0)) + 'px'); }; f(); const raf = requestAnimationFrame(f); window.addEventListener('resize', f); return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', f); }; }, [navV]);
+    useEffect(() => { document.body.setAttribute('data-nv', String(navV)); document.body.setAttribute('data-home', String(homeT)); const f = () => { const n = document.querySelector('.bottom-nav'); if (n) document.documentElement.style.setProperty('--nav-h', (n.offsetHeight + (parseFloat(getComputedStyle(n).bottom) || 0)) + 'px'); }; f(); const raf = requestAnimationFrame(f); window.addEventListener('resize', f); return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', f); }; }, [navV, homeT]);
     const activeAccount = accounts.find(a => a.id === activeAccountId) || accounts[0];
     const trades = (activeAccount === null || activeAccount === void 0 ? void 0 : activeAccount.trades) || [];
     function persist(nextAccounts = accounts, nextActive = activeAccountId) { setAccounts(nextAccounts); setActiveAccountId(nextActive); saveStore(nextActive, nextAccounts); }
@@ -61,6 +63,7 @@ function App() {
         return; const delta = data.type === 'withdraw' ? -amount : amount; const updated = accounts.map(a => a.id === activeAccountId ? { ...a, balance: Number(a.balance || 0) + delta, capitalHistory: [...(a.capitalHistory || []), { id: uid('capital'), type: data.type, amount, date: data.date, note: data.note || '' }] } : a); persist(updated); }
     function updateAccount(patch) { persist(accounts.map(a => a.id === activeAccountId ? { ...a, ...patch } : a)); }
     function closePopups() { setBatch(null); setShowAdd(false); setPrefill(null); setEditingTrade(null); setClosingTrade(null); setShowAccount(false); setAccountMode('manage'); document.querySelectorAll('[data-confirm]').forEach(n => n.dispatchEvent(new Event('confirm-cancel'))); }
+    function pickHome(n) { setHomeT(n); homeSet(n); if (n > 0) { setHeaderV(10 + n); headerVariantSet(10 + n); setNavV(4 + n); navVariantSet(4 + n); } else { if (headerV >= 11) { setHeaderV(0); headerVariantSet(0); } if (navV >= 5) { setNavV(0); navVariantSet(0); } } setNavHidden(false); window.scrollTo(0, 0); }
     function goTab(t) { closePopups(); setNavHidden(false); if (t === 'performance' && tab === 'performance')
         window.dispatchEvent(new Event('perf-home')); setTab(t); window.scrollTo(0, 0); }
     function openCalcTrade(d) { setEditingTrade(null); setClosingTrade(null); setPrefill({ calc: true, ...d }); setShowAdd(true); }
@@ -125,11 +128,11 @@ function App() {
                     React.createElement("strong", null, activeAccount.name),
                     React.createElement("small", null, money(acctNowBal(activeAccount), activeAccount.currency)))),
             React.createElement("main", { className: "main-content" },
-                tab === 'performance' && React.createElement(Performance, { onOpenCandle: openCandle, onSelectDate: chooseCalendarDate, onWallet: () => { setAccountMode('capital'); setShowAccount(true); }, account: activeAccount, trades: trades, period: period, setPeriod: setPeriod, customStart: customStart, customEnd: customEnd, setCustomStart: setCustomStart, setCustomEnd: setCustomEnd }),
+                tab === 'performance' && React.createElement(Performance, { homeT: homeT, onOpenCandle: openCandle, onSelectDate: chooseCalendarDate, onWallet: () => { setAccountMode('capital'); setShowAccount(true); }, account: activeAccount, trades: trades, period: period, setPeriod: setPeriod, customStart: customStart, customEnd: customEnd, setCustomStart: setCustomStart, setCustomEnd: setCustomEnd }),
                 tab === 'journal' && React.createElement(Journal, { account: activeAccount, trades: trades, filters: journalFilters, setFilters: setJournalFilters, expanded: expanded, setExpanded: setExpanded, onAdd: openAdd, onScan: scanScreenshot, onDelete: deleteTrade, onClose: setClosingTrade, onEdit: setEditingTrade }),
                 tab === 'account' && React.createElement(AccountPage, { accounts: accounts, activeAccount: activeAccount, onSelect: selectAccount, onCreate: addAccount, onDelete: deleteAccount, onUpdate: updateAccount, onCapital: recordCapital, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson }),
-                tab === 'tools' && React.createElement(Tools, { onCalcTrade: openCalcTrade, headerVariant: headerV, onHeaderVariant: v => { setHeaderV(v); headerVariantSet(v); window.scrollTo(0, 0); }, navVariant: navV, onNavVariant: v => { setNavV(v); navVariantSet(v); setNavHidden(false); }, account: activeAccount, trades: trades, onAdd: openAdd, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson, onNewAccount: () => setShowAccount(true) }))),
-        React.createElement("nav", { className: "bottom-nav" + (navHidden ? " nav-hidden" : "") + (navV ? " nv-" + navV : "") },
+                tab === 'tools' && React.createElement(Tools, { homeT: homeT, onHome: pickHome, onCalcTrade: openCalcTrade, headerVariant: headerV, onHeaderVariant: v => { setHeaderV(v); headerVariantSet(v); window.scrollTo(0, 0); }, navVariant: navV, onNavVariant: v => { setNavV(v); navVariantSet(v); setNavHidden(false); }, account: activeAccount, trades: trades, onAdd: openAdd, onExport: exportCsv, onBackup: backupJson, onRestore: restoreJson, onNewAccount: () => setShowAccount(true) }))),
+        navV >= 5 && navV <= 10 ? React.createElement(TplNav, { n: navV - 4, tab, showAdd, navHidden, goTab, openAdd }) : React.createElement("nav", { className: "bottom-nav" + (navHidden ? " nav-hidden" : "") + (navV ? " nv-" + navV : "") },
             React.createElement(NavItem, { active: tab === 'performance' && !showAdd, onClick: () => goTab('performance'), icon: React.createElement(BarChart3, null), label: "Performance" }),
             React.createElement(NavItem, { active: tab === 'journal' && !showAdd, onClick: () => goTab('journal'), icon: React.createElement(BookOpen, null), label: "My Journal" }),
             React.createElement("button", { type: "button", className: showAdd ? "nav-item nav-add active" : "nav-item nav-add", "aria-label": "Tambah posisi", onClick: openAdd }, React.createElement(CandlePlus, null), React.createElement("span", null, "Add trade")),

@@ -1,7 +1,7 @@
 /* Header atas aplikasi — 9 gaya (standar + 8 desain baru), dipilih di Profil → Tampilan header */
 "use strict";
 const HEADER_KEY = 'ej3-header';
-const HEADER_LIST = [[0, 'Standar (lama)'], [1, 'Minimal satu baris'], [2, 'Bilah kaca'], [3, 'Akun jadi judul'], [5, 'Saldo di pil akun'], [6, 'Banner gradasi'], [7, 'Status sinkron'], [9, 'Kartu mengambang'], [10, 'Strip tanggal']];
+const HEADER_LIST = [[0, 'Standar (lama)'], [1, 'Minimal satu baris'], [2, 'Bilah kaca'], [3, 'Akun jadi judul'], [5, 'Saldo di pil akun'], [6, 'Banner gradasi'], [7, 'Status sinkron'], [9, 'Kartu mengambang'], [10, 'Strip tanggal']].concat(TPL_HEADER_LIST);
 function headerVariantGet() { try {
     const v = localStorage.getItem(HEADER_KEY);
     return v !== null && /^\d+$/.test(v) && HEADER_LIST.some(x => x[0] === Number(v)) ? Number(v) : 0;
@@ -40,7 +40,8 @@ function useSyncText() {
     return { ok: true, text: 'Tersinkron · ' + (ago === null || ago < 1 ? 'baru saja' : ago < 60 ? ago + ' mnt lalu' : ago < 1440 ? Math.round(ago / 60) + ' jam lalu' : Math.round(ago / 1440) + ' hari lalu') };
 }
 function headerSession() { const h = wib(new Date()).hour; return h >= 6 && h < 12 ? 'Asia' : h >= 12 && h < 20 ? 'London' : 'New York'; }
-function AppHeader({ variant, account, onCalendar, onAccount }) {
+function AppHeader(props) { const v = Number(props.variant) || 0; return v >= 11 && v <= 16 ? React.createElement(TplHeader, { n: v - 10, account: props.account, onCalendar: props.onCalendar, onAccount: props.onAccount }) : React.createElement(AppHeaderClassic, props); }
+function AppHeaderClassic({ variant, account, onCalendar, onAccount }) {
     const v = Number(variant) || 0;
     const sync = useSyncText();
     const name = account.name, initial = (name || '?').trim().charAt(0).toUpperCase();

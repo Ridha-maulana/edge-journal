@@ -1,6 +1,6 @@
 /* Halaman Performance */
 "use strict";
-function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, period, setPeriod, customStart, customEnd, setCustomStart, setCustomEnd }) {
+function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, trades, period, setPeriod, customStart, customEnd, setCustomStart, setCustomEnd }) {
     const [rangeOpen, setRangeOpen] = useState(false);
     const [performanceView, setPerformanceView] = useState('overview');
     const [shareOpen, setShareOpen] = useState(false);
@@ -143,8 +143,15 @@ function Performance({ onOpenCandle, onSelectDate, onWallet, account, trades, pe
         if (e && e.name === 'AbortError')
             return;
     } saveShare(); };
+    const tplWr = filtered.length ? wins.length / filtered.length : 0;
+    const dayRet = Object.values(dm0).map(v => v / startBal), dayMean = dayRet.length ? dayRet.reduce((a, b) => a + b, 0) / dayRet.length : 0, dayStd = dayRet.length > 1 ? Math.sqrt(dayRet.reduce((a, b) => a + (b - dayMean) ** 2, 0) / (dayRet.length - 1)) : 0;
+    const tplD = homeT ? { acc: account, cur: account.currency, cs, cv, startBal, total, aTotal, aNow, aGrowth, growthPct, activeDays, winRate, pf: pf0, nTrades: filtered.length, avgRR: avgRR0, pips: pips0, bestDay: bd0, bestTxt, bestMonthVal: bestMk ? mm[bestMk] : 0, ddTxt, ddVal: maxDd, heroFx, wins: wins.length, losses: losses.length, bySymbol, dayMap: dm0,
+        trendTxt: account.balance ? `${total >= 0 ? '+' : ''}${((total / account.balance) * 100).toFixed(2)}%` : '0.00%',
+        expR: filtered.length && avgRR0 != null ? tplWr * avgRR0 - (1 - tplWr) : null, sharpe: dayStd > 0 && dayRet.length >= 5 ? dayMean / dayStd * Math.sqrt(252) : null,
+        onWallet, onOpen: onOpenCandle, onShare: () => setShareOpen(true), onStats: () => setPerformanceView('advanced'), onDna: () => setPerformanceView('dna'), onAccount: () => window.dispatchEvent(new CustomEvent('ej-account')) } : null;
     return React.createElement("section", { className: `performance-page ${performanceView === 'overview' ? 'performance-overview-page' : 'performance-detail-wrap'}` },
-        performanceView === 'overview' && React.createElement("div", { className: "perf-screen" },
+        performanceView === 'overview' && homeT > 0 && React.createElement(HomeTemplate, { n: homeT, d: tplD }),
+        performanceView === 'overview' && !homeT && React.createElement("div", { className: "perf-screen" },
             React.createElement("div", { className: "hero-card combo hv-d" },
                 React.createElement("div", { className: "combo-top" },
                     React.createElement("div", null,

@@ -67,3 +67,34 @@ const TypeIcon = (p) => React.createElement(Icon, { name: "TypeIcon", ...p });
 const Contrast = (p) => React.createElement(Icon, { name: "Contrast", ...p });
 
 const Sparkles = (p) => React.createElement(Icon, { name: "Sparkles", ...p });
+
+Object.assign(ICONS, {
+    "Home": [["path", {"d": "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"}], ["path", {"d": "M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"}]],
+    "HomeFill": [["path", {"d": "M3.6 10.6 12 3.4l8.4 7.2V19a2 2 0 0 1-2 2H15v-6.5H9V21H5.6a2 2 0 0 1-2-2z", "fill": "currentColor"}]],
+    "Database": [["ellipse", {"cx": 12, "cy": 5, "rx": 9, "ry": 3}], ["path", {"d": "M3 5v14a9 3 0 0 0 18 0V5"}], ["path", {"d": "M3 12a9 3 0 0 0 18 0"}]],
+    "FileText": [["path", {"d": "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"}], ["path", {"d": "M14 2v4a2 2 0 0 0 2 2h4"}], ["path", {"d": "M10 9H8"}], ["path", {"d": "M16 13H8"}], ["path", {"d": "M16 17H8"}]],
+    "Infinity": [["path", {"d": "M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8"}]],
+    "Star": [["polygon", {"points": "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"}]],
+    "Leaf": [["path", {"d": "M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"}], ["path", {"d": "M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"}]],
+    "Pencil": [["path", {"d": "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"}], ["path", {"d": "m15 5 4 4"}]],
+    "Info": [["circle", {"cx": 12, "cy": 12, "r": 10}], ["path", {"d": "M12 16v-4"}], ["path", {"d": "M12 8h.01"}]],
+    "MoreHorizontal": [["circle", {"cx": 12, "cy": 12, "r": 1.2, "fill": "currentColor"}], ["circle", {"cx": 19, "cy": 12, "r": 1.2, "fill": "currentColor"}], ["circle", {"cx": 5, "cy": 12, "r": 1.2, "fill": "currentColor"}]],
+    "Shield": [["path", {"d": "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"}]],
+    "BarsFill": [["rect", {"x": 3.5, "y": 11, "width": 4.4, "height": 9.5, "rx": 1.2, "fill": "currentColor"}], ["rect", {"x": 9.8, "y": 3.5, "width": 4.4, "height": 17, "rx": 1.2, "fill": "currentColor"}], ["rect", {"x": 16.1, "y": 8, "width": 4.4, "height": 12.5, "rx": 1.2, "fill": "currentColor"}]],
+    "BarsBase": [["path", {"d": "M6.5 17.5v-6"}], ["path", {"d": "M10.5 17.5V5"}], ["path", {"d": "M14.5 17.5v-8"}], ["path", {"d": "M18.5 17.5V8"}], ["path", {"d": "M3 21h18", "strokeWidth": 3}]],
+    "BarsThin": [["path", {"d": "M6 20v-6"}], ["path", {"d": "M12 20V9"}], ["path", {"d": "M18 20V4"}]],
+    "Candles": [["path", {"d": "M7 2v3"}], ["rect", {"x": 4.5, "y": 5, "width": 5, "height": 11, "rx": 1.2}], ["path", {"d": "M7 16v5"}], ["path", {"d": "M17 6v3"}], ["rect", {"x": 14.5, "y": 9, "width": 5, "height": 9, "rx": 1.2}], ["path", {"d": "M17 18v3"}]],
+    "Link2": [["path", {"d": "M9 17H7A5 5 0 0 1 7 7h2"}], ["path", {"d": "M15 7h2a5 5 0 1 1 0 10h-2"}], ["line", {"x1": 8, "x2": 16, "y1": 12, "y2": 12}]],
+});
+const Home = (p) => React.createElement(Icon, { name: "Home", ...p });
+const HomeFill = (p) => React.createElement(Icon, { name: "HomeFill", ...p });
+const Database = (p) => React.createElement(Icon, { name: "Database", ...p });
+const FileText = (p) => React.createElement(Icon, { name: "FileText", ...p });
+const InfinityIc = (p) => React.createElement(Icon, { name: "Infinity", ...p });
+const Star = (p) => React.createElement(Icon, { name: "Star", ...p });
+const Leaf = (p) => React.createElement(Icon, { name: "Leaf", ...p });
+const Pencil = (p) => React.createElement(Icon, { name: "Pencil", ...p });
+const Info = (p) => React.createElement(Icon, { name: "Info", ...p });
+const MoreHorizontal = (p) => React.createElement(Icon, { name: "MoreHorizontal", ...p });
+const Shield = (p) => React.createElement(Icon, { name: "Shield", ...p });
+const CoinsIc = (p) => React.createElement(Icon, { name: "Coins", ...p });

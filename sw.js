@@ -1,4 +1,4 @@
-const C='ej3-5.7.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.8.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -10,7 +10,7 @@ const SHELL=[
   './css/00-colors.css', './js/lib/color-table.js', './js/lib/appearance.js',
   './css/01-base.css',
   './css/02-splash.css',
-  './css/15-header-variants.css', './css/16-design-system.css', './css/17-nav-variants.css', './css/18-flat-pages.css', './css/19-appearance.css', './css/20-effects.css',
+  './css/15-header-variants.css', './css/16-design-system.css', './css/17-nav-variants.css', './css/18-flat-pages.css', './css/19-appearance.css', './css/20-effects.css', './css/21-home-templates.css',
   './css/03-nav-legacy.css',
   './css/04-drilldown.css',
   './css/05-nav-simple-fullscreen.css',
@@ -28,6 +28,8 @@ const SHELL=[
   './js/pwa.js',
   './js/splash.js',
   './js/components/app-header.js',
+  './js/components/home-parts.js',
+  './js/components/home-templates.js',
   './js/components/nav-variants.js', './js/components/risk-calc.js', './js/components/appearance-ui.js',
   './js/watchdog.js',
   './js/components/account-modal.js',
@@ -47,6 +49,7 @@ const SHELL=[
   './js/lib/feedback.js',
   './js/lib/files.js',
   './js/lib/format.js',
+  './js/lib/home-tpl.js',
   './js/lib/haptics.js',
   './js/lib/icons.js',
   './js/lib/react-hooks.js',
