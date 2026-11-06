@@ -1,5 +1,6 @@
 package com.ridha.edgejournal;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
@@ -23,7 +24,9 @@ public class EjThemePlugin extends Plugin {
             Context c = getContext();
             int id = c.getResources().getIdentifier("EjSplash_" + key, "style", c.getPackageName());
             if (id == 0) { r.put("ok", false); r.put("reason", "none"); call.resolve(r); return; }
-            c.setSplashScreenTheme(id);
+            Activity a = getActivity();
+            if (a == null) { r.put("ok", false); r.put("reason", "activity"); call.resolve(r); return; }
+            a.getSplashScreen().setSplashScreenTheme(id);
             r.put("ok", true);
             call.resolve(r);
         } catch (Throwable e) {
