@@ -31,16 +31,19 @@ function start(){try{new MutationObserver(queue).observe(document.body,{childLis
 if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
 })();
 /* Splash bawaan Android (sebelum aplikasi terbuka) ikut tema dan mode di dalam aplikasi, bukan mode HP.
-   Hanya di aplikasi Android 13+ yang sudah memuat plugin EjTheme; di tempat lain tidak melakukan apa-apa. Berlaku pada peluncuran berikutnya. */
+   Juga menyimpan warna latar tema agar jendela aplikasi tidak hitam setelah splash. Hanya di aplikasi Android yang sudah memuat plugin EjTheme; di tempat lain tidak melakukan apa-apa. Berlaku pada peluncuran berikutnya. */
 (function(){
 var p=null;try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){p=(c.Plugins&&c.Plugins.EjTheme)||c.registerPlugin('EjTheme');}}catch(e){}
 if(!p)return;
 var last='';
 function push(){try{var E=window.EJ,th=E&&E.state&&E.state.theme;if(!th||!E.resolved)return;
- var id=(th==='custom'||!/^[a-z0-9]+$/.test(th))?'neutral':th,key=id+'_'+E.resolved;if(key===last)return;last=key;
- Promise.resolve(p.setSplash({key:key})).catch(function(){last='';});}catch(e){}}
+ var id=(th==='custom'||!/^[a-z0-9]+$/.test(th))?'neutral':th,bg=/^#[0-9a-fA-F]{6}$/.test(E.bg||'')?E.bg:'',key=id+'_'+E.resolved,sig=key+'|'+bg;if(sig===last)return;last=sig;
+ Promise.resolve(p.setSplash({key:key,bg:bg})).catch(function(){last='';});}catch(e){}}
 window.addEventListener('ej-appearance',push);
 setTimeout(push,1200);setTimeout(push,6000);
 })();
+/* Penanda halaman sudah digulir (html[data-sc="1"]): header transparan di posisi paling atas, solid setelah digulir (tanpa blur) */
+(function(){var f=0,el=document.documentElement;function u(){f=0;var v=(window.pageYOffset||el.scrollTop||0)>6?'1':'0';if(el.getAttribute('data-sc')!==v){el.setAttribute('data-sc',v);try{if(window.syncStatusBar)window.syncStatusBar();}catch(e){}}}
+window.addEventListener('scroll',function(){if(!f)f=requestAnimationFrame(u);},{passive:true});u();})();
 /* Ukuran tetap: cegah cubit-zoom (iOS Safari mengabaikan user-scalable=no) */
 try{["gesturestart","gesturechange","gesturechange"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault();},{passive:false});});}catch(e){}

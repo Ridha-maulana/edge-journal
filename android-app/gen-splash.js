@@ -1,8 +1,7 @@
 /* Membuat splash Android per tema aplikasi dan mode (terang/gelap), memakai tabel warna yang sama dengan aplikasi web
    (../js/lib/appearance.js). Dijalankan oleh workflow setelah "cap add android". Menulis ke android/app/src/main/res:
    - values/ej_splash_themes.xml  : warna latar + gaya EjSplash_<tema>_<mode>
-   - drawable/ejs_fg_<tema>_<mode>.xml : lingkaran warna utama + petir
-   - mipmap-anydpi-v26/ejs_<tema>_<mode>.xml : ikon adaptif (latar + lingkaran)
+   - drawable/ejs_fg_<tema>_<mode>.xml : lingkaran warna utama + petir (vektor biasa, bukan ikon adaptif, supaya tidak ada garis kotak tipis di sekitar logo)
    Plugin EjTheme memilih gaya ini lewat Context.setSplashScreenTheme (Android 13+), berlaku pada peluncuran berikutnya.
    Aman dijalankan berulang kali; bila gagal, workflow tetap lanjut memakai splash lama. */
 const fs = require('fs'), vm = require('vm'), path = require('path');
@@ -38,16 +37,14 @@ try { list = themes(); } catch (e) { console.log('gen-splash: gagal membaca tema
 list.neutral = { light: { bg: '#FFFFFF', ac: '#1C1D1F', tx: '#FFFFFF', on: '#FFFFFF' }, dark: { bg: '#0B0B0C', ac: '#F4F4F5', tx: '#0B0B0C', on: '#0B0B0C' } };
 fs.mkdirSync(path.join(res, 'values'), { recursive: true });
 fs.mkdirSync(path.join(res, 'drawable'), { recursive: true });
-fs.mkdirSync(path.join(res, 'mipmap-anydpi-v26'), { recursive: true });
 let xml = '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n', n = 0;
 for (const id of Object.keys(list)) for (const m of ['light', 'dark']) {
   const t = list[id][m]; if (!t || !hex(t.bg) || !hex(t.ac)) continue;
   const ink = t.on || (m === 'dark' ? t.bg : t.tx), on = t.on || (hex(ink) && cr(t.ac, '#ffffff') < cr(t.ac, ink) ? ink : '#ffffff');
   const key = id + '_' + m;
   xml += '    <color name="ejs_bg_' + key + '">' + t.bg + '</color>\n' +
-    '    <style name="EjSplash_' + key + '" parent="Theme.SplashScreen">\n        <item name="windowSplashScreenBackground">@color/ejs_bg_' + key + '</item>\n        <item name="windowSplashScreenAnimatedIcon">@mipmap/ejs_' + key + '</item>\n    </style>\n';
+    '    <style name="EjSplash_' + key + '" parent="Theme.SplashScreen">\n        <item name="windowSplashScreenBackground">@color/ejs_bg_' + key + '</item>\n        <item name="windowSplashScreenAnimatedIcon">@drawable/ejs_fg_' + key + '</item>\n    </style>\n';
   fs.writeFileSync(path.join(res, 'drawable', 'ejs_fg_' + key + '.xml'), fg(t.ac, hex(on) ? on : '#ffffff'));
-  fs.writeFileSync(path.join(res, 'mipmap-anydpi-v26', 'ejs_' + key + '.xml'), adaptive('ejs_bg_' + key, 'ejs_fg_' + key));
   n++;
 }
 xml += '</resources>\n';

@@ -1,0 +1,16 @@
+/* ===== v5.8.8 — tepi atas rata + layar login mengikuti tema ===== */
+
+/* Tepi atas: header tanpa blur: di posisi paling atas transparan (ornamen/cahaya latar menyatu), saat digulir solid sama dengan warna dasar halaman (bilah status Android memakai warna yang sama) */
+.topbar:not([class*="hd-v"]){background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-bottom-color:transparent!important}
+html[data-sc="1"] .topbar:not([class*="hd-v"]){background:var(--c1)!important}
+/* Halaman standar (Ber-efek): cahaya sudut tidak menyentuh tepi paling atas, jadi baris teratas selalu rata = warna bilah status */
+html[data-fx="on"] body:not([data-home="1"]):not([data-home="2"]):not([data-home="5"]){background:linear-gradient(var(--ej-cv),transparent 40px),radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
+
+/* Layar masuk: latar = warna tema (bukan hitam), tanpa gambar grafiti; logo + judul seperti di header; kartu = warna kartu tema */
+.gate-art{background:var(--c1);justify-content:center;gap:24px}
+.gate-art .gate-hero{height:auto;width:auto;background:none!important}
+.gate-art .gate-hero-brand{position:static;transform:none;gap:16px}
+.gate-art .gate-hero-mark{width:58px;height:58px;box-shadow:0 12px 40px rgba(var(--r2),.55)}
+.gate-art .gate-hero-brand strong{font-size:var(--fs-xl);letter-spacing:.13em;color:var(--c0)}
+.gate-art .gate-hero-brand span{margin-top:8px;font-size:var(--fs-sm);letter-spacing:.3em;color:var(--c12);font-weight:400}
+.gate-art .gate-box{background:var(--c2);border:1px solid var(--c178);backdrop-filter:none;-webkit-backdrop-filter:none}
