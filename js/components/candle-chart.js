@@ -83,14 +83,14 @@ function candleNum(v) {
 }
 const CANDLE_DEF = 120, CANDLE_MIN = 5, CANDLE_FLOOR = 8;
 // tampilan awal: sebanyak kandel yang ada (maks 120); kurang dari 8 tetap selebar 8 slot, mulai dari kiri
-function candleDef(n) { return Math.max(CANDLE_FLOOR, Math.min(CANDLE_DEF, n)); }
-function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed, onSelect, upCol, ro, fs }) {
+function candleDef(n, fl) { return Math.max(fl || CANDLE_FLOOR, Math.min(CANDLE_DEF, n)); }
+function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed, onSelect, upCol, ro, fs, floor }) {
     const UP = upCol || EJC("#34d399");
     const isL = mode === 'line'; // mode garis: tampilan, skala, dan informasi sama dengan kandel
     const RO = ro || 1, FS = fs || 1, W = 500, H = hh || 428, T = Math.round(68 * RO), B = Math.round(26 * (1 + (FS - 1) * .7)), L = 6, AX = Math.round(46 * (1 + (FS - 1) * .75));
     const plotW = W - L - AX;
     const n = candles.length;
-    const def = fixed ? Math.max(CANDLE_FLOOR, Math.min(500, n)) : candleDef(n); // fixed: semua kandel periode tampil, tanpa zoom/geser
+    const def = fixed ? Math.max(floor || CANDLE_FLOOR, Math.min(500, n)) : candleDef(n, floor); // fixed: semua kandel periode tampil, tanpa zoom/geser
     const [count, setCount] = useState(def); // jumlah kandel yang tampak (zoom jari)
     const maxCount = Math.max(CANDLE_DEF, Math.min(500, n * 2));
     const def0 = Math.min(0, n - def); // jika kandel < 8: kandel pertama tetap di kiri
@@ -306,7 +306,7 @@ function candleSavedSet(k, v) { try {
     localStorage.setItem(k, v);
 }
 catch (_) { } }
-function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fixed, onSelect, ext, hideTools, upCol, ro, fs }) {
+function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fixed, onSelect, ext, hideTools, upCol, ro, fs, floor }) {
     const [kind0, setKind0] = useState(() => candleSavedGet('ej3-chart-kind', 'line'));
     const keep = persist !== false;
     const tfList = tfs ? CANDLE_TFS.filter(([k]) => tfs.includes(k)) : CANDLE_TFS;
@@ -318,7 +318,7 @@ function HeroChart({ trades, line, startBal, onOpen, tfs, defTf, persist, hh, fi
     const candles = useMemo(() => buildCandles(trades, tf), [trades, tf]);
     const isLine = kind !== 'candle';
     return React.createElement("div", { className: "hero-chart" },
-        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { upCol: upCol, ro: ro, fs: fs, candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen, hh: hh, fixed: fixed, onSelect: onSelect })),
+        React.createElement("div", { className: "hc-body", key: kind + tf }, React.createElement(CandleChart, { upCol: upCol, ro: ro, fs: fs, floor: floor, candles: candles, tf: tf, mode: isLine ? 'line' : 'candle', resetKey: rk, startBal: startBal, onOpen: onOpen, hh: hh, fixed: fixed, onSelect: onSelect })),
         !hideTools && React.createElement("div", { className: "chart-tools" },
             React.createElement("div", { className: "ct-tf", role: "group", "aria-label": "Skala grafik" }, tfList.map(([k, l]) => React.createElement("button", { key: k, type: "button", className: tf === k ? 'ct-chip on' : 'ct-chip', onClick: () => pickTf(k) }, l))),
             React.createElement("button", { type: "button", className: `ct-pill ${isLine ? 'is-line' : 'is-candle'}`, role: "switch", "aria-checked": isLine, "aria-label": isLine ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => pick(isLine ? 'candle' : 'line') },
