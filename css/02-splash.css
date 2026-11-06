@@ -51,3 +51,11 @@ html,body{background:var(--c1)}
 @keyframes spBarIn{from{opacity:0}to{opacity:1}}
 @keyframes spBarRun{from{transform:translateX(-105%)}to{transform:translateX(250%)}}
 @media(prefers-reduced-motion:reduce){#splash .sp-text strong,#splash .sp-text span,#splash .sp-bar{opacity:1!important}}
+
+
+/* ===== v5.8.6 — latar splash mengikuti template halaman utama yang dipilih (html[data-home] diisi script awal di index.html) =====
+   Warna dasar dan aksen sudah ikut tema + mode aplikasi lewat --ej-cv / --ej-pr / --ej-so. */
+html[data-home="2"][data-fx] #splash::before{background:radial-gradient(circle calc(var(--u)*270) at 76% calc(var(--u)*60),color-mix(in srgb,#efc7b2 46%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*175) at 100% calc(var(--u)*135),color-mix(in srgb,var(--ej-pr) 52%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*150) at 0% 80%,color-mix(in srgb,var(--ej-pr) 40%,var(--ej-cv)) 99%,transparent 100%),var(--ej-cv)}
+html[data-home="6"] #splash::before{background:radial-gradient(60% 28% at 8% 4%,color-mix(in srgb,var(--ej-pr) 17%,transparent),transparent 70%),radial-gradient(55% 26% at 100% 10%,color-mix(in srgb,var(--ej-pr) 10%,var(--ej-so)),transparent 70%),radial-gradient(70% 30% at 0% 48%,color-mix(in srgb,var(--ej-pr) 14%,transparent),transparent 70%),radial-gradient(60% 30% at 100% 62%,color-mix(in srgb,var(--ej-so) 85%,transparent),transparent 70%),radial-gradient(70% 28% at 10% 96%,color-mix(in srgb,var(--ej-pr) 14%,transparent),transparent 70%),var(--ej-cv)}
+html[data-home="1"][data-fx="on"] #splash::before,html[data-home="5"][data-fx="on"] #splash::before{background:radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)}
+html[data-home="1"] #splash,html[data-home="2"] #splash,html[data-home="5"] #splash,html[data-home="6"] #splash{background:var(--ej-cv)}

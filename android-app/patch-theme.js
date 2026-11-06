@@ -29,3 +29,16 @@ try {
     console.log('patch-theme: versionName -> ' + ver);
   }
 } catch (e) { console.log('patch-theme: versi dilewati: ' + e.message); }
+
+/* Splash bawaan Android mengikuti tema + mode aplikasi (Android 13+, lewat plugin EjTheme).
+   Dijalankan di sini (bukan di workflow) supaya cukup dengan mengunggah release.zip. Gagal di langkah mana pun = splash lama tetap dipakai. */
+try {
+  const cp = require('child_process'), path = require('path');
+  const javaDir = path.join('android', 'app', 'src', 'main', 'java', 'com', 'ridha', 'edgejournal');
+  if (fs.existsSync(javaDir) && fs.existsSync(path.join('native', 'EjThemePlugin.java'))) {
+    cp.execFileSync('node', ['gen-splash.js'], { stdio: 'inherit' });
+    if (!fs.existsSync(path.join('android', 'app', 'src', 'main', 'res', 'values', 'ej_splash_themes.xml'))) throw new Error('gaya splash tema tidak terbentuk');
+    for (const f of ['EjThemePlugin.java', 'MainActivity.java']) fs.copyFileSync(path.join('native', f), path.join(javaDir, f));
+    console.log('patch-theme: plugin EjTheme terpasang');
+  } else console.log('patch-theme: folder java belum ada, splash tema dilewati');
+} catch (e) { console.log('patch-theme: splash tema dilewati: ' + e.message); }

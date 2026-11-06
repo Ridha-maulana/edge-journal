@@ -30,5 +30,17 @@ function start(){try{new MutationObserver(queue).observe(document.body,{childLis
  window.addEventListener('resize',queue);window.addEventListener('orientationchange',queue);setInterval(sync,1500);queue();}
 if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
 })();
+/* Splash bawaan Android (sebelum aplikasi terbuka) ikut tema dan mode di dalam aplikasi, bukan mode HP.
+   Hanya di aplikasi Android 13+ yang sudah memuat plugin EjTheme; di tempat lain tidak melakukan apa-apa. Berlaku pada peluncuran berikutnya. */
+(function(){
+var p=null;try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){p=(c.Plugins&&c.Plugins.EjTheme)||c.registerPlugin('EjTheme');}}catch(e){}
+if(!p)return;
+var last='';
+function push(){try{var E=window.EJ,th=E&&E.state&&E.state.theme;if(!th||!E.resolved)return;
+ var id=(th==='custom'||!/^[a-z0-9]+$/.test(th))?'neutral':th,key=id+'_'+E.resolved;if(key===last)return;last=key;
+ Promise.resolve(p.setSplash({key:key})).catch(function(){last='';});}catch(e){}}
+window.addEventListener('ej-appearance',push);
+setTimeout(push,1200);setTimeout(push,6000);
+})();
 /* Ukuran tetap: cegah cubit-zoom (iOS Safari mengabaikan user-scalable=no) */
 try{["gesturestart","gesturechange","gesturechange"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault();},{passive:false});});}catch(e){}
