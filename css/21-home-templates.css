@@ -440,3 +440,11 @@ html[data-fx="off"] .bn6{box-shadow:none!important}
 @media(max-width:400px){.ht5 .ht-bt span,.ht2 .ht-top .ht-bt span{letter-spacing:.06em}}
 @media(max-width:380px){.ht5 .ht-bt span,.ht2 .ht-top .ht-bt span{display:none}.ht5 .ht-acc,.ht2 .ht-top .ht-acc{max-width:190px}}
 @media(max-width:380px){.ht5 .ht-acc svg:first-child,.ht2 .ht-top .ht-acc svg:first-child{display:none}.ht5 .ht-bt strong,.ht2 .ht-top .ht-bt strong{font-size:13px;letter-spacing:.05em}}
+/* v5.8.5: pas satu layar. Grafik memanjang/memendek mengikuti tinggi layar; tidak ada celah kosong di atas menu bawah */
+body[data-home] .app-shell:has(.tp2),body[data-home] .app-shell:has(.tp5),body[data-home] .app-shell:has(.tp6){padding-bottom:var(--tp-bot,84px)!important}
+.main-content:has(.tp2),.main-content:has(.tp5),.main-content:has(.tp6){padding-bottom:0!important}
+.tp2,.tp5,.tp6{padding-bottom:0}
+.t2-fb,.t5-fb,.t6-fb{width:100%;position:relative;overflow:hidden;flex:none}
+.t2-fb{margin-top:12px}
+.t2-fb .t2-ch,.t5-fb .t5-ch{display:block;width:100%;height:100%;margin:0}
+.t6-fb .hero-chart,.t6-fb .hc-body{margin:0;height:100%}

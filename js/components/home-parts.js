@@ -16,7 +16,6 @@ function TplHeader({ n, account, onCalendar, onAccount }) {
     switch (n) {
         case 1: return wrap([brand('EDGE JOURNAL', 'TRADING LOGBOOK'), h("div", { className: "ht-r", key: 'r' }, dateChip, accChip)]);
         case 2: return wrap([
-            h("div", { className: "ht-row ht-top", key: 't' }, brand('EDGE JOURNAL', 'TRADING LOGBOOK'), h("div", { className: "ht-r" }, calBtn, accChip)),
             h("div", { className: "ht-row ht-row2", key: 'b' },
                 h("div", { className: "ht-hello" }, h("strong", null, "Halo, Trader!"), h("span", null, "Disiplin hari ini, hasil besar nanti", tpI('Leaf', 16, 2))),
                 h("button", { type: "button", className: "ht-dcard", onClick: onCalendar, "aria-label": "Buka kalender" }, tpI('CalendarDays', 24), h("div", null, h("b", null, dLong), h("span", null, "Tetap konsisten", tpI('Leaf', 12, 2)))))

@@ -28,6 +28,33 @@ function tpActions(d, subs, ics) { ics = ics || ['Share2', 'BarChart3', 'Activit
 function tpFit(text, fs, em, cls) { const w = Math.round(String(text).length * em * fs); return tpE("svg", { className: 'tp-fit ' + (cls || ''), viewBox: `0 0 ${w} ${Math.round(fs * 1.02)}`, role: "img", "aria-label": String(text), style: { aspectRatio: `${w}/${Math.round(fs * 1.02)}` } }, tpE("text", { x: 0, y: Math.round(fs * .86), fontSize: fs, textLength: w, lengthAdjust: "spacingAndGlyphs", fill: "currentColor", fontWeight: 900 }, text)); }
 function tpGo(t) { window.dispatchEvent(new CustomEvent('ej-goto', { detail: t })); }
 /* kontrol grafik kandel bersama (T3, T4, T6) */
+/* Pas satu layar: tinggi grafik menyesuaikan sisa tinggi layar HP (di antara bagian atas halaman dan menu bawah), tanpa celah kosong dan tanpa scroll bila muat.
+   root = elemen .tp, box = pembungkus grafik. Hasil: {root, box, m:{h,w}} (m = ukuran piksel grafik). */
+function useTplFit(minH, maxH) {
+    const root = useRef(null), box = useRef(null), [m, setM] = useState({ h: 0, w: 0 });
+    React.useLayoutEffect(() => {
+        let raf = 0, dead = false;
+        const fit = () => {
+            raf = 0; const el = root.current, bx = box.current; if (dead || !el || !bx) return;
+            const w = bx.clientWidth; if (!w) return;
+            const nav = document.querySelector('.bottom-nav'), bot = (nav ? nav.offsetHeight : 68) + 8;
+            document.body.style.setProperty('--tp-bot', bot + 'px');
+            const top = el.getBoundingClientRect().top + window.scrollY, avail = window.innerHeight - top - bot;
+            bx.style.height = minH + 'px';
+            const h = Math.round(Math.max(minH, Math.min(maxH, minH + avail - el.offsetHeight)));
+            bx.style.height = h + 'px';
+            setM(p => p.h === h && p.w === w ? p : { h, w });
+        };
+        const q = () => { if (!raf) raf = requestAnimationFrame(fit); };
+        fit();
+        window.addEventListener('resize', q); window.addEventListener('orientationchange', q);
+        const ro = window.ResizeObserver ? new ResizeObserver(q) : null; if (ro && root.current) ro.observe(root.current);
+        const t1 = setTimeout(q, 350), t2 = setTimeout(q, 1200);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(q);
+        return () => { dead = true; if (raf) cancelAnimationFrame(raf); clearTimeout(t1); clearTimeout(t2); window.removeEventListener('resize', q); window.removeEventListener('orientationchange', q); if (ro) ro.disconnect(); };
+    }, []);
+    return { root, box, m };
+}
 function useTplChart(kindDef) { const [tf, setTf] = useState(() => candleSavedGet('ej3-chart-tf', 'SES')), [kind, setKind] = useState(() => candleSavedGet('ej3-chart-kind', kindDef || 'candle')); return { tf, kind, setTf: v => { setTf(v); candleSavedSet('ej3-chart-tf', v); }, setKind: v => { setKind(v); candleSavedSet('ej3-chart-kind', v); } }; }
 function TplChips({ ctl, order }) { const list = (order || ['H1', 'SES', 'D1', 'W1', 'M1', 'Y1']).map(k => CANDLE_TFS.find(x => x[0] === k)); return tpE("div", { className: "tp-tf", role: "group", "aria-label": "Skala grafik" }, list.map(([k, l]) => tpE("button", { key: k, type: "button", className: ctl.tf === k ? 'on' : '', onClick: () => ctl.setTf(k) }, l))); }
 function TplKind({ ctl }) { const line = ctl.kind !== 'candle'; return tpE("button", { type: "button", className: "tp-kind" + (line ? ' is-line' : ''), role: "switch", "aria-checked": line, "aria-label": line ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => ctl.setKind(line ? 'candle' : 'line') },
@@ -111,8 +138,8 @@ function HomeT1({ d }) {
         tpE("div", { className: "tp-card t1-ac" }, tpActions(d)));
 }
 /* ===== T2: organik hijau ===== */
-function T2Area({ pts }) {
-    const W = 640, H = 300, L = 70, R = 14, T = 36, B = 36;
+function T2Area({ pts, fit }) {
+    const W = 640, H = fit && fit.w ? Math.max(150, Math.round(W * fit.h / fit.w)) : 300, L = 70, R = 14, T = 36, B = 36;
     if (!pts.length) return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t2-ch" }, tpE("text", { x: W / 2, y: H / 2, textAnchor: "middle", className: "g-t" }, "Belum ada trade pada periode ini"));
     const vals = pts.map(p => p.v), lo0 = Math.min(0, ...vals), hi0 = Math.max(0, ...vals), nz = tpNice(lo0, hi0 + (hi0 - lo0) * .1, 4);
     const n = pts.length, x = i => L + (n > 1 ? i / (n - 1) : 1) * (W - L - R - 8), y = v => T + (nz.hi - v) / (nz.hi - nz.lo) * (H - T - B);
@@ -132,7 +159,7 @@ function T2Area({ pts }) {
         xl.map(o => tpE("text", { key: 'x' + o.i, x: o.x, y: H - 8, textAnchor: o.a, className: "g-t", style: o.i === n - 1 ? { fontWeight: 700, fill: 'var(--ej-ik)' } : null }, pts[o.i].lb)));
 }
 function HomeT2({ d }) {
-    const ctl = useTplChart('line'), c = d.cur;
+    const ctl = useTplChart('line'), c = d.cur, fit = useTplFit(120, 460);
     const pts = useMemo(() => {
         const cd = buildCandles(d.cs, ctl.tf);
         if (!cd.length) return [];
@@ -141,14 +168,14 @@ function HomeT2({ d }) {
     const k = [['Saldo Awal', money(d.startBal, c), '', 'Coins', 'k1'], ['Saldo Sekarang', money(d.aNow, c), tpC(d.total), 'BarsThin', 'k2'], ['Pertumbuhan', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct), 'TrendingUp', 'k3'], ['Hari Aktif', String(d.activeDays), '', 'Calendar', 'k4']];
     const st = [['Win Rate', d.winRate + '%', 'Trophy'], ['Profit Factor', d.pf === Infinity ? '∞' : d.pf.toFixed(2), 'LineChart'], ['Total Trade', String(d.nTrades), 'BarsFill'], ['Rata-rata R:R', d.avgRR ? d.avgRR.toFixed(1) : '—', 'TrendingUp'], ['Perolehan Pips', tpS(d.pips).replace('-', '') + d.pips.toFixed(1), 'Target'], ['Hari Terbaik', d.bestDay > 0 ? '+' + money(d.bestDay, c) : '—', 'Star']];
     const good = d.total >= 0;
-    return tpE("div", { className: "tp tp2" },
+    return tpE("div", { className: "tp tp2", ref: fit.root },
         tpE("i", { className: "t2-blob b1", "aria-hidden": "true" }), tpE("i", { className: "t2-blob b2", "aria-hidden": "true" }),
         tpE("section", { className: "tp-card t2-main" },
             tpE("div", { className: "t2-mh" }, tpE("button", { type: "button", className: "t2-ttl", onClick: d.onStats }, "Total P&L", tpIc('ChevronRight', 18, 2.4)), tpE("button", { type: "button", className: "t2-accb", onClick: d.onAccount }, tpE("span", null, tpIc('Wallet', 14), d.acc.name), tpIc('ChevronDown', 14, 2.4))),
             tpE("div", { className: "t2-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)),
             tpE("span", { className: "t2-tr " + tpC(d.total) }, tpIc(good ? 'TrendingUp' : 'TrendingDown', 16, 2.4), tpE("b", null, d.trendTxt), " dalam periode ini"),
             tpE("div", { className: "t2-q" }, "Proses kecil setiap hari,", tpE("br"), "hasil besar nanti."),
-            tpE(T2Area, { pts: pts }),
+            tpE("div", { className: "t2-fb", ref: fit.box }, tpE(T2Area, { pts: pts, fit: fit.m })),
             tpE("div", { className: "t2-rg", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([key, l]) => tpE("button", { key: key, type: "button", className: ctl.tf === key ? 'on' : '', onClick: () => ctl.setTf(key) }, l)))),
         tpE("div", { className: "t2-k4" }, k.map(([l, v, t, ic, cl]) => tpE("div", { key: l, className: "tp-card t2-k" }, tpE("span", { className: "t2-ki " + cl }, tpIc(ic, 20)), tpE("small", null, l), tpE("b", { className: t }, v)))),
         tpE("div", { className: "t2-two" },
@@ -163,8 +190,8 @@ function HomeT2({ d }) {
 function tpFacts(d, sel, setSel) { const f = d.heroFx || {}; return tpE("div", { className: "tp-fx", role: "group", "aria-label": "Rentang data" }, [['tahun', f.years], ['bulan', f.months], ['minggu', f.weeks], ['hari', f.days], ['sesi', f.sessions]].map(([k, v]) => tpE("button", { key: k, type: "button", className: sel === k ? 'on' : '', onClick: () => setSel(k) }, tpE("b", null, v == null ? 0 : v), " ", k))); }
 function tpBest(d) { return tpE("div", { className: "tp-bd" }, tpE("span", null, tpE("i", { className: "dt-g" }), "Bulan terbaik: ", tpE("b", null, d.bestTxt)), tpE("span", null, tpE("i", { className: "dt-r" }), "Drawdown terdalam: ", tpE("b", null, d.ddTxt))); }
 /* ===== T5: hijau bersih ===== */
-function T5Bars({ vals, si, onPick }) {
-    const W = 1000, H = 430, T = 78, B = 64, AX = 150, PW = W - AX - 6;
+function T5Bars({ vals, si, onPick, fit }) {
+    const W = 1000, H = fit && fit.w ? Math.max(260, Math.round(W * fit.h / fit.w)) : 430, T = 78, B = 64, AX = 150, PW = W - AX - 6;
     const n = vals.length;
     if (!n) return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t5-ch" }, tpE("text", { x: W / 2, y: H / 2, textAnchor: "middle", className: "g-t" }, "Belum ada trade pada periode ini"));
     const lo0 = Math.min(0, ...vals.map(v => v.v)), hi0 = Math.max(0, ...vals.map(v => v.v)), pad = (hi0 - lo0) * .06 || 1, lo = lo0 < 0 ? lo0 - pad : 0, hi = hi0 + pad;
@@ -183,7 +210,7 @@ function T5Bars({ vals, si, onPick }) {
         xl.map(o => tpE("text", { key: 'x' + o.k, x: o.x, y: H - 14, textAnchor: o.a, className: "g-t" }, vals[o.k].lb)));
 }
 function HomeT5({ d }) {
-    const ctl = useTplChart('line'), c = d.cur, [pick, setPick] = useState(null);
+    const fit = useTplFit(150, 480), ctl = useTplChart('line'), c = d.cur, [pick, setPick] = useState(null);
     useEffect(() => { setPick(null); }, [ctl.tf]);
     const vis = useMemo(() => buildCandles(d.cs, ctl.tf).slice(-14), [d.cs, ctl.tf]);
     const vals = useMemo(() => vis.map(x => ({ v: x.c, o: x.o, lb: x.short })), [vis]);
@@ -191,11 +218,11 @@ function HomeT5({ d }) {
     const rows = [['Saldo awal', money(d.startBal, c), ''], ['Sekarang', money(d.aNow, c), tpC(d.total)], ['Pertumbuhan', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct)], ['Hari aktif', String(d.activeDays), '']];
     const k6 = tpMetrics(d), ic = ['Trophy', 'Infinity', 'BarsFill', 'TrendingUp', 'Target', 'Calendar'];
     const dv = act ? act.c - act.o : 0, dp = act ? act.pc - act.po : 0, dpc = act && d.startBal ? dv / d.startBal * 100 : 0;
-    return tpE("div", { className: "tp tp5" },
+    return tpE("div", { className: "tp tp5", ref: fit.root },
         tpE("section", { className: "tp-card t5-hero" },
             tpE("div", { className: "t5-top" }, tpE("div", { className: "t5-pl" }, tpE("span", { className: "t5-cap" }, "TOTAL P&L"), tpE("div", { className: "t5-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t5-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 14, 2.4), d.trendTxt)),
                 tpE("div", { className: "t5-ac" }, tpE("span", { className: "t5-ai" }, tpIc('BarsFill', 20)), tpE("div", null, tpE("small", null, "Akun aktif"), tpE("strong", null, d.acc.name)))),
-            tpE(T5Bars, { vals: vals, si: si, onPick: setPick }),
+            tpE("div", { className: "t5-fb", ref: fit.box }, tpE(T5Bars, { vals: vals, si: si, onPick: setPick, fit: fit.m })),
             tpE("div", { className: "tp-fx", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([k, l]) => tpE("button", { key: k, type: "button", className: ctl.tf === k ? 'on' : '', onClick: () => ctl.setTf(k) }, l))),
             tpE("div", { className: "t5-st" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v))))),
         act && tpE("section", { className: "tp-card t5-act" }, tpE("div", { className: "t5-ah" }, tpE("b", null, act.label.replace(' · ', ' • ')), tpE("span", null, act.n, " trade")),
@@ -206,15 +233,15 @@ function HomeT5({ d }) {
 }
 /* ===== T6: kaca lembut ===== */
 function HomeT6({ d }) {
-    const ctl = useTplChart('candle'), [sel, setSel] = useState('hari'), c = d.cur;
+    const fit = useTplFit(170, 480), ctl = useTplChart('candle'), [sel, setSel] = useState('hari'), c = d.cur;
     const rows = [['Saldo awal', money(d.startBal, c), ''], ['Sekarang', money(d.aNow, c), tpC(d.total)], ['Pertumbuhan', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct)], ['Hari aktif', String(d.activeDays), '']];
     const m = tpMetrics(d);
-    return tpE("div", { className: "tp tp6" },
+    return tpE("div", { className: "tp tp6", ref: fit.root },
         tpE("i", { className: "t6-blob b1", "aria-hidden": "true" }), tpE("i", { className: "t6-blob b2", "aria-hidden": "true" }), tpE("i", { className: "t6-blob b3", "aria-hidden": "true" }),
         tpE("section", { className: "tp-card t6-pl" }, tpE("div", { className: "t6-l" }, tpE("span", { className: "t6-cap" }, "TOTAL P&L"), tpE("div", { className: "t6-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t6-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 14, 2.4), d.trendTxt + " in selected period")), tpE("div", { className: "t6-r" }, tpE("span", { className: "t6-cap" }, "ACTIVE ACCOUNT"), tpE("strong", null, d.acc.name), tpE("button", { type: "button", onClick: d.onWallet, "aria-label": "Deposit dan Withdraw" }, tpIc('Wallet', 18)))),
         tpFacts(d, sel, setSel),
         tpE("div", { className: "tp-card t6-st" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
-        tpE("section", { className: "tp-card t6-ch" }, tpE("button", { type: "button", className: "t6-more", onClick: d.onStats, "aria-label": "Statistik lanjutan" }, tpIc('MoreHorizontal', 20)), tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: 360, ro: 1.3, fs: 1.45, floor: 5, upCol: 'var(--t-dk)', ext: ctl, hideTools: true, persist: true }), tpE("div", { className: "t6-ft" }, tpE(TplChips, { ctl }), tpE(TplKind, { ctl }))),
+        tpE("section", { className: "tp-card t6-ch" }, tpE("button", { type: "button", className: "t6-more", onClick: d.onStats, "aria-label": "Statistik lanjutan" }, tpIc('MoreHorizontal', 20)), tpE("div", { className: "t6-fb", ref: fit.box }, tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: fit.m.w ? Math.max(200, Math.round(500 * fit.m.h / fit.m.w)) : 360, ro: 1.3, fs: 1.45, floor: 5, upCol: 'var(--t-dk)', ext: ctl, hideTools: true, persist: true })), tpE("div", { className: "t6-ft" }, tpE(TplChips, { ctl }), tpE(TplKind, { ctl }))),
         tpE("div", { className: "tp-card t6-m" }, m.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
         tpActions(d));
 }
