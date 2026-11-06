@@ -399,10 +399,6 @@ body[data-nv="10"] .app-shell{padding-bottom:calc(98px + env(safe-area-inset-bot
 .t2-in p{font-size:12px;line-height:1.4;margin:8px 0 0}
 .t2-nt p{font-size:11px;line-height:1.35;margin:8px 0 10px;max-width:none}
 .t2-nb{height:38px;padding:0 8px;border-radius:14px;font-size:12px;gap:4px;white-space:nowrap}.t2-nb span{gap:6px;white-space:nowrap}.t2-nb svg{width:15px;height:15px}
-.t2-sg{grid-template-columns:repeat(6,minmax(0,1fr));row-gap:0;margin-top:12px;justify-content:stretch}
-.t2-sg>div{padding:0 3px 0 6px;border-left:1px solid var(--ej-bd);min-width:0}.t2-sg>div:first-child{border-left:0;padding-left:0}
-.t2-sg small{font-size:max(9px,calc(var(--u)*21));white-space:normal;line-height:1.15;min-height:2.3em}
-.t2-sg b{font-size:max(11.5px,calc(var(--u)*31));margin-top:4px;white-space:nowrap;letter-spacing:-.02em}
 .t2-st{padding:14px 12px 12px}
 .t2-sh .t2-ti{font-size:14px}.t2-va{font-size:12px}
 .t2-rg{gap:6px}.t2-rg button{height:30px;font-size:12px;border-radius:15px}
@@ -410,10 +406,37 @@ body[data-nv="10"] .app-shell{padding-bottom:calc(98px + env(safe-area-inset-bot
 /* v5.8.3: batas atas (bilah status) satu warna penuh: kilau latar memudar mulai dari bawah tepi atas */
 html[data-fx="on"] body[data-home="1"],html[data-fx="on"] body[data-home="5"]{background:linear-gradient(var(--ej-cv),transparent 40px),radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
 /* T2: label Statistik Trading disingkat di layar sempit */
-.t2-sg .ls{display:none}
-@media(max-width:540px){.t2-sg .lf{display:none}.t2-sg .ls{display:inline}.t2-sg small{white-space:nowrap;min-height:0;font-size:11px}.t2-sg b{font-size:13px;margin-top:6px}.t2-sg>div{padding:0 2px 0 5px}}
 /* v5.8.3: menu bawah T2/T3/T4 solid (kartu tidak tembus terlihat di belakang menu) */
 .bn2,.bn5,.bn6{background:var(--ej-sf)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .bn2{border-radius:0!important;border-top:1px solid var(--ej-bd)!important;box-shadow:none!important}
 .bn6{border:1px solid var(--ej-bd)!important;box-shadow:0 6px 18px color-mix(in srgb,var(--ej-ik) 14%,transparent)!important}
 html[data-fx="off"] .bn6{box-shadow:none!important}
+
+/* T2 Statistik Trading: 6 kolom satu baris, lebar menyesuaikan isi seperti kartu statistik standar */
+.t2-sg{display:grid;grid-template-columns:repeat(6,auto);justify-content:space-between;row-gap:0;margin-top:12px}
+.t2-sg>div{display:flex;flex-direction:column;min-width:0;padding:0 0 0 8px;border-left:1px solid var(--ej-bd)}.t2-sg>div:first-child{border-left:0;padding-left:0}
+.t2-sg small{font-size:11px;line-height:1.2;white-space:nowrap;min-height:0;color:var(--t-mu);font-weight:500}
+.t2-sg b{font-size:13px;margin-top:5px;white-space:nowrap;letter-spacing:-.02em;font-weight:800}
+.t2-sg .ls{display:none}
+@media(max-width:399px){.t2-sg .lf{display:none}.t2-sg .ls{display:inline}.t2-sg>div{padding-left:6px}.t2-sg b{font-size:12.5px}}
+/* ujung halaman: jarak kartu terakhir ke menu bawah sama dengan halaman standar */
+.tp,.tp1,.tp2,.tp5,.tp6{padding-bottom:30px}
+/* header satu baris: logo, judul, kalender, akun (Organik hijau & Hijau bersih) */
+.ht5{flex-wrap:nowrap;gap:6px;row-gap:0}
+.ht2 .ht-top{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:nowrap}
+.ht5 .ht-brand,.ht2 .ht-top .ht-brand{flex:0 1 auto;min-width:0;gap:8px}
+.ht5 .ht-logo,.ht2 .ht-top .ht-logo{width:38px;height:38px;flex:none}.ht5 .ht-logo svg,.ht2 .ht-top .ht-logo svg{width:20px;height:20px}
+.ht5 .ht-bt,.ht2 .ht-top .ht-bt{gap:4px}
+.ht5 .ht-bt strong,.ht2 .ht-top .ht-bt strong{font-size:13.5px;letter-spacing:.07em;font-weight:700}
+.ht5 .ht-bt span,.ht2 .ht-top .ht-bt span{font-size:11px;letter-spacing:.1em;margin:0;font-weight:500}
+.ht5 .ht-r,.ht2 .ht-top .ht-r{flex:1 1 auto;min-width:0;justify-content:flex-end;gap:6px;margin:0}
+.ht5 .ht-date,.ht5 .ht-acc,.ht2 .ht-top .ht-acc,.ht2 .ht-top .ht-cal{height:40px;padding:0 9px;gap:6px;font-size:12px;font-weight:600;border-radius:var(--r-md);width:auto!important;min-width:0;flex:0 1 auto;justify-content:space-between;border:1px solid var(--ej-bd);background:var(--ej-sf)}
+.ht5 .ht-date svg:first-child,.ht5 .ht-acc svg:first-child,.ht2 .ht-top .ht-acc svg:first-child{width:17px;height:17px;flex:none}
+.ht5 .ht-date svg:last-child,.ht5 .ht-acc svg:last-child,.ht2 .ht-top .ht-acc svg:last-child{width:13px;height:13px;flex:none}
+.ht5 .ht-acc,.ht2 .ht-top .ht-acc{flex:1 1 auto;max-width:150px}
+.ht5 .ht-acc span,.ht2 .ht-top .ht-acc span{flex:1 1 auto;min-width:0;max-width:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+.ht5 .ht-date{width:40px!important;padding:0;justify-content:center;flex:none}.ht5 .ht-date span,.ht5 .ht-date svg:last-child{display:none}
+.ht2 .ht-top .ht-cal{width:40px!important;padding:0;justify-content:center;flex:none}.ht2 .ht-top .ht-cal svg{width:19px;height:19px}
+@media(max-width:400px){.ht5 .ht-bt span,.ht2 .ht-top .ht-bt span{letter-spacing:.06em}}
+@media(max-width:380px){.ht5 .ht-bt span,.ht2 .ht-top .ht-bt span{display:none}.ht5 .ht-acc,.ht2 .ht-top .ht-acc{max-width:190px}}
+@media(max-width:380px){.ht5 .ht-acc svg:first-child,.ht2 .ht-top .ht-acc svg:first-child{display:none}.ht5 .ht-bt strong,.ht2 .ht-top .ht-bt strong{font-size:13px;letter-spacing:.05em}}

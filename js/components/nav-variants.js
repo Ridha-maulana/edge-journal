@@ -3,7 +3,8 @@
 const NAV_KEY = 'ej3-nav';
 const NAV_LIST = [[0, 'Standar (lama)'], [1, 'Kapsul gelap'], [2, 'Datar + titik'], [3, 'Mengambang + chip'], [4, 'Datar + pil']].concat(TPL_NAV_LIST);
 function navVariantGet() { try {
-    const v = localStorage.getItem(NAV_KEY);
+    let v = localStorage.getItem(NAV_KEY);
+    if (v === '6' || v === '9' || v === '10') v = '4'; // menu bawah lama Template 2/3/4 -> Datar + pil
     return v !== null && /^\d+$/.test(v) && NAV_LIST.some(x => x[0] === Number(v)) ? Number(v) : 0;
 }
 catch (_) {

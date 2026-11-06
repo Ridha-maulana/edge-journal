@@ -4,7 +4,7 @@
 const HOME_KEY = 'ej3-home';
 const HOME_LIST = [[0, 'Standar (sekarang)'], [1, 'Template 1 · Dasbor biru'], [2, 'Template 2 · Organik hijau'], [5, 'Template 3 · Hijau bersih'], [6, 'Template 4 · Kaca lembut']];
 const TPL_HEADER_LIST = HOME_LIST.slice(1).map(x => [10 + x[0], x[1]]);
-const TPL_NAV_LIST = HOME_LIST.slice(1).map(x => [4 + x[0], x[1]]);
+const TPL_NAV_LIST = HOME_LIST.slice(1).filter(x => x[0] === 1).map(x => [4 + x[0], x[1]]); /* menu bawah: hanya Template 1 punya sendiri; Template 2/3/4 memakai gaya "Datar + pil" (nv 4) */
 function homeGet() { try {
     const v = localStorage.getItem(HOME_KEY);
     return v !== null && /^[0-6]$/.test(v) && Number(v) !== 3 && Number(v) !== 4 ? Number(v) : 0;
