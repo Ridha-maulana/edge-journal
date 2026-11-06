@@ -30,3 +30,17 @@ html[data-fx="on"] :is(.hero-card,.pe-card,.tool-card,.week-head,.trade-card,.gj
 html[data-fx="on"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn){transition:transform .14s ease,box-shadow .2s ease}
 html[data-fx="on"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn):active{transform:scale(.985)}
 @media (prefers-reduced-motion:reduce){html[data-fx="on"] *{animation:none!important;transition:none!important}}
+
+/* ===== v5.8.7 — jarak antar kartu seragam 12px di My Journal dan Advanced Statistics (sebelumnya 8–32px bercampur) ===== */
+:root{--gap-j:12px}
+.trade-card,.week-block{margin-bottom:var(--gap-j)}
+.week-block .week-block:last-child,.gj>.week-block:last-child{margin-bottom:var(--gap-j)}
+.gj-chart{margin:var(--gap-j) 0}
+.gj-sec,.date-label{margin:var(--gap-j) 2px 8px}
+.gj-sec:first-child,.date-label:first-child{margin-top:0}
+.week-block>.gj-sec:first-child{margin-top:var(--gap-j)}
+.pe.only-advanced{gap:var(--gap-j)}
+.pe.only-advanced>.adv,.adv.adv-card-only,.adv.adv-title-only{margin-top:0}
+.adv-card{margin-bottom:0}
+.adv-title{margin-bottom:var(--gap-j)}
+.adv-prof{margin-bottom:var(--gap-j)}
