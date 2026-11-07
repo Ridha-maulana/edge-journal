@@ -448,3 +448,25 @@ body[data-home] .app-shell:has(.tp2),body[data-home] .app-shell:has(.tp5),body[d
 .t2-fb{margin-top:12px}
 .t2-fb .t2-ch,.t5-fb .t5-ch{display:block;width:100%;height:100%;margin:0}
 .t6-fb .hero-chart,.t6-fb .hc-body{margin:0;height:100%}
+/* ===== v5.9.0 T2 Organik hijau: kartu ringkasan, Insight, Catatan — ukuran & tata letak mengikuti gambar rujukan (M(N) = N piksel gambar rujukan lebar-isi 1130; F(N,min) = ukuran huruf dengan batas bawah agar tetap terbaca) ===== */
+.tp2{--m:calc((min(100vw,620px) - 16px)/1130)}
+.t2-k4{grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(var(--m)*18)}
+.t2-k{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-height:calc(var(--m)*246);height:auto;padding:calc(var(--m)*28) calc(var(--m)*8) calc(var(--m)*26) calc(var(--m)*40);gap:0}
+.t2-k .t2-ki{width:calc(var(--m)*88);height:calc(var(--m)*88);margin:0 0 calc(var(--m)*13);flex:none}.t2-k .t2-ki svg{width:calc(var(--m)*40);height:calc(var(--m)*40)}
+.t2-k small{align-self:flex-start;font-size:max(9.5px,calc(var(--m)*27.5));line-height:1.2;font-weight:500;white-space:normal;margin:0 0 calc(var(--m)*8)}
+.t2-k b{align-self:flex-start;margin-top:auto;font-size:max(12px,calc(var(--m)*41));line-height:1.15;white-space:nowrap;letter-spacing:-.02em;font-weight:800}
+.t2-two{grid-template-columns:651fr 452fr;gap:calc(var(--m)*27)}
+.t2-in,.t2-nt{min-width:0;min-height:calc(var(--m)*278)}
+.t2-in{padding:calc(var(--m)*26) calc(var(--m)*28) calc(var(--m)*24) calc(var(--m)*40)}
+.t2-ih{flex-wrap:wrap;align-items:center;justify-content:space-between;gap:calc(var(--m)*10);min-height:calc(var(--m)*57);flex-wrap:nowrap}
+@media(max-width:379px){.t2-ih{flex-wrap:wrap}}
+.t2-in .t2-ti{font-size:max(9.5px,calc(var(--m)*26));gap:calc(var(--m)*25);white-space:nowrap}
+.t2-in .t2-ti .t2-ii svg{width:calc(var(--m)*40);height:calc(var(--m)*40)}
+.t2-bd{height:calc(var(--m)*57);padding:0 calc(var(--m)*18);gap:calc(var(--m)*12);font-size:max(9px,calc(var(--m)*22));white-space:nowrap}.t2-bd svg{width:calc(var(--m)*30);height:calc(var(--m)*30)}
+.t2-in p{font-size:max(10.5px,calc(var(--m)*30));line-height:calc(var(--m)*41);color:var(--t-mu);margin:calc(var(--m)*22) 0 0;font-weight:500}.t2-in p b{color:var(--ej-ik)}
+.t2-nt{display:grid;grid-template-columns:calc(var(--m)*73) minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:calc(var(--m)*31);align-content:start;padding:calc(var(--m)*31) calc(var(--m)*29) calc(var(--m)*25) calc(var(--m)*38);background:color-mix(in srgb,var(--ej-pr) 13%,var(--ej-sf))!important;border-color:color-mix(in srgb,var(--ej-pr) 24%,transparent)!important}
+.t2-nt .t2-ii{grid-area:1/1/3/2;width:calc(var(--m)*73);height:calc(var(--m)*73);border-radius:calc(var(--m)*20);margin:0;align-self:start}.t2-nt .t2-ii svg{width:calc(var(--m)*40);height:calc(var(--m)*40)}
+.t2-nt .t2-nti{grid-area:1/2;margin:calc(var(--m)*11) 0 0;font-size:max(10px,calc(var(--m)*27));font-weight:800;line-height:1.2;white-space:nowrap;color:var(--ej-ik)}
+.t2-nt p{grid-area:2/2;margin:calc(var(--m)*8) 0 0;font-size:max(9.5px,calc(var(--m)*24));line-height:1.25;color:var(--t-mu);max-width:none}
+.t2-nb{grid-area:3/1/4/3;align-self:end;height:calc(var(--m)*82);margin:0;padding:0 calc(var(--m)*30) 0 calc(var(--m)*28);border-radius:999px;font-size:max(10px,calc(var(--m)*25));gap:calc(var(--m)*10);white-space:nowrap}.t2-nb span{gap:calc(var(--m)*22)}.t2-nb svg{width:calc(var(--m)*34);height:calc(var(--m)*34)}.t2-nb>svg{width:calc(var(--m)*34);height:calc(var(--m)*34)}
+@media(max-width:389px){.t2-nb span svg{display:inline}}

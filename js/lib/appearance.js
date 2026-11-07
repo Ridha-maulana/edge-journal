@@ -30,9 +30,49 @@
         figtree: { name: 'Figtree', desc: 'Ramah, bersih', gf: 'Figtree:wght@400;500;600;700;800', css: "Figtree," + STACK },
         vietnam: { name: 'Be Vietnam Pro', desc: 'Rapi, tegas', gf: 'Be+Vietnam+Pro:wght@400;500;600;700;800', css: "'Be Vietnam Pro'," + STACK },
         noto: { name: 'Noto Sans', desc: 'Netral, lengkap', gf: 'Noto+Sans:wght@400;500;600;700;800', css: "'Noto Sans'," + STACK },
-        system: { name: 'Sistem', desc: 'Font bawaan HP, paling hemat', gf: '', css: STACK }
+        system: { name: 'Sistem', desc: 'Font bawaan HP, paling hemat', gf: '', css: STACK },
+        sfpro: { name: 'SF Pro (Apple)', desc: 'Font iPhone & Mac; di Android tampil mirip (Inter)', gf: 'Inter:wght@400;500;600;700;800', css: "-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',Inter," + STACK },
+        sfrounded: { name: 'SF Rounded (Apple)', desc: 'Bulat ala Apple; di Android tampil Nunito', gf: 'Nunito:wght@400;500;600;700;800', css: "ui-rounded,'SF Pro Rounded',Nunito," + STACK },
+        helvetica: { name: 'Helvetica Neue (Apple)', desc: 'Klasik Apple; di Android tampil Arimo', gf: 'Arimo:wght@400;500;600;700', css: "'Helvetica Neue',Helvetica,Arimo," + STACK },
+        avenir: { name: 'Avenir Next (Apple)', desc: 'Hangat, geometris; di Android Nunito Sans', gf: 'Nunito+Sans:wght@400;500;600;700;800', css: "'Avenir Next',Avenir,'Nunito Sans'," + STACK },
+        futura: { name: 'Futura (Apple)', desc: 'Geometris klasik; di Android tampil Jost', gf: 'Jost:wght@400;500;600;700;800', css: "Futura,'Futura PT',Jost," + STACK },
+        newyork: { name: 'New York (Apple)', desc: 'Serif ala Apple; di Android Source Serif', gf: 'Source+Serif+4:wght@400;500;600;700;800', css: "ui-serif,'New York','Source Serif 4',Georgia,serif" },
+        sfmono: { name: 'SF Mono (Apple)', desc: 'Mono ala Apple, angka sejajar', gf: 'Roboto+Mono:wght@400;500;600;700', css: "ui-monospace,'SF Mono',SFMono-Regular,'Roboto Mono',Menlo,monospace" },
+        intertight: { name: 'Inter Tight', desc: 'Inter lebih rapat, hemat tempat', gf: 'Inter+Tight:wght@400;500;600;700;800', css: "'Inter Tight'," + STACK },
+        albert: { name: 'Albert Sans', desc: 'Modern, geometris halus', gf: 'Albert+Sans:wght@400;500;600;700;800', css: "'Albert Sans'," + STACK },
+        onest: { name: 'Onest', desc: 'Bersih, tegas, modern', gf: 'Onest:wght@400;500;600;700;800', css: "Onest," + STACK },
+        geist: { name: 'Geist', desc: 'Gaya pengembang, tajam, rapi', gf: 'Geist:wght@400;500;600;700;800', css: "Geist," + STACK },
+        schibsted: { name: 'Schibsted Grotesk', desc: 'Editorial, jelas', gf: 'Schibsted+Grotesk:wght@400;500;600;700;800', css: "'Schibsted Grotesk'," + STACK },
+        hanken: { name: 'Hanken Grotesk', desc: 'Netral, nyaman dibaca', gf: 'Hanken+Grotesk:wght@400;500;600;700;800', css: "'Hanken Grotesk'," + STACK },
+        instrument: { name: 'Instrument Sans', desc: 'Modern, ringkas', gf: 'Instrument+Sans:wght@400;500;600;700', css: "'Instrument Sans'," + STACK },
+        redhat: { name: 'Red Hat Display', desc: 'Tegas, ramah', gf: 'Red+Hat+Display:wght@400;500;600;700;800', css: "'Red Hat Display'," + STACK },
+        urbanist: { name: 'Urbanist', desc: 'Geometris, lapang', gf: 'Urbanist:wght@400;500;600;700;800', css: "Urbanist," + STACK },
+        publicsans: { name: 'Public Sans', desc: 'Netral, jelas', gf: 'Public+Sans:wght@400;500;600;700;800', css: "'Public Sans'," + STACK },
+        karla: { name: 'Karla', desc: 'Grotesk hangat', gf: 'Karla:wght@400;500;600;700;800', css: "Karla," + STACK },
+        barlow: { name: 'Barlow', desc: 'Industrial, ringkas', gf: 'Barlow:wght@400;500;600;700;800', css: "Barlow," + STACK },
+        heebo: { name: 'Heebo', desc: 'Netral, ringan', gf: 'Heebo:wght@400;500;600;700;800', css: "Heebo," + STACK },
+        cabin: { name: 'Cabin', desc: 'Humanis, lembut', gf: 'Cabin:wght@400;500;600;700', css: "Cabin," + STACK },
+        raleway: { name: 'Raleway', desc: 'Elegan, tipis', gf: 'Raleway:wght@400;500;600;700;800', css: "Raleway," + STACK },
+        josefin: { name: 'Josefin Sans', desc: 'Vintage geometris', gf: 'Josefin+Sans:wght@400;500;600;700', css: "'Josefin Sans'," + STACK },
+        archivo: { name: 'Archivo', desc: 'Grotesk kokoh', gf: 'Archivo:wght@400;500;600;700;800', css: "Archivo," + STACK },
+        epilogue: { name: 'Epilogue', desc: 'Editorial, berkarakter', gf: 'Epilogue:wght@400;500;600;700;800', css: "Epilogue," + STACK },
+        overpass: { name: 'Overpass', desc: 'Terinspirasi Highway Gothic', gf: 'Overpass:wght@400;500;600;700;800', css: "Overpass," + STACK },
+        librefranklin: { name: 'Libre Franklin', desc: 'Klasik Amerika, tegas', gf: 'Libre+Franklin:wght@400;500;600;700;800', css: "'Libre Franklin'," + STACK },
+        bricolage: { name: 'Bricolage Grotesque', desc: 'Unik, ekspresif', gf: 'Bricolage+Grotesque:wght@400;500;600;700;800', css: "'Bricolage Grotesque'," + STACK },
+        lexenddeca: { name: 'Lexend Deca', desc: 'Lega, mudah dibaca', gf: 'Lexend+Deca:wght@400;500;600;700;800', css: "'Lexend Deca'," + STACK },
+        lora: { name: 'Lora', desc: 'Serif, hangat', gf: 'Lora:wght@400;500;600;700', css: "Lora,Georgia,serif" },
+        merriweather: { name: 'Merriweather', desc: 'Serif, nyaman dibaca layar', gf: 'Merriweather:wght@400;700;900', css: "Merriweather,Georgia,serif" },
+        playfair: { name: 'Playfair Display', desc: 'Serif, elegan', gf: 'Playfair+Display:wght@400;500;600;700;800', css: "'Playfair Display',Georgia,serif" },
+        robotomono: { name: 'Roboto Mono', desc: 'Mono, angka sejajar', gf: 'Roboto+Mono:wght@400;500;600;700', css: "'Roboto Mono',ui-monospace,Menlo,monospace" },
+        firacode: { name: 'Fira Code', desc: 'Mono, gaya kode', gf: 'Fira+Code:wght@400;500;600;700', css: "'Fira Code',ui-monospace,Menlo,monospace" },
+        plexmono: { name: 'IBM Plex Mono', desc: 'Mono, teknis', gf: 'IBM+Plex+Mono:wght@400;500;600;700', css: "'IBM Plex Mono',ui-monospace,Menlo,monospace" },
+        spacemono: { name: 'Space Mono', desc: 'Mono, retro-futuristik', gf: 'Space+Mono:wght@400;700', css: "'Space Mono',ui-monospace,Menlo,monospace" },
+        dmmono: { name: 'DM Mono', desc: 'Mono, lembut', gf: 'DM+Mono:wght@400;500', css: "'DM Mono',ui-monospace,Menlo,monospace" },
+        fredoka: { name: 'Fredoka', desc: 'Bulat, ceria', gf: 'Fredoka:wght@400;500;600;700', css: "Fredoka," + STACK },
+        baloo: { name: 'Baloo 2', desc: 'Bulat, ramah', gf: 'Baloo+2:wght@400;500;600;700;800', css: "'Baloo 2'," + STACK },
+        atkinson: { name: 'Atkinson Hyperlegible', desc: 'Sangat jelas, ramah penglihatan', gf: 'Atkinson+Hyperlegible:wght@400;700', css: "'Atkinson Hyperlegible'," + STACK }
     };
-    var FONT_ORDER = ['manrope', 'inter', 'poppins', 'nunito', 'jakarta', 'system', 'roboto', 'montserrat', 'dmsans', 'lexend', 'plex', 'jetbrains', 'opensans', 'lato', 'source', 'worksans', 'outfit', 'grotesk', 'sora', 'rubik', 'mulish', 'quicksand', 'figtree', 'vietnam', 'noto'];
+    var FONT_ORDER = ['manrope', 'inter', 'poppins', 'nunito', 'jakarta', 'system', 'roboto', 'montserrat', 'dmsans', 'lexend', 'plex', 'jetbrains', 'opensans', 'lato', 'source', 'worksans', 'outfit', 'grotesk', 'sora', 'rubik', 'mulish', 'quicksand', 'figtree', 'vietnam', 'noto', 'sfpro', 'sfrounded', 'helvetica', 'avenir', 'futura', 'newyork', 'sfmono', 'intertight', 'albert', 'onest', 'geist', 'schibsted', 'hanken', 'instrument', 'redhat', 'urbanist', 'publicsans', 'karla', 'barlow', 'heebo', 'cabin', 'raleway', 'josefin', 'archivo', 'epilogue', 'overpass', 'librefranklin', 'bricolage', 'lexenddeca', 'lora', 'merriweather', 'playfair', 'robotomono', 'firacode', 'plexmono', 'spacemono', 'dmmono', 'fredoka', 'baloo', 'atkinson'];
 
 
     /* ---- tema berbasis pasangan warna (latar + aksen): tema baru & "Warna sendiri" ---- */
@@ -74,7 +114,7 @@
     function validHex(v) { return typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v); }
     var custom = { bg: '#0a0a0a', ac: '#c9c6bf' };
     try { var cj = JSON.parse(localStorage.getItem('ej3-custom') || 'null'); if (cj && validHex(cj.bg) && validHex(cj.ac)) custom = { bg: cj.bg.toLowerCase(), ac: cj.ac.toLowerCase() }; } catch (e) { }
-    /* 28 tema aplikasi (sumber: gambar rujukan). Tiap tema: [id, nama, sifat, kategori, terang[canvas,surface,ink,primary,soft], gelap[...]] */
+    /* 48 tema aplikasi (sumber: gambar rujukan; 29-48 = seri "Soft & Muted"). Tiap tema: [id, nama, sifat, kategori, terang[canvas,surface,ink,primary,soft], gelap[...]] */
     var RAW = [
         ['mint', 'Mint Finance', 'Bersih · profesional · terpercaya', 'Dashboard & finance', ['#f4f8f6', '#ffffff', '#19312f', '#20a67a', '#ddf4ec'], ['#0d1f1b', '#142c27', '#f1fbf7', '#3fd09c', '#173c34']],
         ['indigo', 'Indigo SaaS', 'Teknologis · fokus · premium', 'SaaS & productivity', ['#f5f7ff', '#ffffff', '#18233d', '#5b67f1', '#e9ecff'], ['#0f1225', '#1a1f3d', '#f4f5ff', '#7d8aff', '#283064']],
@@ -103,7 +143,27 @@
         ['reddit', 'Reddit', 'Forum · playful', 'Forum & discussion', ['#fff6f2', '#ffffff', '#1a1a1b', '#ff4500', '#ffe1d3'], ['#1a1a1b', '#272729', '#f6f7f8', '#ff4500', '#63301e']],
         ['slack', 'Slack', 'Work · collaborative', 'Team & productivity', ['#fcf7fc', '#ffffff', '#1d1c1d', '#611f69', '#f1e3f3'], ['#1a1d21', '#222529', '#f8f8f8', '#e01e5a', '#3f2a45']],
         ['netflix', 'Netflix', 'Entertainment · cinematic', 'Streaming & media', ['#fff6f6', '#ffffff', '#221f1f', '#e50914', '#ffe0e0'], ['#141414', '#221f1f', '#f5f5f1', '#e50914', '#5b1a1d']],
-        ['google', 'Google', 'Universal · optimistic', 'Search & productivity', ['#f5f8ff', '#ffffff', '#202124', '#4285f4', '#e8f0fe'], ['#202124', '#303134', '#e8eaed', '#8ab4f8', '#3c4043']]
+        ['google', 'Google', 'Universal · optimistic', 'Search & productivity', ['#f5f8ff', '#ffffff', '#202124', '#4285f4', '#e8f0fe'], ['#202124', '#303134', '#e8eaed', '#8ab4f8', '#3c4043']],
+        ['softblue', 'Soft Blue CRM', 'Tenang · rapi · komunikatif', 'CRM & customer support', ['#f3f7f9', '#ffffff', '#243642', '#739bb3', '#e2edf2'], ['#17252d', '#21343d', '#ecf3f5', '#8fb8cd', '#2f4854']],
+        ['lavender', 'Calm Lavender', 'Lembut · fokus · kreatif', 'Productivity & notes', ['#f7f5fa', '#ffffff', '#332e3f', '#9a8db5', '#eae5f1'], ['#211d28', '#30283b', '#f3eff8', '#b6a8d0', '#51436a']],
+        ['dustyrose', 'Dusty Rose Shop', 'Hangat · feminin · modern', 'E-commerce & fashion', ['#fbf5f5', '#ffffff', '#3d2930', '#c98291', '#f3e1e4'], ['#2b1b20', '#3b252b', '#f7edef', '#d99ba7', '#653f48']],
+        ['olive', 'Olive Admin', 'Stabil · natural · grounded', 'Admin & operations', ['#f6f7f1', '#ffffff', '#2f3529', '#87936a', '#e6ebd9'], ['#1d261c', '#293426', '#f0f3e9', '#a8b98b', '#48583c']],
+        ['sandstone', 'Sandstone Blog', 'Editorial · hangat · nyaman', 'Blog & content', ['#fbf7f2', '#ffffff', '#3d332c', '#b89270', '#f1e5d8'], ['#2a211c', '#3a2d25', '#f5eee5', '#c9a685', '#5d4938']],
+        ['mistyteal', 'Misty Teal Care', 'Menenteramkan · bersih · humanis', 'Healthcare & wellness', ['#f1f8f7', '#ffffff', '#243b3a', '#6fa5a1', '#dcedea'], ['#152726', '#1f3735', '#edf8f6', '#86c2bc', '#31534f']],
+        ['powder', 'Powder Blue Edu', 'Terbuka · jelas · optimistis', 'Education & course', ['#f3f7fc', '#ffffff', '#27364a', '#7f9fc4', '#e1eaf5'], ['#182231', '#25334a', '#eff5fc', '#9db9dd', '#3a506e']],
+        ['clay', 'Clay Orange Food', 'Ramah · energik · appetizing', 'Food & restaurant', ['#fbf6f2', '#ffffff', '#3b2c25', '#c68a68', '#f1e2d7'], ['#2a1c17', '#3b2820', '#fbf0e9', '#d7a083', '#5b3a2b']],
+        ['dusk', 'Dusk Purple Events', 'Berkarakter · malam · premium', 'Events & ticketing', ['#f6f3f8', '#ffffff', '#302838', '#88749c', '#e8e0ed'], ['#201a26', '#2d2335', '#f3edf7', '#a58dba', '#4d3c59']],
+        ['steel', 'Steel Gray B2B', 'Profesional · ringkas · solid', 'B2B & analytics', ['#f4f6f7', '#ffffff', '#263238', '#71808a', '#e3e8ea'], ['#171d20', '#242c30', '#edf2f3', '#94a7b0', '#3b4c54']],
+        ['softmint', 'Soft Mint Finance', 'Aman · ringan · terpercaya', 'Finance & fintech', ['#f1f8f5', '#ffffff', '#21372f', '#69a58f', '#dceee6'], ['#14251f', '#20352c', '#edf8f2', '#86c3a7', '#315645']],
+        ['babyblue', 'Baby Blue SaaS', 'Friendly · cepat · digital', 'SaaS & dashboard', ['#f2f7fa', '#ffffff', '#253641', '#78a7c5', '#dfecf3'], ['#16262e', '#213641', '#edf5f8', '#92bdd7', '#355365']],
+        ['blush', 'Blush Wellness', 'Soft · personal · caring', 'Beauty & wellness', ['#fbf6f7', '#ffffff', '#3c2e32', '#c996a0', '#f1e2e5'], ['#2a1d21', '#3a272c', '#f8eff1', '#d9aeb5', '#61434a']],
+        ['sageeco', 'Sage Agriculture', 'Organik · tenang · earthy', 'Agriculture & eco', ['#f4f7f1', '#ffffff', '#2d3729', '#8ea17a', '#e4ecde'], ['#1b2519', '#293525', '#eff5ea', '#a9be91', '#43563a']],
+        ['oatmeal', 'Oatmeal Retail', 'Sederhana · lembut · timeless', 'Retail & catalog', ['#faf7f1', '#ffffff', '#3d342a', '#b49a79', '#eee5d8'], ['#29221b', '#382e24', '#f5eee3', '#c9b292', '#594836']],
+        ['mutednavy', 'Muted Navy Logistics', 'Teratur · dapat dipercaya · teknis', 'Logistics & tracking', ['#f2f6f8', '#ffffff', '#263640', '#687f91', '#dde7ec'], ['#17242b', '#22343e', '#edf4f7', '#89a8ba', '#354d5a']],
+        ['dustyaqua', 'Dusty Aqua Travel', 'Segar · santai · eksploratif', 'Travel & booking', ['#f0f7f7', '#ffffff', '#263a3a', '#6ba6a6', '#dbecec'], ['#152525', '#203838', '#edf8f7', '#87c4c2', '#315453']],
+        ['lilac', 'Soft Lilac Creator', 'Imajinatif · ringan · personal', 'Creator & portfolio', ['#f7f4f9', '#ffffff', '#342b3a', '#a38bb5', '#ece4f0'], ['#211a27', '#30233a', '#f2ecf5', '#bda6cc', '#514064']],
+        ['warmgray', 'Warm Gray Portfolio', 'Netral · dewasa · minimal', 'Portfolio & agency', ['#f6f5f3', '#ffffff', '#302f2c', '#8d8982', '#e8e6e2'], ['#1d1c1a', '#2a2926', '#f2f1ef', '#ada9a0', '#4a4741']],
+        ['palecoral', 'Pale Coral Community', 'Ramah · aktif · approachable', 'Community & membership', ['#fcf6f4', '#ffffff', '#3e2b29', '#c98278', '#f1dfdc'], ['#2b1b19', '#3a2522', '#f8efec', '#d99a8f', '#60413b']]
     ];
     function spec(a, dark) {
         return { bg: a[0], pn: a[1], tx: a[2], ac: a[3], so: a[4], bd: mix(a[1], a[2], dark ? .14 : .10), mu: mix(a[1], a[2], .70), p2: mix(a[1], a[4], dark ? .55 : .4) };
@@ -219,16 +279,25 @@
         var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', bg);
     }
     var loaded = {};
+    /* muat font dari Google Fonts; bila permintaan bobot ditolak, coba bobot 400;700 lalu nama saja (agar tidak jatuh ke font sistem) */
+    function loadGf(k) {
+        var f = FONTS[k]; if (!f || !f.gf || loaded[k]) return; loaded[k] = 1;
+        try {
+            var fam = f.gf.split(':')[0], tries = [f.gf, fam + ':wght@400;700', fam], n = 0;
+            (function next() {
+                var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=' + tries[n] + '&display=swap';
+                l.onerror = function () { try { l.parentNode && l.parentNode.removeChild(l); } catch (e) { } if (++n < tries.length) next(); };
+                document.head.appendChild(l);
+            })();
+        } catch (e) { }
+    }
     function applyFont() {
         var f = FONTS[state.font], root = document.documentElement;
-        if (f.gf && !loaded[state.font]) {
-            loaded[state.font] = 1;
-            try { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=' + f.gf + '&display=swap'; document.head.appendChild(l); } catch (e) { }
-        }
+        loadGf(state.font);
         root.style.setProperty('--font', f.css); root.style.fontFamily = f.css;
         var b = document.body; if (b) b.style.fontFamily = f.css;
     }
-    function preload(k) { var f = FONTS[k]; if (!f || !f.gf || loaded[k]) return; loaded[k] = 1; try { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=' + f.gf + '&display=swap'; document.head.appendChild(l); } catch (e) { } }
+    function preload(k) { loadGf(k); }
     function notify() { try { window.dispatchEvent(new CustomEvent('ej-appearance')); } catch (e) { } }
     function set(k, v) {
         state[k] = v; try { localStorage.setItem(KEY[k], v); } catch (e) { }
