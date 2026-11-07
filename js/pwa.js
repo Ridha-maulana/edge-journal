@@ -5,7 +5,17 @@ if("serviceWorker" in navigator){try{if(navigator.storage&&navigator.storage.per
 (function(){
 var cap=null;try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){cap=(c.Plugins&&c.Plugins.StatusBar)||c.registerPlugin('StatusBar');}}catch(e){}
 var run=function(f){try{Promise.resolve(f()).catch(function(){});}catch(e){}};
-if(cap){run(function(){return cap.setOverlaysWebView({overlay:false});});run(function(){return cap.setStyle({style:(window.EJ&&window.EJ.resolved==='light')?'LIGHT':'DARK'});});}
+var edge=false,hold=false;
+/* Mode layar penuh (APK baru dengan plugin EjTheme): halaman digambar sampai ke belakang bilah status yang transparan, jadi tidak ada pita terpisah.
+   Tinggi bilah status dikirim dari Android ke --sat; bila gagal (APK lama / browser), pakai cara lama: bilah status berwarna sama dengan halaman. */
+function legacy(){hold=false;if(cap){run(function(){return cap.setOverlaysWebView({overlay:false});});run(function(){return cap.setStyle({style:(window.EJ&&window.EJ.resolved==='light')?'LIGHT':'DARK'});});}}
+function enterEdge(top){edge=true;hold=false;var el=document.documentElement;el.style.setProperty('--sat',Math.max(0,top)+'px');el.setAttribute('data-edge','1');
+ if(cap)run(function(){return cap.setStyle({style:(window.EJ&&window.EJ.resolved==='light')?'LIGHT':'DARK'});});}
+(function(){var ep=null;try{var c=window.Capacitor;if(cap&&c&&c.isNativePlatform&&c.isNativePlatform()){ep=(c.Plugins&&c.Plugins.EjTheme)||c.registerPlugin('EjTheme');}}catch(e){}
+ if(!ep||!ep.getInsets){legacy();return;}
+ hold=true;
+ var tries=0;function ask(){Promise.resolve(ep.getInsets()).then(function(r){var t=r?Number(r.top):0;if(r&&r.edge&&t>0){enterEdge(t);}else if(r&&r.edge&&tries++<6){setTimeout(ask,250);}else legacy();}).catch(function(){legacy();});}
+ ask();})();
 var BASE=(window.EJ&&window.EJ.bgRGB||[9,13,24,1]).slice(),last='';
 function parse(str){var m=String(str||'').match(/rgba?\(([^)]+)\)/);if(!m)return null;var a=m[1].split(/[ ,\/]+/).filter(Boolean).map(Number);return [a[0],a[1],a[2],a.length>3?a[3]:1];}
 function over(top,bot){var a=top[3];return [top[0]*a+bot[0]*(1-a),top[1]*a+bot[1]*(1-a),top[2]*a+bot[2]*(1-a),1];}
@@ -21,7 +31,7 @@ function topColor(){
 function hex(c){return '#'+c.slice(0,3).map(function(v){v=Math.max(0,Math.min(255,Math.round(v)));return (v<16?'0':'')+v.toString(16);}).join('');}
 function sync(){try{var h=hex(topColor());if(h===last)return;last=h;
  var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',h);
- if(cap)run(function(){return cap.setBackgroundColor({color:h});});}catch(e){}}
+ if(cap&&!edge&&!hold)run(function(){return cap.setBackgroundColor({color:h});});}catch(e){}}
 var q=0;function queue(){if(q)return;q=requestAnimationFrame(function(){q=0;sync();});}
 window.syncStatusBar=queue;
 function onAp(){try{BASE=(window.EJ.bgRGB||BASE).slice();last='';if(cap)run(function(){return cap.setStyle({style:window.EJ.resolved==='light'?'LIGHT':'DARK'});});}catch(e){}queue();}

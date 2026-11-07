@@ -4,7 +4,7 @@
 .topbar:not([class*="hd-v"]){background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-bottom-color:transparent!important}
 html[data-sc="1"] .topbar:not([class*="hd-v"]){background:var(--c1)!important}
 /* Halaman standar (Ber-efek): cahaya sudut tidak menyentuh tepi paling atas, jadi baris teratas selalu rata = warna bilah status */
-html[data-fx="on"] body:not([data-home="1"]):not([data-home="2"]):not([data-home="5"]){background:linear-gradient(var(--ej-cv),transparent 40px),radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
+html[data-fx="on"] body:not([data-home="1"]):not([data-home="2"]):not([data-home="5"]){background:linear-gradient(var(--ej-cv),transparent var(--tp-fade,40px)),radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
 
 /* Layar masuk: latar = warna tema (bukan hitam), tanpa gambar grafiti; logo + judul seperti di header; kartu = warna kartu tema */
 .gate-art{background:var(--c1);justify-content:center;gap:24px}
@@ -14,3 +14,10 @@ html[data-fx="on"] body:not([data-home="1"]):not([data-home="2"]):not([data-home
 .gate-art .gate-hero-brand strong{font-size:var(--fs-xl);letter-spacing:.13em;color:var(--c0)}
 .gate-art .gate-hero-brand span{margin-top:8px;font-size:var(--fs-sm);letter-spacing:.3em;color:var(--c12);font-weight:400}
 .gate-art .gate-box{background:var(--c2);border:1px solid var(--c178);backdrop-filter:none;-webkit-backdrop-filter:none}
+
+/* ===== v5.8.9 — mode layar penuh (html[data-edge], diset oleh js/pwa.js bila APK baru): satu halaman sampai ke belakang bilah status =====
+   --sat = tinggi bilah status dari Android. Latar/ornamen body digambar mulai dari y=0 (margin negatif + padding), isi tetap di posisi semula. */
+html[data-edge]{--tp-fade:0px}
+html[data-edge] body,html[data-edge] body[data-home="6"] .app-shell,html[data-edge] body[data-nv="10"] .app-shell{margin-top:calc(var(--sat)*-1);padding-top:var(--sat)}
+/* setelah digulir, isi yang lewat di belakang bilah status ditutup warna dasar (header sticky mulai dari bawah bilah status) */
+html[data-edge][data-sc="1"] body::before{content:"";position:fixed;top:0;left:0;right:0;height:var(--sat);background:var(--c1);z-index:14;pointer-events:none}

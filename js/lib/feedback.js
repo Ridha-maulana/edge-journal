@@ -10,7 +10,7 @@ function notify(msg) {
 function askConfirm(msg, okLabel = 'Ya, hapus', danger = true) {
     return new Promise(resolve => {
         const o = document.createElement('div');
-        o.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:var(--nav-h,75px);background:var(--c75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) 24px 24px';
+        o.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:var(--nav-h,75px);background:var(--c75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:max(24px,var(--sat,env(safe-area-inset-top,0px))) 24px 24px';
         o.setAttribute('data-confirm', '1');
         document.body.classList.add('confirm-open');
         new MutationObserver((_, ob) => { if (!document.body.contains(o)) { ob.disconnect(); if (!document.querySelector('[data-confirm]')) document.body.classList.remove('confirm-open'); } }).observe(document.body, { childList: true });

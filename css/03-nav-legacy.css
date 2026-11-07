@@ -36,7 +36,7 @@
 .gate-link{display:block;margin:18px auto 0;background:none;border:0;color:var(--c181);font:13px/1.4 Manrope,system-ui,sans-serif;text-decoration:underline;text-align:center}
 .gate-err{margin:14px 0 0!important;color:var(--c173)!important;font-size:var(--fs-md)!important}
 .gate-note{color:var(--c171);font-size:var(--fs-md);margin:0}
-.gate-art{background:var(--c186);justify-content:flex-start;gap:14px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.gate-art{background:var(--c186);justify-content:flex-start;gap:14px;padding-top:calc(10px + var(--sat,env(safe-area-inset-top,0px)))}
 .gate-art>:first-child{margin-top:auto}.gate-art>:last-child{margin-bottom:auto}
 .gate-hero{--h:min(35vh,88vw);position:relative;flex:none;height:var(--h);width:calc(var(--h)*900/893);background:url(../assets/login-art.webp) center/100% 100% no-repeat;animation:gateArt .7s cubic-bezier(.16,1,.3,1) both!important}
 .gate-hero-brand{position:absolute;left:45%;top:45.3%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:calc(var(--h)*.028);white-space:nowrap}

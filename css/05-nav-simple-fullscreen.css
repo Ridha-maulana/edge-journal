@@ -11,7 +11,7 @@
 @media(max-width:380px){.bottom-nav .nav-item span{font-size:var(--fs-xs)}}
 /* ===== v2.8.7 — Pop up tambah / edit / close / konfirmasi hapus: layar penuh tanpa jarak di atas ===== */
 .modal-backdrop.fs{align-items:stretch;justify-content:stretch;padding:0!important;background:var(--c75);z-index:200}
-.modal.fs{width:100%!important;max-width:none!important;height:100%;max-height:none!important;border:0;border-radius:0!important;margin:0!important;box-shadow:none;padding:calc(18px + env(safe-area-inset-top,0px)) 20px calc(28px + env(safe-area-inset-bottom,0px))!important;overflow-y:auto;animation:none!important}
+.modal.fs{width:100%!important;max-width:none!important;height:100%;max-height:none!important;border:0;border-radius:0!important;margin:0!important;box-shadow:none;padding:calc(18px + var(--sat,env(safe-area-inset-top,0px))) 20px calc(28px + env(safe-area-inset-bottom,0px))!important;overflow-y:auto;animation:none!important}
 .modal.fs .modal-head{align-items:flex-start}
 .fs-actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px;width:100%}
 .fs-actions>button,.fs-actions>label{width:100%;min-height:50px;justify-content:center;align-items:center;text-align:center;margin:0!important;display:inline-flex;gap:10px;white-space:nowrap}

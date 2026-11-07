@@ -102,7 +102,7 @@ body[data-tab="journal"] .ht,body[data-tab="tools"] .ht,body[data-tab="account"]
 
 /* ---- T2 organik hijau ---- */
 .tp2,.ht2,.bn2{font-family:'Nunito',var(--font)}
-html[data-fx] body[data-home="2"]{background:linear-gradient(var(--ej-cv),transparent 40px),radial-gradient(circle calc(var(--u)*270) at 76% calc(var(--u)*60),color-mix(in srgb,#efc7b2 46%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*175) at 100% calc(var(--u)*135),color-mix(in srgb,var(--ej-pr) 52%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*150) at 0% calc(var(--u)*1020),color-mix(in srgb,var(--ej-pr) 40%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*200) at 100% calc(var(--u)*1240),color-mix(in srgb,#efc7b2 38%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*120) at 0% calc(var(--u)*1820),color-mix(in srgb,var(--ej-pr) 32%,var(--ej-cv)) 99%,transparent 100%),var(--ej-cv)!important;background-attachment:scroll!important;background-repeat:no-repeat}
+html[data-fx] body[data-home="2"]{background:linear-gradient(var(--ej-cv),transparent var(--tp-fade,40px)),radial-gradient(circle calc(var(--u)*270) at 76% calc(var(--u)*60),color-mix(in srgb,#efc7b2 46%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*175) at 100% calc(var(--u)*135),color-mix(in srgb,var(--ej-pr) 52%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*150) at 0% calc(var(--u)*1020),color-mix(in srgb,var(--ej-pr) 40%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*200) at 100% calc(var(--u)*1240),color-mix(in srgb,#efc7b2 38%,var(--ej-cv)) 99%,transparent 100%),radial-gradient(circle calc(var(--u)*120) at 0% calc(var(--u)*1820),color-mix(in srgb,var(--ej-pr) 32%,var(--ej-cv)) 99%,transparent 100%),var(--ej-cv)!important;background-attachment:scroll!important;background-repeat:no-repeat}
 .t2-blob{display:none}
 .ht2{flex-direction:column;align-items:stretch;gap:calc(var(--u)*34);padding:calc(var(--u)*40) calc(var(--u)*42) calc(var(--u)*30)}
 .ht2 .ht-row{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--u)*12)}
@@ -195,7 +195,7 @@ html[data-fx="off"] .tp5 .tp-card{border-color:var(--ej-bd)!important}
 
 /* ---- T6 kaca lembut ---- */
 .tp6,.ht6,.bn6{--t-dk:color-mix(in srgb,var(--ej-pr) 80%,var(--ej-ik));--g-bg:color-mix(in srgb,var(--ej-sf) 56%,transparent);--g-bd:color-mix(in srgb,#fff 60%,transparent);--g-sh:0 calc(var(--u)*10) calc(var(--u)*34) color-mix(in srgb,var(--ej-ik) 9%,transparent)}
-body[data-home="6"] .app-shell,body[data-nv="10"] .app-shell{background:linear-gradient(var(--ej-cv),transparent 40px),radial-gradient(60% 28% at 8% 4%,color-mix(in srgb,var(--ej-pr) 17%,transparent),transparent 70%),radial-gradient(55% 26% at 100% 10%,color-mix(in srgb,var(--ej-pr) 10%,var(--ej-so)),transparent 70%),radial-gradient(70% 30% at 0% 48%,color-mix(in srgb,var(--ej-pr) 14%,transparent),transparent 70%),radial-gradient(60% 30% at 100% 62%,color-mix(in srgb,var(--ej-so) 85%,transparent),transparent 70%),radial-gradient(70% 28% at 10% 96%,color-mix(in srgb,var(--ej-pr) 14%,transparent),transparent 70%),var(--ej-cv)}
+body[data-home="6"] .app-shell,body[data-nv="10"] .app-shell{background:linear-gradient(var(--ej-cv),transparent var(--tp-fade,40px)),radial-gradient(60% 28% at 8% 4%,color-mix(in srgb,var(--ej-pr) 17%,transparent),transparent 70%),radial-gradient(55% 26% at 100% 10%,color-mix(in srgb,var(--ej-pr) 10%,var(--ej-so)),transparent 70%),radial-gradient(70% 30% at 0% 48%,color-mix(in srgb,var(--ej-pr) 14%,transparent),transparent 70%),radial-gradient(60% 30% at 100% 62%,color-mix(in srgb,var(--ej-so) 85%,transparent),transparent 70%),radial-gradient(70% 28% at 10% 96%,color-mix(in srgb,var(--ej-pr) 14%,transparent),transparent 70%),var(--ej-cv)}
 .t6-blob{display:none}
 .tp6 .pos{color:var(--t-dk)!important}
 .ht6{padding:calc(var(--u)*48) calc(var(--u)*53) calc(var(--u)*22);gap:calc(var(--u)*12)}
@@ -404,7 +404,7 @@ body[data-nv="10"] .app-shell{padding-bottom:calc(98px + env(safe-area-inset-bot
 .t2-rg{gap:6px}.t2-rg button{height:30px;font-size:12px;border-radius:15px}
 @media(max-width:380px){.t2-nb span svg{display:none}.t2-nb{justify-content:space-between}}
 /* v5.8.3: batas atas (bilah status) satu warna penuh: kilau latar memudar mulai dari bawah tepi atas */
-html[data-fx="on"] body[data-home="1"],html[data-fx="on"] body[data-home="5"]{background:linear-gradient(var(--ej-cv),transparent 40px),radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
+html[data-fx="on"] body[data-home="1"],html[data-fx="on"] body[data-home="5"]{background:linear-gradient(var(--ej-cv),transparent var(--tp-fade,40px)),radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
 /* T2: label Statistik Trading disingkat di layar sempit */
 /* v5.8.3: menu bawah T2/T3/T4 solid (kartu tidak tembus terlihat di belakang menu) */
 .bn2,.bn5,.bn6{background:var(--ej-sf)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}

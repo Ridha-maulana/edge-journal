@@ -44,4 +44,25 @@ public class EjThemePlugin extends Plugin {
             call.resolve(r);
         }
     }
+
+    /* Tinggi bilah status (px CSS) untuk mode layar penuh; edge=false bila mode itu tidak aktif. */
+    @PluginMethod
+    public void getInsets(PluginCall call) {
+        JSObject r = new JSObject();
+        try {
+            Context c = getContext();
+            float den = c.getResources().getDisplayMetrics().density;
+            int px = MainActivity.statusTopPx;
+            if (px <= 0) {
+                int id = c.getResources().getIdentifier("status_bar_height", "dimen", "android");
+                if (id > 0) px = c.getResources().getDimensionPixelSize(id);
+            }
+            r.put("edge", MainActivity.edge);
+            r.put("top", String.valueOf(Math.round(px / (den > 0 ? den : 1f))));
+        } catch (Throwable e) {
+            r.put("edge", false);
+            r.put("top", "0");
+        }
+        call.resolve(r);
+    }
 }
