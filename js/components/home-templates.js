@@ -6,6 +6,7 @@ const tpS = v => v > 0.005 ? '+' : v < -0.005 ? '-' : '';
 const tpM = (v, cur) => tpS(v) + money(Math.abs(v), cur);
 const tpM2 = (v, cur) => tpS(v) + new Intl.NumberFormat('en-US', { style: 'currency', currency: cur || 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Math.abs(v));
 const tpDay = iso => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+const tpDayY = iso => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const tpDayS = iso => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 const tpIc = (n, s, w) => tpE(Icon, { name: n, size: s || 18, strokeWidth: w || 2 });
 /* skala tick bulat */
@@ -62,8 +63,8 @@ function TplKind({ ctl }) { const line = ctl.kind !== 'candle'; return tpE("butt
     tpE("svg", { className: "k-c", viewBox: "0 0 24 24", width: "18", height: "18", "aria-hidden": "true" }, tpE("path", { d: "M7 3v3M7 18v3", stroke: EJC("#ff6b81"), strokeWidth: "2", strokeLinecap: "round" }), tpE("rect", { x: 4.5, y: 6, width: 5, height: 12, rx: 1.2, fill: EJC("#ff6b81") }), tpE("path", { d: "M17 2v3M17 17v4", stroke: EJC("#34d399"), strokeWidth: "2", strokeLinecap: "round" }), tpE("rect", { x: 14.5, y: 5, width: 5, height: 12, rx: 1.2, fill: EJC("#34d399") })),
     tpE("svg", { className: "k-l", viewBox: "0 0 24 24", width: "18", height: "18", "aria-hidden": "true" }, tpE("path", { d: "M3 16c2-4 3-5 5-3s3 3 5-1 3-6 5-3 2 3 3 2", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round" }))); }
 /* ===== T1: dasbor biru ===== */
-function T1Equity({ pts, cur }) {
-    const W = 700, H = 372, L = 106, R = 18, T = 26, B = 40;
+function T1Equity({ pts, cur, fit }) {
+    const W = 620, H = fit && fit.w ? Math.max(150, Math.round(W * fit.h / fit.w)) : 372, L = 100, R = 14, T = 30, B = 40;
     if (!pts.length) return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t1-eq" }, tpE("text", { x: W / 2, y: H / 2, textAnchor: "middle", fontSize: "20", fill: "currentColor", opacity: ".6" }, "Belum ada trade pada periode ini"));
     const t0 = pts[0].t, t1 = pts[pts.length - 1].t, span = Math.max(t1 - t0, 36e5);
     const lo0 = Math.min(...pts.map(p => p.eq)), hi0 = Math.max(...pts.map(p => p.eq));
@@ -72,21 +73,21 @@ function T1Equity({ pts, cur }) {
     let dl = `M${x(pts[0].t)},${y(pts[0].eq)}`;
     for (let i = 1; i < pts.length; i++) dl += ` H${x(pts[i].t)} V${y(pts[i].eq)}`;
     const last = pts[pts.length - 1], area = `${dl} V${H - B} H${x(pts[0].t)} Z`;
-    const xt = [0, .5, 1].map(f => new Date(t0 + span * f)), bx = Math.min(x(last.t), W - 70);
+    const xt = [0, .5, 1].map(f => new Date(t0 + span * f)), bx = Math.min(x(last.t), W - 66);
     return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t1-eq", role: "img", "aria-label": "Kurva ekuitas" },
         tpE("defs", null, tpE("linearGradient", { id: "t1g", x1: "0", x2: "0", y1: "0", y2: "1" }, tpE("stop", { offset: "0", stopColor: "var(--green)", stopOpacity: ".34" }), tpE("stop", { offset: "1", stopColor: "var(--green)", stopOpacity: ".04" }))),
         nz.ticks.map((v, i) => tpE("g", { key: i }, tpE("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), className: "g-l" }), tpE("text", { x: L - 14, y: y(v) + 6, textAnchor: "end", className: "g-t" }, money(v, cur)))),
         xt.map((d, i) => tpE("line", { key: 'v' + i, x1: x(t0 + span * [0, .5, 1][i]), x2: x(t0 + span * [0, .5, 1][i]), y1: T, y2: H - B, className: "g-l" })),
         tpE("path", { d: area, fill: "url(#t1g)" }),
-        tpE("path", { d: dl, fill: "none", stroke: "var(--green)", strokeWidth: "3.4", strokeLinejoin: "round" }),
+        tpE("path", { d: dl, fill: "none", stroke: "var(--green)", strokeWidth: "4", strokeLinejoin: "round" }),
         tpE("line", { x1: x(last.t), x2: x(last.t), y1: y(last.eq), y2: H - B, className: "g-d" }),
-        pts.map((p, i) => tpE("circle", { key: 'c' + i, cx: x(p.t), cy: y(p.eq), r: i === pts.length - 1 ? 7 : 6, fill: "var(--green)", stroke: i === pts.length - 1 ? "var(--ej-sf)" : "none", strokeWidth: "2.5" })),
-        tpE("g", { transform: `translate(${bx - 46},${y(last.eq) - 52})` }, tpE("rect", { width: 112, height: 36, rx: 8, fill: "var(--green)" }), tpE("text", { x: 56, y: 25, textAnchor: "middle", className: "g-b" }, money(last.eq, cur))),
+        pts.map((p, i) => tpE("circle", { key: 'c' + i, cx: x(p.t), cy: y(p.eq), r: i === pts.length - 1 ? 9 : 7.5, fill: "var(--green)", stroke: i === pts.length - 1 ? "var(--ej-sf)" : "none", strokeWidth: "2.5" })),
+        tpE("g", { transform: `translate(${bx - 58},${y(last.eq) - 56})` }, tpE("rect", { width: 124, height: 40, rx: 9, fill: "var(--green)" }), tpE("text", { x: 62, y: 28, textAnchor: "middle", className: "g-b" }, money(last.eq, cur))),
         tpE("line", { x1: L, x2: W - R, y1: H - B, y2: H - B, className: "g-a" }),
         xt.map((dd, i) => tpE("text", { key: 'x' + i, x: [L + 22, (L + W - R) / 2 + 12, W - R - 30][i], y: H - 10, textAnchor: "middle", className: "g-t" }, dd.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }))));
 }
 function HomeT1({ d }) {
-    const [rg, setRg] = useState('ALL');
+    const [rg, setRg] = useState('ALL'), fit = useTplFit(120, 460);
     const c = d.cur;
     const pts = useMemo(() => {
         const hrs = { H: 1, D: 24, W: 168, M: 720 }[rg], all = d.cs.map(t => ({ t: +new Date(t.date), pnl: Number(t.pnl) || 0 })).filter(p => isFinite(p.t));
@@ -108,7 +109,7 @@ function HomeT1({ d }) {
     const days = Object.entries(d.dayMap).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 3), dmax = Math.max(1, ...days.map(x => Math.abs(x[1])));
     const kpi4 = [['Database', 'Starting Balance', money(d.startBal, c), ''], ['Wallet', 'Current Balance', money(d.aNow, c), tpC(d.total)], ['BarsFill', 'Growth', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct)], ['Calendar', 'Active Days', String(d.activeDays), '']];
     const k6 = tpMetrics(d), ik = ['Trophy', 'LineChart', 'FileText', 'Scale', 'Target', 'Star'], nm = ['Win Rate', 'Profit Factor', 'Total Trades', 'Avg. R:R', 'Total Pips', 'Best Day'];
-    return tpE("div", { className: "tp tp1" },
+    return tpE("div", { className: "tp tp1", ref: fit.root },
         tpE("section", { className: "tp-card t1-hero" },
             tpE("div", { className: "t1-hl" }, tpE("span", { className: "t1-cap" }, "TOTAL P&L"), tpE("div", { className: "t1-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t1-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'ArrowUpRight' : 'ArrowDownRight', 20, 2.2), tpE("b", null, d.trendTxt), " in selected period")),
             tpE("svg", { className: "t1-spark", viewBox: "0 0 340 140", preserveAspectRatio: "none", "aria-hidden": "true" }, tpE("defs", null, tpE("linearGradient", { id: "t1s", x1: "0", x2: "0", y1: "0", y2: "1" }, tpE("stop", { offset: "0", stopColor: "var(--ej-pr)", stopOpacity: ".3" }), tpE("stop", { offset: "1", stopColor: "var(--ej-pr)", stopOpacity: "0" }))), sn > 1 && tpE("polygon", { points: `0,140 ${sl} 340,140`, fill: "url(#t1s)" }), sn > 1 && tpE("polyline", { points: sl, fill: "none", stroke: "var(--ej-pr)", strokeWidth: "2.6", strokeLinejoin: "round", vectorEffect: "non-scaling-stroke" })),
@@ -118,7 +119,7 @@ function HomeT1({ d }) {
         tpE("div", { className: "t1-mid" },
             tpE("section", { className: "tp-card t1-eqc" },
                 tpE("div", { className: "t1-eh" }, tpE("span", { className: "t1-ti" }, tpIc('BarsFill', 22), "EQUITY CURVE"), tpE("div", { className: "t1-rg", role: "group", "aria-label": "Rentang kurva" }, [['H', '1H'], ['D', '1D'], ['W', '1W'], ['M', '1M'], ['ALL', 'ALL']].map(([k, l]) => tpE("button", { key: k, type: "button", className: rg === k ? 'on' : '', onClick: () => setRg(k) }, l)))),
-                tpE(T1Equity, { pts: pts, cur: c })),
+                tpE("div", { className: "t1-fb", ref: fit.box }, tpE(T1Equity, { pts: pts, cur: c, fit: fit.m }))),
             tpE("div", { className: "t1-side" },
                 tpE("section", { className: "tp-card t1-pb" }, tpE("span", { className: "t1-ti" }, tpIc('Activity', 20), "P&L BREAKDOWN"),
                     tpE("div", { className: "t1-pbb" },
@@ -129,10 +130,10 @@ function HomeT1({ d }) {
             tpE("div", { className: "t1-eh" }, tpE("span", { className: "t1-ti" }, tpIc('FileText', 22), "RECENT TRADES"), tpE("button", { type: "button", className: "t1-va", onClick: () => tpGo('journal') }, "View All", tpIc('ChevronRight', 16, 2.4))),
             tpE("div", { className: "t1-tb", role: "table" },
                 tpE("div", { className: "t1-tr0", role: "row" }, ['DATE', 'PAIR', 'TYPE', 'LOTS', 'ENTRY', 'EXIT', 'PIPS', 'P&L'].map(x => tpE("span", { key: x }, x))),
-                recent.map(t => { const pp = pipsOf(t), pl = Number(t.pnl) || 0; return tpE("div", { key: t.id, className: "t1-trr", role: "row" }, tpE("span", null, tpDayS(t.date)), tpE("span", null, t.symbol), tpE("span", null, tpE("i", { className: t.side === 'Long' ? 'buy' : 'sell' }, t.side === 'Long' ? 'BUY' : 'SELL')), tpE("span", null, Number(t.lots).toFixed(2)), tpE("span", null, Number(t.entry).toFixed(2)), tpE("span", null, Number(t.exit).toFixed(2)), tpE("span", { className: tpC(pp) }, tpS(pp) + Math.abs(pp).toFixed(2)), tpE("span", { className: tpC(pl) }, tpM2(pl, c))); }),
+                recent.map(t => { const pp = pipsOf(t), pl = Number(t.pnl) || 0; return tpE("div", { key: t.id, className: "t1-trr", role: "row" }, tpE("span", null, tpDayY(t.date)), tpE("span", null, t.symbol), tpE("span", null, tpE("i", { className: t.side === 'Long' ? 'buy' : 'sell' }, t.side === 'Long' ? 'BUY' : 'SELL')), tpE("span", null, Number(t.lots).toFixed(2)), tpE("span", null, Number(t.entry).toFixed(2)), tpE("span", null, Number(t.exit).toFixed(2)), tpE("span", { className: tpC(pp) }, tpS(pp) + Math.abs(pp).toFixed(2)), tpE("span", { className: tpC(pl) }, tpM2(pl, c))); }),
                 !recent.length && tpE("div", { className: "t1-none" }, "Belum ada trade pada periode ini"))),
         tpE("div", { className: "t1-two" },
-            tpE("section", { className: "tp-card t1-dp" }, tpE("span", { className: "t1-ti" }, tpIc('BarsFill', 22), "DAILY P&L"), days.map(([k, v]) => tpE("div", { key: k, className: "t1-dr" }, tpE("span", null, tpDayS(k)), tpE("b", { className: tpC(v) }, tpM2(v, c)), tpE("div", { className: "t1-bar" }, tpE("i", { className: v < 0 ? 'neg' : '', style: { width: Math.max(4, Math.abs(v) / dmax * 100) + '%' } })))), !days.length && tpE("small", { className: "t1-none" }, "Belum ada data")),
+            tpE("section", { className: "tp-card t1-dp" }, tpE("span", { className: "t1-ti" }, tpIc('BarsFill', 22), "DAILY P&L"), days.map(([k, v]) => tpE("div", { key: k, className: "t1-dr" }, tpE("span", null, tpDayY(k)), tpE("b", { className: tpC(v) }, tpM2(v, c)), tpE("div", { className: "t1-bar" }, tpE("i", { className: v < 0 ? 'neg' : '', style: { width: Math.max(4, Math.abs(v) / dmax * 100) + '%' } })))), !days.length && tpE("small", { className: "t1-none" }, "Belum ada data")),
             tpE("section", { className: "tp-card t1-rk" }, tpE("span", { className: "t1-ti" }, tpIc('Shield', 22), "RISK METRICS"),
                 tpE("div", { className: "t1-rkg" }, [['Max Drawdown', d.ddTxt, ''], ['Expectancy (R)', d.expR == null ? '—' : tpS(d.expR) + Math.abs(d.expR).toFixed(2), d.expR == null ? '' : tpC(d.expR)], ['Sharpe Ratio', d.sharpe == null ? '-' : d.sharpe.toFixed(2), ''], ['Avg. Trade (Pips)', d.nTrades ? tpS(d.pips / d.nTrades) + Math.abs(d.pips / d.nTrades).toFixed(1) : '—', d.nTrades ? tpC(d.pips) : '']].map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))))),
         tpE("div", { className: "tp-card t1-ac" }, tpActions(d)));
