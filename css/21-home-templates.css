@@ -444,19 +444,19 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 
 /* ===== v5.9.4 T1 Dasbor biru: ukuran & jarak persis gambar rujukan lebar 1440. R(N,min) = N piksel gambar 1440 (batas bawah kecil hanya agar huruf tetap terbaca). V = ukuran vertikal yang boleh dipadatkan (--dk), W = versi lebih lembut (--dk2) untuk kartu berisi teks. useT1Fit memilih --dk terbesar yang muat di satu layar HP ===== */
 .tp1{--dk:1;--dk2:1;gap:max(3px,calc(var(--r)*var(--dk)*29))}
-.t1-hero{height:auto;min-height:max(76px,calc(var(--r)*var(--dk2)*282));padding:max(8px,calc(var(--r)*var(--dk2)*36)) 0 max(7px,calc(var(--r)*var(--dk2)*29)) max(10px,calc(var(--r)*36));gap:0;border-radius:max(12px,calc(var(--r)*28));align-items:stretch}
+.t1-hero{height:auto;min-height:max(76px,calc(var(--r)*var(--dk2)*282));padding:max(7px,calc(var(--r)*var(--dk2)*30)) 0 max(7px,calc(var(--r)*var(--dk2)*29)) max(10px,calc(var(--r)*36));gap:0;border-radius:max(12px,calc(var(--r)*28));align-items:stretch}
 .t1-hl{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;justify-content:flex-start}
 .t1-cap,.t1-acc span{font-size:max(6.6px,calc(var(--r)*26));letter-spacing:.035em;font-weight:500;line-height:1.1;white-space:nowrap}
-.t1-cap{margin-top:calc(var(--r)*2)}
-.t1-big{font-size:max(24px,calc(var(--r)*108));font-weight:800;line-height:1;letter-spacing:-.025em;margin-top:max(2px,calc(var(--r)*var(--dk2)*14))}
-.t1-tr{font-size:max(8.5px,calc(var(--r)*36));gap:max(4px,calc(var(--r)*16));font-weight:500;margin-top:max(3px,calc(var(--r)*var(--dk2)*22));white-space:nowrap}.t1-tr svg{width:max(10px,calc(var(--r)*40));height:max(10px,calc(var(--r)*40))}
+.t1-cap{margin-top:0}
+.t1-big{font-size:max(24px,calc(var(--r)*108));font-weight:800;line-height:1;letter-spacing:-.025em;margin-top:max(2px,calc(var(--r)*var(--dk2)*17))}
+.t1-tr{font-size:max(8.5px,calc(var(--r)*36));gap:max(4px,calc(var(--r)*16));font-weight:500;margin-top:max(3px,calc(var(--r)*var(--dk2)*16));white-space:nowrap}.t1-tr svg{width:max(10px,calc(var(--r)*40));height:max(10px,calc(var(--r)*40))}
 .t1-spark{flex:none;width:max(60px,calc(var(--r)*429));height:max(36px,calc(var(--r)*var(--dk2)*170));align-self:flex-end;margin:0 max(8px,calc(var(--r)*48)) 0 max(2px,calc(var(--r)*10))}
 .t1-acc{flex:none;width:max(76px,calc(var(--r)*305));border-left:1px solid var(--ej-bd);padding-left:max(8px,calc(var(--r)*34));margin:calc(var(--r)*2) 0 0;position:relative;display:flex;flex-direction:column;align-self:stretch}
 .t1-acc strong{font-size:max(8.5px,calc(var(--r)*34));font-weight:700;margin-top:max(3px,calc(var(--r)*var(--dk2)*24));white-space:nowrap;letter-spacing:-.005em}
 .t1-wal{position:absolute;right:max(7px,calc(var(--r)*29));bottom:0;width:max(22px,calc(var(--r)*99));height:max(22px,calc(var(--r)*var(--dk2)*101));border-radius:max(7px,calc(var(--r)*22))}.t1-wal svg{width:max(14px,calc(var(--r)*58));height:max(14px,calc(var(--r)*58))}
 .t1-k4{gap:max(4px,calc(var(--r)*17));grid-template-columns:355fr 358fr 320fr 295fr}
 .t1-k4 .t1-k{height:max(36px,calc(var(--r)*var(--dk2)*135));padding:0 max(4px,calc(var(--r)*14)) 0 max(9px,calc(var(--r)*36));gap:max(2px,calc(var(--r)*8));border-radius:max(10px,calc(var(--r)*22));flex-direction:row;align-items:center}
-.t1-k4 small{font-size:max(7px,calc(var(--r)*26));margin:0 0 max(1px,calc(var(--r)*10));line-height:1.15;font-weight:400}.t1-k4 b{font-size:max(9.5px,calc(var(--r)*38));line-height:1.15;font-weight:700}
+.t1-k4 small{font-size:max(7px,calc(var(--r)*26));margin:0 0 max(1px,calc(var(--r)*12));line-height:max(8px,calc(var(--r)*30));font-weight:400}.t1-k4 b{display:block;font-size:max(9.5px,calc(var(--r)*38));line-height:max(11px,calc(var(--r)*44));font-weight:700}
 .t1-k4 .t1-ki{order:2;margin-left:auto;width:max(22px,calc(var(--r)*80));height:max(22px,calc(var(--r)*var(--dk2)*82));border-radius:max(7px,calc(var(--r)*18));background:var(--t-soft);align-items:center;justify-content:center}.t1-k4 .t1-ki svg{width:max(13px,calc(var(--r)*52));height:max(13px,calc(var(--r)*52))}
 .t1-k4 .t1-k>div{order:1;min-width:0}
 .t1-k6{gap:max(4px,calc(var(--r)*17));grid-template-columns:185fr 242fr 242fr 206fr 206fr 212fr}
@@ -465,33 +465,36 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .t1-k6 b{font-size:max(9.5px,calc(var(--r)*38));margin-top:max(2px,calc(var(--r)*var(--dk2)*14));height:auto;line-height:1.15;font-weight:700;letter-spacing:-.01em}.t1-k6 b svg{width:max(10px,calc(var(--r)*40));height:max(10px,calc(var(--r)*40))}
 .t1-k6 .t1-ki{position:absolute;right:max(5px,calc(var(--r)*28));bottom:max(3px,calc(var(--r)*var(--dk2)*14));width:max(22px,calc(var(--r)*86));height:max(20px,calc(var(--r)*var(--dk2)*86));border-radius:max(7px,calc(var(--r)*20));background:var(--t-soft);align-items:center;justify-content:center}.t1-k6 .t1-ki svg{width:max(13px,calc(var(--r)*54));height:max(13px,calc(var(--r)*54));max-height:100%}
 .t1-mid{gap:max(4px,calc(var(--r)*var(--dk)*22));flex:1 1 auto;min-height:0;grid-template-columns:916fr 443fr}
-.t1-eqc{padding:max(5px,calc(var(--r)*var(--dk)*26)) max(6px,calc(var(--r)*26)) max(3px,calc(var(--r)*var(--dk)*14)) max(10px,calc(var(--r)*46));display:flex;flex-direction:column;border-radius:max(12px,calc(var(--r)*28))}
+.t1-eqc{padding:max(5px,calc(var(--r)*var(--dk)*24)) max(6px,calc(var(--r)*26)) max(3px,calc(var(--r)*var(--dk)*14)) max(10px,calc(var(--r)*46));display:flex;flex-direction:column;border-radius:max(12px,calc(var(--r)*28))}
 .t1-fb{width:100%;position:relative;overflow:hidden;flex:1 1 0;min-height:84px;margin-top:max(2px,calc(var(--r)*var(--dk)*10))}
 .t1-fb .t1-eq{display:block;position:absolute;left:0;top:0;width:100%;height:100%;margin:0}
 .t1-eh{gap:max(3px,calc(var(--r)*10));flex-wrap:nowrap;align-items:center}
-.t1-ti{font-size:max(8px,calc(var(--r)*30));gap:max(6px,calc(var(--r)*34));letter-spacing:.04em;font-weight:600;line-height:1.1}.t1-ti svg{width:max(12px,calc(var(--r)*46));height:max(12px,calc(var(--r)*46))}
+.t1-ti{font-size:max(8px,calc(var(--r)*30));gap:max(6px,calc(var(--r)*34));letter-spacing:.04em;font-weight:600;line-height:1.1}.t1-ti svg{width:max(11px,calc(var(--r)*40));height:max(11px,calc(var(--r)*40))}
 .t1-rg{border-radius:max(6px,calc(var(--r)*14));padding:0;height:max(14px,calc(var(--r)*var(--dk)*51));align-items:stretch}.t1-rg button{font-size:max(7px,calc(var(--r)*27));font-weight:400;padding:0 max(6px,calc(var(--r)*22));border-radius:max(5px,calc(var(--r)*13));display:flex;align-items:center}.t1-rg button.on{font-weight:600}
 .t1-side{gap:max(4px,calc(var(--r)*var(--dk)*23))}
-.t1-pb,.t1-in{padding:max(6px,calc(var(--r)*var(--dk)*34)) max(8px,calc(var(--r)*36)) max(5px,calc(var(--r)*var(--dk)*30)) max(8px,calc(var(--r)*37));border-radius:max(12px,calc(var(--r)*28));display:flex;flex-direction:column;flex:1 1 auto}
+.t1-pb,.t1-in{padding:max(5px,calc(var(--r)*var(--dk)*25)) max(8px,calc(var(--r)*36)) max(5px,calc(var(--r)*var(--dk)*30)) max(8px,calc(var(--r)*37));border-radius:max(12px,calc(var(--r)*28));display:flex;flex-direction:column;flex:1 1 auto}
 .t1-pb{flex-grow:372}.t1-in{flex-grow:206}
 .t1-pbb{gap:max(6px,calc(var(--r)*26));margin-top:max(2px,calc(var(--r)*var(--dk)*14));flex:1;align-items:center;justify-content:flex-start}
 .t1-donut{width:max(40px,calc(var(--r)*204));height:max(34px,calc(var(--r)*var(--dk)*204))}.t1-donut{aspect-ratio:1;height:auto;width:min(max(40px,calc(var(--r)*204)),calc(var(--r)*var(--dk)*204))}
 .t1-dc b{font-size:max(9px,calc(var(--r)*var(--dk)*44));font-weight:600}.t1-dc small{font-size:max(5.2px,calc(var(--r)*var(--dk)*24));margin-top:max(1px,calc(var(--r)*4));letter-spacing:0}
 .t1-lg li{gap:max(4px,calc(var(--r)*14))}.t1-lg span{font-size:max(7px,calc(var(--r)*26));white-space:nowrap;line-height:1.3}.t1-lg b{font-size:max(7px,calc(var(--r)*26));font-weight:600}.t1-lg i{width:max(6px,calc(var(--r)*22));height:max(6px,calc(var(--r)*22));margin-top:max(2px,calc(var(--r)*8))}
 .t1-lg{gap:max(3px,calc(var(--r)*var(--dk)*34))}
-.t1-ir{margin-top:max(3px,calc(var(--r)*var(--dk)*24));column-gap:max(3px,calc(var(--r)*10));row-gap:max(3px,calc(var(--r)*var(--dk)*18))}.t1-ir b{font-size:max(7.5px,calc(var(--r)*27));font-weight:700}.t1-ir em{font-size:max(7px,calc(var(--r)*26));padding-right:max(2px,calc(var(--r)*8))}.t1-ir>span{font-size:max(7px,calc(var(--r)*26))}.t1-bar{height:max(7px,calc(var(--r)*25));border-radius:max(4px,calc(var(--r)*13))}.t1-bar i{border-radius:max(4px,calc(var(--r)*13))}
-.t1-rt{padding:max(6px,calc(var(--r)*var(--dk)*30)) max(5px,calc(var(--r)*24)) max(3px,calc(var(--r)*var(--dk)*14))}
+.t1-ir{margin-top:max(3px,calc(var(--r)*var(--dk)*30));column-gap:max(3px,calc(var(--r)*10));row-gap:max(2px,calc(var(--r)*var(--dk)*10))}.t1-ir b{font-size:max(7.5px,calc(var(--r)*27));font-weight:700}.t1-ir em{font-size:max(7px,calc(var(--r)*26));padding-right:max(2px,calc(var(--r)*8))}.t1-ir>span{font-size:max(7px,calc(var(--r)*26))}.t1-bar{height:max(7px,calc(var(--r)*25));border-radius:max(4px,calc(var(--r)*13))}.t1-bar i{border-radius:max(4px,calc(var(--r)*13))}
+.t1-rt{padding:max(5px,calc(var(--r)*var(--dk)*25)) max(5px,calc(var(--r)*24)) max(3px,calc(var(--r)*var(--dk)*14))}
 .t1-rt .t1-eh{padding:0 max(5px,calc(var(--r)*22)) max(3px,calc(var(--r)*var(--dk)*24)) max(5px,calc(var(--r)*22))}.t1-va{font-size:max(7.5px,calc(var(--r)*28));gap:max(2px,calc(var(--r)*6))}.t1-va svg{width:max(8px,calc(var(--r)*26));height:max(8px,calc(var(--r)*26))}
 .t1-tr0,.t1-trr{grid-template-columns:204fr 166fr 143fr 126fr 176fr 183fr 185fr 132fr;padding:0 0 0 max(6px,calc(var(--r)*22));column-gap:0}
 .t1-tr0{height:max(14px,calc(var(--r)*var(--dk)*66));font-size:max(6.5px,calc(var(--r)*24));letter-spacing:.04em;border-radius:max(5px,calc(var(--r)*14))}
 .t1-trr{height:max(15px,calc(var(--r)*var(--dk)*68));font-size:max(7px,calc(var(--r)*27))}.t1-trr span:nth-child(-n+6){font-weight:400}.t1-trr span:nth-child(n+7){font-size:max(7px,calc(var(--r)*27));font-weight:700}.t1-trr i{font-size:max(6.5px,calc(var(--r)*26));font-weight:500;padding:max(1px,calc(var(--r)*var(--dk)*10)) max(5px,calc(var(--r)*20));border-radius:max(4px,calc(var(--r)*12));line-height:1}
 .t1-two{gap:max(5px,calc(var(--r)*26));grid-template-columns:732fr 621fr}
-.t1-dp,.t1-rk{padding:max(6px,calc(var(--r)*var(--dk)*32)) max(8px,calc(var(--r)*41)) max(4px,calc(var(--r)*var(--dk)*24)) max(8px,calc(var(--r)*40));border-radius:max(12px,calc(var(--r)*28))}
-.t1-dp>.t1-ti,.t1-rk>.t1-ti{margin-bottom:max(2px,calc(var(--r)*var(--dk)*10))}
+.t1-dp,.t1-rk{padding:max(5px,calc(var(--r)*var(--dk)*25)) max(8px,calc(var(--r)*41)) max(4px,calc(var(--r)*var(--dk)*24)) max(8px,calc(var(--r)*40));border-radius:max(12px,calc(var(--r)*28))}
+.t1-dp>.t1-ti,.t1-rk>.t1-ti{margin-bottom:max(2px,calc(var(--r)*var(--dk)*17))}
 .t1-dr{grid-template-columns:max(48px,calc(var(--r)*199)) max(32px,calc(var(--r)*133)) 1fr;column-gap:0;height:max(15px,calc(var(--r)*var(--dk)*70));font-size:max(7px,calc(var(--r)*26))}.t1-dr b{font-size:max(7px,calc(var(--r)*26));font-weight:700}
 .t1-dp .t1-bar{height:max(7px,calc(var(--r)*24))}
-.t1-rkg{margin-top:max(1px,calc(var(--r)*var(--dk)*8))}.t1-rkg>div{padding:max(2px,calc(var(--r)*var(--dk)*12)) 0 max(2px,calc(var(--r)*var(--dk)*14))}.t1-rkg>div:nth-child(even){padding-left:max(7px,calc(var(--r)*32))}
+.t1-rkg{margin-top:max(1px,calc(var(--r)*var(--dk)*8))}.t1-rkg>div{padding:max(2px,calc(var(--r)*var(--dk)*16)) 0 max(3px,calc(var(--r)*var(--dk)*22))}.t1-rkg>div:nth-child(even){padding-left:max(7px,calc(var(--r)*32))}
 .t1-rkg small{font-size:max(7px,calc(var(--r)*26));font-weight:400}.t1-rkg b{font-size:max(8.5px,calc(var(--r)*34));margin-top:max(1px,calc(var(--r)*var(--dk)*10));font-weight:700}
 .t1-ac{padding:max(3px,calc(var(--r)*var(--dk)*10)) max(3px,calc(var(--r)*12));border-radius:max(12px,calc(var(--r)*22))}.t1-ac .tp-act{height:max(26px,calc(var(--r)*var(--dk)*66));font-size:max(9px,calc(var(--r)*27));border-radius:max(9px,calc(var(--r)*16))}.t1-ac .tp-act svg{width:max(13px,calc(var(--r)*36));height:max(13px,calc(var(--r)*36))}
 .t1-ki,.t1-ti svg{color:color-mix(in srgb,var(--ej-pr) 82%,var(--ej-ik))}
 @media(max-width:389px){.t1-dc small{display:none}}
+
+.tp1[data-tight="1"] .t1-dc small{display:none}
+@media(max-width:389px){.t1-k4 .t1-ki{width:19px;height:19px;border-radius:6px}.t1-k4 .t1-ki svg{width:12px;height:12px}.t1-k4 small{font-size:6.5px}.t1-k4 .t1-k{padding-right:6px;padding-left:8px}}

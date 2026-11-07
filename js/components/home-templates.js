@@ -68,9 +68,11 @@ function useT1Fit() {
             document.body.style.setProperty('--tp-bot', bot + 'px');
             const top = el.getBoundingClientRect().top + window.scrollY, avail = Math.max(0, Math.floor(window.innerHeight - top - bot) - 1);
             const mh = avail + 'px'; if (el.style.minHeight !== mh) el.style.minHeight = mh;
-            const DK = [1, .95, .9, .85, .8, .75, .7, .65, .6, .55, .5]; let di = 0;
-            const setDk = i => { el.style.setProperty('--dk', DK[i]); el.style.setProperty('--dk2', (1 - (1 - DK[i]) * .45).toFixed(3)); };
-            setDk(0); while (di < DK.length - 1 && el.getBoundingClientRect().height > avail + .05) { di++; setDk(di); }
+            /* urutan pilihan: utamakan jarak persis gambar rujukan (dk 1); bila tidak muat, kurangi dulu jumlah baris Recent Trades (7 -> 4), baru padatkan jarak */
+            const PLAN = [[7, 1], [7, .95], [6, 1], [6, .95], [5, 1], [5, .95], [4, 1], [4, .95], [4, .9], [4, .85], [4, .8], [4, .75], [4, .7], [4, .65], [4, .6], [4, .55], [4, .5]];
+            const trs = el.querySelectorAll('.t1-trr');
+            const setPlan = i => { const [n, k] = PLAN[i]; trs.forEach((r, j) => { r.style.display = j < n ? '' : 'none'; }); el.style.setProperty('--dk', k); el.dataset.tight = k < .9 ? '1' : '0'; el.style.setProperty('--dk2', (1 - (1 - k) * .45).toFixed(3)); };
+            let di = 0; setPlan(0); while (di < PLAN.length - 1 && el.getBoundingClientRect().height > avail + .05) { di++; setPlan(di); }
             const w = bx.clientWidth, h = bx.clientHeight; if (!w || !h) return;
             setM(p => p.h === h && p.w === w ? p : { h, w });
         };
