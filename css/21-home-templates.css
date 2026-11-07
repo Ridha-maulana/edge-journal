@@ -498,3 +498,9 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 
 .tp1[data-tight="1"] .t1-dc small{display:none}
 @media(max-width:389px){.t1-k4 .t1-ki{width:19px;height:19px;border-radius:6px}.t1-k4 .t1-ki svg{width:12px;height:12px}.t1-k4 small{font-size:6.5px}.t1-k4 .t1-k{padding-right:6px;padding-left:8px}}
+.t1-dp .t1-bar i.neg{background:var(--red)}
+.t1-dp{display:flex;flex-direction:column;justify-content:flex-start}
+.t1-rk{display:flex;flex-direction:column}
+.t1-rkg{flex:1;grid-template-rows:1fr 1fr}
+.t1-rkg>div{display:flex;flex-direction:column;justify-content:center}
+.t1-dp .t1-dr{flex:1 1 auto;height:auto;min-height:max(14px,calc(var(--r)*var(--dk)*70))}

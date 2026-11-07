@@ -68,10 +68,10 @@ function useT1Fit() {
             document.body.style.setProperty('--tp-bot', bot + 'px');
             const top = el.getBoundingClientRect().top + window.scrollY, avail = Math.max(0, Math.floor(window.innerHeight - top - bot) - 1);
             const mh = avail + 'px'; if (el.style.minHeight !== mh) el.style.minHeight = mh;
-            /* urutan pilihan: utamakan jarak persis gambar rujukan (dk 1); bila tidak muat, kurangi dulu jumlah baris Recent Trades (7 -> 4), baru padatkan jarak */
-            const PLAN = [[7, 1], [7, .95], [6, 1], [6, .95], [5, 1], [5, .95], [4, 1], [4, .95], [4, .9], [4, .85], [4, .8], [4, .75], [4, .7], [4, .65], [4, .6], [4, .55], [4, .5]];
-            const trs = el.querySelectorAll('.t1-trr');
-            const setPlan = i => { const [n, k] = PLAN[i]; trs.forEach((r, j) => { r.style.display = j < n ? '' : 'none'; }); el.style.setProperty('--dk', k); el.dataset.tight = k < .9 ? '1' : '0'; el.style.setProperty('--dk2', (1 - (1 - k) * .45).toFixed(3)); };
+            /* urutan pilihan: utamakan jarak persis gambar rujukan (dk 1); bila tidak muat, kurangi dulu jumlah baris Recent Trades (7 -> 4) dan Daily P&L (5 -> 3), baru padatkan jarak */
+            const PLAN = [[7, 5, 1], [7, 4, 1], [6, 4, 1], [6, 3, 1], [5, 3, 1], [4, 3, 1], [4, 3, .95], [4, 3, .9], [4, 3, .85], [4, 3, .8], [4, 3, .75], [4, 3, .7], [4, 3, .65], [4, 3, .6], [4, 3, .55], [4, 3, .5]];
+            const trs = el.querySelectorAll('.t1-trr'), drs = el.querySelectorAll('.t1-dr');
+            const setPlan = i => { const [n, m, k] = PLAN[i]; trs.forEach((r, j) => { r.style.display = j < n ? '' : 'none'; }); drs.forEach((r, j) => { r.style.display = j < m ? '' : 'none'; }); el.style.setProperty('--dk', k); el.dataset.tight = k < .9 ? '1' : '0'; el.style.setProperty('--dk2', (1 - (1 - k) * .45).toFixed(3)); };
             let di = 0; setPlan(0); while (di < PLAN.length - 1 && el.getBoundingClientRect().height > avail + .05) { di++; setPlan(di); }
             const w = bx.clientWidth, h = bx.clientHeight; if (!w || !h) return;
             setM(p => p.h === h && p.w === w ? p : { h, w });
@@ -136,7 +136,7 @@ function HomeT1({ d }) {
     const R = 64, C = 2 * Math.PI * R, seg = (n, off) => ({ strokeDasharray: `${n / tot * C} ${C}`, strokeDashoffset: -off / tot * C });
     const sym = d.bySymbol.slice().sort((a, b) => b.count - a.count).slice(0, 3);
     const recent = d.cs.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 7);
-    const days = Object.entries(d.dayMap).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 3), dmax = Math.max(1, ...days.map(x => Math.abs(x[1])));
+    const days = Object.entries(d.dayMap).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 5), dmax = Math.max(1, ...days.map(x => Math.abs(x[1])));
     const kpi4 = [['Database', 'Starting Balance', money(d.startBal, c), ''], ['Wallet', 'Current Balance', money(d.aNow, c), tpC(d.total)], ['BarsFill', 'Growth', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct)], ['Calendar', 'Active Days', String(d.activeDays), '']];
     const k6 = tpMetrics(d), ik = ['Trophy', 'LineChart', 'FileText', 'Scale', 'Target', 'Star'], nm = ['Win Rate', 'Profit Factor', 'Total Trades', 'Avg. R:R', 'Total Pips', 'Best Day'];
     return tpE("div", { className: "tp tp1", ref: fit.root },
