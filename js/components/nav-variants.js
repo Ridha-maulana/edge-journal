@@ -5,6 +5,7 @@ const NAV_LIST = [[0, 'Standar (lama)'], [1, 'Kapsul gelap'], [2, 'Datar + titik
 function navVariantGet() { try {
     let v = localStorage.getItem(NAV_KEY);
     if (v === '6' || v === '9' || v === '10') v = '4'; // menu bawah lama Template 2/3/4 -> Datar + pil
+    if (v === '5') v = '0'; // menu bawah lama Template 1 -> Standar (lama)
     return v !== null && /^\d+$/.test(v) && NAV_LIST.some(x => x[0] === Number(v)) ? Number(v) : 0;
 }
 catch (_) {

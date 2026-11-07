@@ -3,7 +3,8 @@
 const HEADER_KEY = 'ej3-header';
 const HEADER_LIST = [[0, 'Standar (lama)'], [1, 'Minimal satu baris'], [2, 'Bilah kaca'], [3, 'Akun jadi judul'], [5, 'Saldo di pil akun'], [6, 'Banner gradasi'], [7, 'Status sinkron'], [9, 'Kartu mengambang'], [10, 'Strip tanggal']].concat(TPL_HEADER_LIST);
 function headerVariantGet() { try {
-    const v = localStorage.getItem(HEADER_KEY);
+    let v = localStorage.getItem(HEADER_KEY);
+    if (v === '11') v = '15'; // header lama Template 1 -> Hijau bersih
     return v !== null && /^\d+$/.test(v) && HEADER_LIST.some(x => x[0] === Number(v)) ? Number(v) : 0;
 }
 catch (_) {

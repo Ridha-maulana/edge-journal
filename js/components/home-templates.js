@@ -56,6 +56,34 @@ function useTplFit(minH, maxH) {
     }, []);
     return { root, box, m };
 }
+/* T1: halaman memenuhi satu layar HP. Tinggi minimum akar = sisa layar di atas menu bawah; kartu grafik menyerap sisa lewat CSS flex (tanpa celah di atas menu). */
+function useT1Fit() {
+    const root = useRef(null), box = useRef(null), [m, setM] = useState({ h: 0, w: 0 });
+    React.useLayoutEffect(() => {
+        let raf = 0, dead = false;
+        const fit = () => {
+            raf = 0; const el = root.current, bx = box.current; if (dead || !el || !bx) return;
+            const nav = document.querySelector('.bottom-nav'), nr = nav ? nav.getBoundingClientRect() : null;
+            const bot = (nr && nr.height ? Math.max(nav.offsetHeight, window.innerHeight - nr.top) : 68) + 8;
+            document.body.style.setProperty('--tp-bot', bot + 'px');
+            const top = el.getBoundingClientRect().top + window.scrollY, avail = Math.max(0, Math.floor(window.innerHeight - top - bot) - 1);
+            const mh = avail + 'px'; if (el.style.minHeight !== mh) el.style.minHeight = mh;
+            const DK = [1, .95, .9, .85, .8, .75, .7, .65, .6, .55, .5]; let di = 0;
+            const setDk = i => { el.style.setProperty('--dk', DK[i]); el.style.setProperty('--dk2', (1 - (1 - DK[i]) * .45).toFixed(3)); };
+            setDk(0); while (di < DK.length - 1 && el.getBoundingClientRect().height > avail + .05) { di++; setDk(di); }
+            const w = bx.clientWidth, h = bx.clientHeight; if (!w || !h) return;
+            setM(p => p.h === h && p.w === w ? p : { h, w });
+        };
+        const q = () => { if (!raf) raf = requestAnimationFrame(fit); };
+        fit();
+        window.addEventListener('resize', q); window.addEventListener('orientationchange', q);
+        const ro = window.ResizeObserver ? new ResizeObserver(q) : null; if (ro) { if (root.current) ro.observe(root.current); if (box.current) ro.observe(box.current); }
+        const t1 = setTimeout(q, 350), t2 = setTimeout(q, 1200);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(q);
+        return () => { dead = true; if (raf) cancelAnimationFrame(raf); clearTimeout(t1); clearTimeout(t2); window.removeEventListener('resize', q); window.removeEventListener('orientationchange', q); if (ro) ro.disconnect(); };
+    }, []);
+    return { root, box, m };
+}
 function useTplChart(kindDef) { const [tf, setTf] = useState(() => candleSavedGet('ej3-chart-tf', 'SES')), [kind, setKind] = useState(() => candleSavedGet('ej3-chart-kind', kindDef || 'candle')); return { tf, kind, setTf: v => { setTf(v); candleSavedSet('ej3-chart-tf', v); }, setKind: v => { setKind(v); candleSavedSet('ej3-chart-kind', v); } }; }
 function TplChips({ ctl, order }) { const list = (order || ['H1', 'SES', 'D1', 'W1', 'M1', 'Y1']).map(k => CANDLE_TFS.find(x => x[0] === k)); return tpE("div", { className: "tp-tf", role: "group", "aria-label": "Skala grafik" }, list.map(([k, l]) => tpE("button", { key: k, type: "button", className: ctl.tf === k ? 'on' : '', onClick: () => ctl.setTf(k) }, l))); }
 function TplKind({ ctl }) { const line = ctl.kind !== 'candle'; return tpE("button", { type: "button", className: "tp-kind" + (line ? ' is-line' : ''), role: "switch", "aria-checked": line, "aria-label": line ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => ctl.setKind(line ? 'candle' : 'line') },
@@ -87,7 +115,7 @@ function T1Equity({ pts, cur, fit }) {
         xt.map((dd, i) => tpE("text", { key: 'x' + i, x: [L + 22, (L + W - R) / 2 + 12, W - R - 30][i], y: H - 10, textAnchor: "middle", className: "g-t" }, dd.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }))));
 }
 function HomeT1({ d }) {
-    const [rg, setRg] = useState('ALL'), fit = useTplFit(120, 460);
+    const [rg, setRg] = useState('ALL'), fit = useT1Fit();
     const c = d.cur;
     const pts = useMemo(() => {
         const hrs = { H: 1, D: 24, W: 168, M: 720 }[rg], all = d.cs.map(t => ({ t: +new Date(t.date), pnl: Number(t.pnl) || 0 })).filter(p => isFinite(p.t));
@@ -103,9 +131,9 @@ function HomeT1({ d }) {
     const sp = spark.map((v, i) => [sn === 1 ? 0 : i / (sn - 1) * 340, 8 + (shi - v) / ssp * 120]);
     const sl = sp.map(p => p.join(',')).join(' ');
     const wins = d.wins, losses = d.losses, be = d.nTrades - wins - losses, tot = d.nTrades || 1;
-    const R = 66, C = 2 * Math.PI * R, seg = (n, off) => ({ strokeDasharray: `${n / tot * C} ${C}`, strokeDashoffset: -off / tot * C });
+    const R = 64, C = 2 * Math.PI * R, seg = (n, off) => ({ strokeDasharray: `${n / tot * C} ${C}`, strokeDashoffset: -off / tot * C });
     const sym = d.bySymbol.slice().sort((a, b) => b.count - a.count).slice(0, 3);
-    const recent = d.cs.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+    const recent = d.cs.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 7);
     const days = Object.entries(d.dayMap).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 3), dmax = Math.max(1, ...days.map(x => Math.abs(x[1])));
     const kpi4 = [['Database', 'Starting Balance', money(d.startBal, c), ''], ['Wallet', 'Current Balance', money(d.aNow, c), tpC(d.total)], ['BarsFill', 'Growth', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct)], ['Calendar', 'Active Days', String(d.activeDays), '']];
     const k6 = tpMetrics(d), ik = ['Trophy', 'LineChart', 'FileText', 'Scale', 'Target', 'Star'], nm = ['Win Rate', 'Profit Factor', 'Total Trades', 'Avg. R:R', 'Total Pips', 'Best Day'];
@@ -123,7 +151,7 @@ function HomeT1({ d }) {
             tpE("div", { className: "t1-side" },
                 tpE("section", { className: "tp-card t1-pb" }, tpE("span", { className: "t1-ti" }, tpIc('Activity', 20), "P&L BREAKDOWN"),
                     tpE("div", { className: "t1-pbb" },
-                        tpE("div", { className: "t1-donut" }, tpE("svg", { viewBox: "0 0 160 160", "aria-hidden": "true" }, tpE("g", { transform: "rotate(-90 80 80)", fill: "none", strokeWidth: "26" }, tpE("circle", { cx: 80, cy: 80, r: R, className: "dn-bg" }), wins > 0 && tpE("circle", { cx: 80, cy: 80, r: R, className: "dn-w", style: seg(wins, 0) }), losses > 0 && tpE("circle", { cx: 80, cy: 80, r: R, className: "dn-l", style: seg(losses, wins) }), be > 0 && tpE("circle", { cx: 80, cy: 80, r: R, className: "dn-b", style: seg(be, wins + losses) }))), tpE("div", { className: "t1-dc" }, tpE("b", null, d.nTrades), tpE("small", null, "TRADES"))),
+                        tpE("div", { className: "t1-donut" }, tpE("svg", { viewBox: "0 0 160 160", "aria-hidden": "true" }, tpE("g", { transform: "rotate(-90 80 80)", fill: "none", strokeWidth: "32" }, tpE("circle", { cx: 80, cy: 80, r: R, className: "dn-bg" }), wins > 0 && tpE("circle", { cx: 80, cy: 80, r: R, className: "dn-w", style: seg(wins, 0) }), losses > 0 && tpE("circle", { cx: 80, cy: 80, r: R, className: "dn-l", style: seg(losses, wins) }), be > 0 && tpE("circle", { cx: 80, cy: 80, r: R, className: "dn-b", style: seg(be, wins + losses) }))), tpE("div", { className: "t1-dc" }, tpE("b", null, d.nTrades), tpE("small", null, "TRADES"))),
                         tpE("ul", { className: "t1-lg" }, [['dn-w', 'Wins', wins], ['dn-l', 'Losses', losses], ['dn-b', 'BE', be]].map(([k, l, n]) => tpE("li", { key: l }, tpE("i", { className: k }), tpE("span", null, l, tpE("b", null, n + ' (' + Math.round(n / tot * (d.nTrades ? 100 : 0)) + '%)'))))))),
                 tpE("section", { className: "tp-card t1-in" }, tpE("span", { className: "t1-ti" }, tpIc('BarsFill', 20), "INSTRUMENTS"), sym.length ? sym.map(s => tpE("div", { key: s.symbol, className: "t1-ir" }, tpE("b", null, s.symbol), tpE("em", null, s.count), tpE("div", { className: "t1-bar" }, tpE("i", { style: { width: Math.max(6, s.count / tot * 100) + '%' } })), tpE("span", null, Math.round(s.count / tot * 100) + '%'))) : tpE("small", { className: "t1-none" }, "Belum ada data")))),
         tpE("section", { className: "tp-card t1-rt" },
