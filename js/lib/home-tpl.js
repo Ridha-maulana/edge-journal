@@ -1,13 +1,13 @@
-/* Template halaman utama: 0 = standar (sekarang), 1-6 = enam template baru.
+/* Template halaman utama: 0 = standar (sekarang), 1-7 = template baru (7 = Template 5 · Sederhana, memakai header & menu Template 4).
    Setiap template punya header (id 10+n) dan menu bawah (id 4+n) sendiri yang juga bisa dipilih terpisah di Tools. */
 "use strict";
 const HOME_KEY = 'ej3-home';
-const HOME_LIST = [[0, 'Standar (sekarang)'], [1, 'Template 1 · Dasbor biru'], [2, 'Template 2 · Organik hijau'], [5, 'Template 3 · Hijau bersih'], [6, 'Template 4 · Kaca lembut']];
-const TPL_HEADER_LIST = HOME_LIST.slice(1).filter(x => x[0] !== 1).map(x => [10 + x[0], x[1]]); /* Template 1 memakai header "Hijau bersih" (15) dan menu bawah "Standar (lama)" (0) */
+const HOME_LIST = [[0, 'Standar (sekarang)'], [1, 'Template 1 · Dasbor biru'], [2, 'Template 2 · Organik hijau'], [5, 'Template 3 · Hijau bersih'], [6, 'Template 4 · Kaca lembut'], [7, 'Template 5 · Sederhana']];
+const TPL_HEADER_LIST = HOME_LIST.slice(1).filter(x => x[0] !== 1 && x[0] !== 7).map(x => [10 + x[0], x[1]]); /* Template 1 memakai header "Hijau bersih" (15) dan menu bawah "Standar (lama)" (0) */
 const TPL_NAV_LIST = []; /* tidak ada lagi menu bawah khusus template; Template 2/3/4 memakai "Datar + pil" (nv 4), Template 1 memakai nv 0 */
 function homeGet() { try {
     const v = localStorage.getItem(HOME_KEY);
-    return v !== null && /^[0-6]$/.test(v) && Number(v) !== 3 && Number(v) !== 4 ? Number(v) : 0;
+    return v !== null && /^[0-7]$/.test(v) && Number(v) !== 3 && Number(v) !== 4 ? Number(v) : 0;
 }
 catch (_) {
     return 0;

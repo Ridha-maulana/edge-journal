@@ -427,3 +427,9 @@
 - v5.9.11: ikon daun di header Template 2 hanya kerangka (tanpa isi warna), lebih tegas di tema terang.
 - v5.9.12: Template 2 — jarak antar kartu disamakan 8px (4 kartu ringkasan, Insight/Catatan, dan antar-baris).
 - v5.9.13: Template 4 — kartu 6 statistik disusun 2 kolom × 3 baris: ikon bulat di kiri, label + angka di kanan, dengan garis pemisah (seperti Template 5).
+- v5.9.14: Template 4 — 6 statistik dipisah menjadi 6 kartu sendiri (2 kolom × 3 baris, jarak 8px), ikon bulat di kiri, label + angka di kanan.
+- v5.9.15: Template 4 — kartu Saldo awal / Sekarang / Pertumbuhan / Hari aktif jadi satu baris; grafik/kandel naik mengisi ruang yang kosong (±70px lebih tinggi di layar 410×890).
+- v5.9.16: Template 4 tata letak Bento — kartu P&L + saldo awal/sekarang/hari aktif digabung (kartu periode & 4 kartu saldo dihapus), grafik (candlestick/garis) lebih tinggi, 3 kartu kecil (R:R, Pips, Best Day) tepat di bawah grafik, lingkaran Win rate + Profit Factor + Total Trades, lalu Share/Stats/DNA.
+- v5.9.17: Template baru "Template 5 · Sederhana" (id 7, memakai header & menu Template 4) = tata letak Bento + kartu P&L BREAKDOWN (donut Wins/Losses/BE + Profit Factor & Win rate). Template 4 · Kaca lembut dikembalikan ke tata letak sebelumnya (kartu periode, saldo 2×2, 6 statistik dalam satu kartu 2×3).
+- v5.9.18: Template 5 · Sederhana — bentuk kartu kembali seperti Bento (kartu P&L BREAKDOWN di kiri, Profit Factor & Total Trades bertumpuk di kanan); isi kartu kiri jadi donut Wins/Losses/BE.
+- v5.9.19: Template 5 · Sederhana — spasi seragam semua kartu (padding sekeliling sama, jarak ikon/judul/donut/legenda/label-angka diperlebar), donut P&L BREAKDOWN dikecilkan agar legenda tidak terpotong di layar sempit.

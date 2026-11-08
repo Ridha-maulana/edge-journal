@@ -71,6 +71,6 @@ html[data-fxn="1"] .bottom-nav .nav-item:nth-child(5) svg{color:#f97316!importan
 /* ---- kontras ikon: ikon tidak boleh menyatu dengan latarnya ---- */
 html[data-fxi="1"] .tp2 .t2-nt .t2-ii{background:linear-gradient(145deg,color-mix(in srgb,var(--ico) 28%,transparent),color-mix(in srgb,var(--ico) 14%,transparent))!important;box-shadow:0 4px 12px color-mix(in srgb,var(--ico) 22%,transparent)}
 html[data-fxi="1"] .tp2 .t2-nb svg{--ico:#fff!important;color:#fff!important}
-html[data-mode="light"][data-fxi="1"] :is(.t1-ki,.t2-ki,.t2-bd,.t2-ii,.t5-mi,.t5-ai,.t6-mi,.tp-act) svg[data-i]{color:color-mix(in srgb,var(--ico,currentColor) 62%,#000)!important}
+html[data-mode="light"][data-fxi="1"] :is(.t1-ki,.t2-ki,.t2-bd,.t2-ii,.t5-mi,.t5-ai,.t6-mi,.t6-m3,.t6-wr,.tp-act) svg[data-i]{color:color-mix(in srgb,var(--ico,currentColor) 62%,#000)!important}
 html[data-mode="light"][data-fxh="1"] :is(.ht-dcard,.ht-hello) svg[data-i]{color:color-mix(in srgb,var(--ico,currentColor) 62%,#000)!important}
 html[data-pale="1"] .bottom-nav:not([class*="nv-"]) .nav-item.active,html[data-pale="1"] .bottom-nav:not([class*="nv-"]) .nav-item.active svg,html[data-pale="1"] .bottom-nav.nv-4 .nav-item.nav-add svg,html[data-pale="1"] .bottom-nav.nv-4 .nav-item.nav-add{color:var(--ej-pru)!important}
