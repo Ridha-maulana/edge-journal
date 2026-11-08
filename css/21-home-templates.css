@@ -414,12 +414,12 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .t6-fb .hero-chart,.t6-fb .hc-body{margin:0;height:100%}
 /* ===== v5.9.0 T2 Organik hijau: kartu ringkasan, Insight, Catatan — ukuran & tata letak mengikuti gambar rujukan (M(N) = N piksel gambar rujukan lebar-isi 1130; F(N,min) = ukuran huruf dengan batas bawah agar tetap terbaca) ===== */
 .tp2{--m:calc((min(100vw,620px) - 16px)/1130)}
-.t2-k4{grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(var(--m)*18)}
+.t2-k4{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .t2-k{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-height:calc(var(--m)*246);height:auto;padding:calc(var(--m)*28) calc(var(--m)*8) calc(var(--m)*26) calc(var(--m)*40);gap:0}
 .t2-k .t2-ki{width:calc(var(--m)*88);height:calc(var(--m)*88);margin:0 0 calc(var(--m)*13);flex:none}.t2-k .t2-ki svg{width:calc(var(--m)*40);height:calc(var(--m)*40)}
 .t2-k small{align-self:flex-start;font-size:max(9.5px,calc(var(--m)*27.5));line-height:1.2;font-weight:500;white-space:normal;margin:0 0 calc(var(--m)*8)}
 .t2-k b{align-self:flex-start;margin-top:auto;font-size:max(12px,calc(var(--m)*41));line-height:1.15;white-space:nowrap;letter-spacing:-.02em;font-weight:800}
-.t2-two{grid-template-columns:651fr 452fr;gap:calc(var(--m)*27)}
+.t2-two{grid-template-columns:651fr 452fr;gap:8px}
 .t2-in,.t2-nt{min-width:0;min-height:calc(var(--m)*278)}
 .t2-in{padding:calc(var(--m)*26) calc(var(--m)*28) calc(var(--m)*24) calc(var(--m)*40)}
 .t2-ih{flex-wrap:wrap;align-items:center;justify-content:space-between;gap:calc(var(--m)*10);min-height:calc(var(--m)*57);flex-wrap:nowrap}
@@ -509,3 +509,13 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .t1-rkg>div{display:flex;flex-direction:column;justify-content:center}
 .t1-dp .t1-dr{flex:1 1 auto;height:auto;min-height:max(14px,calc(var(--r)*var(--dk)*70))}
 .ht5 .ht-logo{color:var(--ej-lgf,var(--ej-pr))}
+/* ===== v5.9.13 T6: kartu 6 statistik — 2 kolom × 3 baris, ikon terpisah di kiri, label + angka di kanan ===== */
+.t6-m{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:0;padding:calc(var(--u)*10) calc(var(--u)*30) calc(var(--u)*10)!important}
+.t6-m>div{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"i s" "i b";column-gap:calc(var(--u)*22);row-gap:calc(var(--u)*2);align-items:center;align-content:center;padding:calc(var(--u)*22) calc(var(--u)*12) calc(var(--u)*22) calc(var(--u)*30);border-left:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent);border-top:0}
+.t6-m>div:nth-child(odd){border-left:0;padding-left:calc(var(--u)*4)}
+.t6-m>div:nth-child(even){border-left:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent);padding-left:calc(var(--u)*30)}
+.t6-m>div:nth-child(n+3){border-top:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent)}
+.t6-m>div:last-child{padding-right:calc(var(--u)*12)}
+.t6-m .t6-mi{grid-area:i;width:calc(var(--u)*82);height:calc(var(--u)*82);border-radius:50%;margin:0}.t6-m .t6-mi svg{width:calc(var(--u)*38);height:calc(var(--u)*38)}
+.t6-m small{grid-area:s;align-self:end;white-space:normal;font-size:max(11px,calc(var(--u)*26));line-height:1.2}
+.t6-m b{grid-area:b;align-self:start;font-size:max(11px,calc(var(--u)*38));line-height:1.15}

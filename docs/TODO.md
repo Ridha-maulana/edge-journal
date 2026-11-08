@@ -425,3 +425,5 @@
 - v5.9.9 (APK 1.2.13): Tools > "Efek tampilan" menggantikan "Bandingkan rasa kartu": Tanpa efek / Semua efek + 7 saklar terpisah (latar, kartu, tombol, ikon kartu, ikon header, ikon menu bawah, gerak); pengguna lama otomatis dimigrasi (menu bawah default polos). Ikon punya warna tetap sendiri (ICON_COLORS) di kartu semua template, header, dan menu bawah (opsional). Template 1: jarak teks/angka ke kotak ikon pada kartu k4 & k6 dilonggarkan.
 - v5.9.10: perbaikan kontras ikon (Template 2: ikon Catatan Jurnal & tombol Tulis Catatan; Template 4: ikon grafik garis di tombol jenis grafik; ikon di kotak tint pada tema terang dipertegas; ikon menu bawah pada tema beraksen pucat); Template 4: kartu 6 statistik diberi ikon (Trophy, LineChart, FileText, Scale, Target, Star).
 - v5.9.11: ikon daun di header Template 2 hanya kerangka (tanpa isi warna), lebih tegas di tema terang.
+- v5.9.12: Template 2 — jarak antar kartu disamakan 8px (4 kartu ringkasan, Insight/Catatan, dan antar-baris).
+- v5.9.13: Template 4 — kartu 6 statistik disusun 2 kolom × 3 baris: ikon bulat di kiri, label + angka di kanan, dengan garis pemisah (seperti Template 5).
