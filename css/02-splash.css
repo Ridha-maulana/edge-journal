@@ -5,9 +5,9 @@ html,body{background:var(--c1)}
 #splash.sp-out{opacity:0;transform:scale(1.035);pointer-events:none}
 #splash .sp-glow{position:absolute;left:50%;top:50%;width:min(110vw,560px);height:min(110vw,560px);margin:calc(min(110vw,560px)/-2) 0 0 calc(min(110vw,560px)/-2);border-radius:50%;background:radial-gradient(circle,rgba(var(--r14),.22) 0%,rgba(var(--r14),.07) 40%,transparent 68%);animation:spGlow .9s ease-out .15s both!important;pointer-events:none}
 #splash .sp-lockup{position:relative;display:flex;align-items:center;gap:clamp(12px,4.2vw,20px);padding:0 16px}
-#splash .sp-mark{flex:none;display:grid;place-items:center;width:clamp(58px,18vw,76px);height:clamp(58px,18vw,76px);border-radius:50%;background:var(--accg);box-shadow:0 10px 38px rgba(var(--r2),.5)}
+#splash .sp-mark{flex:none;display:grid;place-items:center;width:clamp(58px,18vw,76px);height:clamp(58px,18vw,76px);border-radius:50%;background:var(--ej-spg,var(--accg));box-shadow:0 10px 38px rgba(var(--r2),.5)}
 #splash .sp-mark svg{width:56%;height:56%;overflow:visible}
-#splash .sp-bolt{fill:none;stroke:var(--c85);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+#splash .sp-bolt{fill:none;stroke:var(--ej-spf,var(--c85));stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
 #splash .sp-text strong{display:block;color:var(--c0);font-weight:700;font-size:clamp(18px,5.8vw,25px);letter-spacing:.13em;line-height:1.1;white-space:nowrap;opacity:0;animation:spText .6s cubic-bezier(.16,1,.3,1) .5s both!important}
 #splash .sp-text span{display:block;margin-top:7px;color:var(--c12);font-weight:500;font-size:clamp(9.5px,3vw,13px);letter-spacing:.3em;line-height:1;white-space:nowrap;opacity:0;animation:spText .6s cubic-bezier(.16,1,.3,1) .62s both!important}
 #splash .sp-mark{animation:spMark .6s cubic-bezier(.16,1,.3,1) both!important}

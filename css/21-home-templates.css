@@ -504,3 +504,4 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .t1-rkg{flex:1;grid-template-rows:1fr 1fr}
 .t1-rkg>div{display:flex;flex-direction:column;justify-content:center}
 .t1-dp .t1-dr{flex:1 1 auto;height:auto;min-height:max(14px,calc(var(--r)*var(--dk)*70))}
+.ht5 .ht-logo{color:var(--ej-lgf,var(--ej-pr))}

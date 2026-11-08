@@ -1,9 +1,9 @@
-/* v5.2.8 — My Journal, Tools, Profil: judul langsung, daftar datar (tanpa kartu besar), ukuran kecil. Hanya HP. */
+/* v5.2.8 — My Journal, Tools, Profil: judul langsung, daftar datar (tanpa kartu besar), ukuran kecil. Berlaku di semua lebar layar (termasuk HP diputar mendatar). */
 .as-namerow{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-top:var(--s2)}
 .as-namerow strong{margin:0!important;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .as-namerow .as-edit-row{flex:1;min-width:0}
 .as-namerow .as-edit{flex:none}
-@media(max-width:760px){
+@media screen{
 /* jarak tepi halaman Tools, Profil, My Journal (halaman utama tidak diubah) */
 body{--pg-edge:20px}
 body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body[data-tab="account"] .main-content{padding-left:var(--pg-edge)!important;padding-right:var(--pg-edge)!important}
@@ -117,4 +117,9 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 .main-content .acc-panel>.tool-card{border:0!important;background:none!important;padding:0!important;margin:0!important}
 .acc-panel>.tool-card>.tool-head{display:none}
 .acc-panel .sync-note:first-child{margin-top:0}
+}
+
+/* HP diputar mendatar (lebar > 760): halaman Tools, Profil, My Journal memakai gaya datar yang sama dan tidak menempel ke tepi atas */
+@media screen and (min-width:761px){
+body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body[data-tab="account"] .main-content{padding-top:max(24px,env(safe-area-inset-top))!important}
 }
