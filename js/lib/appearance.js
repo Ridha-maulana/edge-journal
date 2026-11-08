@@ -336,6 +336,9 @@
         function rgb2(h) { return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
         function trip(h) { return parseInt(h.substr(1, 2), 16) + ',' + parseInt(h.substr(3, 2), 16) + ',' + parseInt(h.substr(5, 2), 16); }
         st.setProperty('--accg', fxOn ? 'linear-gradient(135deg,' + ga + ',' + gb + ')' : f.ac);
+        /* aksen pucat di atas panel terang (amber, coral, dusty rose): sediakan warna aksen yang cukup kontras untuk ikon menu */
+        var pru = f.ac, pt = 0; while (cr(pru, f.pn) < 4.5 && pt < 12) { pt++; pru = mix(f.ac, f.tx, pt * .08); }
+        st.setProperty('--ej-pru', pru); root.setAttribute('data-pale', cr(f.ac, f.pn) < 4.2 ? '1' : '0');
         st.setProperty('--ej-cv', f.bg); st.setProperty('--ej-sf', f.pn); st.setProperty('--ej-ik', f.tx); st.setProperty('--ej-pr', f.ac); st.setProperty('--ej-so', f.so);
         st.setProperty('--fx-a', f.pn); st.setProperty('--fx-b', f.pn);
         st.setProperty('--ej-bd', f.bd); st.setProperty('--fx-bd', f.bd); st.setProperty('--fx-gl', trip(f.ac)); st.setProperty('--fx-so', trip(f.so));
