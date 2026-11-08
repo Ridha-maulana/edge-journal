@@ -9,27 +9,51 @@
 .flat-sec.card-sec{padding:var(--pad-card)!important;margin-bottom:var(--gap-card)!important}
 .trade-card{margin-bottom:var(--gap-card)}
 .week-head.gj-main.lv-y{background:var(--ej-so)!important}
-/* Tanpa efek: datar, tanpa bayangan/cahaya */
-html[data-fx="off"] :is(.hero-card,.pe-card,.tool-card,.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.acc-panel,.flat-sec.card-sec,.hd-card,.backup-panel,.panel,.primary-btn,.gate-btn,.brand-mark,.prof-av,.performance-action,.account-switcher,.icon-btn,.header-icon,.pill,.ct-pill){box-shadow:none!important}
-html[data-fx="off"] .bottom-nav .nav-item:nth-child(3) svg{box-shadow:none!important}
-/* Ber-efek */
-html[data-fx="on"] body{background:radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
-html[data-fx="on"] :is(.hero-card,.pe-card,.tool-card,.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.acc-panel,.flat-sec.card-sec,.hd-card,.backup-panel,.tsel-sheet,.panel){
+/* v5.9.9 — efek dipecah jadi 7 saklar (Tools > Efek tampilan): data-fxl latar · data-fxk kartu · data-fxb tombol · data-fxi ikon kartu · data-fxh ikon header · data-fxn ikon menu bawah · data-fxg gerak ("1" = aktif) */
+/* Kartu tanpa efek: datar, tanpa bayangan */
+html[data-fxk="0"] :is(.hero-card,.pe-card,.tool-card,.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.acc-panel,.flat-sec.card-sec,.hd-card,.backup-panel,.panel){box-shadow:none!important}
+/* Tombol tanpa efek */
+html[data-fxb="0"] :is(.primary-btn,.gate-btn,.performance-action,.account-switcher,.icon-btn,.header-icon,.pill,.ct-pill){box-shadow:none!important}
+html[data-fxb="0"] .bottom-nav .nav-item:nth-child(3) svg{box-shadow:none!important}
+html[data-fxi="0"] :is(.brand-mark,.prof-av){box-shadow:none!important}
+/* Efek latar */
+html[data-fxl="1"] body{background:radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
+/* Efek kartu */
+html[data-fxk="1"] :is(.hero-card,.pe-card,.tool-card,.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.acc-panel,.flat-sec.card-sec,.hd-card,.backup-panel,.panel,.tsel-sheet){
   background:radial-gradient(120% 90% at 0% 0%,var(--fx-s55),transparent 60%),var(--ej-sf)!important;
   box-shadow:0 12px 30px var(--fx-sh),inset 0 1px 0 var(--fx-hi)!important}
-html[data-fx="on"] .week-head.gj-main.lv-y{background:radial-gradient(120% 90% at 0% 0%,var(--fx-s90),var(--ej-so))!important}
-html[data-fx="on"] :is(.pe-tile,.combo-stats>*,.search-box,.tsel,.filter-chip,.account-switcher,.performance-action,.icon-btn,.header-icon){
+html[data-fxk="1"] .week-head.gj-main.lv-y{background:radial-gradient(120% 90% at 0% 0%,var(--fx-s90),var(--ej-so))!important}
+html[data-fxk="1"] :is(.pe-tile,.combo-stats>*,.search-box,.tsel,.filter-chip){
   box-shadow:0 6px 16px var(--fx-sh),inset 0 1px 0 var(--fx-hi)}
-html[data-fx="on"] :is(.primary-btn,.gate-btn,.share-actions .primary,.pill.active,.ct-pill.is-line){
+/* Efek tombol */
+html[data-fxb="1"] :is(.account-switcher,.performance-action,.icon-btn,.header-icon){
+  box-shadow:0 6px 16px var(--fx-sh),inset 0 1px 0 var(--fx-hi)}
+html[data-fxb="1"] :is(.primary-btn,.gate-btn,.share-actions .primary,.pill.active,.ct-pill.is-line){
   background:var(--accg)!important;color:var(--onacc)!important;border-color:transparent!important;
   box-shadow:0 8px 22px rgba(var(--fx-gl),.34),inset 0 1px 0 rgba(255,255,255,.28)!important}
-html[data-fx="on"] .brand-mark,html[data-fx="on"] .prof-av{box-shadow:0 8px 22px rgba(var(--fx-gl),.40)}
-html[data-fx="on"] .bottom-nav:not([class*="nv-"]) .nav-item:nth-child(3) svg{box-shadow:0 10px 26px rgba(var(--fx-gl),.45)!important}
+html[data-fxb="1"] .bottom-nav:not([class*="nv-"]) .nav-item:nth-child(3) svg{box-shadow:0 10px 26px rgba(var(--fx-gl),.45)!important}
+/* Efek ikon: logo/avatar bercahaya */
+html[data-fxi="1"] .brand-mark,html[data-fxi="1"] .prof-av{box-shadow:0 8px 22px rgba(var(--fx-gl),.40)}
+/* Efek gerak */
 @keyframes ejRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-html[data-fx="on"] :is(.hero-card,.pe-card,.tool-card,.week-head,.trade-card,.gj-chart,.flat-sec.card-sec){animation:ejRise .34s cubic-bezier(.2,.7,.2,1) both}
-html[data-fx="on"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn){transition:transform .14s ease,box-shadow .2s ease}
-html[data-fx="on"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn):active{transform:scale(.985)}
-@media (prefers-reduced-motion:reduce){html[data-fx="on"] *{animation:none!important;transition:none!important}}
+html[data-fxg="1"] :is(.hero-card,.pe-card,.tool-card,.week-head,.trade-card,.gj-chart,.flat-sec.card-sec){animation:ejRise .34s cubic-bezier(.2,.7,.2,1) both}
+html[data-fxg="1"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn){transition:transform .14s ease,box-shadow .2s ease}
+html[data-fxg="1"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn):active{transform:scale(.985)}
+@media (prefers-reduced-motion:reduce){html[data-fxg="1"] *{animation:none!important;transition:none!important}}
+/* Ikon berwarna tetap (tiap ikon punya warna sendiri: js/lib/icons.js ICON_COLORS) */
+html[data-fxi="1"] :is(.tp1,.tp2,.tp5,.tp6) svg[data-i]{color:var(--ico,currentColor)}
+html[data-fxi="1"] :is(.tp1,.tp2,.tp5,.tp6) .tp-act.a-stats svg{--ico:#f59e0b!important}
+html[data-fxi="1"] :is(.tp1,.tp2,.tp5,.tp6) .tp-act.a-dna svg{--ico:#ec4899!important}
+html[data-fxi="1"] :is(.tp1,.tp2,.tp5,.tp6) :is(.t2-ki,.t6-kic) svg{color:inherit!important}
+html[data-fxi="1"] .tp1 .t1-ki{background:linear-gradient(145deg,color-mix(in srgb,var(--ico) 26%,transparent),color-mix(in srgb,var(--ico) 12%,transparent))!important;box-shadow:0 4px 12px color-mix(in srgb,var(--ico) 22%,transparent)}
+html[data-fxi="1"] .tp1 .t1-ki svg{color:var(--ico)}
+/* Ikon header */
+html[data-fxh="1"] :is(.ht,.topbar) svg[data-i]{color:var(--ico,currentColor)}
+/* Ikon menu bawah (tombol tengah dibiarkan) */
+html[data-fxn="1"] .bottom-nav .nav-item:nth-child(1) svg{color:#3b82f6!important;stroke:#3b82f6!important;opacity:1!important}
+html[data-fxn="1"] .bottom-nav .nav-item:nth-child(2) svg{color:#f59e0b!important;stroke:#f59e0b!important;opacity:1!important}
+html[data-fxn="1"] .bottom-nav .nav-item:nth-child(4) svg{color:#06b6d4!important;stroke:#06b6d4!important;opacity:1!important}
+html[data-fxn="1"] .bottom-nav .nav-item:nth-child(5) svg{color:#f97316!important;stroke:#f97316!important;opacity:1!important}
 
 /* ===== v5.8.7 — jarak antar kartu seragam 12px di My Journal dan Advanced Statistics (sebelumnya 8–32px bercampur) ===== */
 :root{--gap-j:12px}

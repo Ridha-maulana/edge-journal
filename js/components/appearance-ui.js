@@ -5,6 +5,39 @@ function useAppearance() {
     useEffect(() => { const f = () => bump(n => n + 1); window.addEventListener('ej-appearance', f); return () => window.removeEventListener('ej-appearance', f); }, []);
     return window.EJ;
 }
+/* Efek tampilan: 7 saklar terpisah + pilihan cepat. Pratinjau mengikuti saklar. */
+const FX_ROWS = [
+    ['latar', 'Efek latar', 'Cahaya lembut di latar halaman', 'Moon'],
+    ['kartu', 'Efek kartu', 'Bayangan, gradasi halus, tepi bercahaya', 'FileText'],
+    ['tombol', 'Efek tombol', 'Tombol gradasi + cahaya, efek saat ditekan', 'SlidersHorizontal'],
+    ['ikon', 'Efek ikon kartu', 'Ikon kartu berwarna sendiri, kotak bercahaya', 'Star'],
+    ['hdr', 'Efek ikon header', 'Ikon header berwarna sendiri', 'CalendarDays'],
+    ['nav', 'Efek ikon menu', 'Ikon menu bawah berwarna sendiri', 'BookOpen'],
+    ['gerak', 'Efek gerak', 'Kartu muncul halus dan animasi saat ditekan', 'Clock']
+];
+const FX_MINI = { hdr: ['CalendarDays', 'UserRound'], nav: ['BarChart3', 'BookOpen', 'SlidersHorizontal', 'UserRound'] };
+const FX_NAVC = ['#3b82f6', '#f59e0b', '#06b6d4', '#f97316'];
+function fxCount(st) { const n = EJ_FX_KEYS().filter(k => st.fxs[k]).length; return n === 0 ? 'Tanpa efek' : n === EJ_FX_KEYS().length ? 'Semua efek' : n + ' efek aktif'; }
+function EJ_FX_KEYS() { return window.EJ.FX_KEYS; }
+function ApFxDialog({ EJ, st, onClose }) {
+    const h = React.createElement, f = st.fxs, n = EJ.FX_KEYS.filter(k => f[k]).length, all = n === EJ.FX_KEYS.length, none = n === 0;
+    return h(ApDialog, { title: "Efek tampilan", onClose: onClose, note: "Nyalakan semua, matikan semua, atau pilih sendiri efek mana yang dipakai. Perubahan langsung terlihat." },
+        h("div", { className: "fxm" },
+            h("div", { className: "fxm-seg" },
+                h("button", { type: "button", className: none ? 'on' : '', onClick: () => EJ.setFxAll(false) }, h(SlidersHorizontal, { size: 18 }), h("span", null, "Tanpa efek")),
+                h("button", { type: "button", className: all ? 'on' : '', onClick: () => EJ.setFxAll(true) }, h(Sparkles, { size: 18 }), h("span", null, "Semua efek"))),
+            h("div", { className: "fxm-pv", "data-l": f.latar ? 1 : 0, "data-k": f.kartu ? 1 : 0, "data-b": f.tombol ? 1 : 0, "data-i": f.ikon ? 1 : 0 },
+                h("small", null, "PRATINJAU"),
+                h("div", { className: "fxm-card" },
+                    h("span", { className: "fxm-t" }, h(Icon, { name: "Trophy", size: 22 })),
+                    h("div", { className: "fxm-tx" }, h("b", null, "Win Rate"), h("span", null, "88%")),
+                    h("span", { className: "fxm-bt" }, "Lihat"))),
+            h("div", { className: "fxm-list" }, FX_ROWS.map(([k, t, d, ic]) => h("button", { type: "button", key: k, className: "fxm-r" + (f[k] ? ' on' : ''), role: "switch", "aria-checked": !!f[k], onClick: () => EJ.setFx(k, !f[k]) },
+                h("i", null, h(Icon, { name: ic, size: 18 })),
+                h("div", null, h("b", null, t), h("small", null, d)),
+                FX_MINI[k] && h("span", { className: "fxm-mini" }, FX_MINI[k].map((nm, j) => h("span", { key: nm, style: { color: f[k] ? (k === 'nav' ? FX_NAVC[j] : ICON_COLORS[nm]) : 'var(--ej-ik)', opacity: f[k] ? 1 : .55 } }, h(Icon, { name: nm, size: 15 })))),
+                h("span", { className: "fxm-sw" }))))));
+}
 function ApDialog({ title, note, onClose, children, className }) {
     return ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop center top sheet-layer", onClick: e => { if (e.target === e.currentTarget)
             onClose(); } },
@@ -113,15 +146,13 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
         React.createElement(ApRow, { icon: st.mode === 'light' || (st.mode === 'auto' && EJ.resolved === 'light') ? React.createElement(Sun, { size: 18 }) : React.createElement(Moon, { size: 18 }), title: "Mode tampilan", desc: "Terang, gelap, atau otomatis", value: modeLabel, onOpen: () => setDlg('mode') }),
         React.createElement(ApRow, { icon: React.createElement(Palette, { size: 18 }), title: "Tema aplikasi", desc: "78 tema, masing-masing terang & gelap", value: th.name, dot: th.grad[0], onOpen: () => setDlg('theme') }),
         React.createElement(ApRow, { icon: React.createElement(TypeIcon, { size: 18 }), title: "Font aplikasi", desc: "Jenis huruf di seluruh aplikasi", value: fo.name, onOpen: () => { preFont(startF); setDlg('font'); } }),
-        React.createElement(ApRow, { icon: React.createElement(Sparkles, { size: 18 }), title: "Bandingkan rasa kartu", desc: "Ubah tampilan seluruh kartu dalam satu ketukan", value: st.fx === 'on' ? 'Ber-efek' : 'Tanpa efek', onOpen: () => setDlg('fx') }),
+        React.createElement(ApRow, { icon: React.createElement(Sparkles, { size: 18 }), title: "Efek tampilan", desc: "Kartu, tombol, ikon, latar, dan gerak: pilih semua atau satu per satu", value: fxCount(st), onOpen: () => setDlg('fx') }),
         React.createElement(HeaderPicker, { value: headerVariant || 0, onChange: onHeaderVariant }),
         React.createElement(NavPicker, { value: navVariant || 0, onChange: onNavVariant }),
         dlg === 'home' && React.createElement(ApDialog, { title: "Halaman utama", onClose: close, className: "ap-wide", note: "Template mengganti header, isi, dan menu bawah sekaligus. Warna, mode, font, dan efek kartu tetap mengikuti pilihanmu. Header dan menu bawah masih bisa dipilih sendiri di bawah." },
             React.createElement("div", { className: "ap-list" }, HOME_LIST.map(([v, l]) => React.createElement("button", { type: "button", key: v, className: ((homeT || 0) === v ? 'on ' : '') + 'ap-font', onClick: () => { onHome && onHome(v); close(); } },
                 React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, l.replace(' (sekarang)', '')), React.createElement("small", null, v === 0 ? "Tampilan Edge Journal sekarang" : ({ 1: "Biru, tabel trade & donat P&L", 2: "Hijau lembut, area chart", 5: "Hijau bersih, grafik batang", 6: "Kaca buram, kandel" })[v])), React.createElement("i", { className: "ap-rad" }))))),
-        dlg === 'fx' && React.createElement(ApDialog, { title: "Bandingkan rasa kartu", onClose: close, note: st.fx === 'on' ? "Ber-efek: kedalaman, cahaya, dan gerak halus pada kartu dan tombol." : "Tanpa efek: border tipis, fokus ke data. Semua bayangan, cahaya, dan gerak dimatikan." },
-            React.createElement("div", { className: "ap-seg ap-seg2" }, [['on', 'Ber-efek', Sparkles], ['off', 'Tanpa efek', SlidersHorizontal]].map(([v, l, Ic]) => React.createElement("button", { type: "button", key: v, className: st.fx === v ? 'on' : '', onClick: () => EJ.set('fx', v) },
-                React.createElement(Ic, { size: 18 }), React.createElement("span", null, l))))),
+        dlg === 'fx' && React.createElement(ApFxDialog, { EJ: EJ, st: st, onClose: close }),
         dlg === 'mode' && React.createElement(ApDialog, { title: "Mode tampilan", onClose: close, note: "Otomatis mengikuti pengaturan terang/gelap di HP kamu. Perubahan langsung terlihat." },
             React.createElement("div", { className: "ap-seg" }, seg.map(([v, l, Ic]) => React.createElement("button", { type: "button", key: v, className: st.mode === v ? 'on' : '', onClick: () => EJ.set('mode', v) },
                 React.createElement(Ic, { size: 18 }), React.createElement("span", null, l))))),

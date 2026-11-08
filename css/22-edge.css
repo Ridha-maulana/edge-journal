@@ -4,7 +4,7 @@
 .topbar:not([class*="hd-v"]){background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-bottom-color:transparent!important}
 html[data-sc="1"] .topbar:not([class*="hd-v"]){background:var(--c1)!important}
 /* Halaman standar (Ber-efek): cahaya sudut tidak menyentuh tepi paling atas, jadi baris teratas selalu rata = warna bilah status */
-html[data-fx="on"] body:not([data-home="1"]):not([data-home="2"]):not([data-home="5"]){background:linear-gradient(var(--ej-cv),transparent var(--tp-fade,40px)),radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
+html[data-fxl="1"] body:not([data-home="1"]):not([data-home="2"]):not([data-home="5"]){background:linear-gradient(var(--ej-cv),transparent var(--tp-fade,40px)),radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
 
 /* Layar masuk: latar = warna tema (bukan hitam), tanpa gambar grafiti; logo + judul seperti di header; kartu = warna kartu tema */
 .gate-art{background:var(--c1);justify-content:center;gap:24px}

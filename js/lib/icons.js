@@ -22,9 +22,17 @@ Object.assign(ICONS, {
     "LockKeyhole": [["circle", { "cx": 12, "cy": 16, "r": 1 }], ["rect", { "x": 3, "y": 10, "width": 18, "height": 12, "rx": 2 }], ["path", { "d": "M7 10V7a5 5 0 0 1 10 0v3" }]],
     "LockKeyholeOpen": [["circle", { "cx": 12, "cy": 16, "r": 1 }], ["rect", { "x": 3, "y": 10, "width": 18, "height": 12, "rx": 2 }], ["path", { "d": "M7 10V7a5 5 0 0 1 9.9-1" }]]
 });
+/* Warna tetap tiap ikon (dipakai saat "Efek ikon" aktif; lihat css/20-effects.css). Ikon yang tidak terdaftar tetap mengikuti warna teks. */
+const ICON_COLORS = {
+    Database: '#3b82f6', Wallet: '#14b8a6', BarsFill: '#06b6d4', BarsThin: '#3b82f6', Calendar: '#f97316', CalendarDays: '#3b82f6',
+    Trophy: '#f59e0b', LineChart: '#22c55e', FileText: '#0ea5e9', Scale: '#84cc16', Target: '#ec4899', Star: '#eab308',
+    Shield: '#ef4444', Activity: '#f97316', BarChart3: '#3b82f6', Share2: '#3b82f6', Infinity: '#22c55e', TrendingUp: '#22c55e', TrendingDown: '#ef4444',
+    Coins: '#eab308', Leaf: '#22c55e', Pencil: '#3b82f6', Info: '#0ea5e9', UserRound: '#0ea5e9', User: '#0ea5e9', BookOpen: '#f59e0b', SlidersHorizontal: '#06b6d4'
+};
 function Icon({ name, size = 24, strokeWidth = 2, className, style }) {
     const node = ICONS[name] || [];
-    return React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: strokeWidth, strokeLinecap: "round", strokeLinejoin: "round", className: className, style: style }, node.map((n, i) => React.createElement(n[0], Object.assign({ key: i }, n[1]))));
+    const col = ICON_COLORS[name];
+    return React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: strokeWidth, strokeLinecap: "round", strokeLinejoin: "round", className: className, "data-i": name, style: col ? Object.assign({ '--ico': col }, style) : style }, node.map((n, i) => React.createElement(n[0], Object.assign({ key: i }, n[1]))));
 }
 const CandlePlus = (p) => React.createElement(Icon, { name: "CandlePlus", ...p });
 const Activity = (p) => React.createElement(Icon, { name: "Activity", ...p });

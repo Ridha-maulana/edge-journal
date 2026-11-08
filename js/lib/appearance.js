@@ -1,7 +1,10 @@
 /* Tampilan aplikasi: mode (terang/gelap/otomatis), tema warna, font. Dimuat di <head> agar diterapkan sebelum layar tampil pertama kali.
    Semua warna di CSS/JS berupa var(--cN) dari color-table.js; di sini nilainya dihitung ulang per mode + tema. */
 (function () {
-    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx' };
+    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx', fxs: 'ej3-fxs' };
+    /* efek tampilan yang bisa dinyalakan sendiri-sendiri: latar, kartu, tombol, ikon (kartu), hdr (ikon header), nav (ikon menu bawah), gerak */
+    var FX_KEYS = ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'nav', 'gerak'];
+    var FX_DEFAULT = ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'gerak'];
     var THEMES = {};
     var THEME_ORDER = [];
     var STACK = "system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
@@ -231,8 +234,18 @@
         mode: get('mode', 'dark', function (v) { return v === 'light' || v === 'dark' || v === 'auto'; }),
         theme: get('theme', 'mint', function (v) { return !!THEMES[v]; }),
         font: get('font', 'manrope', function (v) { return !!FONTS[v]; }),
-        fx: get('fx', 'on', function (v) { return v === 'on' || v === 'off'; })
+        fx: 'on',
+        fxs: {}
     };
+    /* efek: baca daftar efek aktif; bila belum ada, ikuti pilihan lama (ej3-fx: on -> efek bawaan, off -> tanpa efek) */
+    (function () {
+        var raw = null, i, list;
+        try { raw = localStorage.getItem(KEY.fxs); } catch (e) { }
+        if (raw !== null) list = raw.split(',').filter(function (k) { return FX_KEYS.indexOf(k) >= 0; });
+        else list = get('fx', 'on', function (v) { return v === 'on' || v === 'off'; }) === 'off' ? [] : FX_DEFAULT.slice();
+        for (i = 0; i < FX_KEYS.length; i++) state.fxs[FX_KEYS[i]] = list.indexOf(FX_KEYS[i]) >= 0;
+        state.fx = list.length ? 'on' : 'off';
+    })();
 
     /* ---- warna ---- */
     function hsl(hex) {
@@ -305,7 +318,7 @@
         var mode = resolveMode(), th = THEMES[state.theme], root = document.documentElement, st = root.style, H = window.EJ_HEX || [], R = window.EJ_RGB || [], i, v;
         for (i = 0; i < H.length; i++) st.setProperty('--c' + i, xf(H[i], th, mode));
         for (i = 0; i < R.length; i++) { var p = R[i].split(','); var hx = toHex([+p[0], +p[1], +p[2]]); if (hx === '#000000' && mode === 'light') { st.setProperty('--r' + i, '70,85,130'); continue; } v = xf(hx, th, mode); st.setProperty('--r' + i, parseInt(v.substr(1, 2), 16) + ',' + parseInt(v.substr(3, 2), 16) + ',' + parseInt(v.substr(5, 2), 16)); }
-        var gs = th.gen[mode], f = gs.f, dk = mode === 'dark', fxOn = state.fx === 'on';
+        var gs = th.gen[mode], f = gs.f, dk = mode === 'dark', fxOn = !!state.fxs.tombol;
         var ga = th.grad[0], gb = th.grad[1], inkD = dk ? f.bg : f.tx;
         function cr(a, b) { var la = lum([parseInt(a.substr(1, 2), 16), parseInt(a.substr(3, 2), 16), parseInt(a.substr(5, 2), 16)]), lb = lum([parseInt(b.substr(1, 2), 16), parseInt(b.substr(3, 2), 16), parseInt(b.substr(5, 2), 16)]); return (Math.max(la, lb) + .05) / (Math.min(la, lb) + .05); }
         var stops = fxOn ? [f.ac, mix(ga, gb, .5)] : [f.ac];
@@ -331,6 +344,8 @@
         st.setProperty('--fx-s95', sa(.95)); st.setProperty('--fx-s60', sa(.6)); st.setProperty('--fx-s55', sa(.55)); st.setProperty('--fx-s90', sa(.9)); st.setProperty('--fx-sh', 'rgba(0,0,0,.10)');
         st.setProperty('--fx-hi', dk ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.85)');
         root.setAttribute('data-fx', state.fx);
+        root.setAttribute('data-fxl', state.fxs.latar ? '1' : '0'); root.setAttribute('data-fxk', state.fxs.kartu ? '1' : '0'); root.setAttribute('data-fxb', state.fxs.tombol ? '1' : '0');
+        root.setAttribute('data-fxi', state.fxs.ikon ? '1' : '0'); root.setAttribute('data-fxh', state.fxs.hdr ? '1' : '0'); root.setAttribute('data-fxn', state.fxs.nav ? '1' : '0'); root.setAttribute('data-fxg', state.fxs.gerak ? '1' : '0');
         st.colorScheme = mode;
         root.setAttribute('data-mode', mode); root.setAttribute('data-theme', state.theme);
         var bg = xf('#090d18', th, mode);
@@ -358,7 +373,16 @@
     }
     function preload(k) { loadGf(k); }
     function notify() { try { window.dispatchEvent(new CustomEvent('ej-appearance')); } catch (e) { } }
+    function saveFx() {
+        var list = FX_KEYS.filter(function (k) { return state.fxs[k]; });
+        state.fx = list.length ? 'on' : 'off';
+        try { localStorage.setItem(KEY.fxs, list.join(',')); localStorage.setItem(KEY.fx, state.fx); } catch (e) { }
+        applyColors(); notify();
+    }
+    function setFx(k, v) { if (FX_KEYS.indexOf(k) < 0) return; state.fxs[k] = !!v; saveFx(); }
+    function setFxAll(on) { FX_KEYS.forEach(function (k) { state.fxs[k] = !!on; }); saveFx(); }
     function set(k, v) {
+        if (k === 'fx') { setFxAll(v === 'on' || v === true); return; }
         state[k] = v; try { localStorage.setItem(KEY[k], v); } catch (e) { }
         if (k === 'font') applyFont(); else applyColors();
         notify();
@@ -373,7 +397,7 @@
     }
     function preview(bg, ac, mode) { var dl = derive(bg, ac), s = side(dl[mode === 'light' ? 1 : 0], mode !== 'light'); var f = s.f; return { bg: f.bg, pn: f.pn, bd: f.bd, tx: f.tx, mu: f.mu, ac: f.ac, on: s.on }; }
     var api = {
-        THEMES: THEMES, THEME_ORDER: THEME_ORDER, FONTS: FONTS, FONT_ORDER: FONT_ORDER, state: state, set: set, preload: preload, custom: custom, validHex: validHex, setCustom: setCustom, preview: preview, bg: '#090d18', bgRGB: [9, 13, 24, 1], resolved: 'dark',
+        THEMES: THEMES, THEME_ORDER: THEME_ORDER, FONTS: FONTS, FONT_ORDER: FONT_ORDER, state: state, set: set, setFx: setFx, setFxAll: setFxAll, FX_KEYS: FX_KEYS, preload: preload, custom: custom, validHex: validHex, setCustom: setCustom, preview: preview, bg: '#090d18', bgRGB: [9, 13, 24, 1], resolved: 'dark',
         idx: {}
     };
     (window.EJ_HEX || []).forEach(function (h, i) { api.idx[h] = i; });

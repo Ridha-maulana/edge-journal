@@ -1,4 +1,4 @@
-const C='ej3-5.9.8';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.9.9';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
