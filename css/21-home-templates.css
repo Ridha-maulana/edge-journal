@@ -555,7 +555,7 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 
 /* ===== v5.9.21: pilihan grafik garis/candlestick di Template 1, 2, dan 3 (warna candlestick baku seperti template standar) ===== */
 .t1-fb .hero-chart,.t1-fb .hc-body,.t2-fb .hero-chart,.t2-fb .hc-body,.t5-fb .hero-chart,.t5-fb .hc-body{margin:0;height:100%}
-.t1-fb .candle-chart,.t2-fb .candle-chart,.t5-fb .candle-chart{height:100%;margin:0}
+.t1-fb .candle-chart,.t2-fb .candle-chart,.t5-fb .candle-chart,.t6-fb .candle-chart{height:100%;margin:0}
 .t1-kf{display:flex;justify-content:flex-end;margin-top:6px;flex:none}
 .tp1 .tp-kind,.tp2 .tp-kind,.tp5 .tp-kind{width:54px;height:24px;border-radius:12px;flex:none}
 .tp1 .tp-kind .k-thumb,.tp2 .tp-kind .k-thumb,.tp5 .tp-kind .k-thumb{top:2px;bottom:2px;left:2px;width:calc(50% - 2px);border-radius:10px}
