@@ -562,3 +562,13 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .tp1 .tp-kind svg,.tp2 .tp-kind svg,.tp5 .tp-kind svg{width:14px;height:14px}
 .t2-rw{display:flex;align-items:center;gap:8px;margin-top:calc(var(--u)*16)}.t2-rw .t2-rg{flex:1;min-width:0;margin-top:0}.tp2 .tp-kind{height:30px;border-radius:15px}
 .t5-rw{display:flex;align-items:stretch;gap:8px;margin-top:calc(var(--u)*24)}.t5-rw .tp-fx{flex:1;min-width:0;margin-top:0}.tp5 .tp-kind{height:auto;width:56px;border-radius:calc(var(--u)*26)}
+
+/* v5.9.25 garis pembatas grafik */
+.t5-fb{border-top:2px solid color-mix(in srgb,var(--t-mu) 42%,transparent);margin-top:calc(var(--u)*26);padding-top:calc(var(--u)*14);box-sizing:border-box}
+/* v5.9.26 Template 3: % mengisi ruang kosong di samping $ (satu baris), kartu Akun aktif tetap di kanan */
+.t5-bl{display:flex;align-items:baseline;flex-wrap:nowrap;column-gap:calc(var(--u)*12);margin-top:calc(var(--u)*14)}
+.t5-bl .t5-big{margin-top:0;flex:none}
+.t5-bl .t5-tr{margin-top:0;font-size:max(11px,calc(var(--u)*31));font-weight:600;align-items:center;gap:calc(var(--u)*6);white-space:nowrap;flex:none;letter-spacing:-.01em}.t5-bl .t5-tr svg{width:calc(var(--u)*28);height:calc(var(--u)*28)}
+.t5-top .t5-pl{flex:none}
+@media (max-width:375px){.t5-bl .t5-tr svg{display:none}}
+.t5-top{column-gap:calc(var(--u)*8)!important}.t5-top .t5-ac{flex:none}

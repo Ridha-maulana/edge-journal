@@ -438,3 +438,6 @@
 - v5.9.22: Template 2 — tulisan kenaikan/turun (header candlestick) diperkecil.
 - v5.9.23: Template 3/4/5 — header candlestick (tanggal, kenaikan/turun, O/H/L/C) diperkecil sama seperti Template 2; label tanggal sumbu bawah di Template 4/5 tidak lagi terpotong.
 - v5.9.24: Warna baku hijau (naik) / merah (turun) di semua template: P&L, Saldo, Pertumbuhan, persen, Max Drawdown, O/H/L/C. Template 3 & 4 tidak lagi ikut warna tema; candlestick Template 4 memakai warna standar.
+- v5.9.25: Template 3 — garis pemisah antara persen kenaikan dan header grafik (tanggal/trade) dipertegas + diberi jarak agar batas grafik jelas.
+- v5.9.26: Template 3 — persen kenaikan di samping total $ (satu baris, font lebih kecil); kartu Akun aktif dipindah ke kanan baris TOTAL P&L dalam ukuran ringkas.
+- v5.9.27: Template 3 — tata letak hero dikembalikan (kartu Akun aktif tetap di kanan); persen kenaikan kini mengisi ruang kosong di samping total $ dalam satu baris (font lebih kecil; ikon disembunyikan di layar <=375px).

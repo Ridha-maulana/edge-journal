@@ -253,7 +253,7 @@ function HomeT5({ d }) {
     const dv = act ? act.c - act.o : 0, dp = act ? act.pc - act.po : 0, dpc = act && d.startBal ? dv / d.startBal * 100 : 0;
     return tpE("div", { className: "tp tp5", ref: fit.root },
         tpE("section", { className: "tp-card t5-hero" },
-            tpE("div", { className: "t5-top" }, tpE("div", { className: "t5-pl" }, tpE("span", { className: "t5-cap" }, "TOTAL P&L"), tpE("div", { className: "t5-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t5-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 14, 2.4), d.trendTxt)),
+            tpE("div", { className: "t5-top" }, tpE("div", { className: "t5-pl" }, tpE("span", { className: "t5-cap" }, "TOTAL P&L"), tpE("div", { className: "t5-bl" }, tpE("div", { className: "t5-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t5-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 14, 2.4), d.trendTxt))),
                 tpE("div", { className: "t5-ac" }, tpE("span", { className: "t5-ai" }, tpIc('BarsFill', 20)), tpE("div", null, tpE("small", null, "Akun aktif"), tpE("strong", null, d.acc.name)))),
             tpE("div", { className: "t5-fb", ref: fit.box }, ctl.kind === 'candle' ? tplCandle(d, ctl, fit, false, .92) : tpE(T5Bars, { vals: vals, si: si, onPick: setPick, fit: fit.m })),
             tpE("div", { className: "t5-rw" }, tpE("div", { className: "tp-fx", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([k, l]) => tpE("button", { key: k, type: "button", className: ctl.tf === k ? 'on' : '', onClick: () => ctl.setTf(k) }, l))), tpE(TplKind, { ctl })),
