@@ -88,7 +88,7 @@ function useT1Fit() {
 }
 function useTplChart(kindDef) { const [tf, setTf] = useState(() => candleSavedGet('ej3-chart-tf', 'SES')), [kind, setKind] = useState(() => candleSavedGet('ej3-chart-kind', kindDef || 'candle')); return { tf, kind, setTf: v => { setTf(v); candleSavedSet('ej3-chart-tf', v); }, setKind: v => { setKind(v); candleSavedSet('ej3-chart-kind', v); } }; }
 function TplChips({ ctl, order }) { const list = (order || ['H1', 'SES', 'D1', 'W1', 'M1', 'Y1']).map(k => CANDLE_TFS.find(x => x[0] === k)); return tpE("div", { className: "tp-tf", role: "group", "aria-label": "Skala grafik" }, list.map(([k, l]) => tpE("button", { key: k, type: "button", className: ctl.tf === k ? 'on' : '', onClick: () => ctl.setTf(k) }, l))); }
-function tplCandle(d, ctl, fit, sm) { return tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: fit.m.w ? Math.max(sm ? 150 : 200, Math.round(500 * fit.m.h / fit.m.w)) : 360, ro: sm ? 1.1 : 1.3, fs: sm ? 1.5 : 1.45, floor: 5, ext: ctl, hideTools: true, persist: true }); }
+function tplCandle(d, ctl, fit, sm, roX) { return tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: fit.m.w ? Math.max(sm ? 150 : 200, Math.round(500 * fit.m.h / fit.m.w)) : 360, ro: roX || (sm ? 1.1 : 1.3), fs: sm ? 1.5 : 1.45, floor: 5, ext: ctl, hideTools: true, persist: true }); }
 function TplKind({ ctl }) { const line = ctl.kind !== 'candle'; return tpE("button", { type: "button", className: "tp-kind" + (line ? ' is-line' : ''), role: "switch", "aria-checked": line, "aria-label": line ? "Beralih ke grafik kandel" : "Beralih ke grafik garis", onClick: () => ctl.setKind(line ? 'candle' : 'line') },
     tpE("span", { className: "k-thumb" }),
     tpE("svg", { className: "k-c", viewBox: "0 0 24 24", width: "18", height: "18", "aria-hidden": "true" }, tpE("path", { d: "M7 3v3M7 18v3", stroke: EJC("#ff6b81"), strokeWidth: "2", strokeLinecap: "round" }), tpE("rect", { x: 4.5, y: 6, width: 5, height: 12, rx: 1.2, fill: EJC("#ff6b81") }), tpE("path", { d: "M17 2v3M17 17v4", stroke: EJC("#34d399"), strokeWidth: "2", strokeLinecap: "round" }), tpE("rect", { x: 14.5, y: 5, width: 5, height: 12, rx: 1.2, fill: EJC("#34d399") })),
@@ -208,7 +208,7 @@ function HomeT2({ d }) {
             tpE("div", { className: "t2-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)),
             tpE("span", { className: "t2-tr " + tpC(d.total) }, tpIc(good ? 'TrendingUp' : 'TrendingDown', 16, 2.4), tpE("b", null, d.trendTxt), " dalam periode ini"),
             tpE("div", { className: "t2-q" }, "Proses kecil setiap hari,", tpE("br"), "hasil besar nanti."),
-            tpE("div", { className: "t2-fb", ref: fit.box }, ctl.kind === 'candle' ? tplCandle(d, ctl, fit) : tpE(T2Area, { pts: pts, fit: fit.m })),
+            tpE("div", { className: "t2-fb", ref: fit.box }, ctl.kind === 'candle' ? tplCandle(d, ctl, fit, false, .92) : tpE(T2Area, { pts: pts, fit: fit.m })),
             tpE("div", { className: "t2-rw" }, tpE("div", { className: "t2-rg", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([key, l]) => tpE("button", { key: key, type: "button", className: ctl.tf === key ? 'on' : '', onClick: () => ctl.setTf(key) }, l))), tpE(TplKind, { ctl }))),
         tpE("div", { className: "t2-k4" }, k.map(([l, v, t, ic, cl]) => tpE("div", { key: l, className: "tp-card t2-k" }, tpE("span", { className: "t2-ki " + cl }, tpIc(ic, 20)), tpE("small", null, l), tpE("b", { className: t }, v)))),
         tpE("div", { className: "t2-two" },
