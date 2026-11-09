@@ -576,3 +576,18 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .t5-top .t5-ac{background:none!important;box-shadow:none!important;border:0!important}
 .t5-top .t5-ac .t5-ai{background:none!important;color:var(--ej-pr)}
 .t5-top .t5-ac .t5-ai svg{width:calc(var(--u)*52);height:calc(var(--u)*52)}
+/* v5.9.29 Template 4: 3 kartu atas (hero + rentang + saldo) jadi 1 kartu, saldo 1 baris */
+.tp6 .t6-top{background:linear-gradient(135deg,color-mix(in srgb,var(--ej-pr) 20%,var(--ej-sf)) 0%,color-mix(in srgb,var(--ej-sf) 56%,transparent) 62%),var(--g-bg)!important;padding:calc(var(--u)*46) calc(var(--u)*46) calc(var(--u)*40)!important;display:flex;flex-direction:column;margin-top:calc(var(--u)*2)}
+.t6-top .t6-pl{background:none!important;min-height:0;margin:0;padding:0}
+.tp6 .t6-top .tp-fx{background:none!important;border:0!important;border-top:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent)!important;border-bottom:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent)!important;border-radius:0;box-shadow:none!important;backdrop-filter:none;-webkit-backdrop-filter:none;height:calc(var(--u)*92);margin-top:calc(var(--u)*34);padding:0}
+.tp6 .t6-top .tp-fx button{height:calc(var(--u)*60);align-self:center}.tp6 .t6-top .tp-fx button.on{padding:0 calc(var(--u)*26);border-radius:calc(var(--u)*30);box-shadow:none}
+.t6-top .t6-st{display:grid;grid-template-columns:repeat(4,auto);justify-content:space-between;padding:calc(var(--u)*30) 0 0;border-radius:0!important;row-gap:0}
+.t6-top .t6-st>div{padding:0;border:0;gap:calc(var(--u)*10)}
+.t6-top .t6-st small{white-space:nowrap;font-size:max(11px,calc(var(--u)*25))}.t6-top .t6-st b{font-size:max(11px,calc(var(--u)*37))}
+/* v5.9.30 Template 4: rapatkan kartu gabungan agar kartu grafik lebih tinggi */
+.tp6 .t6-top{padding:calc(var(--u)*38) calc(var(--u)*46) calc(var(--u)*30)!important}
+.tp6 .t6-top .tp-fx{height:calc(var(--u)*84);margin-top:calc(var(--u)*24)}
+.t6-top .t6-st{padding-top:calc(var(--u)*22)}
+.t6-top .t6-pl .t6-big{margin-top:calc(var(--u)*14)}.t6-top .t6-pl .t6-tr{margin-top:calc(var(--u)*14)}.t6-top .t6-pl .t6-r strong{margin-top:calc(var(--u)*16)}.t6-top .t6-pl .t6-r button{margin-top:calc(var(--u)*14)}
+/* v5.9.31 Template 4: baris rentang dihapus, satu garis pemisah hero/saldo */
+.t6-top .t6-st{margin-top:calc(var(--u)*28);padding-top:calc(var(--u)*26);border-top:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent)}

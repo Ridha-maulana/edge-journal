@@ -442,3 +442,6 @@
 - v5.9.26: Template 3 — persen kenaikan di samping total $ (satu baris, font lebih kecil); kartu Akun aktif dipindah ke kanan baris TOTAL P&L dalam ukuran ringkas.
 - v5.9.27: Template 3 — tata letak hero dikembalikan (kartu Akun aktif tetap di kanan); persen kenaikan kini mengisi ruang kosong di samping total $ dalam satu baris (font lebih kecil; ikon disembunyikan di layar <=375px).
 - v5.9.28: Template 3 — kotak Akun aktif dihilangkan (tinggal ikon dompet + nama akun), ukuran dan posisi teks tetap.
+- v5.9.29: Template 4 — 3 kartu atas (hero, rentang 1 tahun/bulan/.., saldo) digabung jadi 1 kartu dengan garis pemisah; Saldo awal/Sekarang/Pertumbuhan/Hari aktif jadi 1 baris.
+- v5.9.30: Template 4 — kartu gabungan dirapatkan sedikit sehingga kartu grafik lebih tinggi (sekitar +20px di layar 360-430).
+- v5.9.31: Template 4 — baris rentang (tahun/bulan/minggu/hari/sesi) dihapus dari kartu atas; kartu grafik makin tinggi.

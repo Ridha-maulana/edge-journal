@@ -266,14 +266,14 @@ function HomeT5({ d }) {
 }
 /* ===== T6: kaca lembut ===== */
 function HomeT6({ d }) {
-    const fit = useTplFit(170, 480), ctl = useTplChart('candle'), [sel, setSel] = useState('hari'), c = d.cur;
+    const fit = useTplFit(170, 480), ctl = useTplChart('candle'), c = d.cur;
     const rows = [['Saldo awal', money(d.startBal, c), ''], ['Sekarang', money(d.aNow, c), tpC(d.total)], ['Pertumbuhan', tpS(d.aGrowth) + Math.abs(d.aGrowth).toFixed(2) + '%', tpC(d.growthPct)], ['Hari aktif', String(d.activeDays), '']];
     const m = tpMetrics(d), t6ic = ['Trophy', 'LineChart', 'FileText', 'Scale', 'Target', 'Star'];
     return tpE("div", { className: "tp tp6", ref: fit.root },
         tpE("i", { className: "t6-blob b1", "aria-hidden": "true" }), tpE("i", { className: "t6-blob b2", "aria-hidden": "true" }), tpE("i", { className: "t6-blob b3", "aria-hidden": "true" }),
-        tpE("section", { className: "tp-card t6-pl" }, tpE("div", { className: "t6-l" }, tpE("span", { className: "t6-cap" }, "TOTAL P&L"), tpE("div", { className: "t6-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t6-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 14, 2.4), d.trendTxt + " in selected period")), tpE("div", { className: "t6-r" }, tpE("span", { className: "t6-cap" }, "ACTIVE ACCOUNT"), tpE("strong", null, d.acc.name), tpE("button", { type: "button", onClick: d.onWallet, "aria-label": "Deposit dan Withdraw" }, tpIc('Wallet', 18)))),
-        tpFacts(d, sel, setSel),
-        tpE("div", { className: "tp-card t6-st" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v)))),
+        tpE("section", { className: "tp-card t6-top" },
+            tpE("div", { className: "t6-pl" }, tpE("div", { className: "t6-l" }, tpE("span", { className: "t6-cap" }, "TOTAL P&L"), tpE("div", { className: "t6-big " + tpC(d.total) }, tpS(d.aTotal), money(Math.abs(d.aTotal), c)), tpE("span", { className: "t6-tr " + tpC(d.total) }, tpIc(d.total >= 0 ? 'TrendingUp' : 'TrendingDown', 14, 2.4), d.trendTxt + " in selected period")), tpE("div", { className: "t6-r" }, tpE("span", { className: "t6-cap" }, "ACTIVE ACCOUNT"), tpE("strong", null, d.acc.name), tpE("button", { type: "button", onClick: d.onWallet, "aria-label": "Deposit dan Withdraw" }, tpIc('Wallet', 18)))),
+            tpE("div", { className: "t6-st" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v))))),
         tpE("section", { className: "tp-card t6-ch" }, tpE("button", { type: "button", className: "t6-more", onClick: d.onStats, "aria-label": "Statistik lanjutan" }, tpIc('MoreHorizontal', 20)), tpE("div", { className: "t6-fb", ref: fit.box }, tpE(HeroChart, { trades: d.cs, startBal: d.startBal, onOpen: d.onOpen, hh: fit.m.w ? Math.max(200, Math.round(500 * fit.m.h / fit.m.w)) : 360, ro: .92, fs: 1.45, floor: 5, ext: ctl, hideTools: true, persist: true })), tpE("div", { className: "t6-ft" }, tpE(TplChips, { ctl }), tpE(TplKind, { ctl }))),
         tpE("div", { className: "tp-card t6-m" }, m.map(([l, v, t], i) => tpE("div", { key: l }, tpE("span", { className: "t6-mi", style: { '--ico': ICON_COLORS[t6ic[i]] } }, tpIc(t6ic[i], 17)), tpE("small", null, l), tpE("b", { className: t }, v)))),
         tpActions(d));
