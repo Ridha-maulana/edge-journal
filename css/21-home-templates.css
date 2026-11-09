@@ -154,7 +154,7 @@ html[data-fx] body[data-home="2"]{background:linear-gradient(var(--ej-cv),transp
 
 /* ---- T5 hijau bersih ---- */
 .tp5,.ht5,.bn5{--t-dk:color-mix(in srgb,var(--ej-pr) 78%,var(--ej-ik))}
-.tp5 .pos{color:var(--t-dk)!important}
+.tp5 .pos{color:var(--t-pos)!important}.tp5 .neg{color:var(--t-neg)!important}
 .ht5{padding:calc(var(--u)*40) calc(var(--u)*42) calc(var(--u)*30)}
 .ht5 .ht-logo{width:calc(var(--u)*106);height:calc(var(--u)*106);background:var(--ej-ik);color:var(--ej-pr)}.ht5 .ht-logo svg{width:calc(var(--u)*54);height:calc(var(--u)*54);fill:currentColor}
 .ht5 .ht-brand{gap:calc(var(--u)*24)}.ht5 .ht-bt{gap:calc(var(--u)*14)}.ht5 .ht-bt strong{font-size:max(11px,calc(var(--u)*32));letter-spacing:.17em;font-weight:700}.ht5 .ht-bt span{font-size:max(11px,calc(var(--u)*20));letter-spacing:.3em}
@@ -166,7 +166,7 @@ html[data-fxk="0"] .tp5 .tp-card{border-color:var(--ej-bd)!important}
 .t5-hero{padding:calc(var(--u)*34) calc(var(--u)*33) calc(var(--u)*30)}
 .t5-top{display:flex;justify-content:space-between;align-items:flex-start}
 .t5-cap{font-size:max(11px,calc(var(--u)*28));letter-spacing:.16em;color:var(--t-mu);font-weight:500}
-.t5-big{font-size:max(11px,calc(var(--u)*100));font-weight:700;letter-spacing:-.045em;line-height:1;margin-top:calc(var(--u)*14);margin-left:calc(var(--u)*-2)}.t5-big.pos{background:linear-gradient(90deg,var(--t-dk),var(--ej-pr));-webkit-background-clip:text;background-clip:text;color:transparent!important}
+.t5-big{font-size:max(11px,calc(var(--u)*100));font-weight:700;letter-spacing:-.045em;line-height:1;margin-top:calc(var(--u)*14);margin-left:calc(var(--u)*-2)}
 .t5-tr{display:flex;align-items:center;gap:calc(var(--u)*14);font-size:max(11px,calc(var(--u)*33));margin-top:calc(var(--u)*24);font-weight:500}.t5-tr svg{width:calc(var(--u)*34);height:calc(var(--u)*34)}
 .t5-ac{display:flex;align-items:center;gap:calc(var(--u)*30);width:calc(var(--u)*391);height:calc(var(--u)*136);margin-top:calc(var(--u)*6);padding:0 calc(var(--u)*30);border-radius:calc(var(--u)*26);background:color-mix(in srgb,var(--ej-pr) 10%,var(--ej-sf));flex:none;margin-right:calc(var(--u)*-4)}
 .t5-ai{display:grid;place-items:center;width:calc(var(--u)*88);height:calc(var(--u)*88);border-radius:50%;background:color-mix(in srgb,var(--ej-pr) 16%,var(--ej-sf));color:var(--t-dk);flex:none}.t5-ai svg{width:calc(var(--u)*40);height:calc(var(--u)*40)}
@@ -197,7 +197,7 @@ html[data-fxk="0"] .tp5 .tp-card{border-color:var(--ej-bd)!important}
 .tp6,.ht6,.bn6{--t-dk:color-mix(in srgb,var(--ej-pr) 80%,var(--ej-ik));--g-bg:color-mix(in srgb,var(--ej-sf) 56%,transparent);--g-bd:color-mix(in srgb,#fff 60%,transparent);--g-sh:0 calc(var(--u)*10) calc(var(--u)*34) color-mix(in srgb,var(--ej-ik) 9%,transparent)}
 body[data-home="6"] .app-shell,body[data-nv="10"] .app-shell{background:linear-gradient(var(--ej-cv),transparent var(--tp-fade,40px)),radial-gradient(60% 28% at 8% 4%,color-mix(in srgb,var(--ej-pr) 17%,transparent),transparent 70%),radial-gradient(55% 26% at 100% 10%,color-mix(in srgb,var(--ej-pr) 10%,var(--ej-so)),transparent 70%),radial-gradient(70% 30% at 0% 48%,color-mix(in srgb,var(--ej-pr) 14%,transparent),transparent 70%),radial-gradient(60% 30% at 100% 62%,color-mix(in srgb,var(--ej-so) 85%,transparent),transparent 70%),radial-gradient(70% 28% at 10% 96%,color-mix(in srgb,var(--ej-pr) 14%,transparent),transparent 70%),var(--ej-cv)}
 .t6-blob{display:none}
-.tp6 .pos{color:var(--t-dk)!important}
+.tp6 .pos{color:var(--t-pos)!important}.tp6 .neg{color:var(--t-neg)!important}
 .ht6{padding:calc(var(--u)*48) calc(var(--u)*53) calc(var(--u)*22);gap:calc(var(--u)*12)}
 .ht6 .ht-logo{width:calc(var(--u)*110);height:calc(var(--u)*110);background:radial-gradient(circle at 35% 30%,#2b3a36,#10181a);color:#cdf5e6;box-shadow:0 0 0 calc(var(--u)*10) color-mix(in srgb,#fff 38%,transparent),0 0 0 calc(var(--u)*11) color-mix(in srgb,var(--ej-ik) 10%,transparent),0 calc(var(--u)*10) calc(var(--u)*26) color-mix(in srgb,var(--ej-ik) 22%,transparent);margin:0 calc(var(--u)*2) 0 calc(var(--u)*10)}.ht6 .ht-logo svg{width:calc(var(--u)*56);height:calc(var(--u)*56);fill:none;stroke:currentColor}
 .ht6 .ht-brand{gap:calc(var(--u)*36)}.ht6 .ht-bt{gap:calc(var(--u)*18)}.ht6 .ht-bt strong{font-size:max(11px,calc(var(--u)*30));letter-spacing:.17em;font-weight:700}.ht6 .ht-bt span{font-size:max(11px,calc(var(--u)*19));letter-spacing:.3em;font-weight:500}

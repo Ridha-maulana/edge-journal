@@ -437,3 +437,4 @@
 - v5.9.21: Template 5 — Saldo+Awal di atas dompet, persen di posisi Awal, warna P&L dan candlestick baku (hijau/merah standar). Template 1/2/3 dan grafik Growth/Balance/Profit/Drawdown di Performance kini punya pilihan garis/candlestick.
 - v5.9.22: Template 2 — tulisan kenaikan/turun (header candlestick) diperkecil.
 - v5.9.23: Template 3/4/5 — header candlestick (tanggal, kenaikan/turun, O/H/L/C) diperkecil sama seperti Template 2; label tanggal sumbu bawah di Template 4/5 tidak lagi terpotong.
+- v5.9.24: Warna baku hijau (naik) / merah (turun) di semua template: P&L, Saldo, Pertumbuhan, persen, Max Drawdown, O/H/L/C. Template 3 & 4 tidak lagi ikut warna tema; candlestick Template 4 memakai warna standar.
