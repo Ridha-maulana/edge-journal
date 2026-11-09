@@ -433,3 +433,5 @@
 - v5.9.17: Template baru "Template 5 · Sederhana" (id 7, memakai header & menu Template 4) = tata letak Bento + kartu P&L BREAKDOWN (donut Wins/Losses/BE + Profit Factor & Win rate). Template 4 · Kaca lembut dikembalikan ke tata letak sebelumnya (kartu periode, saldo 2×2, 6 statistik dalam satu kartu 2×3).
 - v5.9.18: Template 5 · Sederhana — bentuk kartu kembali seperti Bento (kartu P&L BREAKDOWN di kiri, Profit Factor & Total Trades bertumpuk di kanan); isi kartu kiri jadi donut Wins/Losses/BE.
 - v5.9.19: Template 5 · Sederhana — spasi seragam semua kartu (padding sekeliling sama, jarak ikon/judul/donut/legenda/label-angka diperlebar), donut P&L BREAKDOWN dikecilkan agar legenda tidak terpotong di layar sempit.
+- v5.9.20: Template 5 · Sederhana — Saldo di atas, persen + dompet di bawahnya; isi kartu kecil dan P&L BREAKDOWN dipusatkan agar spasi kiri-kanan sama.
+- v5.9.21: Template 5 — Saldo+Awal di atas dompet, persen di posisi Awal, warna P&L dan candlestick baku (hijau/merah standar). Template 1/2/3 dan grafik Growth/Balance/Profit/Drawdown di Performance kini punya pilihan garis/candlestick.

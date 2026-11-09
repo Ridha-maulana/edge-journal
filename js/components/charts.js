@@ -47,15 +47,16 @@ function ComboChart({ vals, labels, col, fmt }) {
         React.createElement("text", { x: L, y: H - 9, fontSize: "11", fill: EJC("#7d8bab") }, labels[0]),
         n > 1 && React.createElement("text", { x: W - R, y: H - 9, textAnchor: "end", fontSize: "11", fill: EJC("#7d8bab") }, labels[n - 1]));
 }
-function MiniChart({ vals, labels, kind, fmt }) {
+function MiniChart({ vals, labels, kind, fmt, candle, base }) {
     if (!vals.length)
         return React.createElement("div", { className: "pe-empty" }, "Belum ada data untuk grafik ini.");
     const W = 500, H = 230, L = 58, R = 12, T = 14, B = 30;
-    const lo = Math.min(0, ...vals), hi = Math.max(0, ...vals);
+    const opens = vals.map((v, i) => i ? vals[i - 1] : (base || 0)), all = candle ? vals.concat(opens) : vals;
+    const free = candle && base, lo = Math.min(free ? Infinity : 0, ...all), hi = Math.max(free ? -Infinity : 0, ...all);
     const span = (hi - lo) || 1;
     const y = v => T + (hi - v) / span * (H - T - B);
     const n = vals.length;
-    const x = i => kind === 'bar' ? L + (i + .5) * ((W - L - R) / n) : (n === 1 ? (L + W - R) / 2 : L + i * ((W - L - R) / (n - 1)));
+    const x = i => kind === 'bar' || candle ? L + (i + .5) * ((W - L - R) / n) : (n === 1 ? (L + W - R) / 2 : L + i * ((W - L - R) / (n - 1)));
     const grid = [0, 1, 2, 3].map(i => lo + span * i / 3);
     const col = vals[n - 1] >= 0 ? EJC("#34d399") : EJC("#ff6b81");
     const line = vals.map((v, i) => `${x(i)},${y(v)}`).join(' ');
@@ -64,8 +65,8 @@ function MiniChart({ vals, labels, kind, fmt }) {
         grid.map((g, i) => React.createElement("g", { key: i },
             React.createElement("line", { x1: L, x2: W - R, y1: y(g), y2: y(g), stroke: EJC("#233252"), strokeWidth: "1" }),
             React.createElement("text", { x: L - 6, y: y(g) + 4, textAnchor: "end", fontSize: "11", fill: EJC("#7d8bab") }, fmt(g)))),
-        React.createElement("line", { x1: L, x2: W - R, y1: y(0), y2: y(0), stroke: EJC("#3a4d78"), strokeWidth: "1.5" }),
-        kind === 'bar' ? vals.map((v, i) => React.createElement("rect", { key: i, x: x(i) - bw / 2, y: Math.min(y(v), y(0)), width: bw, height: Math.max(2, Math.abs(y(v) - y(0))), rx: "3", fill: v >= 0 ? EJC("#34d399") : EJC("#ff6b81") })) : React.createElement(React.Fragment, null,
+        lo <= 0 && hi >= 0 && React.createElement("line", { x1: L, x2: W - R, y1: y(0), y2: y(0), stroke: EJC("#3a4d78"), strokeWidth: "1.5" }),
+        candle ? vals.map((v, i) => { const o = opens[i], up = v >= o; return React.createElement("rect", { key: i, x: x(i) - bw / 2, y: Math.min(y(v), y(o)), width: bw, height: Math.max(2, Math.abs(y(v) - y(o))), rx: "2", fill: up ? EJC("#34d399") : EJC("#ff6b81") }); }) : kind === 'bar' ? vals.map((v, i) => React.createElement("rect", { key: i, x: x(i) - bw / 2, y: Math.min(y(v), y(0)), width: bw, height: Math.max(2, Math.abs(y(v) - y(0))), rx: "3", fill: v >= 0 ? EJC("#34d399") : EJC("#ff6b81") })) : React.createElement(React.Fragment, null,
             n > 1 && React.createElement("polygon", { points: `${x(0)},${y(0)} ${line} ${x(n - 1)},${y(0)}`, fill: col, opacity: ".14" }),
             React.createElement("polyline", { points: line, pathLength: "1", className: "cc-line", fill: "none", stroke: col, strokeWidth: "3", strokeLinejoin: "round", strokeLinecap: "round" }),
             React.createElement("circle", { cx: x(n - 1), cy: y(vals[n - 1]), r: "5", fill: col })),

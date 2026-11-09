@@ -74,3 +74,8 @@ html[data-fxi="1"] .tp2 .t2-nb svg{--ico:#fff!important;color:#fff!important}
 html[data-mode="light"][data-fxi="1"] :is(.t1-ki,.t2-ki,.t2-bd,.t2-ii,.t5-mi,.t5-ai,.t6-mi,.t6-m3,.t6-wr,.tp-act) svg[data-i]{color:color-mix(in srgb,var(--ico,currentColor) 62%,#000)!important}
 html[data-mode="light"][data-fxh="1"] :is(.ht-dcard,.ht-hello) svg[data-i]{color:color-mix(in srgb,var(--ico,currentColor) 62%,#000)!important}
 html[data-pale="1"] .bottom-nav:not([class*="nv-"]) .nav-item.active,html[data-pale="1"] .bottom-nav:not([class*="nv-"]) .nav-item.active svg,html[data-pale="1"] .bottom-nav.nv-4 .nav-item.nav-add svg,html[data-pale="1"] .bottom-nav.nv-4 .nav-item.nav-add{color:var(--ej-pru)!important}
+/* v5.9.21: tombol garis/candlestick pada grafik tambahan halaman Performance */
+.pe-kw{display:flex;align-items:center;justify-content:space-between;gap:10px}.pe-kw .pe-sub{margin:10px 0 6px}
+.pe-kw .tp-kind{position:relative;display:inline-flex;align-items:center;width:62px;height:28px;border-radius:14px;padding:0;flex:none;border:1px solid var(--c0, #fff3);background:transparent;color:inherit;opacity:.9}
+.pe-kw .tp-kind .k-thumb{position:absolute;top:2px;bottom:2px;left:2px;width:calc(50% - 2px);border-radius:12px;background:currentColor;opacity:.14;transition:transform .2s}.pe-kw .tp-kind.is-line .k-thumb{transform:translateX(100%)}
+.pe-kw .tp-kind svg{width:15px;height:15px;flex:1;z-index:1;margin:auto}

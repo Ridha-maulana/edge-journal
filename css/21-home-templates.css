@@ -520,34 +520,45 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .t6-m small{grid-area:s;align-self:end;white-space:normal;font-size:max(11px,calc(var(--u)*26));line-height:1.2}
 .t6-m b{grid-area:b;align-self:start;font-size:max(11px,calc(var(--u)*38));line-height:1.15}
 /* ===== v5.9.17 Template 5 · Sederhana (tp7): tata letak Bento — P&L + saldo dalam satu kartu, grafik tinggi, 3 kartu kecil, lingkaran win rate ===== */
-.tp6.tp7 .t6-pl{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"l r" "f f";column-gap:calc(var(--u)*20);row-gap:calc(var(--u)*30);padding:calc(var(--u)*46)!important;min-height:0;margin-top:0}
+.tp6.tp7 .t6-pl{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"l r" "f f";column-gap:calc(var(--u)*20);row-gap:calc(var(--u)*26);padding:calc(var(--u)*46)!important;min-height:0;margin-top:0}
 .tp6.tp7 .t6-l{grid-area:l;min-width:0}
-.tp6.tp7 .t6-r{grid-area:r;align-items:flex-end;justify-content:space-between;gap:calc(var(--u)*22)}
-.tp6.tp7 .t6-rt{display:flex;align-items:center;gap:calc(var(--u)*14)}
-.tp6.tp7 .t6-r .t6-tr{margin:0;padding:calc(var(--u)*15) calc(var(--u)*26);border-radius:999px;font-size:max(11px,calc(var(--u)*32));font-weight:700;gap:calc(var(--u)*12);white-space:nowrap;flex-wrap:nowrap;background:color-mix(in srgb,currentColor 14%,transparent)}
-.tp6.tp7 .t6-r button{margin:0;width:calc(var(--u)*100);height:calc(var(--u)*100);border-radius:calc(var(--u)*32)}.tp6.tp7 .t6-r button svg{width:calc(var(--u)*46);height:calc(var(--u)*46)}
-.tp6.tp7 .t6-sd{font-size:max(11px,calc(var(--u)*30));color:var(--t-mu);white-space:nowrap}.tp6.tp7 .t6-sd b{color:var(--ej-ik);font-weight:700}
-.tp6.tp7 .t6-pf{grid-area:f;display:flex;justify-content:space-between;align-items:center;gap:calc(var(--u)*20);padding-top:calc(var(--u)*32);border-top:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent);font-size:max(11px,calc(var(--u)*30));color:var(--t-mu)}
+.tp6.tp7 .t6-r{grid-area:r;align-items:flex-end;justify-content:space-between;gap:calc(var(--u)*16)}
+.tp6.tp7 .t6-tr{margin:0;padding:calc(var(--u)*15) calc(var(--u)*26);border-radius:999px;font-size:max(11px,calc(var(--u)*32));font-weight:700;gap:calc(var(--u)*12);white-space:nowrap;flex-wrap:nowrap;background:color-mix(in srgb,currentColor 14%,transparent)}
+.tp6.tp7 .t6-r button{margin:0;width:calc(var(--u)*88);height:calc(var(--u)*88);border-radius:calc(var(--u)*28)}.tp6.tp7 .t6-r button svg{width:calc(var(--u)*42);height:calc(var(--u)*42)}
+.tp6.tp7 .t6-sd{display:flex;flex-direction:column;align-items:flex-end;gap:calc(var(--u)*6);font-size:max(11px,calc(var(--u)*30));color:var(--t-mu);white-space:nowrap}.tp6.tp7 .t6-sd b{color:var(--ej-ik);font-weight:700}
+/* warna tetap seperti template standar: hijau/merah baku, tidak ikut warna tema */
+.tp6.tp7 .pos{color:var(--t-pos)!important}.tp6.tp7 .neg{color:var(--t-neg)!important}
+.tp6.tp7 .t6-pf{grid-area:f;display:flex;justify-content:space-between;align-items:center;gap:calc(var(--u)*20);padding-top:calc(var(--u)*28);border-top:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent);font-size:max(11px,calc(var(--u)*30));color:var(--t-mu)}
 .tp6.tp7 .t6-pf span{display:inline-flex;align-items:center;gap:calc(var(--u)*14);white-space:nowrap}.tp6.tp7 .t6-pf b{color:var(--ej-ik);font-weight:700}.tp6.tp7 .t6-pf svg{width:calc(var(--u)*42);height:calc(var(--u)*42)}
 .tp6.tp7 .t6-m3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.tp6.tp7 .t6-m3>.tp-card{padding:calc(var(--u)*46)!important;border-radius:calc(var(--u)*56)!important;display:flex;flex-direction:column;gap:calc(var(--u)*24);min-width:0}
+.tp6.tp7 .t6-m3>.tp-card{padding:calc(var(--u)*46) calc(var(--u)*24)!important;border-radius:calc(var(--u)*56)!important;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:calc(var(--u)*24);min-width:0}
 .tp6.tp7 .t6-m3 small{display:flex;align-items:center;gap:calc(var(--u)*16);font-size:max(11px,calc(var(--u)*26));color:var(--t-mu);white-space:nowrap}.tp6.tp7 .t6-m3 small svg{width:calc(var(--u)*46);height:calc(var(--u)*46);flex:none}
 .tp6.tp7 .t6-m3 b{font-size:max(11px,calc(var(--u)*42));font-weight:800;line-height:1.1;white-space:nowrap}
 
 .tp6.tp7 .t6-m2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .tp6.tp7 .t7-bd{padding:calc(var(--u)*46)!important;border-radius:calc(var(--u)*56)!important;display:flex;flex-direction:column;gap:calc(var(--u)*32);min-width:0}
 .tp6.tp7 .t7-ti{display:flex;align-items:center;gap:calc(var(--u)*16);font-size:max(11px,calc(var(--u)*22));letter-spacing:.1em;font-weight:800;color:var(--ej-ik);white-space:nowrap}.tp6.tp7 .t7-ti svg{width:calc(var(--u)*44);height:calc(var(--u)*44);flex:none}
-.tp6.tp7 .t7-bb{display:flex;align-items:center;gap:calc(var(--u)*28);flex:1;min-width:0}
+.tp6.tp7 .t7-bb{display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*28);flex:1;min-width:0}
 .tp6.tp7 .t7-donut{position:relative;width:calc(var(--u)*232);height:calc(var(--u)*232);flex:none}.tp6.tp7 .t7-donut svg{width:100%;height:100%;display:block}
 .tp6.tp7 .t7-donut .dn-bg{stroke:var(--ej-ik);stroke-opacity:.1}.tp6.tp7 .t7-donut .dn-w{stroke:#22b573}.tp6.tp7 .t7-donut .dn-l{stroke:#9aa3ab}.tp6.tp7 .t7-donut .dn-b{stroke:var(--ej-pr)}
 .tp6.tp7 .t7-dc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*2)}.tp6.tp7 .t7-dc b{font-size:max(11px,calc(var(--u)*62));font-weight:800;line-height:1;letter-spacing:-.02em}.tp6.tp7 .t7-dc small{font-size:clamp(5.5px,1.65vw,7px);letter-spacing:.02em;color:var(--t-mu)}
-.tp6.tp7 .t7-lg{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:calc(var(--u)*22);min-width:0;flex:1}.tp6.tp7 .t7-lg li{display:flex;align-items:flex-start;gap:calc(var(--u)*16)}
+.tp6.tp7 .t7-lg{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:calc(var(--u)*22);min-width:0;flex:none}.tp6.tp7 .t7-lg li{display:flex;align-items:flex-start;gap:calc(var(--u)*16)}
 .tp6.tp7 .t7-lg i{width:calc(var(--u)*24);height:calc(var(--u)*24);border-radius:50%;margin-top:calc(var(--u)*8);flex:none}.tp6.tp7 .t7-lg i.dn-w{background:#22b573}.tp6.tp7 .t7-lg i.dn-l{background:#9aa3ab}.tp6.tp7 .t7-lg i.dn-b{background:var(--ej-pr)}
 .tp6.tp7 .t7-lg span{display:flex;flex-direction:column;gap:calc(var(--u)*4);font-size:max(11px,calc(var(--u)*23));color:var(--t-mu);line-height:1.15;white-space:nowrap}.tp6.tp7 .t7-lg b{font-size:max(11px,calc(var(--u)*27));font-weight:800;color:var(--ej-ik)}
 .tp6.tp7 .t6-m2r{display:flex;flex-direction:column;gap:8px;min-width:0}
-.tp6.tp7 .t6-m2r>.tp-card{flex:1;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"i s" "i b";column-gap:calc(var(--u)*32);row-gap:calc(var(--u)*8);align-items:center;align-content:center;padding:calc(var(--u)*30) calc(var(--u)*46)!important;border-radius:calc(var(--u)*56)!important;min-width:0}
+.tp6.tp7 .t6-m2r>.tp-card{flex:1;display:grid;grid-template-columns:auto auto;justify-content:center;grid-template-areas:"i s" "i b";column-gap:calc(var(--u)*32);row-gap:calc(var(--u)*8);align-items:center;align-content:center;padding:calc(var(--u)*30) calc(var(--u)*24)!important;border-radius:calc(var(--u)*56)!important;min-width:0}
 .tp6.tp7 .t6-m2r .t6-mi{grid-area:i;width:calc(var(--u)*112);height:calc(var(--u)*112);border-radius:50%;margin:0}.tp6.tp7 .t6-m2r .t6-mi svg{width:calc(var(--u)*56);height:calc(var(--u)*56)}
 .tp6.tp7 .t6-m2r small{grid-area:s;align-self:end;font-size:max(11px,calc(var(--u)*26));line-height:1.2;color:var(--t-mu);white-space:normal}
 .tp6.tp7 .t6-m2r b{grid-area:b;align-self:start;font-size:max(11px,calc(var(--u)*42));font-weight:800;line-height:1.1}
 @media (max-height:720px){.tp6.tp7 .t6-pl{padding:calc(var(--u)*40) calc(var(--u)*46) calc(var(--u)*36)!important;row-gap:calc(var(--u)*22)}.tp6.tp7 .t6-pf{padding-top:calc(var(--u)*24)}}
 @media (max-width:385px){.tp6.tp7 .t7-bb{gap:calc(var(--u)*22)}.tp6.tp7 .t7-donut{width:calc(var(--u)*214);height:calc(var(--u)*214)}.tp6.tp7 .t7-dc b{font-size:max(11px,calc(var(--u)*54))}.tp6.tp7 .t7-lg li{gap:calc(var(--u)*10)}.tp6.tp7 .t7-lg span{font-size:max(11px,calc(var(--u)*21))}.tp6.tp7 .t7-lg b{font-size:max(11px,calc(var(--u)*25))}}
+
+/* ===== v5.9.21: pilihan grafik garis/candlestick di Template 1, 2, dan 3 (warna candlestick baku seperti template standar) ===== */
+.t1-fb .hero-chart,.t1-fb .hc-body,.t2-fb .hero-chart,.t2-fb .hc-body,.t5-fb .hero-chart,.t5-fb .hc-body{margin:0;height:100%}
+.t1-fb .candle-chart,.t2-fb .candle-chart,.t5-fb .candle-chart{height:100%;margin:0}
+.t1-kf{display:flex;justify-content:flex-end;margin-top:6px;flex:none}
+.tp1 .tp-kind,.tp2 .tp-kind,.tp5 .tp-kind{width:54px;height:24px;border-radius:12px;flex:none}
+.tp1 .tp-kind .k-thumb,.tp2 .tp-kind .k-thumb,.tp5 .tp-kind .k-thumb{top:2px;bottom:2px;left:2px;width:calc(50% - 2px);border-radius:10px}
+.tp1 .tp-kind svg,.tp2 .tp-kind svg,.tp5 .tp-kind svg{width:14px;height:14px}
+.t2-rw{display:flex;align-items:center;gap:8px;margin-top:calc(var(--u)*16)}.t2-rw .t2-rg{flex:1;min-width:0;margin-top:0}.tp2 .tp-kind{height:30px;border-radius:15px}
+.t5-rw{display:flex;align-items:stretch;gap:8px;margin-top:calc(var(--u)*24)}.t5-rw .tp-fx{flex:1;min-width:0;margin-top:0}.tp5 .tp-kind{height:auto;width:56px;border-radius:calc(var(--u)*26)}

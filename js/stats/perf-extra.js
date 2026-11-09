@@ -4,7 +4,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const cur = account.currency;
     const fm = n => money(n, cur);
     const sg = n => `${n > 0 ? '+' : ''}${fm(n)}`;
-    const [ct, setCt] = useState('growth');
+    const [ct, setCt] = useState('growth'), kctl = useTplChart('line');
     const [showDet, setShowDet] = useState(false);
     const nowW = wib(new Date());
     const year = view.y, mSel = view.m;
@@ -141,8 +141,8 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                         "%")))),
         React.createElement("div", { className: "pe-card" },
             React.createElement("div", { className: "pe-tabs icon-tabs" }, [['growth', 'Growth', 'ChartUp'], ['balance', 'Balance', 'Scale'], ['profit', 'Profit', 'Coins'], ['daily', 'Daily P&L', 'ChartPie'], ['dd', 'Drawdown', 'ChartDown']].map(([k, l, ic]) => React.createElement("button", { key: k, type: "button", className: ct === k ? 'on' : '', "aria-label": l, title: l, onClick: () => setCt(k) }, React.createElement(Icon, { name: ic, size: 21 })))),
-            React.createElement("p", { className: "pe-sub" }, CT.t),
-            React.createElement(MiniChart, { key: ct, vals: CT.v, labels: lab, kind: CT.k, fmt: CT.f }),
+            React.createElement("div", { className: "pe-kw" }, React.createElement("p", { className: "pe-sub" }, CT.t), CT.k === 'line' && React.createElement(TplKind, { ctl: kctl })),
+            React.createElement(MiniChart, { key: ct + (kctl.kind === 'candle' ? 'c' : 'l'), vals: CT.v, labels: lab, kind: CT.k, fmt: CT.f, candle: CT.k === 'line' && kctl.kind === 'candle', base: ct === 'balance' ? account.balance : 0 }),
             React.createElement("div", { className: "pe-cap" },
                 React.createElement("span", null,
                     React.createElement("i", { className: "dot g" }),
