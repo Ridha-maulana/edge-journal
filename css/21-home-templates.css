@@ -572,3 +572,7 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .t5-top .t5-pl{flex:none}
 @media (max-width:375px){.t5-bl .t5-tr svg{display:none}}
 .t5-top{column-gap:calc(var(--u)*8)!important}.t5-top .t5-ac{flex:none}
+/* v5.9.28 Template 3: kotak Akun aktif dihilangkan (tinggal ikon dompet + teks), ukuran & posisi tetap */
+.t5-top .t5-ac{background:none!important;box-shadow:none!important;border:0!important}
+.t5-top .t5-ac .t5-ai{background:none!important;color:var(--ej-pr)}
+.t5-top .t5-ac .t5-ai svg{width:calc(var(--u)*52);height:calc(var(--u)*52)}

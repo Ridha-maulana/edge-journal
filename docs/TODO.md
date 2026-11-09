@@ -441,3 +441,4 @@
 - v5.9.25: Template 3 — garis pemisah antara persen kenaikan dan header grafik (tanggal/trade) dipertegas + diberi jarak agar batas grafik jelas.
 - v5.9.26: Template 3 — persen kenaikan di samping total $ (satu baris, font lebih kecil); kartu Akun aktif dipindah ke kanan baris TOTAL P&L dalam ukuran ringkas.
 - v5.9.27: Template 3 — tata letak hero dikembalikan (kartu Akun aktif tetap di kanan); persen kenaikan kini mengisi ruang kosong di samping total $ dalam satu baris (font lebih kecil; ikon disembunyikan di layar <=375px).
+- v5.9.28: Template 3 — kotak Akun aktif dihilangkan (tinggal ikon dompet + nama akun), ukuran dan posisi teks tetap.
