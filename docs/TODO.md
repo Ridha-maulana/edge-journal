@@ -451,3 +451,4 @@
 - v5.9.36: Template 4 dikembalikan seperti semula (perubahan v5.9.35 dibatalkan). Template 3 — kartu 6 metrik: ikon kiri, angka di atas, keterangan di bawah; spasi kiri=kanan; ukuran seragam, otomatis mengecil bila teks/angka panjang.
 - v5.9.37: Template 3 — kartu metrik: tulisan di atas, angka di bawah. Baris saldo: 4 kolom sama lebar + garis pemisah (garis tengah sejajar garis tengah kartu bawah), angka mengecil otomatis, ikon/jarak menyesuaikan lebar layar agar tidak tertutup garis.
 - v5.9.38: Template 3 — baris saldo: isi tiap kolom di tengah, spasi atas/bawah/samping sama, garis pemisah simetris; semua angka satu ukuran dan mengecil otomatis bila perlu.
+- v5.9.39: Template 5 (Sederhana) — tata letak baru: kartu P&L terpisah dari kartu grafik (kepala P&L + % + Akun aktif seperti Template 3, baris Saldo/Awal/Hari aktif), 3 metrik dalam satu kartu, header grafik lebih kecil, breakdown satu baris per kategori.
