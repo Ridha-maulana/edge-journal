@@ -447,3 +447,7 @@
 - v5.9.31: Template 4 — baris rentang (tahun/bulan/minggu/hari/sesi) dihapus dari kartu atas; kartu grafik makin tinggi.
 - v5.9.32: Template 3 — kolom Saldo awal/Sekarang/Pertumbuhan/Hari aktif mengikuti lebar isi (angka tidak tertutup garis, aman untuk font mono); Template 4/5 — gradasi gelap kartu P&L dihapus (sama seperti kartu bawah); label tanggal kiri grafik candlestick tidak terpotong.
 - v5.9.33: Template 4/5 — lingkaran ikon metrik dibuat dop (warna rata, tanpa gradasi dan cahaya) saat efek ikon aktif.
+- v5.9.34: Template 3 — garis pemisah kolom Saldo awal/Sekarang/Pertumbuhan/Hari aktif diganti ikon polos (tanpa lingkaran/kotak); ikon disembunyikan di layar <=375px.
+- v5.9.36: Template 4 dikembalikan seperti semula (perubahan v5.9.35 dibatalkan). Template 3 — kartu 6 metrik: ikon kiri, angka di atas, keterangan di bawah; spasi kiri=kanan; ukuran seragam, otomatis mengecil bila teks/angka panjang.
+- v5.9.37: Template 3 — kartu metrik: tulisan di atas, angka di bawah. Baris saldo: 4 kolom sama lebar + garis pemisah (garis tengah sejajar garis tengah kartu bawah), angka mengecil otomatis, ikon/jarak menyesuaikan lebar layar agar tidak tertutup garis.
+- v5.9.38: Template 3 — baris saldo: isi tiap kolom di tengah, spasi atas/bawah/samping sama, garis pemisah simetris; semua angka satu ukuran dan mengecil otomatis bila perlu.

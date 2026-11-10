@@ -591,3 +591,19 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .t6-top .t6-pl .t6-big{margin-top:calc(var(--u)*14)}.t6-top .t6-pl .t6-tr{margin-top:calc(var(--u)*14)}.t6-top .t6-pl .t6-r strong{margin-top:calc(var(--u)*16)}.t6-top .t6-pl .t6-r button{margin-top:calc(var(--u)*14)}
 /* v5.9.31 Template 4: baris rentang dihapus, satu garis pemisah hero/saldo */
 .t6-top .t6-st{margin-top:calc(var(--u)*28);padding-top:calc(var(--u)*26);border-top:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent)}
+/* v5.9.38 Template 3: 4 kolom saldo sama lebar, isi di TENGAH tiap kolom, ada spasi atas/bawah & samping; garis pemisah; garis tengah sejajar kartu bawah */
+.t5-st{grid-template-columns:repeat(4,minmax(0,1fr))!important;justify-content:stretch!important}
+.t5-st>div,.t5-st>div:first-child,.t5-st>div:last-child{container-type:inline-size;min-width:0;align-items:center;text-align:center;gap:calc(var(--u)*10);border-left:1px solid var(--ej-bd)!important;padding:calc(var(--u)*18) calc(var(--u)*20)!important}
+.t5-st>div:first-child{border-left:0!important}
+.t5-st small{display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*6);white-space:nowrap;font-size:max(max(11px,calc(var(--u)*19)),min(max(11px,calc(var(--u)*25)),calc((100cqi - calc(var(--u)*52)) / (var(--n,8) * .56))))}
+.t5-st small svg{width:calc(var(--u)*30);height:calc(var(--u)*30);flex:none}
+.t5-st b{white-space:nowrap;text-align:center;font-size:max(max(11px,calc(var(--u)*24)),min(max(11px,calc(var(--u)*42)),calc(100cqi / (var(--n,6) * .68))))}
+.t5-st.noic small svg{display:none}
+.t5-st.tight>div,.t5-st.tight>div:first-child,.t5-st.tight>div:last-child{padding:calc(var(--u)*18) calc(var(--u)*12)!important}
+/* v5.9.36 Template 3: kartu 6 metrik — ikon kiri, angka di atas, keterangan di bawah; spasi kiri=kanan; ukuran seragam (mengecil otomatis bila panjang) */
+.t5-mg>div,.t5-mg>div:nth-child(odd),.t5-mg>div:nth-child(even),.t5-mg>div:nth-child(3n+1){gap:calc(var(--u)*22);min-width:0;padding:calc(var(--u)*24) calc(var(--u)*24) calc(var(--u)*24) calc(var(--u)*6)}
+.t5-mg>div:nth-child(even){padding:calc(var(--u)*24) calc(var(--u)*6) calc(var(--u)*24) calc(var(--u)*24);border-left:1px solid var(--ej-bd)}
+.t5-mg>div:nth-child(odd){border-left:0}
+.t5-mg .t5-mt{flex:1;min-width:0;container-type:inline-size;display:flex;flex-direction:column;gap:calc(var(--u)*6)}
+.t5-mg .t5-mt b{display:block;margin:0;font-size:max(max(11px,calc(var(--u)*26)),min(max(11px,calc(var(--u)*40)),calc(100cqi / (var(--n,6) * .6))));line-height:1.1;white-space:nowrap}
+.t5-mg .t5-mt small{display:block;font-size:max(max(11px,calc(var(--u)*20)),min(max(11px,calc(var(--u)*26)),calc(100cqi / (var(--n,10) * .58))));line-height:1.2;white-space:nowrap}

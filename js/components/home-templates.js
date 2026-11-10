@@ -245,6 +245,17 @@ function T5Bars({ vals, si, onPick, fit }) {
 function HomeT5({ d }) {
     const fit = useTplFit(150, 480), ctl = useTplChart('line'), c = d.cur, [pick, setPick] = useState(null);
     useEffect(() => { setPick(null); }, [ctl.tf]);
+    const stR = useRef(null);
+    React.useLayoutEffect(() => {
+        const el = stR.current; if (!el) return;
+        const bad = () => [...el.children].some(c => [...c.children].some(x => { const g = document.createRange(); g.selectNodeContents(x); return g.getBoundingClientRect().width > x.clientWidth - 2; }));
+        const run = () => { el.classList.remove('noic', 'tight'); if (bad()) { el.classList.add('noic'); if (bad()) el.classList.add('tight'); } };
+        run();
+        const ro = window.ResizeObserver ? new ResizeObserver(run) : null; if (ro) ro.observe(el);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+        const t = setTimeout(run, 600);
+        return () => { if (ro) ro.disconnect(); clearTimeout(t); };
+    }, [ctl.kind, d.aNow, d.activeDays, d.startBal]);
     const vis = useMemo(() => buildCandles(d.cs, ctl.tf).slice(-14), [d.cs, ctl.tf]);
     const vals = useMemo(() => vis.map(x => ({ v: x.c, o: x.o, lb: x.short })), [vis]);
     const si = vis.length ? (pick != null && pick < vis.length ? pick : vis.length - 1) : 0, act = vis[si] || null;
@@ -257,12 +268,12 @@ function HomeT5({ d }) {
                 tpE("div", { className: "t5-ac" }, tpE("span", { className: "t5-ai" }, tpIc('Wallet', 22)), tpE("div", null, tpE("small", null, "Akun aktif"), tpE("strong", null, d.acc.name)))),
             tpE("div", { className: "t5-fb", ref: fit.box }, ctl.kind === 'candle' ? tplCandle(d, ctl, fit, false, .92) : tpE(T5Bars, { vals: vals, si: si, onPick: setPick, fit: fit.m })),
             tpE("div", { className: "t5-rw" }, tpE("div", { className: "tp-fx", role: "group", "aria-label": "Skala grafik" }, CANDLE_TFS.map(([k, l]) => tpE("button", { key: k, type: "button", className: ctl.tf === k ? 'on' : '', onClick: () => ctl.setTf(k) }, l))), tpE(TplKind, { ctl })),
-            tpE("div", { className: "t5-st" }, rows.map(([l, v, t]) => tpE("div", { key: l }, tpE("small", null, l), tpE("b", { className: t }, v))))),
+            tpE("div", { className: "t5-st", ref: stR }, rows.map(([l, v, t], i) => tpE("div", { key: l }, tpE("small", { style: { '--n': Math.max(...rows.map(r => String(r[0]).length)) } }, tpIc(['Coins', 'BarsFill', 'TrendingUp', 'Calendar'][i], 14, 2), l), tpE("b", { className: t, style: { '--n': Math.max(...rows.map(r => String(r[1]).length)) } }, v))))),
         act && ctl.kind !== 'candle' && tpE("section", { className: "tp-card t5-act" }, tpE("div", { className: "t5-ah" }, tpE("b", null, act.label.replace(' · ', ' • ')), tpE("span", null, act.n, " trade")),
             tpE("div", { className: "t5-av " + tpC(dv) }, tpE("b", null, tpS(dv) + Math.abs(dv).toFixed(2)), tpE("span", null, tpS(dpc) + Math.abs(dpc).toFixed(2) + '%')),
             tpE("div", { className: "t5-oh" }, tpE("b", { className: tpC(dp) }, tpS(dp) + Math.abs(dp).toFixed(1) + ' pips'), tpE("i", null, "|"), [['O', act.o], ['H', act.h], ['L', act.l], ['C', act.c]].map(([k, v]) => tpE("span", { key: k }, k, " ", tpE("b", { className: tpC(v) }, tpS(v) + Math.abs(v).toFixed(v >= 100 ? 0 : 2))))),
             tpE("button", { type: "button", className: "t5-dt", onClick: () => d.onOpen && d.onOpen(act, ctl.tf) }, "Lihat detail", tpIc('ChevronRight', 15, 2.4))),
-        tpE("section", { className: "tp-card t5-m" }, tpE("div", { className: "t5-mg" }, k6.map((m, i) => tpE("div", { key: m[0] }, tpE("span", { className: "t5-mi" }, tpIc(ic[i], 18)), tpE("div", null, tpE("small", null, m[0]), tpE("b", { className: m[2] }, m[1]))))), tpActions(d)));
+        tpE("section", { className: "tp-card t5-m" }, tpE("div", { className: "t5-mg" }, k6.map((m, i) => tpE("div", { key: m[0] }, tpE("span", { className: "t5-mi" }, tpIc(ic[i], 18)), tpE("div", { className: "t5-mt" }, tpE("small", { style: { '--n': String(m[0]).length } }, m[0]), tpE("b", { className: m[2], style: { '--n': String(m[1]).length } }, m[1]))))), tpActions(d)));
 }
 /* ===== T6: kaca lembut ===== */
 function HomeT6({ d }) {
