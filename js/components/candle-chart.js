@@ -266,7 +266,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
                 React.createElement("line", { x1: cx, x2: cx, y1: y(c.h), y2: y(c.l), stroke: k, strokeWidth: wk, strokeLinecap: "round" }),
                 React.createElement("rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(1.8, bot - top), rx: bw > 4 ? "1.2" : "0", fill: k }));
         })),
-        shown.map(c => { const i = candles.indexOf(c); return (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14) ? React.createElement("text", { key: c.k, x: x(i), y: H - 8 * FS, textAnchor: "middle", fontSize: String(9.5 * FS), fill: EJC("#7d8bab") }, c.short) : null; }),
+        shown.map(c => { const i = candles.indexOf(c); return (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14) ? React.createElement("text", { key: c.k, x: Math.max(String(c.short).length * 3.2 * FS + 1, Math.min(W - AX - String(c.short).length * 3.2 * FS, x(i))), y: H - 8 * FS, textAnchor: "middle", fontSize: String(9.5 * FS), fill: EJC("#7d8bab") }, c.short) : null; }),
         React.createElement("g", { transform: RO !== 1 ? `scale(${RO})` : undefined },
         React.createElement("text", { x: L, y: 13, fontSize: "11.5", fontWeight: "700", fill: EJC("#eef2ff") },
             act.label,

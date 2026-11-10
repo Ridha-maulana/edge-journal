@@ -445,3 +445,5 @@
 - v5.9.29: Template 4 — 3 kartu atas (hero, rentang 1 tahun/bulan/.., saldo) digabung jadi 1 kartu dengan garis pemisah; Saldo awal/Sekarang/Pertumbuhan/Hari aktif jadi 1 baris.
 - v5.9.30: Template 4 — kartu gabungan dirapatkan sedikit sehingga kartu grafik lebih tinggi (sekitar +20px di layar 360-430).
 - v5.9.31: Template 4 — baris rentang (tahun/bulan/minggu/hari/sesi) dihapus dari kartu atas; kartu grafik makin tinggi.
+- v5.9.32: Template 3 — kolom Saldo awal/Sekarang/Pertumbuhan/Hari aktif mengikuti lebar isi (angka tidak tertutup garis, aman untuk font mono); Template 4/5 — gradasi gelap kartu P&L dihapus (sama seperti kartu bawah); label tanggal kiri grafik candlestick tidak terpotong.
+- v5.9.33: Template 4/5 — lingkaran ikon metrik dibuat dop (warna rata, tanpa gradasi dan cahaya) saat efek ikon aktif.
