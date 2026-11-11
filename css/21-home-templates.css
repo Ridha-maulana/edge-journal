@@ -332,6 +332,10 @@ html[data-fxi="1"] .tp6 .t6-mi{background:color-mix(in srgb,var(--ico) 20%,trans
 .t5-top{flex-wrap:wrap;gap:calc(var(--u)*20)}
 .t5-ac strong{white-space:nowrap;font-size:max(11px,calc(var(--u)*30))}
 
+/* layar sangat sempit (<=350px): judul header tidak terpotong tombol di kanan */
+.ht-bt{min-width:0}.ht-bt strong{display:block;max-width:100%;overflow:hidden!important;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:350px){.ht .ht-bt strong{letter-spacing:.04em!important;font-size:11px!important}.ht .ht-bt span{display:none}.ht-acc span{max-width:64px}}
+
 /* ===== v5.8.2 — ukuran & jarak tepi disamakan dengan halaman utama standar (satuan piksel, sama persis) ===== */
 /* tepi kiri-kanan 8px seperti .main-content standar; jarak antar kartu 8px */
 .tp,.tp1,.tp2,.tp5,.tp6{padding-left:8px;padding-right:8px;gap:8px}

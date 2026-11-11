@@ -3,7 +3,7 @@
 (function () {
     var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx', fxs: 'ej3-fxs', sfc: 'ej3-sfc', sfcg: 'ej3-sfcg' };
     /* efek permukaan kartu (v5.9.40): 0 = standar, 1-25 = gaya (nama, keluarga warna teks d/l/a, grup). CSS-nya css/23-surfaces.css (dibuat docs/gen-surfaces.py) */
-    var SFC = [null, ["Putih Solid", "l", "dasar"], ["Hitam Solid", "d", "dasar"], ["Abu Solid", "l", "dasar"], ["Transparan Ringan", "a", "dasar"], ["Transparan Gelap", "d", "dasar"], ["Border Berwarna", "a", "dasar"], ["Bayangan Lembut", "a", "dasar"], ["Bayangan Tebal", "a", "dasar"], ["Kaca Buram", "a", "dasar"], ["Border Tipis", "a", "dasar"], ["Doff Hitam", "d", "doff"], ["Doff Putih", "l", "doff"], ["Doff Abu Muda", "l", "doff"], ["Doff Abu Tua", "d", "doff"], ["Doff Navy", "d", "doff"], ["Doff Biru", "d", "doff"], ["Doff Hijau Sage", "l", "doff"], ["Doff Hijau Tua", "d", "doff"], ["Doff Olive", "d", "doff"], ["Doff Krem", "l", "doff"], ["Doff Terracotta", "d", "doff"], ["Doff Merah Marun", "d", "doff"], ["Doff Pink Dusty", "l", "doff"], ["Doff Ungu Plum", "d", "doff"], ["Doff Cokelat", "d", "doff"]];
+    var SFC = [null, ["Putih Solid", "l", "dasar", "#fafafa"], ["Hitam Solid", "d", "dasar", "#1c1c1e"], ["Abu Solid", "l", "dasar", "#adb1b9"], ["Transparan Ringan", "a", "dasar"], ["Transparan Gelap", "d", "dasar", "#6d727b"], ["Border Berwarna", "a", "dasar"], ["Bayangan Lembut", "a", "dasar"], ["Bayangan Tebal", "a", "dasar"], ["Kaca Buram", "a", "dasar"], ["Border Tipis", "a", "dasar"], ["Doff Hitam", "d", "doff", "#1d1e21"], ["Doff Putih", "l", "doff", "#efeeea"], ["Doff Abu Muda", "l", "doff", "#a4a7ae"], ["Doff Abu Tua", "d", "doff", "#46494e"], ["Doff Navy", "d", "doff", "#2b3d5e"], ["Doff Biru", "d", "doff", "#5878a0"], ["Doff Hijau Sage", "l", "doff", "#94ab95"], ["Doff Hijau Tua", "d", "doff", "#2e4a3c"], ["Doff Olive", "d", "doff", "#62694a"], ["Doff Krem", "l", "doff", "#ecdcc3"], ["Doff Terracotta", "d", "doff", "#b4664a"], ["Doff Merah Marun", "d", "doff", "#5c2a35"], ["Doff Pink Dusty", "l", "doff", "#cf9b9b"], ["Doff Ungu Plum", "d", "doff", "#583d58"], ["Doff Cokelat", "d", "doff", "#624a3e"]];
     /* efek tampilan yang bisa dinyalakan sendiri-sendiri: latar, kartu, tombol, ikon (kartu), hdr (ikon header), nav (ikon menu bawah), gerak */
     var FX_KEYS = ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'nav', 'gerak'];
     var FX_DEFAULT = ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'gerak'];
@@ -351,7 +351,14 @@
         if (sfam && state.sfcg) root.setAttribute('data-sfcg', '1'); else root.removeAttribute('data-sfcg');
         if (sfam === 'd' || sfam === 'l') {
             var fm = sfam === 'd' ? 'dark' : 'light', f2 = th.gen[fm].f, p2, hx2, v2;
-            for (i = 0; i < H.length; i++) st.setProperty('--sp-c' + i, xf(H[i], th, fm));
+            var sbase = sm[3] || '', sink = sfam === 'd' ? '#ffffff' : '#000000';
+            /* teks redup bernuansa tema (hijau/abu) di atas permukaan berwarna: naikkan kontras ke 4.5 tanpa mengubah aksen jenuh */
+            function fixc(h) {
+                if (!sbase) return h; var a = rgb2(h), mx = Math.max(a[0], a[1], a[2]), mn = Math.min(a[0], a[1], a[2]), l = (mx + mn) / 510, s = mx === mn ? 0 : (mx - mn) / 255 / (1 - Math.abs(2 * l - 1));
+                var textlike = sfam === 'd' ? lum(a) > .3 : lum(a) < .22; if (!textlike || s > .4) return h;
+                var c = h, t = 0; while (cr(c, sbase) < 4.5 && t < 12) { t++; c = mix(h, sink, t * .08); } return c;
+            }
+            for (i = 0; i < H.length; i++) st.setProperty('--sp-c' + i, fixc(xf(H[i], th, fm)));
             for (i = 0; i < R.length; i++) { p2 = R[i].split(','); hx2 = toHex([+p2[0], +p2[1], +p2[2]]); if (hx2 === '#000000' && fm === 'light') { st.setProperty('--sp-r' + i, '70,85,130'); continue; } v2 = xf(hx2, th, fm); st.setProperty('--sp-r' + i, parseInt(v2.substr(1, 2), 16) + ',' + parseInt(v2.substr(3, 2), 16) + ',' + parseInt(v2.substr(5, 2), 16)); }
             var pru2 = f2.ac, pt2 = 0; while (cr(pru2, f2.pn) < 4.5 && pt2 < 12) { pt2++; pru2 = mix(f2.ac, f2.tx, pt2 * .08); }
             var ink2 = fm === 'dark' ? f2.bg : f2.tx, stops2 = fxOn ? [f2.ac, mix(ga, gb, .5)] : [f2.ac];
