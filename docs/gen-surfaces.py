@@ -82,14 +82,15 @@ S_=S
 # ---------------------------------------------------------------------------------------------
 # Selektor yang ikut permukaan: kartu + header + menu bawah (semua varian)
 CARDS=(".tp-card,.hero-card,.pe-card,.tool-card:not(.acct-inline),.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,"
-       ".flat-sec.card-sec,.hd-card,.backup-panel,.panel,.pe-tile,.tp-act")
+       ".flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act")
 CHROME=(".brand-mark,.header-icon,.account-switcher,.hd-strip,.ht-logo,.ht-cal,.ht-acc,.ht-date,.ht-dcard,"
         '.topbar[class*="hd-v"],.bottom-nav')
 CONTROLS=("button.icon-btn,.performance-detail-badge,button.tsel,button.sel,.search-box,button.pill:not(.active),button.dfield,"
   "input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]):not([type=hidden]),textarea,select,"
-  ".direction,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.pe-link,.dna-item,.dna-badge,.t5-fb,.tp-fx,"
-  "button.tp-kind.is-line,.k-thumb,.t5-st,.t5-dt,.t5-mi,.prof-av,.pick-ic,.account-avatar,"
+  ".direction,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.pe-link,.dna-item,.dna-badge,.tool-icon,.as-edit,.capital-toggle,.capital-balance,.rc-seg,.rc-swap,.rc-out,.rc-res>*,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.cal-cell:not(.win):not(.loss):not(.los),.pe-years button,.pe-sum>div,.pe-tabs button:not(.on),.dd-crumb:not(.on),.dd-lock,.dd-btn.back,.dd-item.click,.tp-fx,"
+  "button.tp-kind.is-line,.k-thumb,.prof-av,.pick-ic,.account-avatar,"
   "")
+CARDS=','.join(c+':not(.acc-panel *)' for c in CARDS.split(','))
 ALL=CARDS+','+CHROME+','+CONTROLS
 def small(css):
     m=re.search(r'box-shadow:([^;]*(?:\([^)]*\)[^;]*)*?)(!important)?;',css)
@@ -127,11 +128,11 @@ out=['/* Efek permukaan kartu (v5.9.40). DIBUAT OTOMATIS oleh docs/gen-surfaces.
      '   Berlaku untuk kartu, header, dan menu bawah. Palet keluarga d/l dipasang appearance.js sebagai --sp-*. */']
 m=[f'--c{i}:var(--sp-c{i})' for i in range(NC)]+[f'--r{i}:var(--sp-r{i})' for i in range(NR)]
 m+=['--t-dk:var(--sp-pr)','--t-soft:color-mix(in srgb,var(--sp-pr) 16%,transparent)','--bg:var(--c1)','--panel:var(--c2)','--panel2:var(--c3)','--border:var(--c4)','--muted:var(--c5)','--blue:var(--c6)','--purple:var(--c9)','--orange:var(--c10)','--ej-ik:var(--sp-ik)','--ej-bd:var(--sp-bd)','--fx-bd:var(--sp-bd)','--ej-so:var(--sp-so)','--ej-pr:var(--sp-pr)','--ej-pru:var(--sp-pru)','--fx-gl:var(--sp-gl)','--fx-so:var(--sp-so3)','--onacc:var(--sp-onacc)','--accg:var(--sp-accg)','color:var(--sp-ik)']
-out.append('html[data-sfcf="d"][data-sfc] :is(%s):not(.acc-panel *),html[data-sfcf="l"][data-sfc] :is(%s):not(.acc-panel *){%s}'%(ALL,ALL,';'.join(m)))
+out.append('html[data-sfcf="d"][data-sfc] :is(%s),html[data-sfcf="l"][data-sfc] :is(%s){%s}'%(ALL,ALL,';'.join(m)))
 FAM={'d':'--ej-sf:#17181b;--t-mu:color-mix(in srgb,var(--ej-ik) 62%,var(--ej-sf));--t-mu2:color-mix(in srgb,var(--ej-ik) 44%,var(--ej-sf));--t-ln:var(--ej-bd);--t-soft:color-mix(in srgb,var(--ej-so) 55%,var(--ej-sf));--t-pos:#2ee6a0;--t-neg:#ff6b81;--green:#2ee6a0;--red:#ff6b81;',
      'l':'--ej-sf:#f1f2f4;--t-mu:#3d4452;--t-mu2:#6b7380;--t-ln:#00000026;--t-soft:#0000000d;--t-pos:#07804d;--t-neg:#cf1f3a;--green:#07804d;--red:#cf1f3a;'}
-for f in 'dl': out.append('html[data-sfcf="%s"][data-sfc] :is(%s):not(.acc-panel *){%s}'%(f,ALL,FAM[f]))
-SEL='html[data-sfc="%d"][data-mode%s][data-sfcf] :is(%s):not(.acc-panel *)'
+for f in 'dl': out.append('html[data-sfcf="%s"][data-sfc] :is(%s){%s}'%(f,ALL,FAM[f]))
+SEL='html[data-sfc="%d"][data-mode%s][data-sfcf] :is(%s)'
 def xs_of(ex):
     return f"--ej-sf:{ex['sf']};--t-mu:{ex['mu']};--t-mu2:{ex['mu2']};--t-ln:{ex['ln']};--t-pos:{ex['pos']};--t-neg:{ex['neg']};--green:{ex['pos']};--red:{ex['neg']};--muted:{ex['mu']};--border:{ex['ln']};--c4:{ex['ln']};--c5:{ex['mu']};" if ex else ''
 for k,(n,grp,fam,css,cssL,ex) in S.items():
@@ -144,6 +145,7 @@ for k,(n,grp,fam,css,cssL,ex) in S.items():
     out.append((SEL%(k,'',CONTROLS))+'{'+imp(small(css))+'}')
     if cssL: out.append(SEL%(k,'="light"',CONTROLS)+'{'+imp(small(cssL))+'}')
     out.append(f'html[data-sfc="{k}"]{{--sg-a:{ga};--sg-b:{gb};}}')
+    if k>=11: out.append(f'html[data-sfc="{k}"] :is(.tp-act,.ht-cal,.header-icon,.pe-years button) svg{{color:var(--ej-ik)!important;stroke:currentColor!important}}')
     act={'d':'#ffffff1f','l':'#0000001a','a':'#ffffff1f'}[fam]
 
 
@@ -153,7 +155,8 @@ html[data-sfc] .bottom-nav .nav-item:not(.active),html[data-sfc] .bottom-nav .bt
 html[data-sfc] .bottom-nav.nv-1 .nav-item.active,html[data-sfc] .bottom-nav.nv-3 .nav-item.active{color:var(--ej-ik)!important;box-shadow:inset 0 1px 0 #ffffff1a!important}
 html[data-sfc] .bottom-nav.nv-1 .nav-item.active svg,html[data-sfc] .bottom-nav.nv-3 .nav-item.active svg{color:inherit!important}
 html[data-sfc] :is(input,textarea)::placeholder{color:color-mix(in srgb,var(--ej-ik) 58%,transparent)!important;opacity:1!important}
-html[data-sfc] .direction button:not(.selected){color:color-mix(in srgb,var(--ej-ik) 70%,transparent)!important}
+html[data-sfc] :is(.direction,.capital-toggle,.rc-seg) button:not(.selected):not(.on):not(.active){color:color-mix(in srgb,var(--ej-ik) 72%,transparent)!important}
+html[data-sfc] .account-list-item :is(.account-delete,.account-delete svg){color:color-mix(in srgb,var(--ej-ik) 75%,transparent)!important}
 html[data-sfc][data-mode="light"][data-sfcf="a"] .ht-logo,html[data-sfc][data-mode="light"][data-sfcf="a"] .brand-mark{color:#0f7a57!important}""")
 out.append("""/* elemen di dalam kartu: tint rata (tanpa bayangan ganda) */""")
 CONT=CARDS
@@ -166,6 +169,8 @@ tint('a','dark','#ffffff12','#ffffff1c'); tint('a','light','#0000000a','#0000001
 # controles di dalam kontrol (input di search-box dsb) & panel akun: polos
 FLAT='background:transparent!important;background-image:none!important;border-color:transparent!important;box-shadow:none!important;'
 out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][data-mode] :is(%s) :is(%s,%s){%s}'%(CONTROLS,CARDS,CONTROLS,FLAT))
+out.append('html[data-sfc] :is(.backup-panel,.helper-note){background:none!important;box-shadow:none!important;border:0!important}')
+out.append('html[data-sfc] .acc-panel .tool-card{background:none!important;box-shadow:none!important;border:0!important;border-radius:0!important}')
 FN='.gj-chart,.week-head'
 out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][data-mode] :is(%s) :is(%s){%s}'%(CONT,FN,FLAT))
 out.append("""/* latar berpendar */
