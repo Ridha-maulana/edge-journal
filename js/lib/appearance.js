@@ -1,7 +1,9 @@
 /* Tampilan aplikasi: mode (terang/gelap/otomatis), tema warna, font. Dimuat di <head> agar diterapkan sebelum layar tampil pertama kali.
    Semua warna di CSS/JS berupa var(--cN) dari color-table.js; di sini nilainya dihitung ulang per mode + tema. */
 (function () {
-    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx', fxs: 'ej3-fxs' };
+    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx', fxs: 'ej3-fxs', sfc: 'ej3-sfc', sfcg: 'ej3-sfcg' };
+    /* efek permukaan kartu (v5.9.40): 0 = standar, 1-25 = gaya (nama, keluarga warna teks d/l/a, grup). CSS-nya css/23-surfaces.css (dibuat docs/gen-surfaces.py) */
+    var SFC = [null, ["Putih Solid", "l", "dasar"], ["Hitam Solid", "d", "dasar"], ["Abu Solid", "l", "dasar"], ["Transparan Ringan", "a", "dasar"], ["Transparan Gelap", "d", "dasar"], ["Border Berwarna", "a", "dasar"], ["Bayangan Lembut", "a", "dasar"], ["Bayangan Tebal", "a", "dasar"], ["Kaca Buram", "a", "dasar"], ["Border Tipis", "a", "dasar"], ["Doff Hitam", "d", "doff"], ["Doff Putih", "l", "doff"], ["Doff Abu Muda", "l", "doff"], ["Doff Abu Tua", "d", "doff"], ["Doff Navy", "d", "doff"], ["Doff Biru", "d", "doff"], ["Doff Hijau Sage", "l", "doff"], ["Doff Hijau Tua", "d", "doff"], ["Doff Olive", "d", "doff"], ["Doff Krem", "l", "doff"], ["Doff Terracotta", "d", "doff"], ["Doff Merah Marun", "d", "doff"], ["Doff Pink Dusty", "l", "doff"], ["Doff Ungu Plum", "d", "doff"], ["Doff Cokelat", "d", "doff"]];
     /* efek tampilan yang bisa dinyalakan sendiri-sendiri: latar, kartu, tombol, ikon (kartu), hdr (ikon header), nav (ikon menu bawah), gerak */
     var FX_KEYS = ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'nav', 'gerak'];
     var FX_DEFAULT = ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'gerak'];
@@ -234,6 +236,8 @@
         mode: get('mode', 'dark', function (v) { return v === 'light' || v === 'dark' || v === 'auto'; }),
         theme: get('theme', 'mint', function (v) { return !!THEMES[v]; }),
         font: get('font', 'manrope', function (v) { return !!FONTS[v]; }),
+        sfc: +get('sfc', '0', function (v) { return /^\d+$/.test(v) && +v >= 0 && +v < SFC.length; }),
+        sfcg: get('sfcg', '0', function (v) { return v === '0' || v === '1'; }) === '1' ? 1 : 0,
         fx: 'on',
         fxs: {}
     };
@@ -341,6 +345,22 @@
         st.setProperty('--ej-pru', pru); root.setAttribute('data-pale', cr(f.ac, f.pn) < 4.2 ? '1' : '0');
         st.setProperty('--ej-cv', f.bg); st.setProperty('--ej-sf', f.pn); st.setProperty('--ej-ik', f.tx); st.setProperty('--ej-pr', f.ac); st.setProperty('--ej-so', f.so);
         st.setProperty('--fx-a', f.pn); st.setProperty('--fx-b', f.pn);
+        /* efek permukaan kartu: palet mode lawan untuk keluarga d/l dipasang sebagai --sp-* (dipetakan ke --cN di css/23-surfaces.css) */
+        var sn = state.sfc | 0, sm = SFC[sn], sfam = sn > 0 && sm ? sm[1] : '';
+        if (sfam) { root.setAttribute('data-sfc', sn); root.setAttribute('data-sfcf', sfam); } else { root.removeAttribute('data-sfc'); root.removeAttribute('data-sfcf'); }
+        if (sfam && state.sfcg) root.setAttribute('data-sfcg', '1'); else root.removeAttribute('data-sfcg');
+        if (sfam === 'd' || sfam === 'l') {
+            var fm = sfam === 'd' ? 'dark' : 'light', f2 = th.gen[fm].f, p2, hx2, v2;
+            for (i = 0; i < H.length; i++) st.setProperty('--sp-c' + i, xf(H[i], th, fm));
+            for (i = 0; i < R.length; i++) { p2 = R[i].split(','); hx2 = toHex([+p2[0], +p2[1], +p2[2]]); if (hx2 === '#000000' && fm === 'light') { st.setProperty('--sp-r' + i, '70,85,130'); continue; } v2 = xf(hx2, th, fm); st.setProperty('--sp-r' + i, parseInt(v2.substr(1, 2), 16) + ',' + parseInt(v2.substr(3, 2), 16) + ',' + parseInt(v2.substr(5, 2), 16)); }
+            var pru2 = f2.ac, pt2 = 0; while (cr(pru2, f2.pn) < 4.5 && pt2 < 12) { pt2++; pru2 = mix(f2.ac, f2.tx, pt2 * .08); }
+            var ink2 = fm === 'dark' ? f2.bg : f2.tx, stops2 = fxOn ? [f2.ac, mix(ga, gb, .5)] : [f2.ac];
+            function worst2(c) { return Math.min.apply(null, stops2.map(function (s2) { return cr(c, s2); })); }
+            st.setProperty('--sp-ik', f2.tx); st.setProperty('--sp-bd', f2.bd); st.setProperty('--sp-so', f2.so); st.setProperty('--sp-pr', f2.ac); st.setProperty('--sp-pru', pru2);
+            st.setProperty('--sp-gl', trip(f2.ac)); st.setProperty('--sp-so3', trip(f2.so));
+            st.setProperty('--sp-onacc', worst2('#ffffff') >= worst2(ink2) ? '#ffffff' : ink2);
+            st.setProperty('--sp-accg', fxOn ? 'linear-gradient(135deg,' + ga + ',' + gb + ')' : f2.ac);
+        }
         st.setProperty('--ej-bd', f.bd); st.setProperty('--fx-bd', f.bd); st.setProperty('--fx-gl', trip(f.ac)); st.setProperty('--fx-so', trip(f.so));
         var ds = Math.abs(lum(rgb2(f.so)) - lum(rgb2(f.bg))), kk = ds < .06 ? 1 : Math.max(.22, .06 / ds);
         function sa(al) { return 'rgba(' + trip(f.so) + ',' + (al * kk).toFixed(2) + ')'; }
@@ -400,7 +420,7 @@
     }
     function preview(bg, ac, mode) { var dl = derive(bg, ac), s = side(dl[mode === 'light' ? 1 : 0], mode !== 'light'); var f = s.f; return { bg: f.bg, pn: f.pn, bd: f.bd, tx: f.tx, mu: f.mu, ac: f.ac, on: s.on }; }
     var api = {
-        THEMES: THEMES, THEME_ORDER: THEME_ORDER, FONTS: FONTS, FONT_ORDER: FONT_ORDER, state: state, set: set, setFx: setFx, setFxAll: setFxAll, FX_KEYS: FX_KEYS, preload: preload, custom: custom, validHex: validHex, setCustom: setCustom, preview: preview, bg: '#090d18', bgRGB: [9, 13, 24, 1], resolved: 'dark',
+        THEMES: THEMES, THEME_ORDER: THEME_ORDER, FONTS: FONTS, FONT_ORDER: FONT_ORDER, state: state, set: set, setFx: setFx, setFxAll: setFxAll, FX_KEYS: FX_KEYS, SFC: SFC, preload: preload, custom: custom, validHex: validHex, setCustom: setCustom, preview: preview, bg: '#090d18', bgRGB: [9, 13, 24, 1], resolved: 'dark',
         idx: {}
     };
     (window.EJ_HEX || []).forEach(function (h, i) { api.idx[h] = i; });

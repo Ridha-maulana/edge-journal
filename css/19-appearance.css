@@ -83,3 +83,19 @@
 .fxm-sw{width:44px;height:26px;border-radius:99px;background:var(--ej-bd);position:relative;flex:none;transition:background .2s}
 .fxm-sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4);transition:left .2s}
 .fxm-r.on .fxm-sw{background:#22c55e}.fxm-r.on .fxm-sw::after{left:21px}
+
+/* Efek permukaan kartu (v5.9.40): menu pilihan */
+.sfx{padding:2px 14px 4px}
+.sfx-std{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;margin:0 0 4px;border:1px solid var(--ej-bd);border-radius:14px;background:none;color:var(--ej-ik);text-align:left;font-family:var(--font)}
+.sfx-std.on{background:var(--ej-so);border-color:var(--ej-pr)}
+.sfx-sw{width:44px;height:30px;border-radius:9px;background:var(--ej-sf);border:1px solid var(--ej-bd);flex:none}
+.sfx-sd{flex:1;min-width:0}.sfx-sd b{display:block;font-size:14px;font-weight:600}.sfx-sd small{display:block;font-size:11px;opacity:.6;margin-top:1px}
+.sfx-std.on .ap-rad{border-color:var(--ej-pr);background:radial-gradient(var(--ej-pr) 45%,transparent 50%)}
+.sfx-gl{font:700 11px/1 var(--font);letter-spacing:.09em;text-transform:uppercase;opacity:.55;margin:16px 2px 8px}
+.sfx-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sfx-t{display:flex;flex-direction:column;gap:6px;margin:0;padding:6px;background:none;border:1px solid transparent;border-radius:14px;color:var(--ej-ik);font-family:var(--font);text-align:left}
+.sfx-t.on{border-color:var(--ej-pr);background:var(--ej-so)}
+.sfc-pv{display:flex;flex-direction:column;justify-content:center;gap:2px;height:58px;padding:0 10px;border-radius:12px;position:relative;overflow:hidden}
+.sfc-pv b{font-size:13px;font-weight:800;line-height:1.1}.sfc-pv small{font-size:10px;font-weight:700;line-height:1;opacity:.8}
+.sfx-n{font-size:11.5px;font-weight:600;line-height:1.2;display:flex;gap:6px;align-items:baseline}.sfx-n em{font-style:normal;opacity:.5;font-weight:700;font-size:10.5px}
+.sfx-opt{margin-top:14px}
