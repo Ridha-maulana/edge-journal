@@ -119,3 +119,5 @@
 body[data-tab="journal"] .topbar,body[data-tab="tools"] .topbar,body[data-tab="account"] .topbar{display:none!important}
 body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body[data-tab="account"] .main-content{padding-top:var(--s4)}
 }
+/* header halaman DNA / Advanced Statistics ikut tergulung (tidak menempel di atas) */
+.performance-detail-top{position:static!important;backdrop-filter:none!important;background:transparent!important}

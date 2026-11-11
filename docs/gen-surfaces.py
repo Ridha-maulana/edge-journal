@@ -82,15 +82,14 @@ S_=S
 # ---------------------------------------------------------------------------------------------
 # Selektor yang ikut permukaan: kartu + header + menu bawah (semua varian)
 CARDS=(".tp-card,.hero-card,.pe-card,.tool-card:not(.acct-inline),.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,"
-       ".flat-sec.card-sec,.hd-card,.backup-panel,.panel,.combo-stats>*,.pe-tile,.tp-act")
+       ".flat-sec.card-sec,.hd-card,.backup-panel,.panel,.pe-tile,.tp-act")
 CHROME=(".brand-mark,.header-icon,.account-switcher,.hd-strip,.ht-logo,.ht-cal,.ht-acc,.ht-date,.ht-dcard,"
         '.topbar[class*="hd-v"],.bottom-nav')
-CARDS+=",.modal:not(.fs),.tsel-sheet"
 CONTROLS=("button.icon-btn,.performance-detail-badge,button.tsel,button.sel,.search-box,button.pill:not(.active),button.dfield,"
   "input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]):not([type=hidden]),textarea,select,"
   ".direction,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.pe-link,.dna-item,.dna-badge,.t5-fb,.tp-fx,"
   "button.tp-kind.is-line,.k-thumb,.t5-st,.t5-dt,.t5-mi,.prof-av,.pick-ic,.account-avatar,"
-  ".fxm-seg,.fxm-card,.fxm-r")
+  "")
 ALL=CARDS+','+CHROME+','+CONTROLS
 def small(css):
     m=re.search(r'box-shadow:([^;]*(?:\([^)]*\)[^;]*)*?)(!important)?;',css)
@@ -127,12 +126,12 @@ out=['/* Efek permukaan kartu (v5.9.40). DIBUAT OTOMATIS oleh docs/gen-surfaces.
      '   html[data-sfc="N"] (N=1..25; 0/tanpa atribut = tampilan standar). data-sfcf = keluarga warna teks: d (teks terang di atas gelap) / l (teks gelap di atas terang) / a (ikut mode aplikasi).',
      '   Berlaku untuk kartu, header, dan menu bawah. Palet keluarga d/l dipasang appearance.js sebagai --sp-*. */']
 m=[f'--c{i}:var(--sp-c{i})' for i in range(NC)]+[f'--r{i}:var(--sp-r{i})' for i in range(NR)]
-m+=['--bg:var(--c1)','--panel:var(--c2)','--panel2:var(--c3)','--border:var(--c4)','--muted:var(--c5)','--blue:var(--c6)','--purple:var(--c9)','--orange:var(--c10)','--ej-ik:var(--sp-ik)','--ej-bd:var(--sp-bd)','--fx-bd:var(--sp-bd)','--ej-so:var(--sp-so)','--ej-pr:var(--sp-pr)','--ej-pru:var(--sp-pru)','--fx-gl:var(--sp-gl)','--fx-so:var(--sp-so3)','--onacc:var(--sp-onacc)','--accg:var(--sp-accg)','color:var(--sp-ik)']
-out.append('html[data-sfcf="d"][data-sfc] :is(%s),html[data-sfcf="l"][data-sfc] :is(%s){%s}'%(ALL,ALL,';'.join(m)))
+m+=['--t-dk:var(--sp-pr)','--t-soft:color-mix(in srgb,var(--sp-pr) 16%,transparent)','--bg:var(--c1)','--panel:var(--c2)','--panel2:var(--c3)','--border:var(--c4)','--muted:var(--c5)','--blue:var(--c6)','--purple:var(--c9)','--orange:var(--c10)','--ej-ik:var(--sp-ik)','--ej-bd:var(--sp-bd)','--fx-bd:var(--sp-bd)','--ej-so:var(--sp-so)','--ej-pr:var(--sp-pr)','--ej-pru:var(--sp-pru)','--fx-gl:var(--sp-gl)','--fx-so:var(--sp-so3)','--onacc:var(--sp-onacc)','--accg:var(--sp-accg)','color:var(--sp-ik)']
+out.append('html[data-sfcf="d"][data-sfc] :is(%s):not(.acc-panel *),html[data-sfcf="l"][data-sfc] :is(%s):not(.acc-panel *){%s}'%(ALL,ALL,';'.join(m)))
 FAM={'d':'--ej-sf:#17181b;--t-mu:color-mix(in srgb,var(--ej-ik) 62%,var(--ej-sf));--t-mu2:color-mix(in srgb,var(--ej-ik) 44%,var(--ej-sf));--t-ln:var(--ej-bd);--t-soft:color-mix(in srgb,var(--ej-so) 55%,var(--ej-sf));--t-pos:#2ee6a0;--t-neg:#ff6b81;--green:#2ee6a0;--red:#ff6b81;',
      'l':'--ej-sf:#f1f2f4;--t-mu:#3d4452;--t-mu2:#6b7380;--t-ln:#00000026;--t-soft:#0000000d;--t-pos:#07804d;--t-neg:#cf1f3a;--green:#07804d;--red:#cf1f3a;'}
-for f in 'dl': out.append('html[data-sfcf="%s"][data-sfc] :is(%s){%s}'%(f,ALL,FAM[f]))
-SEL='html[data-sfc="%d"][data-mode%s][data-sfcf] :is(%s)'
+for f in 'dl': out.append('html[data-sfcf="%s"][data-sfc] :is(%s):not(.acc-panel *){%s}'%(f,ALL,FAM[f]))
+SEL='html[data-sfc="%d"][data-mode%s][data-sfcf] :is(%s):not(.acc-panel *)'
 def xs_of(ex):
     return f"--ej-sf:{ex['sf']};--t-mu:{ex['mu']};--t-mu2:{ex['mu2']};--t-ln:{ex['ln']};--t-pos:{ex['pos']};--t-neg:{ex['neg']};--green:{ex['pos']};--red:{ex['neg']};--muted:{ex['mu']};--border:{ex['ln']};--c4:{ex['ln']};--c5:{ex['mu']};" if ex else ''
 for k,(n,grp,fam,css,cssL,ex) in S.items():
@@ -146,10 +145,10 @@ for k,(n,grp,fam,css,cssL,ex) in S.items():
     if cssL: out.append(SEL%(k,'="light"',CONTROLS)+'{'+imp(small(cssL))+'}')
     out.append(f'html[data-sfc="{k}"]{{--sg-a:{ga};--sg-b:{gb};}}')
     act={'d':'#ffffff1f','l':'#0000001a','a':'#ffffff1f'}[fam]
-    out.append(f'html[data-sfc="{k}"] .bottom-nav .nav-item.active{{background:{act}!important;}}')
-    if fam=='a': out.append(f'html[data-sfc="{k}"][data-mode="light"] .bottom-nav .nav-item.active{{background:#0000001a!important;}}')
+
+
 out.append("""/* menu bawah: bentuk asli, hanya warna */
-html[data-sfc] .bottom-nav .nav-item:before,html[data-sfc] .bottom-nav .nav-item:after{display:none!important}
+
 html[data-sfc] .bottom-nav .nav-item:not(.active),html[data-sfc] .bottom-nav .bt-item:not(.on){color:color-mix(in srgb,var(--ej-ik) 74%,transparent)!important}
 html[data-sfc] .bottom-nav.nv-1 .nav-item.active,html[data-sfc] .bottom-nav.nv-3 .nav-item.active{color:var(--ej-ik)!important;box-shadow:inset 0 1px 0 #ffffff1a!important}
 html[data-sfc] .bottom-nav.nv-1 .nav-item.active svg,html[data-sfc] .bottom-nav.nv-3 .nav-item.active svg{color:inherit!important}
@@ -161,13 +160,14 @@ CONT=CARDS
 NEST=':is(%s) :is(%s,%s)'%(CONT,CARDS,CONTROLS)
 def tint(fam,mode,bg,bd):
     sel='html[data-sfc][data-sfcf="%s"]%s[data-sfc][data-mode] '%(fam,'[data-mode="%s"]'%mode if mode else '')+NEST
-    out.append(sel+'{background:%s!important;background-image:none!important;border:1px solid %s!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}'%(bg,bd))
+    out.append(sel+'{background:%s!important;background-image:none!important;border-color:%s!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}'%(bg,bd))
 tint('l',None,'#0000000b','#00000014'); tint('d',None,'#ffffff12','#ffffff1c')
 tint('a','dark','#ffffff12','#ffffff1c'); tint('a','light','#0000000a','#00000014')
 # controles di dalam kontrol (input di search-box dsb) & panel akun: polos
 FLAT='background:transparent!important;background-image:none!important;border-color:transparent!important;box-shadow:none!important;'
 out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][data-mode] :is(%s) :is(%s,%s){%s}'%(CONTROLS,CARDS,CONTROLS,FLAT))
-out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][data-mode] .acc-panel .tool-card{%s}'%FLAT)
+FN='.gj-chart,.week-head'
+out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][data-mode] :is(%s) :is(%s){%s}'%(CONT,FN,FLAT))
 out.append("""/* latar berpendar */
 html[data-sfc][data-sfcg="1"] .app-shell{position:relative;isolation:isolate}
 html[data-sfc][data-sfcg="1"] .app-shell:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;filter:blur(26px);background:radial-gradient(62% 17% at 92% 2%,var(--sg-a),transparent 74%),radial-gradient(45% 14% at 0% 6%,var(--sg-b),transparent 74%),radial-gradient(70% 20% at 85% 100%,var(--sg-a),transparent 74%),radial-gradient(50% 16% at 5% 96%,var(--sg-b),transparent 74%)}""")
