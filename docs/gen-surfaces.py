@@ -89,7 +89,7 @@ CHROME=(".brand-mark,.header-icon,.account-switcher,.hd-strip,.ht-logo,.ht-cal,.
 CONTROLS=("button.icon-btn,.performance-detail-badge,button.tsel,button.sel,.search-box,button.pill:not(.active),button.dfield,"
   "input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]):not([type=hidden]),textarea,select,"
   ".direction button,.rc-seg button,.capital-toggle button,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.pe-link,.dna-item,.dna-badge,.tool-icon,.as-edit,.capital-balance,.rc-swap,.rc-out,.rc-res>*,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.cal-cell:not(.win):not(.loss):not(.los),.pe-years button,.pe-sum>div,.pe-tabs button:not(.on),.dd-crumb:not(.on),.dd-lock:not(.on),.dd-btn,.dd-item.click,.tp-fx,"
-  "button.tp-kind,.k-thumb,.prof-av,.pick-ic,.account-avatar,"
+  "button.tp-kind,.dd-tag.cnt,.k-thumb,.prof-av,.pick-ic,.account-avatar,"
   ".primary-btn,.fab,.gate-btn,.share-actions .primary,button.pill.active,.t1-wal,.t2-accb,.t2-nb,.t5-ai,.t5-mi,.t6-mi,.t2-ki,.t2-ii,.t6-more,.t5-dt,"
   "")
 CARDS=','.join(c+':not(.acc-panel *)' for c in CARDS.split(','))
@@ -192,6 +192,7 @@ out.append("""/* status aktif: tombol terpilih memakai warna aksen penuh, jelas 
 html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf] :is(.dd-crumb.on,.dd-lock.on,.pe-tabs button.on,.pe-years button.on,.ct-pill.on,.rc-seg button.on:not(.long):not(.short)){background:var(--ej-pr)!important;background-image:none!important;color:var(--onacc)!important;border-color:var(--ej-pr)!important;box-shadow:0 4px 12px rgba(var(--fx-gl),.3)!important}
 html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf] :is(.dd-crumb.on,.dd-lock.on,.pe-tabs button.on,.pe-years button.on) svg{color:var(--onacc)!important;stroke:currentColor!important}
 html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf] .dd-crumb.seen:not(.on){color:var(--ej-pru)!important}""")
+out.append('html[data-sfc][data-sfc] :is(.dd-tag.day,.dd-tag.week,.dd-tag.month,.dd-tag.ses){box-shadow:0 2px 5px #0000002e,inset 0 1px 0 #ffffff40}')
 GP='html'+'[data-sfc]'*9
 out.append(f'/* saklar Efek kartu / Efek tombol: mati = tanpa bayangan */\n{GP}[data-fxk="0"] :is({CARDS}){{box-shadow:none!important}}\n{GP}[data-fxb="0"] :is({BTNL}){{box-shadow:none!important}}')
 out.append("""/* grup tombol: wadah polos, tiap tombol punya permukaan sendiri */
@@ -212,7 +213,7 @@ html[data-sfc] .account-list-item :is(.account-delete,.account-delete svg){color
 html[data-sfc][data-mode="light"][data-sfcf="a"] .ht-logo,html[data-sfc][data-mode="light"][data-sfcf="a"] .brand-mark{color:#0f7a57!important}""")
 out.append("""/* elemen di dalam kartu: tint rata (tanpa bayangan ganda) */""")
 CONT=CARDS
-CTL_NT=','.join(c for c in CONTROLS.split(',') if not c.startswith('.cal-cell'))
+CTL_NT=','.join(c for c in CONTROLS.split(',') if not c.startswith(('.cal-cell','.dd-tag')))
 NEST=':is(%s) :is(%s,%s):not(.cal-nav *)'%(CONT,CARDS,CTL_NT)
 def tint(fam,mode,bg,bd):
     sel='html[data-sfc][data-sfcf="%s"]%s[data-sfc][data-mode] '%(fam,'[data-mode="%s"]'%mode if mode else '')+NEST
@@ -221,7 +222,8 @@ tint('l',None,'#0000000b','#00000014'); tint('d',None,'#ffffff12','#ffffff1c')
 tint('a','dark','#ffffff12','#ffffff1c'); tint('a','light','#0000000a','#00000014')
 # controles di dalam kontrol (input di search-box dsb) & panel akun: polos
 FLAT='background:transparent!important;background-image:none!important;border-color:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;'
-out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][data-mode] :is(%s) :is(%s,%s){%s}'%(CONTROLS,CARDS,CONTROLS,FLAT))
+CTL_F=','.join(c for c in CONTROLS.split(',') if not c.startswith('.dd-tag'))
+out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][data-mode] :is(%s) :is(%s,%s){%s}'%(CONTROLS,CARDS,CTL_F,FLAT))
 out.append('html[data-sfc] :is(.backup-panel,.helper-note){background:none!important;box-shadow:none!important;border:0!important}')
 out.append('html[data-sfc] .acc-panel .tool-card{background:none!important;box-shadow:none!important;border:0!important;border-radius:0!important}')
 FN='.gj-chart,.week-head'

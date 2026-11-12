@@ -464,3 +464,4 @@
 - v5.9.49: Advanced Statistics (Performa per bulan/minggu/hari/sesi): tab ikon & tombol Kunci terpilih berwarna aksen penuh (jelas beda dari yang belum dipilih); kartu item ikut efek permukaan; tombol Kembali/Selanjutnya ikut efek; kotak info hari/minggu/bulan/sesi dibedakan warna; angka +/- terbaca di Doff gelap.
 - v5.9.50: Halaman Kalender (ikon kalender di header): tombol tanggal dan panah bulan kini memakai tint rata seperti kalender di Advanced Statistics (tanpa bayangan tebal).
 - v5.9.51: Kalender di Advanced Statistics: tombol tanggal dan panah bulan kembali bermuka penuh (timbul, berbayangan) seperti halaman Kalender dari ikon header; v5.9.50 dibatalkan.
+- v5.9.52: Performa per bulan: chip '1 minggu / 2 hari / 3 sesi' ikut efek permukaan (timbul); chip hari/minggu/bulan/sesi berwarna diberi bayangan halus.
