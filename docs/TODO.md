@@ -460,3 +460,4 @@
 - v5.9.45: Efek permukaan: tombol/isian di dalam panel Tools & Profil (Risk calculator, Cloud backup, Export, akun) ikut efek; modal Account management (Backup, Deposit/WD, daftar akun) dirapikan; teks toggle tidak aktif terbaca.
 - v5.9.46: Modal Account management (Accounts & Backup): kartu dibiarkan polos, efek hanya di ikon dan tombol; kotak di sekeliling catatan backup dihilangkan.
 - v5.9.47: Efek permukaan: semua tombol & ikon ikut efek (tambah/FAB, Simpan, Long/Buy, Short/Sell, tombol Home, lingkaran ikon); teks aksen dikontraskan terhadap warna permukaan; grup Long/Short wadahnya polos.
+- v5.9.48: Efek permukaan + Efek tampilan: saklar Efek ikon kartu / ikon header / kartu / tombol kini bekerja di semua gaya (ikon berwarna di Doff, keping terang di Doff bernada menengah, bayangan kartu/tombol mati-nyala, cahaya tombol aksen); memilih gaya di Efek permukaan kartu langsung menutup halaman; Transparan Gelap terbaca di mode terang.

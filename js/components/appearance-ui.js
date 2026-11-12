@@ -42,13 +42,13 @@ function ApFxDialog({ EJ, st, onClose }) {
 function sfcName(EJ, n) { const m = EJ.SFC[n]; return m ? m[0] : 'Standar'; }
 function ApSfcDialog({ EJ, st, onClose }) {
     const h = React.createElement, cur = st.sfc | 0, S = EJ.SFC;
-    const tile = (k, no) => h("button", { type: "button", key: k, className: "sfx-t" + (cur === k ? ' on' : ''), "aria-pressed": cur === k, onClick: () => EJ.set('sfc', k) },
+    const tile = (k, no) => h("button", { type: "button", key: k, className: "sfx-t" + (cur === k ? ' on' : ''), "aria-pressed": cur === k, onClick: () => { EJ.set('sfc', k); onClose(); } },
         h("span", { className: "sfc-pv", "data-k": k }, h("b", null, "$154.59"), h("small", null, "+7.73%")),
         h("span", { className: "sfx-n" }, h("em", null, String(no).padStart(2, '0')), S[k][0].replace(/^Doff /, '')));
     const grp = g => S.map((m, k) => m && m[2] === g ? k : 0).filter(Boolean);
-    return h(ApDialog, { title: "Efek permukaan kartu", onClose: onClose, className: "ap-wide", note: "Permukaan dipakai di semua kartu (halaman utama, Trader DNA, Advanced Statistics, jurnal, dll), header, dan menu bawah. Pilih Standar untuk kembali ke tampilan sekarang. Perubahan langsung terlihat." },
+    return h(ApDialog, { title: "Efek permukaan kartu", onClose: onClose, className: "ap-wide", note: "Permukaan dipakai di semua kartu (halaman utama, Trader DNA, Advanced Statistics, jurnal, dll), header, dan menu bawah. Pilih Standar untuk kembali ke tampilan sekarang. Sekali ketuk, gaya langsung dipakai dan halaman ini tertutup." },
         h("div", { className: "sfx" },
-            h("button", { type: "button", className: "sfx-std" + (cur === 0 ? ' on' : ''), "aria-pressed": cur === 0, onClick: () => EJ.set('sfc', 0) },
+            h("button", { type: "button", className: "sfx-std" + (cur === 0 ? ' on' : ''), "aria-pressed": cur === 0, onClick: () => { EJ.set('sfc', 0); onClose(); } },
                 h("span", { className: "sfx-sw" }), h("span", { className: "sfx-sd" }, h("b", null, "Standar"), h("small", null, "Tampilan sekarang, tanpa efek permukaan")), h("i", { className: "ap-rad" })),
             h("div", { className: "sfx-gl" }, "Gaya dasar"),
             h("div", { className: "sfx-g" }, grp('dasar').map(k => tile(k, k))),

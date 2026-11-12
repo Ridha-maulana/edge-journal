@@ -54,7 +54,8 @@ add(4,'Transparan Ringan','dasar','a',
   "background-image:linear-gradient(135deg,#ffffff16,#ffffff05);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #ffffff30!important;box-shadow:0 6px 18px #00000040,inset 0 1px 0 #ffffff26!important;",
   "background:#ffffff70;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #ffffffd0!important;box-shadow:0 6px 18px #00000018,inset 0 1px 0 #ffffffe0!important;")
 add(5,'Transparan Gelap','dasar','d',
-  "background:linear-gradient(135deg,#8b909a8c,#6d727b8c);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid #ffffff30!important;box-shadow:0 8px 22px #00000055,inset 0 1px 0 #ffffff30!important;",None,
+  "background:linear-gradient(135deg,#8b909a8c,#6d727b8c);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid #ffffff30!important;box-shadow:0 8px 22px #00000055,inset 0 1px 0 #ffffff30!important;",
+  "background:linear-gradient(135deg,#5d626bec,#464b54ec);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid #ffffff30!important;box-shadow:0 8px 22px #00000040,inset 0 1px 0 #ffffff30!important;",
   tone('#6d727b','d'))
 add(6,'Border Berwarna','dasar','a',
   "background-image:linear-gradient(#2f6fe414,#2f6fe414);border:1px solid #2f6fe4!important;box-shadow:inset 0 0 0 1px #2f6fe4,0 0 0 3px #2f6fe41f,0 8px 20px #00000045!important;",
@@ -112,6 +113,19 @@ def small(css):
         except Exception: o.append(q);continue
         o.append('0 %dpx %dpx %s'%(min(y,3) if y else 0,min(b,8),' '.join(t[3:])))
     return css[:m.start()]+'box-shadow:'+','.join(o)+(m.group(2) or '')+';'+css[m.end():]
+def outer_off(css):
+    m=re.search(r'box-shadow:([^;]*(?:\([^)]*\)[^;]*)*?)(!important)?;',css)
+    if not m: return None
+    parts=[];d=0;cur=''
+    for ch in m.group(1):
+        if ch=='(': d+=1
+        if ch==')': d-=1
+        if ch==',' and d==0: parts.append(cur);cur=''
+        else: cur+=ch
+    parts.append(cur)
+    keep=[q.strip() for q in parts if q.strip().startswith('inset')]
+    return ','.join(keep) if keep else 'none'
+BTNL='.header-icon,.account-switcher,.ht-cal,.ht-acc,.ht-date,.ht-dcard,'+','.join(c for c in CONTROLS.split(',') if c and not c.startswith(('input','textarea','select','.search-box','button.dfield','button.tsel','button.sel','.k-thumb','.prof-av','.account-avatar','.pick-ic','.tool-icon','.cal-cell')))
 def imp(css):
     parts=[];cur='';d=0;q=False
     for ch in css:
@@ -147,8 +161,8 @@ for k,(n,grp,fam,css,cssL,ex) in S.items():
     out.append((SEL%(k,'',CONTROLS))+'{'+imp(small(css))+'}')
     if cssL: out.append(SEL%(k,'="light"',CONTROLS)+'{'+imp(small(cssL))+'}')
     out.append(f'html[data-sfc="{k}"]{{--sg-a:{ga};--sg-b:{gb};}}')
-    if k>=11: out.append(f'html[data-sfc="{k}"][data-sfc][data-mode][data-sfcf] :is(.tp-act,.ht-cal,.ht-date,.ht-dcard,.ht-acc,.header-icon,.pe-years button,.t1-ki,.t2-ki,.t2-ii,.t2-bd,.t5-mi,.t5-ai,.t6-mi,.t6-kic,.t6-more,.t1-wal,.t2-accb,.t2-nb,.pick-ic,.fab,.primary-btn) svg{{color:currentColor!important;stroke:currentColor!important}}')
-    if k>=11: out.append(f'html[data-sfc="{k}"][data-sfc][data-mode][data-sfcf] :is(.tp-act,.ht-cal,.ht-date,.ht-dcard,.ht-acc,.header-icon,.pe-years button,.t1-ki,.t2-ki,.t2-ii,.t2-bd,.t5-mi,.t5-ai,.t6-mi,.t6-kic,.t6-more,.t1-wal,.pick-ic){{color:var(--ej-ik)!important}}')
+    P=f'html[data-sfc="{k}"][data-sfc][data-sfc][data-mode][data-sfcf]'
+    out.append(f'{P}[data-fxb="1"] :is({ACC}){{box-shadow:0 8px 22px rgba(var(--fx-gl),.34),inset 0 1px 0 rgba(255,255,255,.28)!important}}')
     if re.search(r'background',css):
         SA=SEL%(k,'',ACC)
         out.append('html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf]'+SA[4:]+'{color:var(--ej-pru)!important;border-color:var(--ej-pru)!important}')
@@ -156,6 +170,26 @@ for k,(n,grp,fam,css,cssL,ex) in S.items():
     act={'d':'#ffffff1f','l':'#0000001a','a':'#ffffff1f'}[fam]
 
 
+HDR='.ht-cal,.ht-date,.ht-dcard,.ht-acc,.header-icon'
+ICO='.tp-act,.t1-ki,.t2-ki,.t2-ii,.t2-bd,.t5-mi,.t5-ai,.t6-mi,.t6-kic,.t6-more,.t1-wal,.pick-ic,.pe-years button'
+for f in 'dl':
+    Q='html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf="%s"]'%f
+    out.append(f'{Q} :is({HDR},{ICO},.t2-accb,.t2-nb,.fab,.primary-btn) svg{{color:currentColor!important;stroke:currentColor!important}}')
+    out.append(f'{Q}[data-fxi="0"] :is({ICO}){{color:var(--ej-ik)!important}}')
+    out.append(f'{Q}[data-fxh="0"] :is({HDR}){{color:var(--ej-ik)!important}}')
+    X='color-mix(in srgb,var(--ico,var(--ej-ik)) 62%,#000)' if f=='l' else 'var(--ico,var(--ej-ik))'
+    out.append(f'{Q}[data-fxi="1"] :is({ICO}) svg[data-i]{{color:{X}!important}}')
+    out.append(f'{Q}[data-fxh="1"] :is({HDR}) svg[data-i]{{color:{X}!important}}')
+    out.append(f'{Q}[data-fxi="1"] :is(.t1-ki,.t2-ki,.t5-mi,.t6-mi,.t5-ai){{background-image:linear-gradient(color-mix(in srgb,var(--ico) 24%,transparent),color-mix(in srgb,var(--ico) 12%,transparent))!important}}')
+# permukaan doff bernada menengah (keluarga d): ikon berwarna dipasang di atas keping terang supaya terbaca
+for k,(n,grp,fam,css,cssL,ex) in S.items():
+    if grp=='doff' and fam=='d' and lum(ex['sf'])>.12:
+        Q='html[data-sfc="%d"]'%k+'[data-sfc]'*10+'[data-mode][data-sfcf][data-fxi="1"]'
+        QH=Q.replace('[data-fxi="1"]','[data-fxh="1"]')
+        out.append(f'/* keping ikon {n} */\n{Q} :is({ICO}){{background-color:#ffffffe8!important;background-image:none!important;color:#17181b!important}}\n{Q} :is({ICO}) svg[data-i]{{color:color-mix(in srgb,var(--ico,#17181b) 70%,#000)!important}}')
+        out.append(f'{QH} :is({HDR}){{background-color:#ffffffe8!important;background-image:none!important;color:#17181b!important}}\n{QH} :is({HDR}) svg[data-i]{{color:color-mix(in srgb,var(--ico,#17181b) 70%,#000)!important}}')
+GP='html'+'[data-sfc]'*9
+out.append(f'/* saklar Efek kartu / Efek tombol: mati = tanpa bayangan */\n{GP}[data-fxk="0"] :is({CARDS}){{box-shadow:none!important}}\n{GP}[data-fxb="0"] :is({BTNL}){{box-shadow:none!important}}')
 out.append("""/* grup tombol: wadah polos, tiap tombol punya permukaan sendiri */
 html[data-sfc] :is(.direction,.rc-seg,.capital-toggle){background:none!important;border:0!important;box-shadow:none!important;padding:0!important;gap:8px;overflow:visible!important}
 html[data-sfc] :is(.direction,.rc-seg) button{border-radius:var(--r-md)!important;min-height:40px}
