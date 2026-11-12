@@ -121,3 +121,10 @@ body[data-tab="journal"] .main-content,body[data-tab="tools"] .main-content,body
 }
 /* header halaman DNA / Advanced Statistics ikut tergulung (tidak menempel di atas) */
 .performance-detail-top{position:static!important;backdrop-filter:none!important;background:transparent!important}
+/* v5.9.49: kotak info hari/minggu/bulan/sesi dibedakan warna (hari abu-biru, minggu amber, bulan biru, sesi hijau-teal) */
+:root{--tgx:#fff}html[data-mode="light"]{--tgx:#000}html[data-sfcf="d"]{--tgx:#fff}html[data-sfcf="l"]{--tgx:#000}
+.dd-tag.day{--tg:#64748b}.dd-tag.week{--tg:#f59e0b}.dd-tag.month{--tg:#3b82f6}.dd-tag.ses{--tg:#14b8a6}
+.dd-tag.day,.dd-tag.week,.dd-tag.month,.dd-tag.ses{background:color-mix(in srgb,var(--tg) 20%,transparent);border-color:color-mix(in srgb,var(--tg) 50%,transparent);color:color-mix(in srgb,var(--tg) 45%,var(--tgx));font-weight:600}
+html[data-sfcf="d"] .dd-tag.day,html[data-sfcf="d"] .dd-tag.week,html[data-sfcf="d"] .dd-tag.month,html[data-sfcf="d"] .dd-tag.ses{background:color-mix(in srgb,var(--tg) 28%,#fff);border-color:color-mix(in srgb,var(--tg) 55%,#fff);color:color-mix(in srgb,var(--tg) 38%,#000)}
+html[data-sfcf="d"] .dd-item .pos,html[data-sfcf="l"] .dd-item .pos{color:var(--t-pos)}
+html[data-sfcf="d"] .dd-item .neg,html[data-sfcf="l"] .dd-item .neg{color:var(--t-neg)}

@@ -83,12 +83,12 @@ S_=S
 # ---------------------------------------------------------------------------------------------
 # Selektor yang ikut permukaan: kartu + header + menu bawah (semua varian)
 CARDS=(".tp-card,.hero-card,.pe-card,.tool-card:not(.acct-inline),.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,"
-       ".flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act")
+       ".flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act,.dd-item")
 CHROME=(".brand-mark,.header-icon,.account-switcher,.hd-strip,.ht-logo,.ht-cal,.ht-acc,.ht-date,.ht-dcard,"
         '.topbar[class*="hd-v"],.bottom-nav')
 CONTROLS=("button.icon-btn,.performance-detail-badge,button.tsel,button.sel,.search-box,button.pill:not(.active),button.dfield,"
   "input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]):not([type=hidden]),textarea,select,"
-  ".direction button,.rc-seg button,.capital-toggle button,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.pe-link,.dna-item,.dna-badge,.tool-icon,.as-edit,.capital-balance,.rc-swap,.rc-out,.rc-res>*,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.cal-cell:not(.win):not(.loss):not(.los),.pe-years button,.pe-sum>div,.pe-tabs button:not(.on),.dd-crumb:not(.on),.dd-lock,.dd-btn.back,.dd-item.click,.tp-fx,"
+  ".direction button,.rc-seg button,.capital-toggle button,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.pe-link,.dna-item,.dna-badge,.tool-icon,.as-edit,.capital-balance,.rc-swap,.rc-out,.rc-res>*,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.cal-cell:not(.win):not(.loss):not(.los),.pe-years button,.pe-sum>div,.pe-tabs button:not(.on),.dd-crumb:not(.on),.dd-lock:not(.on),.dd-btn,.dd-item.click,.tp-fx,"
   "button.tp-kind,.k-thumb,.prof-av,.pick-ic,.account-avatar,"
   ".primary-btn,.fab,.gate-btn,.share-actions .primary,button.pill.active,.t1-wal,.t2-accb,.t2-nb,.t5-ai,.t5-mi,.t6-mi,.t2-ki,.t2-ii,.t6-more,.t5-dt,"
   "")
@@ -148,7 +148,7 @@ FAM={'d':'--ej-sf:#17181b;--t-mu:color-mix(in srgb,var(--ej-ik) 62%,var(--ej-sf)
      'l':'--ej-sf:#f1f2f4;--t-mu:#3d4452;--t-mu2:#6b7380;--t-ln:#00000026;--t-soft:#0000000d;--t-pos:#07804d;--t-neg:#cf1f3a;--green:#07804d;--red:#cf1f3a;'}
 for f in 'dl': out.append('html[data-sfcf="%s"][data-sfc] :is(%s){%s}'%(f,ALL,FAM[f]))
 SEL='html[data-sfc="%d"][data-mode%s][data-sfcf] :is(%s)'
-ACC='.primary-btn,.fab,.gate-btn,.share-actions .primary,button.pill.active,.t2-nb,.t2-accb'
+ACC='.dd-btn:not(.back),.primary-btn,.fab,.gate-btn,.share-actions .primary,button.pill.active,.t2-nb,.t2-accb'
 def xs_of(ex):
     return f"--ej-sf:{ex['sf']};--t-mu:{ex['mu']};--t-mu2:{ex['mu2']};--t-ln:{ex['ln']};--t-pos:{ex['pos']};--t-neg:{ex['neg']};--green:{ex['pos']};--red:{ex['neg']};--muted:{ex['mu']};--border:{ex['ln']};--c4:{ex['ln']};--c5:{ex['mu']};" if ex else ''
 for k,(n,grp,fam,css,cssL,ex) in S.items():
@@ -188,6 +188,10 @@ for k,(n,grp,fam,css,cssL,ex) in S.items():
         QH=Q.replace('[data-fxi="1"]','[data-fxh="1"]')
         out.append(f'/* keping ikon {n} */\n{Q} :is({ICO}){{background-color:#ffffffe8!important;background-image:none!important;color:#17181b!important}}\n{Q} :is({ICO}) svg[data-i]{{color:color-mix(in srgb,var(--ico,#17181b) 70%,#000)!important}}')
         out.append(f'{QH} :is({HDR}){{background-color:#ffffffe8!important;background-image:none!important;color:#17181b!important}}\n{QH} :is({HDR}) svg[data-i]{{color:color-mix(in srgb,var(--ico,#17181b) 70%,#000)!important}}')
+out.append("""/* status aktif: tombol terpilih memakai warna aksen penuh, jelas beda dari yang belum dipilih */
+html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf] :is(.dd-crumb.on,.dd-lock.on,.pe-tabs button.on,.pe-years button.on,.ct-pill.on,.rc-seg button.on:not(.long):not(.short)){background:var(--ej-pr)!important;background-image:none!important;color:var(--onacc)!important;border-color:var(--ej-pr)!important;box-shadow:0 4px 12px rgba(var(--fx-gl),.3)!important}
+html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf] :is(.dd-crumb.on,.dd-lock.on,.pe-tabs button.on,.pe-years button.on) svg{color:var(--onacc)!important;stroke:currentColor!important}
+html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf] .dd-crumb.seen:not(.on){color:var(--ej-pru)!important}""")
 GP='html'+'[data-sfc]'*9
 out.append(f'/* saklar Efek kartu / Efek tombol: mati = tanpa bayangan */\n{GP}[data-fxk="0"] :is({CARDS}){{box-shadow:none!important}}\n{GP}[data-fxb="0"] :is({BTNL}){{box-shadow:none!important}}')
 out.append("""/* grup tombol: wadah polos, tiap tombol punya permukaan sendiri */
