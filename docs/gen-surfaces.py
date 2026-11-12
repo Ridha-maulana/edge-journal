@@ -87,8 +87,9 @@ CHROME=(".brand-mark,.header-icon,.account-switcher,.hd-strip,.ht-logo,.ht-cal,.
         '.topbar[class*="hd-v"],.bottom-nav')
 CONTROLS=("button.icon-btn,.performance-detail-badge,button.tsel,button.sel,.search-box,button.pill:not(.active),button.dfield,"
   "input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]):not([type=hidden]),textarea,select,"
-  ".direction,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.pe-link,.dna-item,.dna-badge,.tool-icon,.as-edit,.capital-toggle,.capital-balance,.rc-seg,.rc-swap,.rc-out,.rc-res>*,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.cal-cell:not(.win):not(.loss):not(.los),.pe-years button,.pe-sum>div,.pe-tabs button:not(.on),.dd-crumb:not(.on),.dd-lock,.dd-btn.back,.dd-item.click,.tp-fx,"
-  "button.tp-kind.is-line,.k-thumb,.prof-av,.pick-ic,.account-avatar,"
+  ".direction button,.rc-seg button,.capital-toggle button,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.pe-link,.dna-item,.dna-badge,.tool-icon,.as-edit,.capital-balance,.rc-swap,.rc-out,.rc-res>*,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.cal-cell:not(.win):not(.loss):not(.los),.pe-years button,.pe-sum>div,.pe-tabs button:not(.on),.dd-crumb:not(.on),.dd-lock,.dd-btn.back,.dd-item.click,.tp-fx,"
+  "button.tp-kind,.k-thumb,.prof-av,.pick-ic,.account-avatar,"
+  ".primary-btn,.fab,.gate-btn,.share-actions .primary,button.pill.active,.t1-wal,.t2-accb,.t2-nb,.t5-ai,.t5-mi,.t6-mi,.t2-ki,.t2-ii,.t6-more,.t5-dt,"
   "")
 CARDS=','.join(c+':not(.acc-panel *)' for c in CARDS.split(','))
 ALL=CARDS+','+CHROME+','+CONTROLS
@@ -133,6 +134,7 @@ FAM={'d':'--ej-sf:#17181b;--t-mu:color-mix(in srgb,var(--ej-ik) 62%,var(--ej-sf)
      'l':'--ej-sf:#f1f2f4;--t-mu:#3d4452;--t-mu2:#6b7380;--t-ln:#00000026;--t-soft:#0000000d;--t-pos:#07804d;--t-neg:#cf1f3a;--green:#07804d;--red:#cf1f3a;'}
 for f in 'dl': out.append('html[data-sfcf="%s"][data-sfc] :is(%s){%s}'%(f,ALL,FAM[f]))
 SEL='html[data-sfc="%d"][data-mode%s][data-sfcf] :is(%s)'
+ACC='.primary-btn,.fab,.gate-btn,.share-actions .primary,button.pill.active,.t2-nb,.t2-accb'
 def xs_of(ex):
     return f"--ej-sf:{ex['sf']};--t-mu:{ex['mu']};--t-mu2:{ex['mu2']};--t-ln:{ex['ln']};--t-pos:{ex['pos']};--t-neg:{ex['neg']};--green:{ex['pos']};--red:{ex['neg']};--muted:{ex['mu']};--border:{ex['ln']};--c4:{ex['ln']};--c5:{ex['mu']};" if ex else ''
 for k,(n,grp,fam,css,cssL,ex) in S.items():
@@ -145,11 +147,23 @@ for k,(n,grp,fam,css,cssL,ex) in S.items():
     out.append((SEL%(k,'',CONTROLS))+'{'+imp(small(css))+'}')
     if cssL: out.append(SEL%(k,'="light"',CONTROLS)+'{'+imp(small(cssL))+'}')
     out.append(f'html[data-sfc="{k}"]{{--sg-a:{ga};--sg-b:{gb};}}')
-    if k>=11: out.append(f'html[data-sfc="{k}"] :is(.tp-act,.ht-cal,.header-icon,.pe-years button) svg{{color:var(--ej-ik)!important;stroke:currentColor!important}}')
+    if k>=11: out.append(f'html[data-sfc="{k}"][data-sfc][data-mode][data-sfcf] :is(.tp-act,.ht-cal,.ht-date,.ht-dcard,.ht-acc,.header-icon,.pe-years button,.t1-ki,.t2-ki,.t2-ii,.t2-bd,.t5-mi,.t5-ai,.t6-mi,.t6-kic,.t6-more,.t1-wal,.t2-accb,.t2-nb,.pick-ic,.fab,.primary-btn) svg{{color:currentColor!important;stroke:currentColor!important}}')
+    if k>=11: out.append(f'html[data-sfc="{k}"][data-sfc][data-mode][data-sfcf] :is(.tp-act,.ht-cal,.ht-date,.ht-dcard,.ht-acc,.header-icon,.pe-years button,.t1-ki,.t2-ki,.t2-ii,.t2-bd,.t5-mi,.t5-ai,.t6-mi,.t6-kic,.t6-more,.t1-wal,.pick-ic){{color:var(--ej-ik)!important}}')
+    if re.search(r'background',css):
+        SA=SEL%(k,'',ACC)
+        out.append('html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf]'+SA[4:]+'{color:var(--ej-pru)!important;border-color:var(--ej-pru)!important}')
+        out.append('html[data-sfc][data-sfc]'+(SEL%(k,'',ACC))[4:]+' svg{color:inherit!important}')
     act={'d':'#ffffff1f','l':'#0000001a','a':'#ffffff1f'}[fam]
 
 
-out.append("""/* menu bawah: bentuk asli, hanya warna */
+out.append("""/* grup tombol: wadah polos, tiap tombol punya permukaan sendiri */
+html[data-sfc] :is(.direction,.rc-seg,.capital-toggle){background:none!important;border:0!important;box-shadow:none!important;padding:0!important;gap:8px;overflow:visible!important}
+html[data-sfc] :is(.direction,.rc-seg) button{border-radius:var(--r-md)!important;min-height:40px}
+html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf][data-sfc][data-mode][data-sfcf] :is(.direction,.rc-seg) button:is(.selected,.on).long{color:var(--green)!important;border-color:var(--green)!important;background-image:linear-gradient(color-mix(in srgb,var(--green) 16%,transparent),color-mix(in srgb,var(--green) 16%,transparent))!important}
+html[data-sfc][data-sfc][data-sfc][data-mode][data-sfcf][data-sfc][data-mode][data-sfcf] :is(.direction,.rc-seg) button:is(.selected,.on).short{color:var(--red)!important;border-color:var(--red)!important;background-image:linear-gradient(color-mix(in srgb,var(--red) 16%,transparent),color-mix(in srgb,var(--red) 16%,transparent))!important}
+html[data-sfc] .fab svg,html[data-sfc] .primary-btn svg{color:inherit}
+html[data-sfcf="d"][data-sfc][data-sfc][data-mode] .tp-fx button.on,html[data-sfcf="l"][data-sfc][data-sfc][data-mode] .tp-fx button.on{color:var(--onacc)!important}
+/* menu bawah: bentuk asli, hanya warna */
 
 html[data-sfc] .bottom-nav .nav-item:not(.active),html[data-sfc] .bottom-nav .bt-item:not(.on){color:color-mix(in srgb,var(--ej-ik) 74%,transparent)!important}
 html[data-sfc] .bottom-nav.nv-1 .nav-item.active,html[data-sfc] .bottom-nav.nv-3 .nav-item.active{color:var(--ej-ik)!important;box-shadow:inset 0 1px 0 #ffffff1a!important}
@@ -167,7 +181,7 @@ def tint(fam,mode,bg,bd):
 tint('l',None,'#0000000b','#00000014'); tint('d',None,'#ffffff12','#ffffff1c')
 tint('a','dark','#ffffff12','#ffffff1c'); tint('a','light','#0000000a','#00000014')
 # controles di dalam kontrol (input di search-box dsb) & panel akun: polos
-FLAT='background:transparent!important;background-image:none!important;border-color:transparent!important;box-shadow:none!important;'
+FLAT='background:transparent!important;background-image:none!important;border-color:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;'
 out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][data-mode] :is(%s) :is(%s,%s){%s}'%(CONTROLS,CARDS,CONTROLS,FLAT))
 out.append('html[data-sfc] :is(.backup-panel,.helper-note){background:none!important;box-shadow:none!important;border:0!important}')
 out.append('html[data-sfc] .acc-panel .tool-card{background:none!important;box-shadow:none!important;border:0!important;border-radius:0!important}')

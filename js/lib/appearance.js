@@ -360,7 +360,7 @@
             }
             for (i = 0; i < H.length; i++) st.setProperty('--sp-c' + i, fixc(xf(H[i], th, fm)));
             for (i = 0; i < R.length; i++) { p2 = R[i].split(','); hx2 = toHex([+p2[0], +p2[1], +p2[2]]); if (hx2 === '#000000' && fm === 'light') { st.setProperty('--sp-r' + i, '70,85,130'); continue; } v2 = xf(hx2, th, fm); st.setProperty('--sp-r' + i, parseInt(v2.substr(1, 2), 16) + ',' + parseInt(v2.substr(3, 2), 16) + ',' + parseInt(v2.substr(5, 2), 16)); }
-            var pru2 = f2.ac, pt2 = 0; while (cr(pru2, f2.pn) < 4.5 && pt2 < 12) { pt2++; pru2 = mix(f2.ac, f2.tx, pt2 * .08); }
+            var pb2 = sbase || f2.pn, pru2 = f2.ac, pt2 = 0; while (cr(pru2, pb2) < 4.5 && pt2 < 12) { pt2++; pru2 = mix(f2.ac, sbase ? sink : f2.tx, pt2 * .08); }
             var ink2 = fm === 'dark' ? f2.bg : f2.tx, stops2 = fxOn ? [f2.ac, mix(ga, gb, .5)] : [f2.ac];
             function worst2(c) { return Math.min.apply(null, stops2.map(function (s2) { return cr(c, s2); })); }
             st.setProperty('--sp-ik', f2.tx); st.setProperty('--sp-bd', f2.bd); st.setProperty('--sp-so', f2.so); st.setProperty('--sp-pr', f2.ac); st.setProperty('--sp-pru', pru2);

@@ -459,3 +459,4 @@
 - v5.9.44: Efek permukaan: grafik & baris Saldo awal (Template 3) tidak lagi berkotak; tombol Share/Stats/DNA, kalender, panah tahun, tab & kartu ringkasan di Stats/DNA kini ikut efek; ikon terbaca di gaya Doff berwarna.
 - v5.9.45: Efek permukaan: tombol/isian di dalam panel Tools & Profil (Risk calculator, Cloud backup, Export, akun) ikut efek; modal Account management (Backup, Deposit/WD, daftar akun) dirapikan; teks toggle tidak aktif terbaca.
 - v5.9.46: Modal Account management (Accounts & Backup): kartu dibiarkan polos, efek hanya di ikon dan tombol; kotak di sekeliling catatan backup dihilangkan.
+- v5.9.47: Efek permukaan: semua tombol & ikon ikut efek (tambah/FAB, Simpan, Long/Buy, Short/Sell, tombol Home, lingkaran ikon); teks aksen dikontraskan terhadap warna permukaan; grup Long/Short wadahnya polos.
