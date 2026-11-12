@@ -119,5 +119,3 @@ html[data-bgw][data-bgw][data-bgw][data-bgw][data-bgw] :is(body,.app-shell){back
 .bgx-sl input[type=range]{width:100%;margin:10px 0 4px;accent-color:var(--ej-pr)}.bgx-sl small{display:block;font-size:11px;opacity:.6}
 /* kartu agak tembus agar latar terlihat (hanya saat Efek permukaan = Standar; gaya permukaan punya tampilan sendiri) */
 html[data-bgw][data-bgw]:not([data-sfc]) :is(.tp-card,.pe-card,.tool-card:not(.acct-inline),.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act,.t2-nt,.t5-card):not(.acc-panel *){background:color-mix(in srgb,var(--ej-sf) 70%,transparent)!important;background-image:none!important;-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
-/* baris Tools/Profil di atas latar: alas tembus supaya teks tetap terbaca */
-html[data-bgw] .pick-row{background:color-mix(in srgb,var(--ej-sf) 58%,transparent)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}

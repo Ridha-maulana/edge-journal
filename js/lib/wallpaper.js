@@ -8,9 +8,11 @@
     var layer = null, art = null, dim = null, curK = '';
     /* nada latar vs mode: latar terang di mode gelap (atau sebaliknya) otomatis diredupkan agar teks tetap terbaca; 'a' = ikut warna tema */
     function need(w, mode) {
-        if (w.tone === 'a') return 0;
-        if (w.tone === 'm') return .42;
-        return (w.tone === 'l' && mode === 'dark') || (w.tone === 'd' && mode === 'light') ? .8 : 0;
+        var n = 0;
+        if (w.tone === 'm') n = .42;
+        else if (w.tone !== 'a' && ((w.tone === 'l' && mode === 'dark') || (w.tone === 'd' && mode === 'light'))) n = .8;
+        if (w.cat === 'anime') n = Math.max(n, .6); /* gambar ramai: teks tanpa kotak di Tools/Profil tetap terbaca */
+        return n;
     }
     function dimOf(w) { return Math.max(((EJ.state.bgd | 0) / 100), need(w, EJ.resolved)); }
     function ensure() {
@@ -24,7 +26,7 @@
         var w = BY[EJ.state.bg], root = document.documentElement;
         if (!w) { root.removeAttribute('data-bgw'); if (layer && layer.parentNode) layer.parentNode.removeChild(layer); layer = null; return; }
         ensure();
-        if (curK !== w.k) { art.innerHTML = w.full.replace(/@/g, 'w'); curK = w.k; }
+        if (curK !== w.k) { art.innerHTML = w.full.replace(/@/g, 'w'); curK = w.k; art.style.filter = w.cat === 'anime' ? 'blur(1.4px)' : ''; art.style.transform = w.cat === 'anime' ? 'scale(1.03)' : ''; }
         dim.style.opacity = dimOf(w).toFixed(2);
         root.setAttribute('data-bgw', '1'); root.setAttribute('data-bgwt', w.tone);
     };

@@ -10,7 +10,7 @@ function PosStrip({ n, pnl, pct, pips, cur }) {
 }
 /* Pembantu tampilan bertingkat (Tahun -> Bulan -> Minggu) */
 function jSum(list) { return { pnl: list.reduce((x, t) => x + (t.status === 'closed' ? Number(t.pnl) || 0 : 0), 0), pips: list.reduce((x, t) => x + tradePips(t), 0) }; }
-function jDay(t) { return wib(new Date(new Date(t.date).getTime() - 6 * 3600 * 1000)).day; }
+function jDay(t) { return wib(new Date(new Date(t.date).getTime() - 7 * 3600 * 1000)).day; }
 function jCal(t) { return wib(new Date(t.date)).day; } /* tanggal kalender WIB: dipakai untuk kartu Tahun/Bulan agar sama dengan Advanced Statistics */
 function jMonday(day) { const md = new Date(Date.UTC(Number(day.slice(0, 4)), Number(day.slice(5, 7)) - 1, Number(day.slice(8, 10)))); md.setUTCDate(md.getUTCDate() - ((md.getUTCDay() + 6) % 7)); return md; }
 function jWeekLabel(md) { const en = new Date(md.getTime() + 6 * 86400000); const f = (d, y) => d.toLocaleDateString('en-GB', y ? { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' } : { day: 'numeric', month: 'short', timeZone: 'UTC' }); return `${f(md)} - ${f(en, true)}`; }

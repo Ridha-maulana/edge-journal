@@ -231,6 +231,9 @@ out.append('html[data-sfc][data-sfcf][data-sfc][data-mode][data-sfcf][data-sfc][
 out.append("""/* latar berpendar */
 html[data-sfc][data-sfcg="1"] .app-shell{position:relative;isolation:isolate}
 html[data-sfc][data-sfcg="1"] .app-shell:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;filter:blur(26px);background:radial-gradient(62% 17% at 92% 2%,var(--sg-a),transparent 74%),radial-gradient(45% 14% at 0% 6%,var(--sg-b),transparent 74%),radial-gradient(70% 20% at 85% 100%,var(--sg-a),transparent 74%),radial-gradient(50% 16% at 5% 96%,var(--sg-b),transparent 74%)}""")
+# tombol + (FAB) melayang di atas isi halaman/latar: gaya yang tembus/berongga (Transparan, Border Berwarna, Border Tipis) diberi alas penuh warna panel agar tidak berlubang
+out.append('html[data-sfc="4"][data-sfc][data-sfc][data-sfc] .fab,html[data-sfc="5"][data-sfc][data-sfc][data-sfc] .fab,html[data-sfc="6"][data-sfc][data-sfc][data-sfc] .fab,html[data-sfc="9"][data-sfc][data-sfc][data-sfc] .fab,html[data-sfc="10"][data-sfc][data-sfc][data-sfc] .fab{background-color:var(--ej-sf)!important}')
+out.append('html[data-sfc="10"][data-sfc][data-sfc][data-sfc] .fab{box-shadow:0 6px 16px rgba(var(--fx-so),.30),0 1px 3px rgba(var(--fx-so),.20)!important}')
 for k,(n,grp,fam,css,cssL,ex) in S.items():
     ink='#17181b' if fam=='l' else '#f5f6f8' if fam=='d' else 'var(--ej-ik)'
     out.append(f'.sfc-pv[data-k="{k}"]{{{imp(css)}color:{ink};}}')

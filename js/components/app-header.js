@@ -40,7 +40,7 @@ function useSyncText() {
     const ago = st.lastSyncAt ? Math.max(0, Math.round((Date.now() - st.lastSyncAt) / 60000)) : null;
     return { ok: true, text: 'Tersinkron · ' + (ago === null || ago < 1 ? 'baru saja' : ago < 60 ? ago + ' mnt lalu' : ago < 1440 ? Math.round(ago / 60) + ' jam lalu' : Math.round(ago / 1440) + ' hari lalu') };
 }
-function headerSession() { const h = wib(new Date()).hour; return h >= 6 && h < 12 ? 'Asia' : h >= 12 && h < 20 ? 'London' : 'New York'; }
+function headerSession() { const h = wib(new Date()).hour; return h >= 7 && h < 14 ? 'Asia' : h >= 14 && h < 20 ? 'London' : 'New York'; }
 function AppHeader(props) { const v = Number(props.variant) || 0; return v >= 11 && v <= 16 ? React.createElement(TplHeader, { n: v - 10, account: props.account, onCalendar: props.onCalendar, onAccount: props.onAccount }) : React.createElement(AppHeaderClassic, props); }
 function AppHeaderClassic({ variant, account, onCalendar, onAccount }) {
     const v = Number(variant) || 0;
