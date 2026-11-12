@@ -212,7 +212,8 @@ html[data-sfc] .account-list-item :is(.account-delete,.account-delete svg){color
 html[data-sfc][data-mode="light"][data-sfcf="a"] .ht-logo,html[data-sfc][data-mode="light"][data-sfcf="a"] .brand-mark{color:#0f7a57!important}""")
 out.append("""/* elemen di dalam kartu: tint rata (tanpa bayangan ganda) */""")
 CONT=CARDS
-NEST=':is(%s) :is(%s,%s)'%(CONT,CARDS,CONTROLS)
+CTL_NT=','.join(c for c in CONTROLS.split(',') if not c.startswith('.cal-cell'))
+NEST=':is(%s) :is(%s,%s):not(.cal-nav *)'%(CONT,CARDS,CTL_NT)
 def tint(fam,mode,bg,bd):
     sel='html[data-sfc][data-sfcf="%s"]%s[data-sfc][data-mode] '%(fam,'[data-mode="%s"]'%mode if mode else '')+NEST
     out.append(sel+'{background:%s!important;background-image:none!important;border-color:%s!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}'%(bg,bd))
