@@ -21,3 +21,5 @@ html[data-edge]{--tp-fade:0px}
 html[data-edge] body,html[data-edge] body[data-home="6"] .app-shell,html[data-edge] body[data-nv="10"] .app-shell{margin-top:calc(var(--sat)*-1);padding-top:var(--sat)}
 /* setelah digulir, isi yang lewat di belakang bilah status ditutup warna dasar (header sticky mulai dari bawah bilah status) */
 html[data-edge][data-sc="1"] body::before{content:"";position:fixed;top:0;left:0;right:0;height:var(--sat);background:var(--c1);z-index:14;pointer-events:none}
+/* Tools & Profil: penutup bilah status saat digulir dihapus (isi menggulir lewat di belakang bilah status, seperti DNA dan Advanced Statistics) */
+html[data-edge][data-sc="1"] body[data-tab="tools"]::before,html[data-edge][data-sc="1"] body[data-tab="account"]::before{display:none!important}
