@@ -99,3 +99,25 @@
 .sfc-pv b{font-size:13px;font-weight:800;line-height:1.1}.sfc-pv small{font-size:10px;font-weight:700;line-height:1;opacity:.8}
 .sfx-n{font-size:11.5px;font-weight:600;line-height:1.2;display:flex;gap:6px;align-items:baseline}.sfx-n em{font-style:normal;opacity:.5;font-weight:700;font-size:10.5px}
 .sfx-opt{margin-top:14px}
+/* latar aplikasi (v5.9.53) */
+#ej-wp{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+#ej-wp .wp-art,#ej-wp .wp-dim{position:absolute;inset:0}
+#ej-wp .wp-art svg{display:block;width:100%;height:100%}
+#ej-wp .wp-dim{background:var(--ej-cv)}
+html[data-bgw][data-bgw][data-bgw][data-bgw][data-bgw] :is(body,.app-shell){background:none!important}
+.bgx-std{width:36px;aspect-ratio:3/4;border-radius:8px;overflow:hidden;flex:none;border:1px solid var(--ej-bd);display:block}.bgx-std svg,.bgx-im svg{display:block;width:100%;height:100%}
+.bgx-cats{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 10px}
+.bgx-cats button{padding:8px 14px;border-radius:999px;border:1px solid var(--ej-bd);background:none;color:var(--ej-ik);font:600 13px var(--font)}
+.bgx-cats button.on{background:var(--ej-pr);border-color:var(--ej-pr);color:var(--onacc)}
+.bgx-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bgx-t{display:flex;flex-direction:column;gap:6px;margin:0;padding:5px;background:none;border:1px solid transparent;border-radius:14px;color:var(--ej-ik);font-family:var(--font);text-align:left}
+.bgx-t.on{border-color:var(--ej-pr);background:var(--ej-so)}
+.bgx-im{display:block;aspect-ratio:3/4;border-radius:10px;overflow:hidden;border:1px solid var(--ej-bd);background:var(--ej-sf)}
+.bgx-n{font-size:11.5px;font-weight:600;line-height:1.2}
+.bgx-sl{margin-top:14px;padding:12px 14px;border:1px solid var(--ej-bd);border-radius:14px}.bgx-sl.off{opacity:.55}
+.bgx-sh{display:flex;justify-content:space-between;align-items:baseline;font-size:13px}.bgx-sh span{opacity:.65;font-weight:700}
+.bgx-sl input[type=range]{width:100%;margin:10px 0 4px;accent-color:var(--ej-pr)}.bgx-sl small{display:block;font-size:11px;opacity:.6}
+/* kartu agak tembus agar latar terlihat (hanya saat Efek permukaan = Standar; gaya permukaan punya tampilan sendiri) */
+html[data-bgw][data-bgw]:not([data-sfc]) :is(.tp-card,.pe-card,.tool-card:not(.acct-inline),.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act,.t2-nt,.t5-card):not(.acc-panel *){background:color-mix(in srgb,var(--ej-sf) 70%,transparent)!important;background-image:none!important;-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
+/* baris Tools/Profil di atas latar: alas tembus supaya teks tetap terbaca */
+html[data-bgw] .pick-row{background:color-mix(in srgb,var(--ej-sf) 58%,transparent)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}

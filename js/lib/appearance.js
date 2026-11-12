@@ -1,7 +1,7 @@
 /* Tampilan aplikasi: mode (terang/gelap/otomatis), tema warna, font. Dimuat di <head> agar diterapkan sebelum layar tampil pertama kali.
    Semua warna di CSS/JS berupa var(--cN) dari color-table.js; di sini nilainya dihitung ulang per mode + tema. */
 (function () {
-    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx', fxs: 'ej3-fxs', sfc: 'ej3-sfc', sfcg: 'ej3-sfcg' };
+    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx', fxs: 'ej3-fxs', sfc: 'ej3-sfc', sfcg: 'ej3-sfcg', bg: 'ej3-bg', bgd: 'ej3-bgd' };
     /* efek permukaan kartu (v5.9.40): 0 = standar, 1-25 = gaya (nama, keluarga warna teks d/l/a, grup). CSS-nya css/23-surfaces.css (dibuat docs/gen-surfaces.py) */
     var SFC = [null, ["Putih Solid", "l", "dasar", "#fafafa"], ["Hitam Solid", "d", "dasar", "#1c1c1e"], ["Abu Solid", "l", "dasar", "#adb1b9"], ["Transparan Ringan", "a", "dasar"], ["Transparan Gelap", "d", "dasar", "#6d727b"], ["Border Berwarna", "a", "dasar"], ["Bayangan Lembut", "a", "dasar"], ["Bayangan Tebal", "a", "dasar"], ["Kaca Buram", "a", "dasar"], ["Border Tipis", "a", "dasar"], ["Doff Hitam", "d", "doff", "#1d1e21"], ["Doff Putih", "l", "doff", "#efeeea"], ["Doff Abu Muda", "l", "doff", "#a4a7ae"], ["Doff Abu Tua", "d", "doff", "#46494e"], ["Doff Navy", "d", "doff", "#2b3d5e"], ["Doff Biru", "d", "doff", "#5878a0"], ["Doff Hijau Sage", "l", "doff", "#94ab95"], ["Doff Hijau Tua", "d", "doff", "#2e4a3c"], ["Doff Olive", "d", "doff", "#62694a"], ["Doff Krem", "l", "doff", "#ecdcc3"], ["Doff Terracotta", "d", "doff", "#b4664a"], ["Doff Merah Marun", "d", "doff", "#5c2a35"], ["Doff Pink Dusty", "l", "doff", "#cf9b9b"], ["Doff Ungu Plum", "d", "doff", "#583d58"], ["Doff Cokelat", "d", "doff", "#624a3e"]];
     /* efek tampilan yang bisa dinyalakan sendiri-sendiri: latar, kartu, tombol, ikon (kartu), hdr (ikon header), nav (ikon menu bawah), gerak */
@@ -238,6 +238,9 @@
         font: get('font', 'manrope', function (v) { return !!FONTS[v]; }),
         sfc: +get('sfc', '0', function (v) { return /^\d+$/.test(v) && +v >= 0 && +v < SFC.length; }),
         sfcg: get('sfcg', '0', function (v) { return v === '0' || v === '1'; }) === '1' ? 1 : 0,
+        /* latar aplikasi (v5.9.53): '' = standar (ikut tema/template halaman utama), selain itu 'kategori:Nama' dari js/lib/wallpapers.js; bgd = redup 0-80 */
+        bg: get('bg', '', function (v) { return /^[a-z]+:[^<>"']{1,40}$/.test(v); }),
+        bgd: +get('bgd', '20', function (v) { return /^\d+$/.test(v) && +v >= 0 && +v <= 80; }),
         fx: 'on',
         fxs: {}
     };
@@ -381,6 +384,8 @@
         var bg = xf('#090d18', th, mode);
         api.bg = bg; api.bgRGB = [parseInt(bg.substr(1, 2), 16), parseInt(bg.substr(3, 2), 16), parseInt(bg.substr(5, 2), 16), 1]; api.resolved = mode;
         var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', bg);
+        if (state.bg) root.setAttribute('data-bgw', '1'); else root.removeAttribute('data-bgw');
+        if (api.bgApply) api.bgApply();
     }
     var loaded = {};
     /* muat font dari Google Fonts; bila permintaan bobot ditolak, coba bobot 400;700 lalu nama saja (agar tidak jatuh ke font sistem) */

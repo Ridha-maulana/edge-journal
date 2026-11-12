@@ -77,6 +77,7 @@ const Contrast = (p) => React.createElement(Icon, { name: "Contrast", ...p });
 
 const Sparkles = (p) => React.createElement(Icon, { name: "Sparkles", ...p });
 const Layers = (p) => React.createElement(Icon, { name: "Layers", ...p });
+ICONS.Image = [["rect", { "x": 3, "y": 3, "width": 18, "height": 18, "rx": 2 }], ["circle", { "cx": 9, "cy": 9, "r": 2 }], ["path", { "d": "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" }]];
 
 Object.assign(ICONS, {
     "Home": [["path", {"d": "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"}], ["path", {"d": "M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"}]],

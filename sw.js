@@ -1,4 +1,4 @@
-const C='ej3-5.9.52';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.9.53';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -57,7 +57,7 @@ const SHELL=[
   './js/lib/mt5-parse.js',
   './js/lib/mt5-chart.js',
   './js/lib/ocr.js',
-  './js/lib/store.js',
+  './js/lib/store.js', './js/lib/wallpapers.js', './js/lib/wallpaper.js',
   './js/lib/trading.js',
   './js/pages/journal.js',
   './js/pages/performance.js',

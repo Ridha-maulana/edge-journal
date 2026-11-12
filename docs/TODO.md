@@ -465,3 +465,4 @@
 - v5.9.50: Halaman Kalender (ikon kalender di header): tombol tanggal dan panah bulan kini memakai tint rata seperti kalender di Advanced Statistics (tanpa bayangan tebal).
 - v5.9.51: Kalender di Advanced Statistics: tombol tanggal dan panah bulan kembali bermuka penuh (timbul, berbayangan) seperti halaman Kalender dari ikon header; v5.9.50 dibatalkan.
 - v5.9.52: Performa per bulan: chip '1 minggu / 2 hari / 3 sesi' ikut efek permukaan (timbul); chip hari/minggu/bulan/sesi berwarna diberi bayangan halus.
+- v5.9.53: Latar aplikasi baru (Tools > Tampilan aplikasi): 34 latar (Dasar 8, Doff 6, Kaca 6, Anime 6, Pola 8 termasuk Organik hijau), Standar = latar tema/template seperti sebelumnya, slider redup, otomatis diredupkan bila nada latar tidak serasi dengan mode; kartu agak tembus saat Efek permukaan = Standar. File: js/lib/wallpapers.js (dibuat docs/gen-wallpapers.py), js/lib/wallpaper.js.

@@ -60,6 +60,26 @@ function ApSfcDialog({ EJ, st, onClose }) {
                     h("div", null, h("b", null, "Latar berpendar"), h("small", null, "Cahaya halus selaras warna permukaan di belakang kartu. Paling terlihat di gaya transparan dan kaca")),
                     h("span", { className: "fxm-sw" })))));
 }
+/* Latar aplikasi (v5.9.53): Standar = ikut tema/template halaman utama; selain itu latar tetap di belakang seluruh aplikasi. Sekali ketuk, latar langsung dipakai dan halaman ini tertutup. */
+function bgName(EJ, k) { const w = EJ.WP && EJ.WP.BY[k]; return w ? w.name : 'Standar'; }
+function ApBgDialog({ EJ, st, onClose }) {
+    const h = React.createElement, WP = EJ.WP, cur = WP.BY[st.bg] ? st.bg : '';
+    const [cat, setCat] = useState(cur ? WP.BY[cur].cat : 'dasar');
+    const items = WP.LIST.filter(w => w.cat === cat), w0 = WP.BY[cur], auto = EJ.WP.auto(w0);
+    return h(ApDialog, { title: "Latar aplikasi", onClose: onClose, className: "ap-wide", note: "Standar memakai latar bawaan tema dan template halaman utama. Latar yang dipilih tetap di belakang semua halaman. Latar yang tidak serasi dengan mode terang/gelap otomatis diredupkan agar teks tetap terbaca. Sekali ketuk, latar langsung dipakai dan halaman ini tertutup." },
+        h("div", { className: "sfx bgx" },
+            h("button", { type: "button", className: "sfx-std" + (cur === '' ? ' on' : ''), "aria-pressed": cur === '', onClick: () => { EJ.set('bg', ''); onClose(); } },
+                h("span", { className: "bgx-std", dangerouslySetInnerHTML: { __html: WP.thumb(WP.BY['pola:Organik hijau'], 's') } }),
+                h("span", { className: "sfx-sd" }, h("b", null, "Standar (ikuti tema)"), h("small", null, "Latar bawaan tema dan template halaman utama")), h("i", { className: "ap-rad" })),
+            h("div", { className: "bgx-cats", role: "tablist" }, WP.CATS.map(([k, l]) => h("button", { type: "button", key: k, role: "tab", "aria-selected": cat === k, className: cat === k ? 'on' : '', onClick: () => setCat(k) }, l))),
+            h("div", { className: "bgx-g" }, items.map((w, i) => h("button", { type: "button", key: w.k, className: "bgx-t" + (cur === w.k ? ' on' : ''), "aria-pressed": cur === w.k, onClick: () => { EJ.set('bg', w.k); onClose(); } },
+                h("span", { className: "bgx-im", dangerouslySetInnerHTML: { __html: WP.thumb(w, i) } }),
+                h("span", { className: "bgx-n" }, w.name)))),
+            h("div", { className: "bgx-sl" + (cur === '' ? ' off' : '') },
+                h("div", { className: "bgx-sh" }, h("b", null, "Redup"), h("span", null, (st.bgd | 0) + "%")),
+                h("input", { type: "range", min: 0, max: 80, step: 5, value: st.bgd | 0, disabled: cur === '', "aria-label": "Redup latar", onChange: e => EJ.set('bgd', +e.target.value) }),
+                h("small", null, cur === '' ? "Aktif setelah kamu memilih latar" : auto ? "Latar ini otomatis diredupkan lebih banyak agar teks terbaca" : "Atur supaya teks tetap terbaca"))));
+}
 function ApDialog({ title, note, onClose, children, className }) {
     return ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop center top sheet-layer", onClick: e => { if (e.target === e.currentTarget)
             onClose(); } },
@@ -170,6 +190,7 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
         React.createElement(ApRow, { icon: React.createElement(TypeIcon, { size: 18 }), title: "Font aplikasi", desc: "Jenis huruf di seluruh aplikasi", value: fo.name, onOpen: () => { preFont(startF); setDlg('font'); } }),
         React.createElement(ApRow, { icon: React.createElement(Sparkles, { size: 18 }), title: "Efek tampilan", desc: "Kartu, tombol, ikon, latar, dan gerak: pilih semua atau satu per satu", value: fxCount(st), onOpen: () => setDlg('fx') }),
         React.createElement(ApRow, { icon: React.createElement(Layers, { size: 18 }), title: "Efek permukaan kartu", desc: "Doff, solid, transparan, bayangan: kartu, header, dan menu bawah", value: sfcName(EJ, st.sfc | 0), onOpen: () => setDlg('sfc') }),
+        React.createElement(ApRow, { icon: React.createElement(Icon, { name: "Image", size: 18 }), title: "Latar aplikasi", desc: "Warna dasar, doff, kaca, anime, atau pola di belakang aplikasi", value: bgName(EJ, st.bg), onOpen: () => setDlg('bg') }),
         React.createElement(HeaderPicker, { value: headerVariant || 0, onChange: onHeaderVariant }),
         React.createElement(NavPicker, { value: navVariant || 0, onChange: onNavVariant }),
         dlg === 'home' && React.createElement(ApDialog, { title: "Halaman utama", onClose: close, className: "ap-wide", note: "Template mengganti header, isi, dan menu bawah sekaligus. Warna, mode, font, dan efek kartu tetap mengikuti pilihanmu. Header dan menu bawah masih bisa dipilih sendiri di bawah." },
@@ -177,6 +198,7 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
                 React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, l.replace(' (sekarang)', '')), React.createElement("small", null, v === 0 ? "Tampilan Edge Journal sekarang" : ({ 1: "Biru, tabel trade & donat P&L", 2: "Hijau lembut, area chart", 5: "Hijau bersih, grafik batang", 6: "Kaca buram, kandel" })[v])), React.createElement("i", { className: "ap-rad" }))))),
         dlg === 'fx' && React.createElement(ApFxDialog, { EJ: EJ, st: st, onClose: close }),
         dlg === 'sfc' && React.createElement(ApSfcDialog, { EJ: EJ, st: st, onClose: close }),
+        dlg === 'bg' && React.createElement(ApBgDialog, { EJ: EJ, st: st, onClose: close }),
         dlg === 'mode' && React.createElement(ApDialog, { title: "Mode tampilan", onClose: close, note: "Otomatis mengikuti pengaturan terang/gelap di HP kamu. Perubahan langsung terlihat." },
             React.createElement("div", { className: "ap-seg" }, seg.map(([v, l, Ic]) => React.createElement("button", { type: "button", key: v, className: st.mode === v ? 'on' : '', onClick: () => EJ.set('mode', v) },
                 React.createElement(Ic, { size: 18 }), React.createElement("span", null, l))))),
