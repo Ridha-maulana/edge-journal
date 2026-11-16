@@ -81,12 +81,16 @@ function ApBgDialog({ EJ, st, onClose }) {
                 h("small", null, cur === '' ? "Aktif setelah kamu memilih latar" : auto ? "Latar ini otomatis diredupkan lebih banyak agar teks terbaca" : "Atur supaya teks tetap terbaca"))));
 }
 function ApDialog({ title, note, onClose, children, className }) {
-    return ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop center top sheet-layer", onClick: e => { if (e.target === e.currentTarget)
+    useEffect(() => { const k = e => { if (e.key === 'Escape') onClose(); }; document.addEventListener('keydown', k); return () => document.removeEventListener('keydown', k); }, []);
+    return ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop sheet-layer ap-bs", onClick: e => { if (e.target === e.currentTarget)
             onClose(); } },
-        React.createElement("div", { className: "tsel-sheet ap-sheet " + (className || '') },
-            React.createElement("div", { className: "tsel-title" }, title),
-            children,
-            note && React.createElement("p", { className: "ap-note" }, note))), document.body);
+        React.createElement("div", { className: "tsel-sheet ap-sheet ap-bsheet " + (className || ''), role: "dialog", "aria-modal": "true", "aria-label": title },
+            React.createElement("div", { className: "ap-head" },
+                React.createElement("h2", { className: "ap-ttl" }, title),
+                React.createElement("button", { type: "button", className: "ap-x", "aria-label": "Tutup", onClick: onClose }, React.createElement(X, { size: 20 }))),
+            React.createElement("div", { className: "ap-body" },
+                children,
+                note && React.createElement("p", { className: "ap-note" }, note)))), document.body);
 }
 function ApRow({ icon, title, desc, value, dot, onOpen }) {
     return React.createElement("button", { type: "button", className: "pick-row", onClick: onOpen },
@@ -115,8 +119,10 @@ function ApPager({ pages, titles, start, onPage }) {
         React.createElement("div", { className: "ap-pager", ref: ref, onScroll: onScroll }, pages.map((pg, i) => React.createElement("div", { className: "ap-page", key: i },
             React.createElement("div", { className: "ap-grp" }, React.createElement("span", null, titles[i]), React.createElement("span", null, React.createElement("b", null, i + 1), " / ", pages.length)),
             pg))),
-        React.createElement("div", { className: "ap-dots" }, pages.map((_, i) => React.createElement("button", { type: "button", key: i, "aria-label": "Halaman " + (i + 1), className: i === idx ? 'on' : '', onClick: () => go(i) }))),
-        React.createElement("div", { className: "ap-swipe" }, "← geser ke samping →"));
+        React.createElement("div", { className: "ap-pn" },
+            React.createElement("button", { type: "button", className: "ap-nb", "aria-label": "Halaman sebelumnya", disabled: idx <= 0, onClick: () => go(idx - 1) }, React.createElement(ChevronLeft, { size: 20 })),
+            React.createElement("span", { className: "ap-pc2" }, (idx + 1) + " / " + pages.length),
+            React.createElement("button", { type: "button", className: "ap-nb", "aria-label": "Halaman berikutnya", disabled: idx >= pages.length - 1, onClick: () => go(idx + 1) }, React.createElement(ChevronRight, { size: 20 }))));
 }
 function apInk(h) { const v = [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16) / 255).map(c => c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4)); const L = .2126 * v[0] + .7152 * v[1] + .0722 * v[2]; return L > .4 ? '#111' : '#fff'; }
 const AP_BGS = ['#000000', '#0a0a0a', '#121212', '#1a1a1a', '#1c1c1e', '#0e1320', '#f4f3ef', '#e8e9eb'];
@@ -159,6 +165,15 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
     const st = EJ.state, th = EJ.THEMES[st.theme], fo = EJ.FONTS[st.font];
     const modeLabel = { light: 'Terang', dark: 'Gelap', auto: 'Otomatis' }[st.mode];
     const close = () => setDlg(null);
+    const [sure, setSure] = useState(false);
+    useEffect(() => { if (!sure) return; const t = setTimeout(() => setSure(false), 4000); return () => clearTimeout(t); }, [sure]);
+    function resetAll() {
+        if (!sure) { setSure(true); return; }
+        setSure(false);
+        EJ.set('mode', 'dark'); EJ.set('theme', 'mint'); EJ.set('font', 'manrope'); EJ.set('sfc', 0); EJ.set('sfcg', 0); EJ.set('bg', ''); EJ.set('bgd', 20);
+        EJ.FX_KEYS.forEach(k => EJ.setFx(k, ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'gerak'].indexOf(k) >= 0));
+        onHome && onHome(0); onHeaderVariant && onHeaderVariant(0); onNavVariant && onNavVariant(0);
+    }
     const seg = [['light', 'Terang', Sun], ['dark', 'Gelap', Moon], ['auto', 'Otomatis', Contrast]];
     const chunk = (arr, n) => { const o = []; for (let i = 0; i < arr.length; i += n)
         o.push(arr.slice(i, i + n)); return o; };
@@ -193,6 +208,7 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
         React.createElement(ApRow, { icon: React.createElement(Icon, { name: "Image", size: 18 }), title: "Latar aplikasi", desc: "Warna dasar, doff, kaca, anime, atau pola di belakang aplikasi", value: bgName(EJ, st.bg), onOpen: () => setDlg('bg') }),
         React.createElement(HeaderPicker, { value: headerVariant || 0, onChange: onHeaderVariant }),
         React.createElement(NavPicker, { value: navVariant || 0, onChange: onNavVariant }),
+        React.createElement("button", { type: "button", className: "ap-reset" + (sure ? ' sure' : ''), onClick: resetAll }, sure ? "Ketuk lagi untuk mengembalikan" : "Kembalikan tampilan standar"),
         dlg === 'home' && React.createElement(ApDialog, { title: "Halaman utama", onClose: close, className: "ap-wide", note: "Template mengganti header, isi, dan menu bawah sekaligus. Warna, mode, font, dan efek kartu tetap mengikuti pilihanmu. Header dan menu bawah masih bisa dipilih sendiri di bawah." },
             React.createElement("div", { className: "ap-list" }, HOME_LIST.map(([v, l]) => React.createElement("button", { type: "button", key: v, className: ((homeT || 0) === v ? 'on ' : '') + 'ap-font', onClick: () => { onHome && onHome(v); close(); } },
                 React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, l.replace(' (sekarang)', '')), React.createElement("small", null, v === 0 ? "Tampilan Edge Journal sekarang" : ({ 1: "Biru, tabel trade & donat P&L", 2: "Hijau lembut, area chart", 5: "Hijau bersih, grafik batang", 6: "Kaca buram, kandel" })[v])), React.createElement("i", { className: "ap-rad" }))))),

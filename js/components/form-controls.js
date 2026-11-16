@@ -30,19 +30,20 @@ function PickRow({ icon, title, desc, value, options, onChange }) {
     const [open, setOpen] = useState(false);
     const opts = options.map(o => typeof o === 'string' ? { v: o, l: o } : o);
     const cur = opts.find(o => o.v === value) || opts[0];
+    const per = 6, pages = [];
+    for (let i = 0; i < opts.length; i += per) pages.push(opts.slice(i, i + per));
+    const start = Math.max(0, pages.findIndex(pg => pg.some(o => o.v === value)));
+    const list = pg => React.createElement("div", { className: "ap-list" }, pg.map(o => React.createElement("button", { type: "button", key: o.v, className: (o.v === value ? 'on ' : '') + 'ap-font', onClick: () => { setOpen(false); onChange(o.v); } },
+        React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, o.l)),
+        React.createElement("i", { className: "ap-rad" }))));
     return React.createElement(React.Fragment, null,
         React.createElement("button", { type: "button", className: "pick-row", onClick: () => setOpen(true) },
             React.createElement("span", { className: "pick-ic" }, icon),
             React.createElement("span", { className: "pick-tx" }, React.createElement("b", null, title), desc && React.createElement("small", null, desc)),
             React.createElement("span", { className: "pick-val" }, cur.l),
             React.createElement(ChevronRight, { size: 18 })),
-        open && ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop center top sheet-layer", onClick: e => { if (e.target === e.currentTarget)
-                setOpen(false); } },
-            React.createElement("div", { className: "tsel-sheet" },
-                React.createElement("div", { className: "tsel-title" }, title),
-                opts.map(o => React.createElement("button", { type: "button", key: o.v, className: o.v === value ? 'on' : '', onClick: () => { setOpen(false); onChange(o.v); } },
-                    React.createElement("span", null, o.l),
-                    React.createElement("i", null))))), document.body));
+        open && React.createElement(ApDialog, { title: title, className: "ap-wide", onClose: () => setOpen(false) },
+            pages.length > 1 ? React.createElement(ApPager, { pages: pages.map(list), titles: pages.map((_, i) => String(i + 1)), start: start }) : list(pages[0])));
 }
 function DateField({ value, onChange, withTime, min }) {
     const p2 = n => String(n).padStart(2, '0');
