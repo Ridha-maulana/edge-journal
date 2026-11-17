@@ -560,7 +560,10 @@ html[data-mode]:not(#a):not(#b) .direction button.selected.long{border-color:#16
 html[data-mode]:not(#a):not(#b) .direction button.selected.short{border-color:#dc2626!important}
 html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn){border:1px solid var(--ej-pr)!important;box-shadow:none!important;color:var(--onacc,#fff)!important;-webkit-text-fill-color:currentColor}
 html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn) *{color:inherit!important}
-/* v5.9.67 teks tombol utama selalu terbaca */
-html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn,.add-trade .primary-btn){color:#fff!important;-webkit-text-fill-color:#fff!important}
-html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn,.add-trade .primary-btn) *{color:#fff!important;-webkit-text-fill-color:#fff!important}
-html[data-mode]:not(#a):not(#b) button.pill.active,html[data-mode]:not(#a):not(#b) button.pill.active *{color:#fff!important}
+/* v5.9.67 teks tombol utama & pil aktif: warna isi solid, teks mengikuti kontras (terang=putih, gelap=hitam di tema mono) */
+html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn,.add-trade .primary-btn){background-image:none!important;background-color:var(--ej-pr)!important;color:var(--onacc)!important;-webkit-text-fill-color:var(--onacc)!important}
+html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn,.add-trade .primary-btn) *{color:inherit!important;-webkit-text-fill-color:inherit!important}
+html[data-mode]:not(#a):not(#b) :is(button.pill.active){background-image:none!important;background-color:var(--ej-pr)!important;border-color:var(--ej-pr)!important;color:var(--onacc)!important;-webkit-text-fill-color:var(--onacc)!important}
+html[data-mode]:not(#a):not(#b) :is(button.pill.active) *{color:inherit!important;-webkit-text-fill-color:inherit!important}
+/* profil/tools: kartu dalam panel tanpa border ganda */
+html[data-mode]:not(#a):not(#b) .acc-panel :is(.tool-card,.acct-inline,.acct-inline-body,.cloud-card,.button-row){border:0!important;box-shadow:none!important;background:transparent!important}
