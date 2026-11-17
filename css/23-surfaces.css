@@ -527,3 +527,12 @@ html .add-trade .direction button:not(#x){width:100%}
 html .add-trade textarea:not(#x){height:auto;min-height:72px;padding:10px 12px;resize:none;line-height:1.4!important}
 html .add-trade .fs-actions button:not(#x){box-shadow:none!important}
 html .add-trade .fs-actions .primary-btn:not(#x){background:var(--ej-pr)!important;border-color:transparent!important}
+/* v5.9.64 — Template 4/5/2: tombol header, tombol dompet, pilihan timeframe dan tombol grafik polos (tanpa lingkaran); kartu satu garis tipis rata */
+html[data-mode]:not(#a):not(#b) :is(.ht-date,.ht-acc,.ht-cal,.ht-dcard,.t1-wal,.t5-ai,.t2-accb,.tp-tf,.tp-kind,.t6-more){border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important;background-color:color-mix(in srgb,var(--ej-ik) 9%,transparent)!important}
+html[data-mode]:not(#a):not(#b) .ht-logo{box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-tf button,.tp-tf button.on){border:0!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) .tp-tf button:not(.on){background:transparent!important}
+html[data-mode]:not(#a):not(#b) .tp-tf button::before{display:none!important}
+html[data-mode]:not(#a):not(#b) .tp-kind .k-thumb{box-shadow:none!important;background:var(--ej-sf)!important}
+html[data-mode]:not(#a):not(#b) .tp-card{border:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) .t6-r button{border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important;background-color:color-mix(in srgb,var(--ej-ik) 9%,transparent)!important}

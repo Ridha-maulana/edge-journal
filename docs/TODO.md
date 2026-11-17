@@ -476,3 +476,4 @@
 - v5.9.61: pop-up Tampilan aplikasi: tinggi baris disamakan di semua sheet; daftar yang barisnya sedikit (Mode, Menu bawah, halaman terakhir Font/Latar) menempel di atas, tidak dilebarkan.
 - v5.9.62: tombol (kalender, akun, Share/Stats/DNA, ikon, tombol grafik) dan pilihan timeframe dibuat polos: tanpa pinggiran, bayangan, kilap; pilihan timeframe rata dan sama ukuran.
 - v5.9.63: Tambah posisi satu gaya: kolom isian, tombol pilihan (Long/Short, status, cara keluar), kotak hasil, dan tombol aksi disamakan ukuran dan bentuknya, lebih kecil dan datar; teks judul dan tombol berbahasa Indonesia.
+- v5.9.64: Template 4/5 (dan 1/2): lingkaran tebal pada tombol header (kalender, akun, tanggal), tombol dompet, pilihan timeframe, tombol grafik dan logo dihilangkan; garis kartu disamakan satu garis tipis tanpa kilap.
