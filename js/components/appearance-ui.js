@@ -51,12 +51,12 @@ function ApSfcDialog({ EJ, st, onClose }) {
         h("span", { className: "ap-nm" }, h("b", null, S[k][0]), h("small", null, S[k][2] === 'doff' ? 'Doff' : 'Dasar')),
         h("i", { className: "ap-rad" }));
     return h(ApDialog, { title: "Efek permukaan", onClose: onClose, className: "ap-wide" },
-        h("div", { className: "ap-list ap-top" }, h("button", { type: "button", className: (cur === 0 ? 'on ' : '') + 'ap-font', "aria-pressed": cur === 0, onClick: () => EJ.set('sfc', 0) },
-            h("span", { className: "ap-nm" }, h("b", null, "Standar")), h("i", { className: "ap-rad" }))),
-        h(ApPager, { pages: pages.map(pg => h("div", { className: "ap-list" }, pg.map(row))), titles: pages.map((_, i) => String(i + 1)), start: start }),
-        h("div", { className: "ap-list ap-opt" }, h("button", { type: "button", className: "fxm-r" + (st.sfcg ? ' on' : ''), role: "switch", "aria-checked": !!st.sfcg, disabled: cur === 0, style: cur === 0 ? { opacity: .45 } : null, onClick: () => EJ.set('sfcg', st.sfcg ? 0 : 1) },
-            h("div", null, h("b", null, "Latar berpendar"), h("small", null, "Cahaya halus di belakang kartu")),
-            h("span", { className: "fxm-sw" }))));
+        h("div", { className: "ap-list ap-top" },
+            h("button", { type: "button", className: (cur === 0 ? 'on ' : '') + 'ap-font', "aria-pressed": cur === 0, onClick: () => EJ.set('sfc', 0) },
+                h("span", { className: "ap-nm" }, h("b", null, "Standar")), h("i", { className: "ap-rad" })),
+            h("button", { type: "button", className: "ap-font ap-sw" + (st.sfcg ? ' on' : ''), role: "switch", "aria-checked": !!st.sfcg, disabled: cur === 0, style: cur === 0 ? { opacity: .45 } : null, onClick: () => EJ.set('sfcg', st.sfcg ? 0 : 1) },
+                h("span", { className: "ap-nm" }, h("b", null, "Latar berpendar")), h("span", { className: "fxm-sw" }))),
+        h(ApPager, { pages: pages.map(pg => h("div", { className: "ap-list" }, pg.map(row))), titles: pages.map((_, i) => String(i + 1)), start: start }));
 }
 /* Latar aplikasi (v5.9.53): Standar = ikut tema/template halaman utama; selain itu latar tetap di belakang seluruh aplikasi. Sekali ketuk, latar langsung dipakai dan halaman ini tertutup. */
 function bgName(EJ, k) { const w = EJ.WP && EJ.WP.BY[k]; return w ? w.name : 'Standar'; }
@@ -66,7 +66,7 @@ function ApBgDialog({ EJ, st, onClose }) {
     const items = cat === 'semua' ? WP.LIST : WP.LIST.filter(w => w.cat === cat), w0 = WP.BY[cur], auto = EJ.WP.auto(w0);
     const catName = k => (WP.CATS.find(c => c[0] === k) || [0, ''])[1];
     const pages = [];
-    for (let i = 0; i < items.length; i += 4) pages.push(items.slice(i, i + 4));
+    for (let i = 0; i < items.length; i += 5) pages.push(items.slice(i, i + 5));
     const start = Math.max(0, pages.findIndex(pg => pg.some(w => w.k === cur)));
     const row = (w, i) => h("button", { type: "button", key: w.k, className: (cur === w.k ? 'on ' : '') + 'ap-font', "aria-pressed": cur === w.k, onClick: () => EJ.set('bg', w.k) },
         h("span", { className: "bgx-im ap-th2", dangerouslySetInnerHTML: { __html: WP.thumb(w, 'r' + items.indexOf(w)) } }),
@@ -78,9 +78,9 @@ function ApBgDialog({ EJ, st, onClose }) {
             h("span", { className: "ap-nm" }, h("b", null, "Tanpa latar")), h("i", { className: "ap-rad" }))),
         h(ApPager, { key: cat, pages: pages.map(pg => h("div", { className: "ap-list" }, pg.map(row))), titles: pages.map((_, i) => String(i + 1)), start: cat === 'semua' ? start : 0 }),
         h("div", { className: "bgx-sl" + (cur === '' ? ' off' : '') },
-            h("div", { className: "bgx-sh" }, h("b", null, "Redup"), h("span", null, (st.bgd | 0) + "%")),
+            h("b", null, "Redup"),
             h("input", { type: "range", min: 0, max: 80, step: 5, value: st.bgd | 0, disabled: cur === '', "aria-label": "Redup latar", onChange: e => EJ.set('bgd', +e.target.value) }),
-            h("small", null, cur === '' ? "Aktif setelah kamu memilih latar" : auto ? "Latar ini otomatis diredupkan lebih banyak agar teks terbaca" : "Atur supaya teks tetap terbaca")));
+            h("span", null, (st.bgd | 0) + "%")));
 }
 function ApDialog({ title, note, noteEnd, onClose, children, className }) {
     useEffect(() => { const k = e => { if (e.key === 'Escape') onClose(); }; document.addEventListener('keydown', k); return () => document.removeEventListener('keydown', k); }, []);
@@ -180,7 +180,7 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
     const seg = [['light', 'Terang', Sun], ['dark', 'Gelap', Moon], ['auto', 'Otomatis', Contrast]];
     const chunk = (arr, n) => { const o = []; for (let i = 0; i < arr.length; i += n)
         o.push(arr.slice(i, i + n)); return o; };
-    const themeKeys = chunk(EJ.THEME_ORDER, 5), fontKeys = chunk(EJ.FONT_ORDER, 5);
+    const themeKeys = chunk(EJ.THEME_ORDER, 6), fontKeys = chunk(EJ.FONT_ORDER, 6);
     const startT = Math.max(0, themeKeys.findIndex(p => p.indexOf(st.theme) >= 0)), startF = Math.max(0, fontKeys.findIndex(p => p.indexOf(st.font) >= 0));
     const themePages = themeKeys.map(p => React.createElement("div", { className: "ap-list" }, p.map(k => {
         const t = EJ.THEMES[k], cust = k === 'custom';
@@ -218,8 +218,9 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
         dlg === 'sfc' && React.createElement(ApSfcDialog, { EJ: EJ, st: st, onClose: close }),
         dlg === 'bg' && React.createElement(ApBgDialog, { EJ: EJ, st: st, onClose: close }),
         dlg === 'mode' && React.createElement(ApDialog, { title: "Mode tampilan", onClose: close, className: "ap-wide" },
-            React.createElement("div", { className: "ap-list" }, [['auto', 'Otomatis'], ['light', 'Terang'], ['dark', 'Gelap']].map(([v, l]) => React.createElement("button", { type: "button", key: v, className: (st.mode === v ? 'on ' : '') + 'ap-font', onClick: () => EJ.set('mode', v) },
-                React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, l)), React.createElement("i", { className: "ap-rad" }))))),
+            React.createElement("div", { className: "ap-list" }, [['auto', 'Otomatis', 'Ikuti pengaturan terang/gelap di HP', Contrast], ['light', 'Terang', 'Latar terang, teks gelap', Sun], ['dark', 'Gelap', 'Latar gelap, teks terang', Moon]].map(([v, l, d, Ic]) => React.createElement("button", { type: "button", key: v, className: (st.mode === v ? 'on ' : '') + 'ap-font', onClick: () => EJ.set('mode', v) },
+                React.createElement("span", { className: "ap-ic" }, React.createElement(Ic, { size: 18 })),
+                React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, l), React.createElement("small", null, d)), React.createElement("i", { className: "ap-rad" }))))),
         dlg === 'theme' && React.createElement(ApDialog, { title: "Tema warna", onClose: close, className: "ap-wide" },
             React.createElement(ApPager, { pages: themePages, titles: themeKeys.map((_, i) => String(i + 1)), start: startT })),
         dlg === 'custom' && React.createElement(CustomEditor, { EJ: EJ, onClose: close }),

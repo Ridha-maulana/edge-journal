@@ -30,7 +30,7 @@ function PickRow({ icon, title, desc, sheet, note, value, options, onChange }) {
     const [open, setOpen] = useState(false);
     const opts = options.map(o => typeof o === 'string' ? { v: o, l: o } : o);
     const cur = opts.find(o => o.v === value) || opts[0];
-    const per = 5, pages = [];
+    const per = 6, pages = [];
     for (let i = 0; i < opts.length; i += per) pages.push(opts.slice(i, i + per));
     const start = Math.max(0, pages.findIndex(pg => pg.some(o => o.v === value)));
     const list = pg => React.createElement("div", { className: "ap-list" }, pg.map(o => React.createElement("button", { type: "button", key: o.v, className: (o.v === value ? 'on ' : '') + 'ap-font', onClick: () => { setOpen(false); onChange(o.v); } },
