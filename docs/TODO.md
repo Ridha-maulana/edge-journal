@@ -473,3 +473,4 @@
 - v5.9.58: semua pop-up Tampilan aplikasi sama tinggi (setengah layar HP), isi menggulir di dalam.
 - v5.9.59: pop-up Tampilan aplikasi didesain ulang minimalis seperti Pelita: judul Template beranda/Tema warna/Font/Efek permukaan/Latar/Header/Menu bawah, baris tanpa warna aksen + centang tipis, contoh warna 3 potong, Latar pakai chip Semua + daftar berhalaman, Mode jadi daftar, tinggi tetap 57% layar (min 500px).
 - v5.9.60: pop-up Tampilan aplikasi pas satu layar tanpa skrol: font dan jarak baris dikecilkan, 6 baris per halaman (Tema, Font, Template, Header, Menu bawah), baris daftar pendek (Mode, Menu bawah) dibagi rata mengisi sheet, Mode tampilan diberi ikon dan keterangan.
+- v5.9.61: pop-up Tampilan aplikasi: tinggi baris disamakan di semua sheet; daftar yang barisnya sedikit (Mode, Menu bawah, halaman terakhir Font/Latar) menempel di atas, tidak dilebarkan.

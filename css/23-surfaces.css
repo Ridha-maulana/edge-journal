@@ -471,5 +471,8 @@ html .tsel-sheet.ap-bsheet .ap-list>button:has(.ap-sq),html .tsel-sheet.ap-bshee
 html .tsel-sheet.ap-bsheet .ap-page>.ap-list>button{min-height:0}
 .ap-bsheet .ap-body>.ap-list.ap-top>button{min-height:0}
 /* daftar pendek (Mode, Menu bawah, Template): baris dibagi rata mengisi sheet */
-.ap-bsheet .ap-body>.ap-list:not(.ap-top){flex:1;min-height:0;grid-auto-rows:1fr;align-content:stretch}
+/* tinggi baris tetap sama di semua sheet; baris sedikit = menempel di atas, sisa kosong di bawah */
+.ap-bsheet .ap-body>.ap-list:not(.ap-top),.ap-bsheet .ap-page>.ap-list{flex:none;min-height:0;grid-auto-rows:62px;align-content:start}
+.ap-bsheet:has(.ap-note-top) .ap-body>.ap-list:not(.ap-top),.ap-bsheet:has(.ap-note-top) .ap-page>.ap-list{grid-auto-rows:58px}
+.ap-bsheet .ap-page>.ap-list:has(.ap-sq),.ap-bsheet .ap-page>.ap-list:has(.ap-th2){grid-auto-rows:52px}
 .ap-bsheet .ap-ic{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:10px;background:var(--ej-so);color:var(--ej-ik)}
