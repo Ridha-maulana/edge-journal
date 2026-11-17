@@ -549,3 +549,18 @@ html[data-mode]:not(#a):not(#b) :is(.ct-pill,.ct-pill.is-line,.ct-pill.is-candle
 html[data-mode]:not(#a):not(#b) :is(.ct-thumb,.tp-kind .k-thumb){background:color-mix(in srgb,currentColor 18%,transparent)!important;box-shadow:none!important}
 html[data-mode]:not(#a):not(#b) :is(.ct-pill.is-line .ic-line,.ct-pill .ic-line,.tp-kind .k-l,.tp-kind.is-line .k-l,.tp6 .tp-kind.is-line .k-l){color:inherit!important;opacity:1!important}
 html[data-mode]:not(#a):not(#b) .tp-kind{color:inherit!important}
+/* ===== v5.9.67 — My Journal, Tambah posisi, Tools, Profil: tombol, kolom isian dan kartu diberi garis tipis tegas, tanpa bayangan ===== */
+html[data-mode]:not(#a):not(#b) :is(.search-box,.tsel,button.pill,.rc-seg,.rc-swap,.rc-out,.secondary-btn,.ap-reset,.as-edit,.icon-btn,.dfield,button.dfield,.at-add,.direction button,.at-seg button,.at-chips button,.pe-tabs button,.pick-ic,.prof-av,.account-avatar,.dd-btn,.fab,.filter-chip,.tp-fx,.k-btn){border:1px solid color-mix(in srgb,currentColor 30%,transparent)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html[data-mode]:not(#a):not(#b) :is(.tool-card input,.add-trade input,.add-trade textarea,.add-trade select,.search-box input,.tool-card select,.tool-card textarea){border:1px solid color-mix(in srgb,currentColor 30%,transparent)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) .search-box input{border:0!important}
+html[data-mode]:not(#a):not(#b) :is(.week-head,.trade-card,.acc-panel,.tool-card,.account-list-item,.flat-sec.card-sec,.panel,.pe-card,.chart-card,.adv-card,.scan-card,.calc-result,.rc-out){border:1px solid color-mix(in srgb,currentColor 20%,transparent)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) .tool-card.acct-inline{border:0!important}
+html[data-mode]:not(#a):not(#b) :is(.account-list-item.selected,.pill.active,button.selected,.at-seg button.on,.at-chips button.on){border-color:var(--ej-pr)!important}
+html[data-mode]:not(#a):not(#b) .direction button.selected.long{border-color:#16a34a!important}
+html[data-mode]:not(#a):not(#b) .direction button.selected.short{border-color:#dc2626!important}
+html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn){border:1px solid var(--ej-pr)!important;box-shadow:none!important;color:var(--onacc,#fff)!important;-webkit-text-fill-color:currentColor}
+html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn) *{color:inherit!important}
+/* v5.9.67 teks tombol utama selalu terbaca */
+html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn,.add-trade .primary-btn){color:#fff!important;-webkit-text-fill-color:#fff!important}
+html[data-mode]:not(#a):not(#b) :is(.primary-btn,.fs-actions .primary-btn,.add-trade .primary-btn) *{color:#fff!important;-webkit-text-fill-color:#fff!important}
+html[data-mode]:not(#a):not(#b) button.pill.active,html[data-mode]:not(#a):not(#b) button.pill.active *{color:#fff!important}

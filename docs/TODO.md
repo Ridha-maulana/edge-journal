@@ -479,3 +479,4 @@
 - v5.9.64: Template 4/5 (dan 1/2): lingkaran tebal pada tombol header (kalender, akun, tanggal), tombol dompet, pilihan timeframe, tombol grafik dan logo dihilangkan; garis kartu disamakan satu garis tipis tanpa kilap.
 - v5.9.65: semua tombol (header, dompet, timeframe, Share/Stats/DNA, grafik) dan kartu (termasuk kartu dalam kartu) diberi garis tipis 1px yang tegas, tanpa bayangan/kilap; tombol sedikit lebih tegas dari kartu.
 - v5.9.66: pilihan Tampilan header dikurangi jadi 4 (Standar lama, Template 2, 3, 4); tombol header terbaca lagi di semua Efek permukaan (warna isi tombol tidak lagi bentrok); tombol kandel/garis tidak berwarna saat dipilih dan ikonnya selalu terlihat.
+- v5.9.67: Border tipis 1px (tegas, tanpa bayangan) di tombol, kolom isi, dan kartu untuk My Journal, Tambah posisi, Tools, Profil; teks tombol hijau (Simpan posisi/trade, pil aktif) dipaksa putih supaya terbaca.
