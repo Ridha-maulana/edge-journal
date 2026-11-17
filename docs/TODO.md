@@ -477,3 +477,4 @@
 - v5.9.62: tombol (kalender, akun, Share/Stats/DNA, ikon, tombol grafik) dan pilihan timeframe dibuat polos: tanpa pinggiran, bayangan, kilap; pilihan timeframe rata dan sama ukuran.
 - v5.9.63: Tambah posisi satu gaya: kolom isian, tombol pilihan (Long/Short, status, cara keluar), kotak hasil, dan tombol aksi disamakan ukuran dan bentuknya, lebih kecil dan datar; teks judul dan tombol berbahasa Indonesia.
 - v5.9.64: Template 4/5 (dan 1/2): lingkaran tebal pada tombol header (kalender, akun, tanggal), tombol dompet, pilihan timeframe, tombol grafik dan logo dihilangkan; garis kartu disamakan satu garis tipis tanpa kilap.
+- v5.9.65: semua tombol (header, dompet, timeframe, Share/Stats/DNA, grafik) dan kartu (termasuk kartu dalam kartu) diberi garis tipis 1px yang tegas, tanpa bayangan/kilap; tombol sedikit lebih tegas dari kartu.

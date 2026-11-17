@@ -536,3 +536,9 @@ html[data-mode]:not(#a):not(#b) .tp-tf button::before{display:none!important}
 html[data-mode]:not(#a):not(#b) .tp-kind .k-thumb{box-shadow:none!important;background:var(--ej-sf)!important}
 html[data-mode]:not(#a):not(#b) .tp-card{border:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent)!important;box-shadow:none!important}
 html[data-mode]:not(#a):not(#b) .t6-r button{border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important;background-color:color-mix(in srgb,var(--ej-ik) 9%,transparent)!important}
+/* v5.9.65 — garis tipis tegas (1px) untuk semua tombol dan kartu, termasuk kartu di dalam kartu; tanpa bayangan/kilap */
+html{--ej-lb:color-mix(in srgb,var(--ej-ik) 28%,transparent);--ej-lc:color-mix(in srgb,var(--ej-ik) 20%,transparent)}
+html[data-mode]:not(#a):not(#b) :is(.header-icon,.account-switcher,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.tp-fx,.tp-act,.tp-kind,.t6-more,.ht-date,.ht-acc,.ht-cal,.ht-dcard,.t1-wal,.t5-ai,.t2-accb,.tp-tf,.t6-r button,.wallet-inline){border:1px solid var(--ej-lb)!important}
+html[data-mode]:not(#a):not(#b) :is(.ht-logo,.brand-mark){border:1px solid var(--ej-lb)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-card,.hero-card,.pe-card){border:1px solid var(--ej-lc)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-tf button,.tp-fx button,.ct-chip,.tp-kind .k-thumb,.ct-thumb){border:0!important}
