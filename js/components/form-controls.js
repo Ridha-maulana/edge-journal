@@ -26,11 +26,11 @@ function AccRow({ icon, title, desc, open, onToggle, children }) {
             React.createElement(ChevronDown, { size: 18 })),
         open && React.createElement("div", { className: "acc-panel" }, children));
 }
-function PickRow({ icon, title, desc, value, options, onChange }) {
+function PickRow({ icon, title, desc, sheet, note, value, options, onChange }) {
     const [open, setOpen] = useState(false);
     const opts = options.map(o => typeof o === 'string' ? { v: o, l: o } : o);
     const cur = opts.find(o => o.v === value) || opts[0];
-    const per = 6, pages = [];
+    const per = 5, pages = [];
     for (let i = 0; i < opts.length; i += per) pages.push(opts.slice(i, i + per));
     const start = Math.max(0, pages.findIndex(pg => pg.some(o => o.v === value)));
     const list = pg => React.createElement("div", { className: "ap-list" }, pg.map(o => React.createElement("button", { type: "button", key: o.v, className: (o.v === value ? 'on ' : '') + 'ap-font', onClick: () => { setOpen(false); onChange(o.v); } },
@@ -42,7 +42,7 @@ function PickRow({ icon, title, desc, value, options, onChange }) {
             React.createElement("span", { className: "pick-tx" }, React.createElement("b", null, title), desc && React.createElement("small", null, desc)),
             React.createElement("span", { className: "pick-val" }, cur.l),
             React.createElement(ChevronRight, { size: 18 })),
-        open && React.createElement(ApDialog, { title: title, className: "ap-wide", onClose: () => setOpen(false) },
+        open && React.createElement(ApDialog, { title: sheet || title, note: note, className: "ap-wide", onClose: () => setOpen(false) },
             pages.length > 1 ? React.createElement(ApPager, { pages: pages.map(list), titles: pages.map((_, i) => String(i + 1)), start: start }) : list(pages[0])));
 }
 function DateField({ value, onChange, withTime, min }) {

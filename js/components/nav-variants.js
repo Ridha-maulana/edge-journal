@@ -16,5 +16,5 @@ function navVariantSet(v) { try {
 }
 catch (_) { } }
 function NavPicker({ value, onChange }) {
-    return React.createElement(PickRow, { icon: React.createElement(SlidersHorizontal, { size: 18 }), title: "Tampilan menu bawah", desc: "Gaya menu bar di bagian bawah layar", value: value, options: NAV_LIST.map(x => ({ v: x[0], l: x[1] })), onChange: onChange });
+    return React.createElement(PickRow, { icon: React.createElement(SlidersHorizontal, { size: 18 }), title: "Tampilan menu bawah", desc: "Gaya menu bar di bagian bawah layar", sheet: "Menu bawah", value: value, options: NAV_LIST.map(x => ({ v: x[0], l: x[1] })), onChange: onChange });
 }

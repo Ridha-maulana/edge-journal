@@ -69,5 +69,5 @@ function AppHeaderClassic({ variant, account, onCalendar, onAccount }) {
 }
 /* kartu pemilih di Profil */
 function HeaderPicker({ value, onChange }) {
-    return React.createElement(PickRow, { icon: React.createElement(UserRound, { size: 18 }), title: "Tampilan header", desc: "Gaya header atas, hanya di halaman utama", value: value, options: HEADER_LIST.map(x => ({ v: x[0], l: x[1] })), onChange: onChange });
+    return React.createElement(PickRow, { icon: React.createElement(UserRound, { size: 18 }), title: "Tampilan header", desc: "Gaya header atas, hanya di halaman utama", sheet: "Header", note: "Berlaku di halaman Performance.", value: value, options: HEADER_LIST.map(x => ({ v: x[0], l: x[1] })), onChange: onChange });
 }
