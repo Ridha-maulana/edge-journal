@@ -361,3 +361,12 @@ html .tsel-sheet.ap-bsheet .ap-list>button:last-child{border-bottom:0}
 .add-trade .form-grid.at-one{grid-template-columns:1fr!important}
 .add-trade label,.add-trade .at-lbl{font-size:12px!important}
 .add-trade input[type=file]{display:none!important}
+/* v5.9.57 — semua pop-up Tampilan aplikasi sama tinggi: setengah layar */
+html .tsel-sheet.ap-bsheet{height:max(50vh,440px);height:max(50dvh,440px);max-height:88dvh}
+.ap-bsheet .ap-head{padding:18px 20px 8px}
+.ap-bsheet .ap-ttl{font-size:24px}
+.ap-bsheet .ap-x{width:44px;height:44px;border-radius:14px}
+.ap-bsheet .ap-list{padding:0 20px}
+html .tsel-sheet.ap-bsheet .ap-list>button{min-height:54px;padding:8px 0}
+.ap-pn{padding:8px 20px 0}
+.ap-nb{width:48px;height:48px;border-radius:16px}
