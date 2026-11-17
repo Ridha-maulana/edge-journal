@@ -477,7 +477,7 @@ html .tsel-sheet.ap-bsheet .ap-page>.ap-list>button{min-height:0}
 .ap-bsheet .ap-page>.ap-list:has(.ap-sq),.ap-bsheet .ap-page>.ap-list:has(.ap-th2){grid-auto-rows:52px}
 .ap-bsheet .ap-ic{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:10px;background:var(--ej-so);color:var(--ej-ik)}
 /* v5.9.62 — tombol dan pilihan timeframe polos: tanpa pinggiran, tanpa bayangan/kilap, bentuk rata */
-html[data-mode]:not(#a):not(#b) :is(.tp-act,.tp-kind,.t6-more,.header-icon,.account-switcher,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.tp-fx){border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important;background-color:var(--ej-so)!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-act,.tp-kind,.t6-more,.header-icon,.account-switcher,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.tp-fx){border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important}
 html[data-mode]:not(#a):not(#b) :is(.tp-fx button,.ct-chip,.tp-kind .k-thumb){border:0!important;box-shadow:none!important;backdrop-filter:none!important;background-image:none}
 html[data-mode]:not(#a):not(#b) .tp-fx button::before{display:none!important}
 html[data-mode]:not(#a):not(#b) :is(.tp-fx,.ct-tf,.chart-tools) button:not(.on):not(.ct-pill){background:transparent!important}
@@ -528,17 +528,24 @@ html .add-trade textarea:not(#x){height:auto;min-height:72px;padding:10px 12px;r
 html .add-trade .fs-actions button:not(#x){box-shadow:none!important}
 html .add-trade .fs-actions .primary-btn:not(#x){background:var(--ej-pr)!important;border-color:transparent!important}
 /* v5.9.64 — Template 4/5/2: tombol header, tombol dompet, pilihan timeframe dan tombol grafik polos (tanpa lingkaran); kartu satu garis tipis rata */
-html[data-mode]:not(#a):not(#b) :is(.ht-date,.ht-acc,.ht-cal,.ht-dcard,.t1-wal,.t5-ai,.t2-accb,.tp-tf,.tp-kind,.t6-more){border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important;background-color:color-mix(in srgb,var(--ej-ik) 9%,transparent)!important}
+html[data-mode]:not(#a):not(#b) :is(.ht-date,.ht-acc,.ht-cal,.ht-dcard,.t1-wal,.t5-ai,.t2-accb,.tp-tf,.tp-kind,.t6-more){border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important}
 html[data-mode]:not(#a):not(#b) .ht-logo{box-shadow:none!important}
 html[data-mode]:not(#a):not(#b) :is(.tp-tf button,.tp-tf button.on){border:0!important;box-shadow:none!important}
 html[data-mode]:not(#a):not(#b) .tp-tf button:not(.on){background:transparent!important}
 html[data-mode]:not(#a):not(#b) .tp-tf button::before{display:none!important}
 html[data-mode]:not(#a):not(#b) .tp-kind .k-thumb{box-shadow:none!important;background:var(--ej-sf)!important}
-html[data-mode]:not(#a):not(#b) .tp-card{border:1px solid color-mix(in srgb,var(--ej-ik) 14%,transparent)!important;box-shadow:none!important}
-html[data-mode]:not(#a):not(#b) .t6-r button{border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important;background-color:color-mix(in srgb,var(--ej-ik) 9%,transparent)!important}
+html[data-mode]:not(#a):not(#b) .tp-card{border:1px solid color-mix(in srgb,currentColor 20%,transparent)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) .t6-r button{border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important}
 /* v5.9.65 — garis tipis tegas (1px) untuk semua tombol dan kartu, termasuk kartu di dalam kartu; tanpa bayangan/kilap */
 html{--ej-lb:color-mix(in srgb,var(--ej-ik) 28%,transparent);--ej-lc:color-mix(in srgb,var(--ej-ik) 20%,transparent)}
-html[data-mode]:not(#a):not(#b) :is(.header-icon,.account-switcher,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.tp-fx,.tp-act,.tp-kind,.t6-more,.ht-date,.ht-acc,.ht-cal,.ht-dcard,.t1-wal,.t5-ai,.t2-accb,.tp-tf,.t6-r button,.wallet-inline){border:1px solid var(--ej-lb)!important}
-html[data-mode]:not(#a):not(#b) :is(.ht-logo,.brand-mark){border:1px solid var(--ej-lb)!important;box-shadow:none!important}
-html[data-mode]:not(#a):not(#b) :is(.tp-card,.hero-card,.pe-card){border:1px solid var(--ej-lc)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) :is(.header-icon,.account-switcher,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.tp-fx,.tp-act,.tp-kind,.t6-more,.ht-date,.ht-acc,.ht-cal,.ht-dcard,.t1-wal,.t5-ai,.t2-accb,.tp-tf,.t6-r button,.wallet-inline){border:1px solid color-mix(in srgb,currentColor 32%,transparent)!important}
+html[data-mode]:not(#a):not(#b) :is(.ht-logo,.brand-mark){border:1px solid color-mix(in srgb,currentColor 32%,transparent)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-card,.hero-card,.pe-card){border:1px solid color-mix(in srgb,currentColor 20%,transparent)!important;box-shadow:none!important}
 html[data-mode]:not(#a):not(#b) :is(.tp-tf button,.tp-fx button,.ct-chip,.tp-kind .k-thumb,.ct-thumb){border:0!important}
+/* v5.9.66 — tombol di dalam kartu: isi tipis dari warna teksnya sendiri (tetap terbaca di semua efek permukaan) */
+html[data-mode]:not(#a):not(#b) :is(.t6-r button,.t1-wal,.t5-ai,.t2-accb,.tp-kind,.tp-tf,.tp-fx,.t6-more){background-image:none!important;background-color:color-mix(in srgb,currentColor 8%,transparent)!important}
+/* tombol kandel/garis: tidak berwarna saat dipilih, ikon tetap terbaca */
+html[data-mode]:not(#a):not(#b) :is(.ct-pill,.ct-pill.is-line,.ct-pill.is-candle){background-image:none!important;background-color:color-mix(in srgb,currentColor 8%,transparent)!important;color:inherit!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) :is(.ct-thumb,.tp-kind .k-thumb){background:color-mix(in srgb,currentColor 18%,transparent)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) :is(.ct-pill.is-line .ic-line,.ct-pill .ic-line,.tp-kind .k-l,.tp-kind.is-line .k-l,.tp6 .tp-kind.is-line .k-l){color:inherit!important;opacity:1!important}
+html[data-mode]:not(#a):not(#b) .tp-kind{color:inherit!important}

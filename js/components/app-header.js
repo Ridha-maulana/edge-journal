@@ -1,7 +1,7 @@
 /* Header atas aplikasi — 9 gaya (standar + 8 desain baru), dipilih di Profil → Tampilan header */
 "use strict";
 const HEADER_KEY = 'ej3-header';
-const HEADER_LIST = [[0, 'Standar (lama)'], [1, 'Minimal satu baris'], [2, 'Bilah kaca'], [3, 'Akun jadi judul'], [5, 'Saldo di pil akun'], [6, 'Banner gradasi'], [7, 'Status sinkron'], [9, 'Kartu mengambang'], [10, 'Strip tanggal']].concat(TPL_HEADER_LIST);
+const HEADER_LIST = [[0, 'Standar (lama)']].concat(TPL_HEADER_LIST); /* hanya 4 pilihan: Standar (lama), Template 2, 3, 4 */
 function headerVariantGet() { try {
     let v = localStorage.getItem(HEADER_KEY);
     if (v === '11') v = '15'; // header lama Template 1 -> Hijau bersih
