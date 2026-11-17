@@ -100,14 +100,14 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
                 h("small", null, "Dari balance awal ", money(baseBal), " dan jarak SL ", dist.toFixed(5).replace(/\.?0+$/, ''), "."),
                 h("button", { type: "button", className: "secondary-btn", onClick: () => { set('lots', adjLots.toFixed(2)); setAdjOpen(false); } }, "Pakai ", adjLots.toFixed(2), " lot")) : h("small", { className: "warn" }, "Isi Entry level dan Stop loss dulu untuk menghitung lot.")),
         h("div", { className: "fs-actions" },
-            h("button", { type: "button", className: "secondary-btn", "aria-expanded": adjOpen, onClick: () => setAdjOpen(o => !o) }, h(Target, { size: 15 }), " Calculate / Adjust risk"),
-            h("button", { className: "primary-btn", type: "submit" }, h(Plus, { size: 17 }), closed ? " Simpan trade (closed)" : " Save open trade")));
+            h("button", { type: "button", className: "secondary-btn", "aria-expanded": adjOpen, onClick: () => setAdjOpen(o => !o) }, h(Target, { size: 15 }), " Hitung lot"),
+            h("button", { className: "primary-btn", type: "submit" }, h(Plus, { size: 17 }), closed ? " Simpan trade" : " Simpan posisi")));
     return h("div", { className: "modal-backdrop fs" },
         h("div", { className: "modal wide-modal fs" },
             h("div", { className: "modal-head" },
                 h("div", null,
-                    h("p", { className: "eyebrow" }, initial ? 'EDIT TRADE / UPDATE' : pf ? 'NEW TRADE / SCREENSHOT ENTRY' : 'NEW TRADE / MANUAL ENTRY'),
-                    h("h2", null, initial ? 'Edit trade' : 'Tambah trade')),
+                    h("p", { className: "eyebrow" }, initial ? 'Edit trade' : pf ? 'Trade baru · dari screenshot' : 'Trade baru · input manual'),
+                    h("h2", null, initial ? 'Ubah trade' : 'Tambah trade')),
                 h("button", { className: "icon-btn", type: "button", "aria-label": "Tutup", onClick: onClose }, h(X, { size: 19 }))),
             formEl));
 }

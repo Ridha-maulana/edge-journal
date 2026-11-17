@@ -476,3 +476,54 @@ html .tsel-sheet.ap-bsheet .ap-page>.ap-list>button{min-height:0}
 .ap-bsheet:has(.ap-note-top) .ap-body>.ap-list:not(.ap-top),.ap-bsheet:has(.ap-note-top) .ap-page>.ap-list{grid-auto-rows:58px}
 .ap-bsheet .ap-page>.ap-list:has(.ap-sq),.ap-bsheet .ap-page>.ap-list:has(.ap-th2){grid-auto-rows:52px}
 .ap-bsheet .ap-ic{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:10px;background:var(--ej-so);color:var(--ej-ik)}
+/* v5.9.62 — tombol dan pilihan timeframe polos: tanpa pinggiran, tanpa bayangan/kilap, bentuk rata */
+html[data-mode]:not(#a):not(#b) :is(.tp-act,.tp-kind,.t6-more,.header-icon,.account-switcher,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.tp-fx){border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background-image:none!important;background-color:var(--ej-so)!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-fx button,.ct-chip,.tp-kind .k-thumb){border:0!important;box-shadow:none!important;backdrop-filter:none!important;background-image:none}
+html[data-mode]:not(#a):not(#b) .tp-fx button::before{display:none!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-fx,.ct-tf,.chart-tools) button:not(.on):not(.ct-pill){background:transparent!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-fx button.on,.ct-chip.on){background:var(--ej-pr)!important;color:var(--onacc)!important;font-weight:600!important}
+html[data-mode]:not(#a):not(#b) .tp-fx button,html[data-mode]:not(#a):not(#b) .ct-chip{font-weight:500!important}
+html[data-mode]:not(#a):not(#b) :is(.tp-kind .k-thumb,.ct-thumb){background:var(--ej-sf)!important}
+/* ===== v5.9.63 — Tambah posisi satu gaya: kolom, tombol pilihan, kartu dan tombol aksi senada ===== */
+html .add-trade{display:grid;gap:12px;--at-h:40px;--at-r:10px}
+html .add-trade>*{margin:0!important;min-width:0}
+html .add-trade .form-grid{gap:12px 10px!important}
+html .add-trade label{display:grid;gap:5px;margin:0;font-size:12px!important;font-weight:500;color:var(--ej-ik);letter-spacing:0;text-transform:none}
+html .add-trade label>span:first-child,html .add-trade .at-lbl{opacity:1}
+html .add-trade .at-lbl{margin:0!important;font-size:12px!important;font-weight:500;color:var(--ej-ik)}
+html .add-trade :is(input,select,textarea,.tsel,.dfield,button.tsel,button.dfield){box-sizing:border-box;min-height:var(--at-h);height:var(--at-h);padding:0 12px;border:1px solid var(--ej-bd)!important;border-radius:var(--at-r)!important;background:var(--ej-sf)!important;box-shadow:none!important;color:var(--ej-ik);font:400 14px/1.2 var(--font)!important;letter-spacing:0!important;font-variant-numeric:tabular-nums}
+html .add-trade textarea{height:auto;min-height:72px;padding:10px 12px;resize:none;line-height:1.4!important}
+html .add-trade :is(input,textarea)::placeholder{color:var(--ej-ik);opacity:.38}
+html .add-trade :is(input,select,textarea,.tsel,.dfield):focus{outline:0;border-color:var(--ej-pr)!important}
+/* tombol pilihan: Long/Short, status, cara keluar = satu bentuk */
+html .add-trade .direction{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0;background:none;border:0}
+html .add-trade :is(.direction button,.at-seg button,.at-chips button){box-sizing:border-box;min-height:var(--at-h);height:var(--at-h);padding:0 10px;border:1px solid var(--ej-bd)!important;border-radius:var(--at-r)!important;background:var(--ej-sf)!important;box-shadow:none!important;color:var(--ej-ik);font:500 14px/1 var(--font)!important;letter-spacing:0;opacity:1;transform:none}
+html .add-trade .at-seg{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0;border-radius:0;background:none}
+html .add-trade .at-chips{gap:8px}
+html .add-trade .direction button.selected.long{border-color:#16a34a!important;background:rgba(22,163,74,.10)!important;color:#15803d;font-weight:600!important}
+html .add-trade .direction button.selected.short{border-color:#dc2626!important;background:rgba(220,38,38,.09)!important;color:#b91c1c;font-weight:600!important}
+html .add-trade :is(.at-seg button.on,.at-chips button.on){border-color:var(--ej-pr)!important;background:var(--ej-so)!important;color:var(--ej-ik);font-weight:600!important}
+/* hasil hitung dan blok tutup: datar, tanpa kartu bergaris */
+html .add-trade .calc-result{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;padding:12px 14px;border:0;border-radius:var(--at-r);background:var(--ej-so)}
+html .add-trade .calc-result span,html .add-trade .at-adjr span{display:block;margin:0 0 2px;font-size:11px;font-weight:500;letter-spacing:0;text-transform:none;opacity:.62}
+html .add-trade .calc-result strong,html .add-trade .at-adjr strong{font-size:16px;font-weight:600}
+html .add-trade .at-close{display:grid;gap:12px;margin:0;padding:12px 0 0;border:0;border-top:1px solid var(--ej-bd);border-radius:0;background:none}
+html .add-trade .close-preview{border-radius:var(--at-r);background:var(--ej-so);padding:10px 14px}
+html .add-trade .at-adj{margin:0;padding:14px 16px;border-radius:var(--at-r);gap:12px}
+/* screenshot dan tombol aksi */
+html .add-trade .at-add{box-sizing:border-box;min-height:var(--at-h);border:1px dashed var(--ej-bd);border-radius:var(--at-r);font:500 14px var(--font);color:var(--ej-ik)}
+html .add-trade .at-shots>div{border-radius:var(--at-r)}
+html .add-trade .fs-actions{gap:12px;margin:4px 0 0!important}
+html .add-trade .fs-actions button{box-sizing:border-box;min-height:44px;height:44px;border-radius:var(--at-r)!important;font:600 14px var(--font)!important;box-shadow:none!important;gap:8px;padding:0 12px}
+html .add-trade .fs-actions .secondary-btn{border:1px solid var(--ej-bd)!important;background:var(--ej-sf)!important;color:var(--ej-ik)}
+html .add-trade .fs-actions .primary-btn{border:1px solid transparent!important;background:var(--ej-pr)!important;background-image:none!important;color:var(--onacc,#fff)!important}
+/* judul pop-up */
+html .modal.wide-modal.fs .modal-head{margin-bottom:12px}
+html .modal.wide-modal.fs .modal-head .eyebrow{margin:0 0 2px;font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;opacity:.62}
+html .modal.wide-modal.fs .modal-head h2{margin:0;font-size:21px;font-weight:600;letter-spacing:0}
+html .modal.wide-modal.fs .modal-head .icon-btn{width:38px;height:38px;border:1px solid var(--ej-bd)!important;border-radius:var(--at-r,12px)!important;box-shadow:none!important;background:var(--ej-sf)!important}
+html .add-trade .direction:not(#x){display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0;border:0;background:none;margin:0}
+html .add-trade .direction button:not(#x){width:100%}
+html .add-trade textarea:not(#x){height:auto;min-height:72px;padding:10px 12px;resize:none;line-height:1.4!important}
+html .add-trade .fs-actions button:not(#x){box-shadow:none!important}
+html .add-trade .fs-actions .primary-btn:not(#x){background:var(--ej-pr)!important;border-color:transparent!important}
