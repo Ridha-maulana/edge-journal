@@ -567,3 +567,9 @@ html[data-mode]:not(#a):not(#b) :is(button.pill.active){background-image:none!im
 html[data-mode]:not(#a):not(#b) :is(button.pill.active) *{color:inherit!important;-webkit-text-fill-color:inherit!important}
 /* profil/tools: kartu dalam panel tanpa border ganda */
 html[data-mode]:not(#a):not(#b) .acc-panel :is(.tool-card,.acct-inline,.acct-inline-body,.cloud-card,.button-row){border:0!important;box-shadow:none!important;background:transparent!important}
+/* v5.9.69 semua halaman: tidak ada penutup solid di belakang bilah status (isi menggulir lewat di belakang jam/baterai, sama seperti Tools & Profil) */
+html[data-edge][data-sc="1"] body::before{display:none!important}
+/* tombol nonaktif (Risk calculator: Pakai lot ini, Buat posisi) tetap berborder tipis yang jelas */
+html[data-mode]:not(#a):not(#b) .rc-btns button{border:1px solid color-mix(in srgb,currentColor 55%,transparent)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) .rc-btns .primary-btn{border-color:var(--ej-pr)!important}
+html[data-mode]:not(#a):not(#b) .rc-btns button:disabled{opacity:.6!important}
