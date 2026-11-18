@@ -578,3 +578,7 @@ html[data-mode]:not(#a):not(#b) .week-head.gj-main.lv-y{background:var(--ej-sf)!
 html[data-fxk="1"][data-mode]:not(#a):not(#b) .week-head.gj-main.lv-y{background:radial-gradient(120% 90% at 0% 0%,var(--fx-s55),transparent 60%),var(--ej-sf)!important}
 html[data-mode]:not(#a):not(#b) .week-head.gj-main.lv-y>div strong,html[data-mode]:not(#a):not(#b) .week-head.gj-main.lv-y>svg{color:inherit!important}
 html[data-mode]:not(#a):not(#b) .ht-dcard{background:var(--ej-sf)!important;border:1px solid color-mix(in srgb,currentColor 20%,transparent)!important;box-shadow:none!important;color:var(--ej-ik)!important}
+/* v5.9.71 timeframe (1H..1Y) di Template 2 / klasik: sama dengan tombol candle/line (wadah netral + penanda netral) */
+html[data-mode]:not(#a):not(#b) .ct-tf{padding:3px;gap:2px;border:1px solid color-mix(in srgb,currentColor 30%,transparent)!important;border-radius:999px;background:color-mix(in srgb,currentColor 8%,transparent)!important;align-items:center}
+html[data-mode]:not(#a):not(#b) .ct-tf .ct-chip{border-radius:999px!important;background:transparent!important;background-image:none!important;color:inherit!important;box-shadow:none!important;min-height:28px;font-weight:500!important}
+html[data-mode]:not(#a):not(#b) .ct-tf .ct-chip.on{background:color-mix(in srgb,currentColor 18%,transparent)!important;color:inherit!important;font-weight:600!important}
