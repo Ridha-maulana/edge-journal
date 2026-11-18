@@ -232,12 +232,12 @@ function DrillDown({ account, trades, rangeText }) {
     }
 
     const DD_ICO = ['CalendarDays', 'CalendarRange', 'Calendar', 'Clock', 'Trophy'];
-    const crumbs = DD_LV.map((l, i) => h('button', { key: l, type: 'button', className: 'dd-crumb' + (i === lv ? ' on' : crumbOn(i) ? ' seen' : ''), disabled: !crumbOn(i), 'aria-label': l, title: l, onClick: () => crumbOn(i) && setLevel(i) }, h(Icon, { name: DD_ICO[i], size: 21 })));
-    crumbs.push(h('button', { key: 'lock', type: 'button', className: 'dd-lock' + (locked ? ' on' : ''), 'aria-label': locked ? 'Terkunci' : 'Kunci', title: locked ? 'Terkunci' : 'Kunci', onClick: () => setLocked(v => !v), 'aria-pressed': locked }, h(Icon, { name: locked ? 'LockKeyhole' : 'LockKeyholeOpen', size: 21 })));
+    const crumbs = DD_LV.map((l, i) => h('button', { key: l, type: 'button', className: 'dd-crumb' + (i === lv ? ' on' : crumbOn(i) ? ' seen' : ''), disabled: !crumbOn(i), 'aria-label': l, title: l, onClick: () => crumbOn(i) && setLevel(i) }, h(Icon, { name: DD_ICO[i], size: 15 }), h('span', null, l)));
+    const lockBtn = h('button', { key: 'lock', type: 'button', className: 'dd-lock' + (locked ? ' on' : ''), 'aria-label': locked ? 'Terkunci' : 'Kunci', title: locked ? 'Terkunci' : 'Kunci', onClick: () => setLocked(v => !v), 'aria-pressed': locked }, h(Icon, { name: locked ? 'LockKeyhole' : 'LockKeyholeOpen', size: 15 }), h('span', null, locked ? 'Terkunci' : 'Kunci'));
 
     return h('div', { className: 'pe-card dd', ref: cardRef },
+        h('div', { className: 'dd-top' }, h('h3', { className: 'dd-title' }, title, ' ', h('small', null, `(${small})`)), lockBtn),
         h('div', { className: 'dd-crumbs' }, crumbs),
-        h('h3', { className: 'dd-title' }, title, ' ', h('small', null, `(${small})`)),
         hl, body,
         h('div', { className: 'dd-nav' },
             h('button', { type: 'button', className: 'dd-btn back', disabled: lv === 0, onClick: goBack }, lv === 0 ? '← Kembali' : `← Kembali ke ${DD_LV[lv - 1]}`),

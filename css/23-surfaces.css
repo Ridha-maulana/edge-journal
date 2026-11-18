@@ -582,3 +582,21 @@ html[data-mode]:not(#a):not(#b) .ht-dcard{background:var(--ej-sf)!important;bord
 html[data-mode]:not(#a):not(#b) .ct-tf{padding:3px;gap:2px;border:1px solid color-mix(in srgb,currentColor 30%,transparent)!important;border-radius:999px;background:color-mix(in srgb,currentColor 8%,transparent)!important;align-items:center}
 html[data-mode]:not(#a):not(#b) .ct-tf .ct-chip{border-radius:999px!important;background:transparent!important;background-image:none!important;color:inherit!important;box-shadow:none!important;min-height:28px;font-weight:500!important}
 html[data-mode]:not(#a):not(#b) .ct-tf .ct-chip.on{background:color-mix(in srgb,currentColor 18%,transparent)!important;color:inherit!important;font-weight:600!important}
+/* v5.9.72 Advanced Statistics: kalender = gaya halaman Kalender; pilihan Performa/Growth = tulisan + ikon (tanpa kartu); "terbaik" = tulisan info */
+html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid){background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important;padding:4px 2px!important}
+html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell{border-radius:14px!important;background:var(--ej-sf)!important;box-shadow:none!important;border:1px solid color-mix(in srgb,currentColor 22%,transparent)!important}
+html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.empty{background:transparent!important;border-color:color-mix(in srgb,currentColor 8%,transparent)!important}
+html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.pos,html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.win{background:color-mix(in srgb,#34d399 16%,var(--ej-sf))!important;border-color:color-mix(in srgb,#34d399 70%,transparent)!important}
+html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.neg,html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.loss{background:color-mix(in srgb,#ff6b81 16%,var(--ej-sf))!important;border-color:color-mix(in srgb,#ff6b81 70%,transparent)!important}
+html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .icon-btn{border:1px solid color-mix(in srgb,currentColor 30%,transparent)!important;background:var(--ej-sf)!important;box-shadow:none!important}
+.dd-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.dd-top .dd-title{margin:0!important}
+html[data-mode]:not(#a):not(#b) .dd-top .dd-lock{display:inline-flex;align-items:center;gap:6px;border:0!important;background:none!important;box-shadow:none!important;color:inherit!important;font:600 13px var(--font,inherit);padding:6px 0!important;height:auto!important;min-height:0;transform:none!important}
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs,.pe-tabs.icon-tabs){display:flex!important;justify-content:space-between;gap:2px;margin:4px 0 16px;border-bottom:1px solid color-mix(in srgb,currentColor 14%,transparent);grid-template-columns:none;flex-wrap:nowrap}
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb,.pe-tabs.icon-tabs button){display:inline-flex;align-items:center;gap:4px;border:0!important;background:none!important;box-shadow:none!important;color:inherit!important;opacity:.5;font:500 12px var(--font,inherit);padding:8px 1px 10px!important;height:auto!important;border-radius:0!important;border-bottom:2px solid transparent!important;margin-bottom:-1px;min-width:0;white-space:nowrap;transform:none!important}
+html[data-mode]:not(#a):not(#b) .pe-tabs.icon-tabs button{font-size:11.5px}
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb.on,.pe-tabs.icon-tabs button.on){opacity:1;font-weight:700;border-bottom-color:currentColor!important}
+html[data-mode]:not(#a):not(#b) .dd-crumbs .dd-crumb.seen{opacity:.8}
+html[data-mode]:not(#a):not(#b) .dd-crumbs .dd-crumb:disabled:not(.on){opacity:.4}
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb,.pe-tabs.icon-tabs button) svg{width:14px;height:14px;flex:none}
+html[data-mode]:not(#a):not(#b) .dd-best,html[data-mode]:not(#a):not(#b) .dd-info{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0 0 14px!important;border-radius:0!important;color:inherit!important;font-size:13.5px!important;opacity:.85}

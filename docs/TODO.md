@@ -484,3 +484,4 @@
 - v5.9.69: penutup solid di belakang bilah status dihapus di semua halaman (sama seperti Tools/Profil); tombol nonaktif Risk calculator berborder tipis.
 - v5.9.70: kartu Tahun My Journal disamakan dengan kartu Bulan/Minggu; kartu tanggal header Template 2 satu warna dengan kartu lain.
 - v5.9.71: timeframe 1H..1Y (Template 2/klasik) disamakan dengan tombol candle/line: wadah netral bergaris tipis, penanda aktif netral.
+- v5.9.72: Advanced Statistics: kalender bergaya halaman Kalender; pilihan Performa per bulan dan Growth jadi tulisan + ikon tanpa kartu; Kunci pindah ke judul; "terbaik"/"Mode Kunci" jadi tulisan info.
