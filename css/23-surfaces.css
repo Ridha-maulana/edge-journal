@@ -634,3 +634,12 @@ html[data-mode]:not(#a):not(#b) .pe-tabs.icon-tabs button svg{width:14px;height:
 .mg .mg-note b{font-size:16px;font-weight:700}
 .mg .mg-note span{font-size:13px;opacity:.75;white-space:pre-wrap}
 .pe .mg-note.pos,.pe .mg-note.neg{color:inherit}.pe .mg-note.pos b{color:var(--c118)}.pe .mg-note.neg b{color:var(--c119)}
+/* v5.9.74 tanggal kalender lebih kotak; FAB + terbaca; Tambah posisi tanpa efek warna pada kalkulator / Net P&L / pilihan */
+html[data-mode]:not(#a):not(#b) .cal-cell{aspect-ratio:1/1;min-height:0!important;height:auto;padding:3px 2px!important;gap:1px!important;align-items:center;justify-content:center;text-align:center;line-height:1.1}
+html[data-mode]:not(#a):not(#b) .cal-cell .cal-day{line-height:1.15}
+html[data-mode]:not(#a):not(#b) .cal-cell b{font-size:10.5px!important;line-height:1.1}
+html[data-mode]:not(#a):not(#b) .cal-cell small{font-size:10px!important;line-height:1.1}
+html[data-mode]:not(#a):not(#b) .fab{background-image:none!important;background-color:var(--ej-pr)!important;border-color:var(--ej-pr)!important;color:var(--onacc)!important;-webkit-text-fill-color:var(--onacc)!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) .fab svg{color:var(--onacc)!important;stroke:currentColor!important;opacity:1!important}
+html[data-mode]:not(#a):not(#b) :is(.add-trade .calc-result,.add-trade .close-preview){background:var(--ej-sf)!important;background-image:none!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) :is(.add-trade .at-seg button.on,.add-trade .at-chips button.on){background:var(--ej-sf)!important;background-image:none!important;border:1.5px solid var(--ej-pr)!important;box-shadow:none!important;font-weight:700}
