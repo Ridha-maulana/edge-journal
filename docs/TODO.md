@@ -488,3 +488,4 @@
 - v5.9.73: kalender Advanced Statistics tetap kartu, kalender header jadi kartu; Monthly gain didesain ulang (statistik 2x2, gauge, pilih bulan, ringkasan); tab Performa/Growth lebih besar dengan garis aktif tebal; teks "terbaik" lebih jelas.
 - v5.9.74: tanggal kalender kembali kotak; tombol + My Journal terbaca; Tambah posisi: kalkulator, Net P&L, Terbuka/Sudah ditutup, TP/SL/BE/Manual tanpa efek warna.
 - v5.9.75: tanggal kalender sedikit lebih tinggi dari lebar (rasio ±1.05); sel kosong tampil kotak redup; berlaku di Advanced Statistics dan kalender header.
+- v5.9.76: sudut kartu dalam dibuat konsentris dengan kartu luar di semua halaman (js/lib/concentric.js): radius dalam = radius luar - jarak tepi, min 6px.
