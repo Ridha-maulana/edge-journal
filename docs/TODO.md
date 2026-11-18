@@ -482,3 +482,4 @@
 - v5.9.67: Border tipis 1px (tegas, tanpa bayangan) di tombol, kolom isi, dan kartu untuk My Journal, Tambah posisi, Tools, Profil; teks tombol hijau (Simpan posisi/trade, pil aktif) dipaksa putih supaya terbaca.
 - v5.9.68: teks tombol utama (Simpan posisi/trade) dan pil aktif My Journal mengikuti kontras (terang=putih, gelap=hitam), isi solid; border ganda kartu dalam panel Profil dihapus.
 - v5.9.69: penutup solid di belakang bilah status dihapus di semua halaman (sama seperti Tools/Profil); tombol nonaktif Risk calculator berborder tipis.
+- v5.9.70: kartu Tahun My Journal disamakan dengan kartu Bulan/Minggu; kartu tanggal header Template 2 satu warna dengan kartu lain.

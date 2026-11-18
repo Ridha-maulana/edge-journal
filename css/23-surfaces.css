@@ -573,3 +573,8 @@ html[data-edge][data-sc="1"] body::before{display:none!important}
 html[data-mode]:not(#a):not(#b) .rc-btns button{border:1px solid color-mix(in srgb,currentColor 55%,transparent)!important;box-shadow:none!important}
 html[data-mode]:not(#a):not(#b) .rc-btns .primary-btn{border-color:var(--ej-pr)!important}
 html[data-mode]:not(#a):not(#b) .rc-btns button:disabled{opacity:.6!important}
+/* v5.9.70 kartu Tahun (My Journal) = sama dengan kartu Bulan/Minggu/posisi; kartu tanggal header = satu warna dengan halaman */
+html[data-mode]:not(#a):not(#b) .week-head.gj-main.lv-y{background:var(--ej-sf)!important;border:1px solid color-mix(in srgb,currentColor 20%,transparent)!important;box-shadow:none!important}
+html[data-fxk="1"][data-mode]:not(#a):not(#b) .week-head.gj-main.lv-y{background:radial-gradient(120% 90% at 0% 0%,var(--fx-s55),transparent 60%),var(--ej-sf)!important}
+html[data-mode]:not(#a):not(#b) .week-head.gj-main.lv-y>div strong,html[data-mode]:not(#a):not(#b) .week-head.gj-main.lv-y>svg{color:inherit!important}
+html[data-mode]:not(#a):not(#b) .ht-dcard{background:var(--ej-sf)!important;border:1px solid color-mix(in srgb,currentColor 20%,transparent)!important;box-shadow:none!important;color:var(--ej-ik)!important}
