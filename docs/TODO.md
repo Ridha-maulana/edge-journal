@@ -489,3 +489,4 @@
 - v5.9.74: tanggal kalender kembali kotak; tombol + My Journal terbaca; Tambah posisi: kalkulator, Net P&L, Terbuka/Sudah ditutup, TP/SL/BE/Manual tanpa efek warna.
 - v5.9.75: tanggal kalender sedikit lebih tinggi dari lebar (rasio ±1.05); sel kosong tampil kotak redup; berlaku di Advanced Statistics dan kalender header.
 - v5.9.76: sudut kartu dalam dibuat konsentris dengan kartu luar di semua halaman (js/lib/concentric.js): radius dalam = radius luar - jarak tepi, min 6px.
+- v5.9.77: Growth/Performa: menu ikon di atas tulisan; judul + tombol grafik Growth di baris atas; Daily P&L jadi urutan pertama; tombol Kembali/Selanjutnya lebih kecil.

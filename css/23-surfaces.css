@@ -645,3 +645,11 @@ html[data-mode]:not(#a):not(#b) :is(.add-trade .calc-result,.add-trade .close-pr
 html[data-mode]:not(#a):not(#b) :is(.add-trade .at-seg button.on,.add-trade .at-chips button.on){background:var(--ej-sf)!important;background-image:none!important;border:1.5px solid var(--ej-pr)!important;box-shadow:none!important;font-weight:700}
 /* v5.9.75 sel kosong tampil kotak seperti tanggal */
 html[data-mode]:not(#a):not(#b) .cal-cell.empty{background:var(--ej-sf)!important;background-image:none!important;border:1px solid color-mix(in srgb,currentColor 12%,transparent)!important;opacity:.55;box-shadow:none!important}
+/* v5.9.77 tab ikon di atas tulisan, judul Growth di atas, tombol Kembali/Selanjutnya lebih kecil */
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs,.pe-tabs.icon-tabs){gap:0}
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb,.pe-tabs.icon-tabs button){flex:1 1 0;flex-direction:column;justify-content:flex-start;gap:5px;font-size:12px;padding:6px 0 9px!important;text-align:center;line-height:1.15}
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb,.pe-tabs.icon-tabs button) svg{width:20px;height:20px}
+html[data-mode]:not(#a):not(#b) .pe-card .pe-kw{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+html[data-mode]:not(#a):not(#b) .pe-card .pe-kw .pe-sub{margin:0;font-size:16px;font-weight:700;line-height:1.25;color:inherit;opacity:1}
+html[data-mode]:not(#a):not(#b) .pe-card .pe-kw .tp-kind{transform:scale(.88);transform-origin:right center}
+html[data-mode]:not(#a):not(#b) .dd-nav .dd-btn{font-size:12.5px!important;font-weight:600!important;padding:8px 12px!important;gap:5px}
