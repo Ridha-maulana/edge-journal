@@ -652,4 +652,8 @@ html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb,.pe-tabs.icon-tabs butt
 html[data-mode]:not(#a):not(#b) .pe-card .pe-kw{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
 html[data-mode]:not(#a):not(#b) .pe-card .pe-kw .pe-sub{margin:0;font-size:16px;font-weight:700;line-height:1.25;color:inherit;opacity:1}
 html[data-mode]:not(#a):not(#b) .pe-card .pe-kw .tp-kind{transform:scale(.88);transform-origin:right center}
-html[data-mode]:not(#a):not(#b) .dd-nav .dd-btn{font-size:12.5px!important;font-weight:600!important;padding:8px 12px!important;gap:5px}
+html[data-mode]:not(#a):not(#b) .dd-nav{align-items:center;justify-content:space-between;gap:12px}
+html[data-mode]:not(#a):not(#b) .dd-nav .dd-btn{width:44px;height:44px;padding:0!important;border:0!important;border-radius:14px!important;justify-content:center;background:color-mix(in srgb,currentColor 14%,transparent)!important;color:inherit!important;box-shadow:none!important}
+html[data-mode]:not(#a):not(#b) .dd-nav .dd-btn:disabled{opacity:.35}
+html[data-mode]:not(#a):not(#b) .dd-nav .dd-btn svg{width:22px;height:22px}
+html[data-mode]:not(#a):not(#b) .dd-nav .dd-step{font-size:15px;font-weight:700;opacity:.55;font-variant-numeric:tabular-nums}
