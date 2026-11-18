@@ -4,7 +4,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const cur = account.currency;
     const fm = n => money(n, cur);
     const sg = n => `${n > 0 ? '+' : ''}${fm(n)}`;
-    const [ct, setCt] = useState('growth'), kctl = useTplChart('line');
+    const [ct, setCt] = useState('daily'), kctl = useTplChart('line');
     const [showDet, setShowDet] = useState(false);
     const nowW = wib(new Date());
     const year = view.y, mSel = view.m;
