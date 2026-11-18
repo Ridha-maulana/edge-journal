@@ -487,3 +487,4 @@
 - v5.9.72: Advanced Statistics: kalender bergaya halaman Kalender; pilihan Performa per bulan dan Growth jadi tulisan + ikon tanpa kartu; Kunci pindah ke judul; "terbaik"/"Mode Kunci" jadi tulisan info.
 - v5.9.73: kalender Advanced Statistics tetap kartu, kalender header jadi kartu; Monthly gain didesain ulang (statistik 2x2, gauge, pilih bulan, ringkasan); tab Performa/Growth lebih besar dengan garis aktif tebal; teks "terbaik" lebih jelas.
 - v5.9.74: tanggal kalender kembali kotak; tombol + My Journal terbaca; Tambah posisi: kalkulator, Net P&L, Terbuka/Sudah ditutup, TP/SL/BE/Manual tanpa efek warna.
+- v5.9.75: tanggal kalender sedikit lebih tinggi dari lebar (rasio ±1.05); sel kosong tampil kotak redup; berlaku di Advanced Statistics dan kalender header.
