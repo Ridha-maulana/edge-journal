@@ -582,21 +582,55 @@ html[data-mode]:not(#a):not(#b) .ht-dcard{background:var(--ej-sf)!important;bord
 html[data-mode]:not(#a):not(#b) .ct-tf{padding:3px;gap:2px;border:1px solid color-mix(in srgb,currentColor 30%,transparent)!important;border-radius:999px;background:color-mix(in srgb,currentColor 8%,transparent)!important;align-items:center}
 html[data-mode]:not(#a):not(#b) .ct-tf .ct-chip{border-radius:999px!important;background:transparent!important;background-image:none!important;color:inherit!important;box-shadow:none!important;min-height:28px;font-weight:500!important}
 html[data-mode]:not(#a):not(#b) .ct-tf .ct-chip.on{background:color-mix(in srgb,currentColor 18%,transparent)!important;color:inherit!important;font-weight:600!important}
-/* v5.9.72 Advanced Statistics: kalender = gaya halaman Kalender; pilihan Performa/Growth = tulisan + ikon (tanpa kartu); "terbaik" = tulisan info */
-html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid){background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important;padding:4px 2px!important}
-html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell{border-radius:14px!important;background:var(--ej-sf)!important;box-shadow:none!important;border:1px solid color-mix(in srgb,currentColor 22%,transparent)!important}
-html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.empty{background:transparent!important;border-color:color-mix(in srgb,currentColor 8%,transparent)!important}
-html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.pos,html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.win{background:color-mix(in srgb,#34d399 16%,var(--ej-sf))!important;border-color:color-mix(in srgb,#34d399 70%,transparent)!important}
-html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.neg,html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .cal-cell.loss{background:color-mix(in srgb,#ff6b81 16%,var(--ej-sf))!important;border-color:color-mix(in srgb,#ff6b81 70%,transparent)!important}
-html[data-mode]:not(#a):not(#b) .pe-card:has(.cal-grid) .icon-btn{border:1px solid color-mix(in srgb,currentColor 30%,transparent)!important;background:var(--ej-sf)!important;box-shadow:none!important}
+/* v5.9.72 Advanced Statistics: pilihan Performa/Growth = tulisan + ikon (tanpa kartu); "terbaik" = tulisan info */
 .dd-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .dd-top .dd-title{margin:0!important}
 html[data-mode]:not(#a):not(#b) .dd-top .dd-lock{display:inline-flex;align-items:center;gap:6px;border:0!important;background:none!important;box-shadow:none!important;color:inherit!important;font:600 13px var(--font,inherit);padding:6px 0!important;height:auto!important;min-height:0;transform:none!important}
 html[data-mode]:not(#a):not(#b) :is(.dd-crumbs,.pe-tabs.icon-tabs){display:flex!important;justify-content:space-between;gap:2px;margin:4px 0 16px;border-bottom:1px solid color-mix(in srgb,currentColor 14%,transparent);grid-template-columns:none;flex-wrap:nowrap}
-html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb,.pe-tabs.icon-tabs button){display:inline-flex;align-items:center;gap:4px;border:0!important;background:none!important;box-shadow:none!important;color:inherit!important;opacity:.5;font:500 12px var(--font,inherit);padding:8px 1px 10px!important;height:auto!important;border-radius:0!important;border-bottom:2px solid transparent!important;margin-bottom:-1px;min-width:0;white-space:nowrap;transform:none!important}
-html[data-mode]:not(#a):not(#b) .pe-tabs.icon-tabs button{font-size:11.5px}
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb,.pe-tabs.icon-tabs button){display:inline-flex;align-items:center;gap:4px;border:0!important;background:none!important;box-shadow:none!important;color:inherit!important;opacity:.5;font:500 13px var(--font,inherit);padding:8px 1px 10px!important;height:auto!important;border-radius:0!important;border-bottom:2px solid transparent!important;margin-bottom:-1px;min-width:0;white-space:nowrap;transform:none!important}
+html[data-mode]:not(#a):not(#b) .pe-tabs.icon-tabs button{font-size:12px;gap:3px;padding-left:0!important;padding-right:0!important}
 html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb.on,.pe-tabs.icon-tabs button.on){opacity:1;font-weight:700;border-bottom-color:currentColor!important}
 html[data-mode]:not(#a):not(#b) .dd-crumbs .dd-crumb.seen{opacity:.8}
 html[data-mode]:not(#a):not(#b) .dd-crumbs .dd-crumb:disabled:not(.on){opacity:.4}
 html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb,.pe-tabs.icon-tabs button) svg{width:14px;height:14px;flex:none}
-html[data-mode]:not(#a):not(#b) .dd-best,html[data-mode]:not(#a):not(#b) .dd-info{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0 0 14px!important;border-radius:0!important;color:inherit!important;font-size:13.5px!important;opacity:.85}
+html[data-mode]:not(#a):not(#b) .dd-best,html[data-mode]:not(#a):not(#b) .dd-info{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0 0 14px!important;border-radius:0!important;color:inherit!important;font-size:14.5px!important;font-weight:500!important;opacity:1}
+
+html[data-mode]:not(#a):not(#b) :is(.dd-crumbs .dd-crumb.on,.pe-tabs.icon-tabs button.on){border-bottom-width:3px!important}
+html[data-mode]:not(#a):not(#b) .dd-crumbs .dd-crumb svg{width:15px;height:15px}
+html[data-mode]:not(#a):not(#b) .pe-tabs.icon-tabs button svg{width:14px;height:14px}
+/* v5.9.73 Monthly gain (ringkasan + gauge + pilih bulan) */
+.mg .mg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.mg .mg-ttl h3{margin:0;font-size:20px;font-weight:700}
+.mg .mg-ttl p{margin:4px 0 0;font-size:12.5px;opacity:.65}
+.mg .mg-years{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid color-mix(in srgb,currentColor 30%,transparent);border-radius:999px;background:color-mix(in srgb,currentColor 8%,transparent)}
+.mg .mg-years button{width:32px;height:32px;border-radius:50%;border:0;background:color-mix(in srgb,currentColor 10%,transparent);color:inherit;display:grid;place-items:center;padding:0;box-shadow:none}
+.mg .mg-years span{min-width:52px;text-align:center;font-weight:700;font-size:16px}
+.mg .mg-body{display:grid;gap:14px}
+.mg .mg-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mg .mg-stat{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid color-mix(in srgb,currentColor 20%,transparent);border-radius:16px;background:color-mix(in srgb,currentColor 5%,transparent);min-width:0}
+.mg .mg-ic{flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid color-mix(in srgb,currentColor 40%,transparent);display:grid;place-items:center;font-style:normal}
+.mg .mg-stat>div{min-width:0;display:grid;gap:1px}
+.mg .mg-stat span{font-size:12px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mg .mg-stat b{font-size:17px;font-weight:700;white-space:nowrap}
+.mg .mg-gauge{position:relative;width:100%;max-width:300px;margin:0 auto}
+.mg .mg-gauge svg{display:block;width:100%;height:auto}
+.mg .mg-track,.mg .mg-val{fill:none;stroke-width:14;stroke-linecap:round}
+.mg .mg-track{stroke:color-mix(in srgb,currentColor 12%,transparent)}
+.mg .mg-tick{fill:currentColor;opacity:.6;font-size:10px}
+.mg .mg-gv{position:absolute;left:0;right:0;top:34%;display:grid;justify-items:center;gap:2px;text-align:center}
+.mg .mg-gv b{font-size:30px;line-height:1.1;font-weight:700}
+.mg .mg-gv small{font-size:12px;opacity:.7}
+.mg .mg-lbl{margin:16px 0 8px;font-size:13px;opacity:.7}
+.mg .mg-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px;scroll-snap-type:x proximity}
+.mg .mg-row::-webkit-scrollbar{display:none}
+.mg .mg-row button{flex:none;scroll-snap-align:center;min-width:74px;display:grid;gap:3px;justify-items:center;padding:9px 8px;border:1px solid color-mix(in srgb,currentColor 18%,transparent);border-radius:14px;background:transparent;color:inherit;box-shadow:none}
+.mg .mg-row button span{font-size:13px;font-weight:500}
+.mg .mg-row button em{font-style:normal;font-size:11.5px;font-weight:600}
+.mg .mg-row button em.nil{opacity:.4}
+.mg .mg-row button.sel{background:color-mix(in srgb,currentColor 14%,transparent);border-color:color-mix(in srgb,currentColor 65%,transparent)}
+.mg .mg-row button.sel span{font-weight:700}
+.mg .mg-note{margin-top:14px;display:grid;gap:3px;padding:13px 16px;border-radius:14px;background:color-mix(in srgb,currentColor 6%,transparent);border-left:4px solid color-mix(in srgb,currentColor 35%,transparent)}
+.mg .mg-note.pos{border-left-color:#34d399}.mg .mg-note.neg{border-left-color:#ff6b81}
+.mg .mg-note b{font-size:16px;font-weight:700}
+.mg .mg-note span{font-size:13px;opacity:.75;white-space:pre-wrap}
+.pe .mg-note.pos,.pe .mg-note.neg{color:inherit}.pe .mg-note.pos b{color:var(--c118)}.pe .mg-note.neg b{color:var(--c119)}

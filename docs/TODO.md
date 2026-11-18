@@ -485,3 +485,4 @@
 - v5.9.70: kartu Tahun My Journal disamakan dengan kartu Bulan/Minggu; kartu tanggal header Template 2 satu warna dengan kartu lain.
 - v5.9.71: timeframe 1H..1Y (Template 2/klasik) disamakan dengan tombol candle/line: wadah netral bergaris tipis, penanda aktif netral.
 - v5.9.72: Advanced Statistics: kalender bergaya halaman Kalender; pilihan Performa per bulan dan Growth jadi tulisan + ikon tanpa kartu; Kunci pindah ke judul; "terbaik"/"Mode Kunci" jadi tulisan info.
+- v5.9.73: kalender Advanced Statistics tetap kartu, kalender header jadi kartu; Monthly gain didesain ulang (statistik 2x2, gauge, pilih bulan, ringkasan); tab Performa/Growth lebih besar dengan garis aktif tebal; teks "terbaik" lebih jelas.
