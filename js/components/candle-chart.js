@@ -4,7 +4,7 @@
 /* Membentuk kandel ekuitas (P&L kumulatif) dari trade yang sudah urut waktu.
    H1   = satu kandel per jam masuk (trade tunggal = body penuh)
    Minggu = gabungan 5 kandel D1 (Senin-Jumat); Bulan = gabungan kandel minggu dalam satu bulan; Tahun (1Y) = gabungan kandel bulan dalam satu tahun.
-   Sesi = gabungan kandel H1 dalam satu sesi (Asia 07-14, London 14-20, New York 20-07)
+   Sesi = gabungan kandel H1 dalam satu sesi (Asia, London, New York; jam asli kota, otomatis ikut musim)
    D1   = gabungan kandel sesi dalam satu hari trading (mulai 07:00 WIB)
    Penggabungan standar OHLC: open = awal, close = akhir, high/low = ekstrem seluruh langkah. */
 const CANDLE_TFS = [['H1', '1H'], ['SES', '1S'], ['D1', '1D'], ['W1', '1W'], ['M1', '1M'], ['Y1', '1Y']];
@@ -21,7 +21,7 @@ function buildCandles(trades, tf) {
             return;
         const w = wib(d);
         const tday = wib(new Date(d.getTime() - 7 * 3600 * 1000)).day;
-        const si = w.hour >= 7 && w.hour < 14 ? 0 : w.hour >= 14 && w.hour < 20 ? 1 : 2;
+        const si = ({ Asia: 0, Sepi: 0, London: 1, 'New York': 2 })[sesOf(d.getTime())];
         const hh = String(w.hour).padStart(2, '0');
         let k, label, short;
         if (tf === 'H1') {

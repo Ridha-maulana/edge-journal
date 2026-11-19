@@ -8,10 +8,10 @@ const DD_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', '
 const DD_MONF = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 const DD_DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
 const DD_WKND = 'Akhir pekan (Sab–Min)';
-const DD_SCOL = { 'Asia': EJC("#34d399"), 'London': EJC("#6b8dff"), 'New York': EJC("#f5b84b"), 'Overlap': EJC("#9b82ff") };
+const DD_SCOL = { 'Asia': EJC("#34d399"), 'London': EJC("#6b8dff"), 'New York': EJC("#f5b84b"), 'Sepi': EJC("#8a94a6") };
 const DD_LCOL = [EJC("#6b8dff"), EJC("#9b82ff"), EJC("#f5b84b")];   // dot level: bulan (biru), minggu (ungu), hari (kuning) = warna kotak info
 const DD_LV = ['Bulan', 'Minggu', 'Hari', 'Sesi', 'Win/Loss'];
-const DD_LOCK_MSG = ['Menampilkan semua bulan pada periode terpilih', 'Data per nomor minggu dari semua bulan', 'Data per hari dari semua minggu', '4 sesi dengan data agregat dari semua hari', 'Distribusi win/loss agregat dari semua hari'];
+const DD_LOCK_MSG = ['Menampilkan semua bulan pada periode terpilih', 'Data per nomor minggu dari semua bulan', 'Data per hari dari semua minggu', '3 sesi dengan data agregat dari semua hari', 'Distribusi win/loss agregat dari semua hari'];
 const DD_BEST = ['Bulan terbaik', 'Minggu terbaik', 'Hari terbaik', 'Sesi terbaik'];
 const dd2 = n => String(n).padStart(2, '0');
 function ddBuild(trades) {
@@ -24,8 +24,7 @@ function ddBuild(trades) {
             if (!y || m < 0 || m > 11 || !d) return;
             const off = (new Date(y, m, 1).getDay() + 6) % 7;
             const di = (new Date(y, m, d, 12).getDay() + 6) % 7;
-            const ses = SESSIONS.find(s => s.test(w.hour));
-            if (!ses) return;
+            const ses = { name: sesOf(new Date(t.date).getTime()) };
             out.push({ mk: `${y}-${dd2(m + 1)}`, iso, wk: Math.floor((d - 1 + off) / 7) + 1, di: Math.min(di, 5), day: di < 5 ? DD_DAYS[di] : DD_WKND, ses: ses.name, pnl: Number(t.pnl) || 0, pips: pipsOf(t) || 0 });
         } catch (e) { /* tanggal rusak: lewati */ }
     });
@@ -111,7 +110,8 @@ function DrillDown({ account, trades, rangeText }) {
     const mkItem = (key, o, rs) => ({ key, st: ddStat(rs), tags: [], ...o });
     const tg = (rs, kinds) => ddTagList(rs, kinds, mkShort);
     let items = [], title = '', small = '';
-    const sesNames = SESSIONS.map(s => s.name), sesHrs = n => SESSIONS.find(s => s.name === n).hrs + ' WIB';
+    const sesHrs = n => { const r = sesRangeWib(n); const pre = n === 'Sepi' ? 'di luar sesi ' : ''; return r ? pre + r + ' WIB' : (n === 'Sepi' ? 'tidak ada saat ini' : '-'); };
+    const sesNames = SESSIONS.map(s => s.name).filter(n => n !== 'Sepi' || recs.some(r => r.ses === 'Sepi'));
     const dayNames = rs => [...DD_DAYS, ...(rs.some(r => r.day === DD_WKND) ? [DD_WKND] : [])];
     if (lv === 0) {
         // Bulan: berapa minggu, hari, sesi (kotak info) + posisi, WR, %, profit
@@ -239,5 +239,5 @@ function DrillDown({ account, trades, rangeText }) {
         h('div', { className: 'dd-top' }, h('h3', { className: 'dd-title' }, title, ' ', h('small', null, `(${small})`)), lockBtn),
         h('div', { className: 'dd-crumbs' }, crumbs),
         hl, body,
-        h('p', { className: 'pe-note' }, 'Minggu mengikuti baris pada Kalender (Senin–Minggu); hari dihitung dari tanggal entry; sesi dari jam entry (WIB): Asia 07–14, London 14–20, New York 20–04, Overlap 04–07. Persen (%) dihitung dari modal awal, sama seperti Gain dan Monthly gain. Data kartu ini mengikuti Periode di atas dan bulan/tahun yang dipilih di Monthly gain (satu data, bulan tanpa trade tidak ditampilkan). Tombol Kunci menampilkan data gabungan dari semua bulan/minggu/hari pada periode itu.'));
+        h('p', { className: 'pe-note' }, 'Minggu mengikuti baris pada Kalender (Senin–Minggu); hari dihitung dari tanggal entry; sesi dihitung dari jam asli Sydney/Tokyo, London, dan New York (otomatis ikut musim panas/dingin); jam entry tetap WIB. Saat ini: Asia ' + sesRangeWib('Asia') + ', London ' + sesRangeWib('London') + ', New York ' + sesRangeWib('New York') + ' WIB. Persen (%) dihitung dari modal awal, sama seperti Gain dan Monthly gain. Data kartu ini mengikuti Periode di atas dan bulan/tahun yang dipilih di Monthly gain (satu data, bulan tanpa trade tidak ditampilkan). Tombol Kunci menampilkan data gabungan dari semua bulan/minggu/hari pada periode itu.'));
 }
