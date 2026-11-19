@@ -229,7 +229,19 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
         return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, style: hh ? { aspectRatio: `500/${hh}` } : undefined, className: "combo-chart candle-chart" },
             React.createElement("text", { x: W / 2, y: H / 2, textAnchor: "middle", fontSize: "12", fill: EJC("#7d8bab") }, "Belum ada trade pada periode ini"));
     const grid = [0, 1, 2, 3].map(i => lo + (hi - lo) * (i + .5) / 4);
-    const step = Math.max(1, Math.ceil(Math.min(cnt, n) / 5)); // label sumbu X maksimal 5, rata di semua skala (kandel belum penuh: tiap kandel berlabel)
+    // label sumbu X: maksimal 5, jarak antar label sama rata (kandel sedikit: tiap kandel berlabel di bawahnya)
+    const xl = (() => {
+        const vis = []; shown.forEach(c => { const i = candles.indexOf(c), xi = x(i); if (xi > L + 2 && xi < W - AX - 2) vis.push({ c, xi }); });
+        const hw = vis.reduce((m, v) => Math.max(m, String(v.c.short).length), 0) * 3.1 * FS;
+        if (vis.length <= 5) return vis.map(v => ({ c: v.c, tx: Math.max(L + hw, Math.min(W - AX - hw, v.xi)) }));
+        const out = [], used = {};
+        for (let k = 0; k < 5; k++) {
+            const tx = L + hw + k * (plotW - 2 * hw) / 4;
+            let b = vis[0]; vis.forEach(v => { if (Math.abs(v.xi - tx) < Math.abs(b.xi - tx)) b = v; });
+            if (!used[b.c.k]) { used[b.c.k] = 1; out.push({ c: b.c, tx }); }
+        }
+        return out;
+    })();
     const col = c => c.c > c.o ? UP : c.c < c.o ? EJC("#ff6b81") : EJC("#9aa7c5");
     const bw = Math.max(1.4, SW * .62), wk = Math.max(.9, Math.min(1.6, bw * .55));
     return React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, ref: svgRef, style: hh ? { aspectRatio: `500/${hh}` } : undefined, className: "combo-chart candle-chart" + (fixed ? " cc-fixed" : ""), onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerCancel: cancel },
@@ -266,7 +278,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
                 React.createElement("line", { x1: cx, x2: cx, y1: y(c.h), y2: y(c.l), stroke: k, strokeWidth: wk, strokeLinecap: "round" }),
                 React.createElement("rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(1.8, bot - top), rx: bw > 4 ? "1.2" : "0", fill: k }));
         })),
-        shown.map(c => { const i = candles.indexOf(c); return ((n - 1 - i) % step === 0 && x(i) > L + 6 && x(i) < W - AX - 4) ? React.createElement("text", { key: c.k, x: Math.max(String(c.short).length * 3.2 * FS + 1, Math.min(W - AX - String(c.short).length * 3.2 * FS, x(i))), y: H - 8 * FS, textAnchor: "middle", fontSize: String(9.5 * FS), fill: EJC("#7d8bab") }, c.short) : null; }),
+        xl.map(l => React.createElement("text", { key: l.c.k, x: l.tx, y: H - 8 * FS, textAnchor: "middle", fontSize: String(9.5 * FS), fill: EJC("#7d8bab") }, l.c.short)),
         React.createElement("g", { transform: RO !== 1 ? `scale(${RO})` : undefined },
         React.createElement("text", { x: L, y: 13, fontSize: "11.5", fontWeight: "700", fill: EJC("#eef2ff") },
             act.label,
