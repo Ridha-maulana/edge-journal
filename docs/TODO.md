@@ -493,3 +493,4 @@
 - v5.9.78: Kembali/Selanjutnya Performa per bulan jadi tombol kotak ikon panah + penghitung langkah (mis. 2 / 5).
 - v5.9.79: kartu Growth/Performa membuka tab Daily P&L lebih dulu (urutan pertama); jarak sudut kartu grafik beranda (Template 5) sama rata.
 - v5.9.80: jarak dalam kartu grafik beranda dikurangi seperempat (13/15px jadi 10/12px).
+- v5.9.81: tombol Kembali/Selanjutnya dan penghitung 2/5 di Performa per bulan dihapus (pindah lewat ketuk kartu atau tab); sudut kartu baris dibuat 14px.

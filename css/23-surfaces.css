@@ -659,3 +659,5 @@ html[data-mode]:not(#a):not(#b) .dd-nav .dd-btn svg{width:22px;height:22px}
 html[data-mode]:not(#a):not(#b) .dd-nav .dd-step{font-size:15px;font-weight:700;opacity:.55;font-variant-numeric:tabular-nums}
 /* v5.9.79 jarak sudut kartu grafik sama rata (atas, samping, bawah) */
 html[data-mode]:not(#a):not(#b) .tp-card.t6-ch{padding:calc(var(--u)*25.5)!important}
+/* v5.9.81 kartu baris Performa per bulan: sudut tumpul 14px seperti kotak bulan */
+html[data-mode]:not(#a):not(#b) .dd-item{border-radius:14px!important}

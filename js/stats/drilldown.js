@@ -239,9 +239,5 @@ function DrillDown({ account, trades, rangeText }) {
         h('div', { className: 'dd-top' }, h('h3', { className: 'dd-title' }, title, ' ', h('small', null, `(${small})`)), lockBtn),
         h('div', { className: 'dd-crumbs' }, crumbs),
         hl, body,
-        h('div', { className: 'dd-nav' },
-            h('button', { type: 'button', className: 'dd-btn back', disabled: lv === 0, 'aria-label': lv === 0 ? 'Kembali' : `Kembali ke ${DD_LV[lv - 1]}`, title: lv === 0 ? 'Kembali' : `Kembali ke ${DD_LV[lv - 1]}`, onClick: goBack }, h(Icon, { name: 'ChevronLeft', size: 22 })),
-            h('span', { className: 'dd-step', 'aria-live': 'polite' }, `${lv + 1} / ${DD_LV.length}`),
-            h('button', { type: 'button', className: 'dd-btn next', disabled: lv >= 4, 'aria-label': lv >= 4 ? 'Selesai' : `Selanjutnya ke ${DD_LV[lv + 1]}`, title: lv >= 4 ? 'Selesai' : `Selanjutnya ke ${DD_LV[lv + 1]}`, onClick: goNext }, h(Icon, { name: 'ChevronRight', size: 22 }))),
         h('p', { className: 'pe-note' }, 'Minggu mengikuti baris pada Kalender (Senin–Minggu); hari dihitung dari tanggal entry; sesi dari jam entry (WIB): Asia 07–14, London 14–20, New York 20–04, Overlap 04–07. Persen (%) dihitung dari modal awal, sama seperti Gain dan Monthly gain. Data kartu ini mengikuti Periode di atas dan bulan/tahun yang dipilih di Monthly gain (satu data, bulan tanpa trade tidak ditampilkan). Tombol Kunci menampilkan data gabungan dari semua bulan/minggu/hari pada periode itu.'));
 }

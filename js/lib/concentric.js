@@ -25,6 +25,7 @@
         var e = els[i];
         var a = get(e); if (!a) continue;
         if (a.rc.height < 44 || a.rc.width < 100) continue;
+        if (e.classList.contains('dd-item')) continue;
         var o = e.parentElement, A = null;
         while (o && o !== root && o !== document.body) { A = get(o); if (A) break; o = o.parentElement; }
         if (!A) { if (e.dataset.cr) { e.style.removeProperty('border-radius'); delete e.dataset.cr; } continue; }
