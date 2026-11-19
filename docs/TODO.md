@@ -497,3 +497,4 @@
 - v5.9.83: sesi disederhanakan jadi Asia, London, New York (jam London+NY bersamaan dihitung New York, sesuai jam asli NY); grafik 1S 3 candle sesi.
 - v5.9.84: label sumbu X grafik maksimal 5 dan rata di semua skala (1H–1Y); kandel belum penuh tiap kandel berlabel.
 - v5.9.85: label sumbu X grafik tepat 5 dengan jarak rata di 1H/1S/1D/1W/1M/1Y (tidak lagi bertabrakan di sisi kanan).
+- v5.9.86: label sumbu X grafik garis (Total P&L) rata: maks 5, titik awal dilewati, label terakhir tidak lagi tebal/terdorong.

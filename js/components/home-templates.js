@@ -179,9 +179,16 @@ function T2Area({ pts, fit }) {
     const P = pts.map((p, i) => [x(i), y(p.v)]), ln = smoothPath(P), last = P[P.length - 1], first = P[0];
     const area = `${ln} L${last[0]},${y(Math.max(nz.lo, 0))} L${first[0]},${y(Math.max(nz.lo, 0))} Z`;
     const lastV = pts[n - 1].v;
-    const ix = n > 4 ? [0, .25, .5, .75, 1].map(f => Math.round((n - 1) * f)) : pts.map((_, i) => i), lab = ix.filter((v, i) => ix.indexOf(v) === i && pts[v].lb);
-    const cand = lab.map(i => { const w = pts[i].lb.length * 12.6 + 14, a = i === n - 1 ? "end" : i === 0 ? "start" : "middle", cx = Math.min(Math.max(x(i), L + 20), W - R - 22); return { i, a, x: cx, l: a === "end" ? cx - w : a === "start" ? cx : cx - w / 2, r: a === "end" ? cx : a === "start" ? cx + w : cx + w / 2 }; });
-    const xl = []; [cand[cand.length - 1]].concat(cand.slice(0, -1)).forEach(o => { if (o && !xl.some(q => o.l < q.r && o.r > q.l)) xl.push(o); });
+    // label sumbu X: maksimal 5, jarak sama rata (kurang dari itu bila teks tidak muat); titik awal (tanpa label) dilewati
+    const lp = []; pts.forEach((p, k) => { if (p.lb) lp.push(k); });
+    const mw = lp.reduce((m, k) => Math.max(m, pts[k].lb.length), 0) * 12.6 + 16, hw = mw / 2 - 6, x0 = L + hw, x1 = W - R - 8 - hw;
+    const nl = Math.max(1, Math.min(5, lp.length, Math.floor((x1 - x0) / mw) + 1));
+    const xl = [], seen = {};
+    if (lp.length <= nl) lp.forEach(k => { xl.push({ i: k, a: "middle", x: Math.min(Math.max(x(k), x0), x1) }); });
+    else for (let m = 0; m < nl; m++) {
+        const tx = nl > 1 ? x0 + m * (x1 - x0) / (nl - 1) : x1; let b = lp[0]; lp.forEach(k => { if (Math.abs(x(k) - tx) < Math.abs(x(b) - tx)) b = k; });
+        if (!seen[b]) { seen[b] = 1; xl.push({ i: b, a: "middle", x: tx }); }
+    }
     return tpE("svg", { viewBox: `0 0 ${W} ${H}`, className: "t2-ch", role: "img", "aria-label": "Grafik total P&L" },
         tpE("defs", null, tpE("linearGradient", { id: "t2g", x1: "0", x2: "0", y1: "0", y2: "1" }, tpE("stop", { offset: "0", stopColor: "var(--ej-pr)", stopOpacity: ".32" }), tpE("stop", { offset: "1", stopColor: "var(--ej-pr)", stopOpacity: ".02" }))),
         nz.ticks.map((v, i) => tpE("g", { key: i }, tpE("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), className: v === 0 ? "g-a" : "g-l" }), tpE("text", { x: L - 12, y: y(v) + 6, textAnchor: "end", className: "g-t" }, tpS(v) + Math.abs(v).toFixed(v % 1 ? 1 : 0)))),
@@ -189,7 +196,7 @@ function T2Area({ pts, fit }) {
         tpE("path", { d: ln, fill: "none", stroke: "var(--ej-pr)", strokeWidth: "3.6", strokeLinecap: "round" }),
         tpE("circle", { cx: last[0], cy: last[1], r: 7, fill: "var(--ej-pr)", stroke: "var(--ej-sf)", strokeWidth: "2.5" }),
         tpE("g", { transform: `translate(${Math.min(last[0] - 56, W - 118)},${last[1] - 54})` }, tpE("rect", { width: 112, height: 38, rx: 11, fill: "var(--ej-pr)" }), tpE("text", { x: 56, y: 27, textAnchor: "middle", className: "g-b2", style: { fill: 'var(--onacc)' } }, tpS(lastV) + Math.abs(lastV).toFixed(2))),
-        xl.map(o => tpE("text", { key: 'x' + o.i, x: o.x, y: H - 8, textAnchor: o.a, className: "g-t", style: o.i === n - 1 ? { fontWeight: 700, fill: 'var(--ej-ik)' } : null }, pts[o.i].lb)));
+        xl.map(o => tpE("text", { key: 'x' + o.i, x: o.x, y: H - 8, textAnchor: o.a, className: "g-t" }, pts[o.i].lb)));
 }
 function HomeT2({ d }) {
     const ctl = useTplChart('line'), c = d.cur, fit = useTplFit(120, 460);
