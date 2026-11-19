@@ -495,3 +495,4 @@
 - v5.9.80: jarak dalam kartu grafik beranda dikurangi seperempat (13/15px jadi 10/12px).
 - v5.9.81: tombol Kembali/Selanjutnya dan penghitung 2/5 di Performa per bulan dihapus (pindah lewat ketuk kartu atau tab); sudut kartu baris dibuat 14px.
 - v5.9.83: sesi disederhanakan jadi Asia, London, New York (jam London+NY bersamaan dihitung New York, sesuai jam asli NY); grafik 1S 3 candle sesi.
+- v5.9.84: label sumbu X grafik maksimal 5 dan rata di semua skala (1H–1Y); kandel belum penuh tiap kandel berlabel.
