@@ -71,10 +71,10 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => { const xs = filtered.filter(t => new Date(t.date).toLocaleDateString('en-US', { weekday: 'short' }) === day); return { day, count: xs.length, wins: xs.filter(t => t.pnl > 0).length, losses: xs.filter(t => t.pnl < 0).length, pnl: xs.reduce((a, t) => a + (Number(t.pnl) || 0), 0) }; }).filter(x => x.count).sort((a, b) => b.pnl - a.pnl);
     const cdH = account.capitalHistory || [];
     const depS = cdH.filter(h => h.type !== 'withdraw').reduce((a, h) => a + (Number(h.amount) || 0), 0), wdS = cdH.filter(h => h.type === 'withdraw').reduce((a, h) => a + (Number(h.amount) || 0), 0);
-    const startBal = Math.max((account.balance || 0) - depS + wdS, 1);
+    const startBal = Math.max((account.balance || 0) - depS + wdS, 1), capBal = Math.max(account.balance || 0, 1); /* startBal = tampilan Saldo Awal; capBal = dasar semua % (modal sekarang) */
     const activeDays = new Set(filtered.map(t => dateOnly(t.date))).size;
-    const growthPct = total / startBal * 100;
-    const cs = filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    const growthPct = pctSum(account, filtered); /* jumlah % tiap posisi terhadap modal pada tanggalnya */
+    const cs = withPct(account, filtered).sort((a, b) => new Date(a.date) - new Date(b.date));
     let cr = 0;
     const cv = [0, ...cs.map(t => (cr += Number(t.pnl) || 0))];
     const clo = Math.min(...cv), chi = Math.max(...cv), csp = (chi - clo) || 1;
@@ -82,8 +82,8 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     const cpts = cv.map((v, i) => `${cn === 1 ? 0 : i / (cn - 1) * 500},${12 + (chi - v) / csp * 100}`);
     const cy0 = 12 + (chi - 0) / csp * 100;
     const ccol = cr >= 0 ? EJC("#34d399") : EJC("#ff6b81");
-    const mm = {};
-    cs.forEach(t => { const k = dateOnly(t.date).slice(0, 7); mm[k] = (mm[k] || 0) + (Number(t.pnl) || 0); });
+    const mm = {}, mmP = {};
+    cs.forEach(t => { const k = dateOnly(t.date).slice(0, 7); mm[k] = (mm[k] || 0) + (Number(t.pnl) || 0); mmP[k] = (mmP[k] || 0) + (t.pct || 0); });
     const mKs = Object.keys(mm);
     const bestMk = mKs.length ? mKs.reduce((a, b) => mm[b] > mm[a] ? b : a) : null;
     const MS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
@@ -93,14 +93,14 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     const rr0 = cs.map(t => { const r = riskFor(t.entry, t.sl, t.lots, t.symbol), w = rewardFor(t.entry, t.tp, t.lots, t.symbol); return r && w ? w / r : null; }).filter(Boolean);
     const avgRR0 = rr0.length ? rr0.reduce((a, b) => a + b, 0) / rr0.length : null;
     const pips0 = cs.reduce((a, t) => a + pipsOf(t), 0);
-    const dm0 = {};
-    cs.forEach(t => { const k = dateOnly(t.date); dm0[k] = (dm0[k] || 0) + (Number(t.pnl) || 0); });
+    const dm0 = {}, dmP = {};
+    cs.forEach(t => { const k = dateOnly(t.date); dm0[k] = (dm0[k] || 0) + (Number(t.pnl) || 0); dmP[k] = (dmP[k] || 0) + (t.pct || 0); });
     const dvals0 = Object.values(dm0);
     const bd0 = dvals0.length ? Math.max(...dvals0) : 0;
     const cLabels = ['Awal', ...cs.map(t => new Date(t.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }))];
     const sgn = v => v > 0.005 ? '+' : '';
     const heroRecs = ddBuild(filtered), heroFx = Object.assign(ddStat(heroRecs), { years: new Set(heroRecs.map(r => r.iso.slice(0, 4))).size, months: new Set(heroRecs.map(r => r.mk)).size });   // sama dengan kartu Performa per bulan: tahun, bulan, minggu, hari, sesi, posisi
-    const bestTxt = bestMk ? `${MS[Number(bestMk.slice(5, 7)) - 1]} ${mm[bestMk] >= 0 ? '+' : ''}${(mm[bestMk] / startBal * 100).toFixed(1)}%` : '—';
+    const bestTxt = bestMk ? `${MS[Number(bestMk.slice(5, 7)) - 1]} ${mm[bestMk] >= 0 ? '+' : ''}${(mmP[bestMk]).toFixed(1)}%` : '—';
     const ddTxt = maxDd ? `-${(maxDd / (account.balance || 1) * 100).toFixed(1)}%` : '0%';
     const periodTxt = period === 'Custom date range' && customStart && customEnd ? `${fmtLong(customStart)} – ${fmtLong(customEnd)}` : period;
     const periodBlock = React.createElement(React.Fragment, null,
@@ -144,9 +144,9 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
             return;
     } saveShare(); };
     const tplWr = filtered.length ? wins.length / filtered.length : 0;
-    const dayRet = Object.values(dm0).map(v => v / startBal), dayMean = dayRet.length ? dayRet.reduce((a, b) => a + b, 0) / dayRet.length : 0, dayStd = dayRet.length > 1 ? Math.sqrt(dayRet.reduce((a, b) => a + (b - dayMean) ** 2, 0) / (dayRet.length - 1)) : 0;
-    const tplD = homeT ? { acc: account, cur: account.currency, cs, cv, startBal, total, aTotal, aNow, aGrowth, growthPct, activeDays, winRate, pf: pf0, nTrades: filtered.length, avgRR: avgRR0, pips: pips0, bestDay: bd0, bestTxt, bestMonthVal: bestMk ? mm[bestMk] : 0, ddTxt, ddVal: maxDd, heroFx, wins: wins.length, losses: losses.length, bySymbol, dayMap: dm0,
-        trendTxt: account.balance ? `${total >= 0 ? '+' : ''}${((total / account.balance) * 100).toFixed(2)}%` : '0.00%',
+    const dayRet = Object.values(dmP).map(v => v / 100), dayMean = dayRet.length ? dayRet.reduce((a, b) => a + b, 0) / dayRet.length : 0, dayStd = dayRet.length > 1 ? Math.sqrt(dayRet.reduce((a, b) => a + (b - dayMean) ** 2, 0) / (dayRet.length - 1)) : 0;
+    const tplD = homeT ? { acc: account, cur: account.currency, cs, cv, startBal, capBal, total, aTotal, aNow, aGrowth, growthPct, activeDays, winRate, pf: pf0, nTrades: filtered.length, avgRR: avgRR0, pips: pips0, bestDay: bd0, bestTxt, bestMonthVal: bestMk ? mm[bestMk] : 0, ddTxt, ddVal: maxDd, heroFx, wins: wins.length, losses: losses.length, bySymbol, dayMap: dm0,
+        trendTxt: `${growthPct >= 0 ? '+' : ''}${growthPct.toFixed(2)}%`,
         expR: filtered.length && avgRR0 != null ? tplWr * avgRR0 - (1 - tplWr) : null, sharpe: dayStd > 0 && dayRet.length >= 5 ? dayMean / dayStd * Math.sqrt(252) : null,
         onWallet, onOpen: onOpenCandle, onShare: () => setShareOpen(true), onStats: () => setPerformanceView('advanced'), onDna: () => setPerformanceView('dna'), onAccount: () => window.dispatchEvent(new CustomEvent('ej-account')) } : null;
     return React.createElement("section", { className: `performance-page ${performanceView === 'overview' ? 'performance-overview-page' : 'performance-detail-wrap'}` },
@@ -162,7 +162,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
                         React.createElement("span", { className: `trend ${total >= 0 ? 'positive' : 'negative'}` },
                             total >= 0 ? React.createElement(ArrowUpRight, { size: 15 }) : React.createElement(ArrowDownRight, { size: 15 }),
                             " ",
-                            account.balance ? `${total >= 0 ? '+' : ''}${((total / account.balance) * 100).toFixed(2)}%` : '0.00%',
+                            `${growthPct >= 0 ? '+' : ''}${growthPct.toFixed(2)}%`,
                             " in selected period")),
                     React.createElement("div", { className: "hero-account" },
                         React.createElement("span", null, "ACTIVE ACCOUNT"),
@@ -188,12 +188,12 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
                     React.createElement("div", null,
                         React.createElement("span", null, "Hari aktif"),
                         React.createElement("b", null, activeDays))),
-                React.createElement(HeroChart, { startBal: startBal, onOpen: onOpenCandle, trades: cs, hh: heroHH, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
+                React.createElement(HeroChart, { startBal: capBal, onOpen: onOpenCandle, trades: cs, hh: heroHH, line: React.createElement(ComboChart, { key: `${cn}:${cr}`, vals: cv, labels: cLabels, col: ccol, fmt: v => `${v > 0 ? '+' : ''}${money(v, account.currency)}` }) }),
                 React.createElement("div", { className: "combo-legend" },
                     React.createElement("span", null,
                         React.createElement("i", { style: { background: EJC("#34d399") } }),
                         "Bulan terbaik: ",
-                        React.createElement("b", null, bestMk ? `${MS[Number(bestMk.slice(5, 7)) - 1]} ${mm[bestMk] >= 0 ? '+' : ''}${(mm[bestMk] / startBal * 100).toFixed(1)}%` : '—')),
+                        React.createElement("b", null, bestMk ? `${MS[Number(bestMk.slice(5, 7)) - 1]} ${mm[bestMk] >= 0 ? '+' : ''}${(mmP[bestMk]).toFixed(1)}%` : '—')),
                     React.createElement("span", null,
                         React.createElement("i", { style: { background: EJC("#ff6b81") } }),
                         "Drawdown terdalam: ",

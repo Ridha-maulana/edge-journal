@@ -5,14 +5,15 @@ function AccountModal({ inline = false, initialMode = 'manage', accounts, active
     const [editing, setEditing] = useState(false);
     const [nameDraft, setNameDraft] = useState('');
     const [form, setForm] = useState({ name: '', firstDeposit: new Date().toISOString().slice(0, 10), currency: 'USD', balance: '' });
-    const [capital, setCapital] = useState({ type: 'deposit', amount: '', date: new Date().toISOString().slice(0, 10), note: '' });
+    const nowSec = () => isoNow() + ':' + String(new Date().getSeconds()).padStart(2, '0'); /* waktu lokal HP sampai detik */
+    const [capital, setCapital] = useState({ type: 'deposit', amount: '', date: nowSec(), note: '' });
     const set = (k, v) => setForm({ ...form, [k]: v });
     const setCapitalField = (k, v) => setCapital({ ...capital, [k]: v });
     function submit(e) { e.preventDefault(); if (form.name.trim())
         onCreate(form); }
     function submitCapital(e) { e.preventDefault(); if (Number(capital.amount) > 0) {
         onCapital(capital);
-        setCapital({ ...capital, amount: '', note: '' });
+        setCapital({ ...capital, amount: '', note: '', date: nowSec() });
     } }
     function saveName() { const n = nameDraft.trim(); if (!n) {
         notify('Nama akun tidak boleh kosong.');
@@ -90,8 +91,8 @@ function AccountModal({ inline = false, initialMode = 'manage', accounts, active
                             "Jumlah",
                             React.createElement("input", { type: "number", min: "0.01", step: "0.01", value: capital.amount, onChange: e => setCapitalField('amount', e.target.value), placeholder: "1000", required: true })),
                         React.createElement("label", null,
-                            "Tanggal",
-                            React.createElement(DateField, { value: capital.date, onChange: v => setCapitalField('date', v), required: true }))),
+                            "Tanggal & waktu (WIB)",
+                            React.createElement(DateField, { withTime: true, withSec: true, value: capital.date, onChange: v => setCapitalField('date', v), required: true }))),
                     React.createElement("label", null,
                         "Catatan (opsional)",
                         React.createElement("input", { value: capital.note, onChange: e => setCapitalField('note', v), placeholder: "Contoh: tambah modal / tarik profit" })),
@@ -104,7 +105,7 @@ function AccountModal({ inline = false, initialMode = 'manage', accounts, active
                         React.createElement("span", { className: item.type === 'deposit' ? 'capital-kind deposit' : 'capital-kind withdraw' }, item.type === 'deposit' ? 'DEP' : 'WD'),
                         React.createElement("div", null,
                             React.createElement("strong", null, item.note || (item.type === 'deposit' ? 'Deposit modal' : 'Withdraw')),
-                            React.createElement("small", null, item.date)),
+                            React.createElement("small", null, String(item.date).replace("T", " "))),
                         React.createElement("b", { className: item.type === 'deposit' ? 'positive' : 'negative' },
                             item.type === 'deposit' ? '+' : '-',
                             money(item.amount, activeAccount.currency)))),

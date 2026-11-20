@@ -25,7 +25,7 @@ function ddBuild(trades) {
             const off = (new Date(y, m, 1).getDay() + 6) % 7;
             const di = (new Date(y, m, d, 12).getDay() + 6) % 7;
             const ses = { name: sesOf(new Date(t.date).getTime()) };
-            out.push({ mk: `${y}-${dd2(m + 1)}`, iso, wk: Math.floor((d - 1 + off) / 7) + 1, di: Math.min(di, 5), day: di < 5 ? DD_DAYS[di] : DD_WKND, ses: ses.name, pnl: Number(t.pnl) || 0, pips: pipsOf(t) || 0 });
+            out.push({ mk: `${y}-${dd2(m + 1)}`, iso, wk: Math.floor((d - 1 + off) / 7) + 1, di: Math.min(di, 5), day: di < 5 ? DD_DAYS[di] : DD_WKND, ses: ses.name, pnl: Number(t.pnl) || 0, pct: t.pct || 0, pips: pipsOf(t) || 0 });
         } catch (e) { /* tanggal rusak: lewati */ }
     });
     return out;
@@ -34,7 +34,7 @@ function ddStat(rs) {
     const w = rs.filter(r => r.pnl > 0), l = rs.filter(r => r.pnl < 0);
     const sum = (a, k = 'pnl') => a.reduce((x, r) => x + r[k], 0);
     return {
-        n: rs.length, wins: w.length, losses: l.length, wr: rs.length ? w.length / rs.length * 100 : 0, profit: sum(rs), pips: sum(rs, 'pips'),
+        n: rs.length, wins: w.length, losses: l.length, wr: rs.length ? w.length / rs.length * 100 : 0, profit: sum(rs), profitPct: sum(rs, 'pct'), pips: sum(rs, 'pips'),
         avgWin: w.length ? sum(w) / w.length : 0, avgLoss: l.length ? sum(l) / l.length : 0,
         days: new Set(rs.map(r => r.iso)).size, weeks: new Set(rs.map(r => r.mk + r.wk)).size, sessions: new Set(rs.map(r => r.ses)).size
     };
@@ -66,14 +66,13 @@ function DrillDown({ account, trades, rangeText }) {
     const fm = n => money(n, account.currency);
     const sg = n => n > 0 ? `+${fm(n)}` : n < 0 ? `-${fm(Math.abs(n))}` : fm(0);
     const tn = n => n > 0 ? 'pos' : n < 0 ? 'neg' : 'zero';
-    // modal awal sama seperti kartu lain (Gain / Monthly gain): saldo - deposit + penarikan
+    // dasar % = modal sekarang (setelah deposit/WD), sama seperti kartu lain
     const hist = account.capitalHistory || [];
-    const startBal = Math.max((account.balance || 0) - sumOf(hist.filter(x => x.type !== 'withdraw'), x => x.amount) + sumOf(hist.filter(x => x.type === 'withdraw'), x => x.amount), 1);
-    const pct = v => `${v > 0 ? '+' : ''}${(v / startBal * 100).toFixed(2)}%`;
+    const pct = v => `${v > 0 ? '+' : ''}${v.toFixed(2)}%`; /* v = jumlah % posisi (modal pada tanggalnya) */
     const pipTxt = v => `${v > 0 ? '+' : ''}${v.toFixed(1)} pips`;
     // Hierarki penyaringan: Periode -> pilihan Monthly gain -> kartu ini. `trades` sudah berupa trade closed
     // yang lolos Periode (termasuk rentang bulan yang dipilih di Monthly gain), jadi kartu selalu satu data dengan Monthly gain.
-    const recs = useMemo(() => ddBuild((trades || []).filter(t => t.status === 'closed')), [trades]);
+    const recs = useMemo(() => ddBuild(withPct(account, (trades || []).filter(t => t.status === 'closed'))), [trades, account]);
     const [level, setLevel] = useState(0);
     const [locked, setLocked] = useState(false);
     const [sel, setSel] = useState({ mk: null, wk: null, day: null, ses: null });
@@ -215,7 +214,7 @@ function DrillDown({ account, trades, rangeText }) {
                 i.sub ? h('div', { className: 'dd-sub' }, i.sub) : null,
                 tagEls(i.tags),
                 h('div', { className: 'dd-row' },
-                    h('span', { className: 'dd-meta' }, h('span', null, `${i.st.n} posisi`), h('span', null, `${Math.round(i.st.wr)}% WR`), h('span', { className: tn(i.st.profit) }, pct(i.st.profit))),
+                    h('span', { className: 'dd-meta' }, h('span', null, `${i.st.n} posisi`), h('span', null, `${Math.round(i.st.wr)}% WR`), h('span', { className: tn(i.st.profit) }, pct(i.st.profitPct))),
                     h('b', { className: 'dd-pr ' + tn(i.st.profit) }, sg(i.st.profit))),
                 h('div', { className: 'dd-bar' }, h('i', { style: { width: `${i.st.n ? Math.max(3, i.st.n / maxN * 100) : 0}%`, background: i.st.profit < 0 ? EJC("#ff6b81") : EJC("#34d399") } })));
         });
@@ -224,7 +223,7 @@ function DrillDown({ account, trades, rangeText }) {
         body = [...items.map(i => h('div', { key: i.key, className: 'dd-item' }, head(i), tagEls(i.tags), table(rowsOf(i.st)))),
         h('div', { key: 'total', className: 'dd-item dd-total' },
             h('div', { className: 'dd-ihead' }, h('i', { className: 'dd-dot', style: { background: EJC("#eef2ff") } }), h('strong', null, 'Ringkasan Total'), h('span', { className: 'dd-small' }, 'semua sesi')),
-            table([['Total posisi', String(total.n), ''], ...rowsOf(total), ['Profit', `${sg(total.profit)} · ${pct(total.profit)}`, tn(total.profit)]]))];
+            table([['Total posisi', String(total.n), ''], ...rowsOf(total), ['Profit', `${sg(total.profit)} · ${pct(total.profitPct)}`, tn(total.profit)]]))];
     } else {
         const i = items[0];
         body = [h('div', { key: 'donut', className: 'dd-donutwrap' }, h(DdDonut, { st: i.st })),

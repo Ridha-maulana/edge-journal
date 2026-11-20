@@ -41,7 +41,7 @@ function AdvancedStats({ account, filtered, total, maxDd, hwm, view, part = 'all
     const pf = gL ? gW / gL : (gW ? Infinity : 0);
     const hist = account.capitalHistory || [];
     const depSum = sumOf(hist.filter(h => h.type !== 'withdraw'), h => h.amount), wdSum = sumOf(hist.filter(h => h.type === 'withdraw'), h => h.amount);
-    const start = Math.max((account.balance || 0) - depSum + wdSum, 1);
+    const start = Math.max((account.balance || 0) - depSum + wdSum, 1), capBal = Math.max(account.balance || 0, 1);
     const rrs = cl.map(t => { const r = riskFor(t.entry, t.sl, t.lots, t.symbol), w = rewardFor(t.entry, t.tp, t.lots, t.symbol); return r && w ? w / r : null; }).filter(Boolean);
     const avgRR = rrs.length ? rrs.reduce((a, b) => a + b, 0) / rrs.length : null;
     const rsA = cl.map(t => { const r = riskFor(t.entry, t.sl, t.lots, t.symbol); return r ? (Number(t.pnl) || 0) / r : null; }).filter(v => v !== null);
@@ -106,9 +106,9 @@ function AdvancedStats({ account, filtered, total, maxDd, hwm, view, part = 'all
         ['Max TP Pips', `${mx(tpP).toFixed(1)} pips`, tpP.length ? 'pos' : ''],
         ['Max SL Pips', `${mx(slP).toFixed(1)} pips`, slP.length ? 'neg' : ''],
         ['Profit', sg(total), tn(total)],
-        ['Gain', `${pf1(total / start * 100, 2)}%`, tn(total)],
+        ['Gain', `${pf1(pctSum(account, cl), 2)}%`, tn(total)],
         ['Abs. Gain', `${pf1(total / (start + depSum) * 100, 2)}%`, tn(total)],
-        [`Gain ${MSx[view.m]}`, `${pf1(mPnl / start * 100, 2)}% · ${sg(mPnl)}`, tn(mPnl)],
+        [`Gain ${MSx[view.m]}`, `${pf1(pctSum(account, inM), 2)}% · ${sg(mPnl)}`, tn(mPnl)],
         ['Max Drawdown', maxDd ? `-${fm(maxDd)} · -${(maxDd / (account.balance || 1) * 100).toFixed(2)}%` : fm(0), maxDd ? 'neg' : ''],
         ['High Water Mark', `${hwm > 0 ? '+' : ''}${fm(hwm)}`, hwm > 0 ? 'pos' : ''],
         ['Balance', fm(account.balance), ''],

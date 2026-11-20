@@ -31,6 +31,20 @@ function pipsOf(t) { if (t.exit === null || t.exit === undefined || t.exit === '
 
 /* Modal awal akun (dasar perhitungan %) — sama dengan kartu Performance */
 function acctStartBal(account) { const h = (account && account.capitalHistory) || []; const dep = h.filter(x => x.type !== 'withdraw').reduce((a, x) => a + (Number(x.amount) || 0), 0), wd = h.filter(x => x.type === 'withdraw').reduce((a, x) => a + (Number(x.amount) || 0), 0); return Math.max(((account && account.balance) || 0) - dep + wd, 1); }
+/* Modal sekarang (setelah deposit/WD, tanpa P&L) — dasar semua hitungan % profit/loss */
+function acctCapBal(account) { return Math.max(Number(account && account.balance) || 0, 1); }
+/* Modal akun pada waktu tertentu: modal awal + deposit - WD yang waktunya sudah tercapai (sampai detik; catatan lama tanpa jam dianggap mulai 00:00). Posisi lama tidak berubah saat ada WD/deposit baru. */
+function acctCapAt(account, date) {
+    const h = (account && account.capitalHistory) || [], key = v => { const s = String(v || ''); return s.length <= 10 ? s + 'T00:00:00' : s.length === 16 ? s + ':00' : s.slice(0, 19); }, tk = key(date);
+    let dep = 0, wd = 0, depTo = 0, wdTo = 0;
+    h.forEach(x => { const a = Number(x.amount) || 0, w = x.type === 'withdraw', on = !x.date || key(x.date) <= tk; if (w) { wd += a; if (on) wdTo += a; } else { dep += a; if (on) depTo += a; } });
+    const cap = (Number(account && account.balance) || 0) - dep + wd + depTo - wdTo;
+    return cap >= 1 ? cap : acctCapBal(account);
+}
+/* % satu posisi = P&L / modal pada tanggal posisi itu */
+function tradePct(account, t) { return (Number(t && t.pnl) || 0) / acctCapAt(account, t && t.date) * 100; }
+function pctSum(account, list) { return (list || []).reduce((a, t) => a + (t.status === 'closed' ? tradePct(account, t) : 0), 0); }
+function withPct(account, list) { return (list || []).map(t => t.status === 'closed' ? { ...t, pct: tradePct(account, t) } : t); }
 function tradePips(t) { return t && t.status === 'closed' ? pipsOf(t) : 0; }
 function fmtPctS(v) { const x = Number(v) || 0; return (x > 0 ? '+' : x < 0 ? '-' : '') + Math.abs(x).toFixed(2) + '%'; }
 function fmtPipsS(v) { const x = Number(v) || 0; return (x > 0 ? '+' : x < 0 ? '-' : '') + Math.abs(x).toFixed(1) + ' pips'; }

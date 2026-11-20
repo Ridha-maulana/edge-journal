@@ -67,10 +67,11 @@ function buildCandles(trades, tf) {
             cur.l = Math.min(cur.l, before, after);
             cur.n++;
             cur.pc = pa;
+            if (t.pct !== undefined) cur.pp = (cur.pp || 0) + t.pct;
             cur.ids.push(t.id);
         }
         else {
-            cur = { k, label, short, o: before, c: after, h: Math.max(before, after), l: Math.min(before, after), n: 1, po: pb, pc: pa, ids: [t.id] };
+            cur = { k, label, short, o: before, c: after, h: Math.max(before, after), l: Math.min(before, after), n: 1, po: pb, pc: pa, pp: t.pct, ids: [t.id] };
             out.push(cur);
         }
     });
@@ -295,7 +296,7 @@ function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hh, fixed,
                 dv === 0 ? React.createElement("path", { d: tri, stroke: cc, strokeWidth: "2.4", strokeLinecap: "round" }) : React.createElement("path", { d: tri, fill: cc }),
                 React.createElement("text", { x: L + 19, y: 39, fontSize: "21", fontWeight: "800", fill: cc },
                     candleNum(dv),
-                    React.createElement("tspan", { fontSize: "13.5", fontWeight: "700", dx: "9" }, fmtPctS(dv / base * 100))),
+                    React.createElement("tspan", { fontSize: "13.5", fontWeight: "700", dx: "9" }, fmtPctS(act.pp !== undefined ? act.pp : dv / base * 100))),
                 React.createElement("text", { x: L, y: 58, fontSize: "10.5", fontWeight: "700", fill: cc },
                     fmtPipsS(dpips),
                     React.createElement("tspan", { fill: EJC("#2b3a60"), fontWeight: "400", dx: "8" }, "|"),

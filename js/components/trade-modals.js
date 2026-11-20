@@ -17,7 +17,7 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
     const set = (key, value) => setForm(f => ({ ...f, [key]: value }));
     const risk = riskFor(form.entry, form.sl, form.lots, form.symbol);
     const reward = rewardFor(form.entry, form.tp, form.lots, form.symbol);
-    const baseBal = acctStartBal(account);
+    const baseBal = acctCapBal(account);
     const riskPct = risk ? risk / baseBal * 100 : 0;
     const dist = Number(form.entry) && Number(form.sl) ? Math.abs(Number(form.entry) - Number(form.sl)) : 0;
     const adjRisk = baseBal * (Number(adjPct) || 0) / 100;
@@ -97,7 +97,7 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
             h("label", null, "Risiko per trade (%)", h("input", { type: "number", step: "0.1", min: "0", value: adjPct, onChange: e => setAdjPct(e.target.value) })),
             dist ? h(React.Fragment, null,
                 h("div", { className: "at-adjr" }, h("div", null, h("span", null, "Risiko"), h("strong", { className: "negative" }, money(adjRisk))), h("div", null, h("span", null, "Lot disarankan"), h("strong", null, adjLots.toFixed(2)))),
-                h("small", null, "Dari balance awal ", money(baseBal), " dan jarak SL ", dist.toFixed(5).replace(/\.?0+$/, ''), "."),
+                h("small", null, "Dari modal sekarang ", money(baseBal), " dan jarak SL ", dist.toFixed(5).replace(/\.?0+$/, ''), "."),
                 h("button", { type: "button", className: "secondary-btn", onClick: () => { set('lots', adjLots.toFixed(2)); setAdjOpen(false); } }, "Pakai ", adjLots.toFixed(2), " lot")) : h("small", { className: "warn" }, "Isi Entry level dan Stop loss dulu untuk menghitung lot.")),
         h("div", { className: "fs-actions" },
             h("button", { type: "button", className: "secondary-btn", "aria-expanded": adjOpen, onClick: () => setAdjOpen(o => !o) }, h(Target, { size: 15 }), " Hitung lot"),

@@ -11,7 +11,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const hist = account.capitalHistory || [];
     const dep = hist.filter(h => h.type !== 'withdraw'), wdr = hist.filter(h => h.type === 'withdraw');
     const depSum = sumOf(dep, h => h.amount), wdSum = sumOf(wdr, h => h.amount);
-    const start = Math.max((account.balance || 0) - depSum + wdSum, 1);
+    const start = Math.max((account.balance || 0) - depSum + wdSum, 1), capBal = Math.max(account.balance || 0, 1);
     const sorted = filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
     const wins = sorted.filter(t => t.pnl > 0), losses = sorted.filter(t => t.pnl < 0);
     const gW = sumOf(wins, t => t.pnl), gL = Math.abs(sumOf(losses, t => t.pnl));
@@ -22,18 +22,21 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const monthProfit = sumOf(sorted.filter(t => wib(t.date).month === nowW.month), t => t.pnl);
     const rrs = filtered.map(t => { const r = riskFor(t.entry, t.sl, t.lots, t.symbol), w = rewardFor(t.entry, t.tp, t.lots, t.symbol); return r && w ? w / r : null; }).filter(Boolean);
     const avgRR = rrs.length ? rrs.reduce((a, b) => a + b, 0) / rrs.length : null;
+    const fp = v => `${v > 0 ? '+' : ''}${v.toFixed(2)}%`;
     const pcs = (v, b) => `${v > 0 ? '+' : ''}${(v / (b || 1) * 100).toFixed(2)}%`;
-    const tiles = [['Gain', pcs(total, start), tone(total)], ['Abs. gain', pcs(total, start + depSum), tone(total)], ['Daily (rata-rata)', pcs(dayKeys.length ? total / dayKeys.length : 0, account.balance), tone(total)], ['Monthly (bulan ini)', pcs(monthProfit, account.balance), tone(monthProfit)], ['Drawdown', `${maxDd ? '-' : ''}${(maxDd / (account.balance || 1) * 100).toFixed(2)}%`, maxDd ? 'neg' : ''], ['Win rate', `${sorted.length ? (wins.length / sorted.length * 100).toFixed(0) : 0}%`, sorted.length ? (wins.length / sorted.length >= .5 ? 'pos' : 'neg') : ''], ['Profit factor', pf === Infinity ? '∞' : pf.toFixed(2), pf >= 1 ? 'pos' : pf > 0 ? 'neg' : ''], ['Avg R:R', avgRR ? avgRR.toFixed(1) : '—', ''], ['Trades', String(sorted.length), ''], ['Profit', sg(total), tone(total)], ['Balance', fm(account.balance), ''], ['Equity', fm(account.balance + total), tone(total)], ['Deposits', fm(depSum), 'pos'], ['Withdrawals', fm(wdSum), wdSum ? 'neg' : '']];
+    const tiles = [['Gain', fp(pctSum(account, filtered)), tone(total)], ['Abs. gain', pcs(total, start + depSum), tone(total)], ['Daily (rata-rata)', pcs(dayKeys.length ? total / dayKeys.length : 0, account.balance), tone(total)], ['Monthly (bulan ini)', pcs(monthProfit, account.balance), tone(monthProfit)], ['Drawdown', `${maxDd ? '-' : ''}${(maxDd / (account.balance || 1) * 100).toFixed(2)}%`, maxDd ? 'neg' : ''], ['Win rate', `${sorted.length ? (wins.length / sorted.length * 100).toFixed(0) : 0}%`, sorted.length ? (wins.length / sorted.length >= .5 ? 'pos' : 'neg') : ''], ['Profit factor', pf === Infinity ? '∞' : pf.toFixed(2), pf >= 1 ? 'pos' : pf > 0 ? 'neg' : ''], ['Avg R:R', avgRR ? avgRR.toFixed(1) : '—', ''], ['Trades', String(sorted.length), ''], ['Profit', sg(total), tone(total)], ['Balance', fm(account.balance), ''], ['Equity', fm(account.balance + total), tone(total)], ['Deposits', fm(depSum), 'pos'], ['Withdrawals', fm(wdSum), wdSum ? 'neg' : '']];
     let cum = 0, peak = 0;
     const cumS = [], ddS = [];
     dayKeys.forEach(k => { cum += dayMap[k]; peak = Math.max(peak, cum); cumS.push(cum); ddS.push(cum - peak); });
+    const dayPct = {}; sorted.forEach(t => { const k = wib(t.date).day; dayPct[k] = (dayPct[k] || 0) + tradePct(account, t); });
+    let cumP = 0; const cumPS = dayKeys.map(k => (cumP += dayPct[k]));
     const lab = dayKeys.map(k => `${k.slice(8)}/${k.slice(5, 7)}`);
-    const CT = { growth: { v: cumS.map(c => c / start * 100), k: 'line', f: v => `${v > 0 ? '+' : ''}${v.toFixed(1)}%`, t: 'Growth (% dari modal awal)' }, balance: { v: cumS.map(c => account.balance + c), k: 'line', f: v => `$${Math.round(v)}`, t: 'Balance / equity' }, profit: { v: cumS, k: 'line', f: v => `$${Math.round(v)}`, t: 'Profit kumulatif' }, daily: { v: dayKeys.map(k => dayMap[k]), k: 'bar', f: v => `$${Math.round(v)}`, t: 'P&L harian (WIB)' }, dd: { v: ddS, k: 'line', f: v => `$${Math.round(v)}`, t: 'Drawdown dari puncak' } }[ct];
+    const CT = { growth: { v: cumPS, k: 'line', f: v => `${v > 0 ? '+' : ''}${v.toFixed(1)}%`, t: 'Growth (% dari modal sekarang)' }, balance: { v: cumS.map(c => account.balance + c), k: 'line', f: v => `$${Math.round(v)}`, t: 'Balance / equity' }, profit: { v: cumS, k: 'line', f: v => `$${Math.round(v)}`, t: 'Profit kumulatif' }, daily: { v: dayKeys.map(k => dayMap[k]), k: 'bar', f: v => `$${Math.round(v)}`, t: 'P&L harian (WIB)' }, dd: { v: ddS, k: 'line', f: v => `$${Math.round(v)}`, t: 'Drawdown dari puncak' } }[ct];
     const allClosed = trades.filter(t => t.status === 'closed');
-    const mon = Array.from({ length: 12 }, (_, i) => { const xs = allClosed.filter(t => { const w = wib(t.date); return Number(w.year) === year && w.mi === i; }); return { i, n: xs.length, pnl: sumOf(xs, t => t.pnl), wins: xs.filter(t => t.pnl > 0).length }; });
+    const mon = Array.from({ length: 12 }, (_, i) => { const xs = allClosed.filter(t => { const w = wib(t.date); return Number(w.year) === year && w.mi === i; }); return { i, n: xs.length, pnl: sumOf(xs, t => t.pnl), pc: xs.reduce((a, t) => a + tradePct(account, t), 0), wins: xs.filter(t => t.pnl > 0).length }; });
     const MN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
     const ms = mon[mSel];
-    const mpct = v => { const p = v / (start || 1) * 100, a = Math.abs(p); return (p > 0.004 ? '+' : p < -0.004 ? '-' : '') + (a >= 10 ? a.toFixed(1) : a.toFixed(2)) + '%'; };
+    const mpct = p => { const a = Math.abs(p); return (p > 0.004 ? '+' : p < -0.004 ? '-' : '') + (a >= 10 ? a.toFixed(1) : a.toFixed(2)) + '%'; };
     const syms = [...new Set(sorted.map(t => t.symbol))].map(s => { const xs = sorted.filter(t => t.symbol === s); return { s, n: xs.length, pnl: sumOf(xs, t => t.pnl) }; }).sort((a, b) => b.n - a.n);
     const maxSym = Math.max(1, ...syms.map(x => Math.abs(x.pnl)));
     const [dnaOpen, setDnaOpen] = useState(true);
@@ -122,7 +125,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                     React.createElement("button", { type: "button", "aria-label": "Tahun berikutnya", onClick: () => onPickMonth(year + 1, mSel) }, React.createElement(ChevronRight, { size: 16 })))),
             React.createElement("div", { className: "mg-body" },
                 React.createElement("div", { className: "mg-stats" }, [
-                    ['Gain ' + MN[ms.i], pcs(ms.pnl, start), tone(ms.pnl), 'ChartUp'],
+                    ['Gain ' + MN[ms.i], fp(ms.pc), tone(ms.pnl), 'ChartUp'],
                     ['Profit', sg(ms.pnl), tone(ms.pnl), 'Coins'],
                     ['Trades', ms.n, '', 'BarChart3'],
                     ['Win rate', (ms.n ? Math.round(ms.wins / ms.n * 100) : 0) + '%', '', 'Shield']
@@ -130,21 +133,21 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                     React.createElement("i", { className: "mg-ic" }, React.createElement(Icon, { name: ic, size: 18 })),
                     React.createElement("div", null, React.createElement("span", null, l), React.createElement("b", { className: tn }, v))))),
                 (() => {
-                    const gp = ms.pnl / (start || 1) * 100, mxA = Math.max(1, ...mon.map(z => Math.abs(z.pnl) / (start || 1) * 100), Math.abs(gp));
+                    const gp = ms.pc, mxA = Math.max(1, ...mon.map(z => Math.abs(z.pc)), Math.abs(gp));
                     const top = mxA < 10 ? Math.ceil(mxA / 2) * 2 : Math.ceil(mxA / 5) * 5;
                     const R = 78, CX = 110, CY = 100, A0 = Math.PI, frac = Math.min(1, Math.abs(gp) / top);
                     const pt = a => [CX + R * Math.cos(a), CY - R * Math.sin(a)];
                     const arc = f => { const [x0, y0] = pt(A0), [x1, y1] = pt(A0 - Math.PI * f); return `M${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`; };
                     const col = gp >= 0 ? EJC("#34d399") : EJC("#ff6b81");
                     return React.createElement("div", { className: "mg-gauge" },
-                        React.createElement("svg", { viewBox: "0 0 220 124", role: "img", "aria-label": `Gain ${MN[ms.i]} ${pcs(ms.pnl, start)}` },
+                        React.createElement("svg", { viewBox: "0 0 220 124", role: "img", "aria-label": `Gain ${MN[ms.i]} ${fp(ms.pc)}` },
                             React.createElement("path", { d: arc(1), className: "mg-track" }),
                             frac > 0 && React.createElement("path", { d: arc(frac), className: "mg-val", style: { stroke: col } }),
                             React.createElement("text", { x: 30, y: 118, className: "mg-tick", textAnchor: "middle" }, "0%"),
                             React.createElement("text", { x: 190, y: 118, className: "mg-tick", textAnchor: "middle" }, `${gp < 0 ? '-' : '+'}${top}%`)),
                         React.createElement("div", { className: "mg-gv" },
                             React.createElement("small", null, "Monthly gain"),
-                            React.createElement("b", { className: tone(ms.pnl) }, pcs(ms.pnl, start)),
+                            React.createElement("b", { className: tone(ms.pnl) }, fp(ms.pc)),
                             React.createElement("small", null, "Gain di " + MN[ms.i] + " " + year)));
                 })()),
             React.createElement("div", { className: "mg-lbl" }, "Bulan"),
@@ -175,7 +178,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                 "Rincian ",
                 showDet ? '▴' : '▾'),
             showDet && React.createElement("div", { className: "pe-chips" }, hist.slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).map((h, i) => { const w = h.type === 'withdraw'; return React.createElement("div", { key: i, className: w ? 'neg' : 'pos' },
-                React.createElement("span", null, fmtLong(String(h.date).slice(0, 10))),
+                React.createElement("span", null, fmtLong(String(h.date).slice(0, 10)) + (String(h.date).length > 10 ? ' ' + String(h.date).slice(11, 19) : '')),
                 React.createElement("b", null,
                     w ? '-' : '+',
                     fm(h.amount))); }))),

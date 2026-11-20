@@ -29,11 +29,11 @@ function HierJournal({ autoOpen, kind, status, list: allList, account, startBal,
     const lastMonth = list.length && list.map(t => jCal(t).slice(0, 7)).sort().pop();
     const isOpen = (key, def) => key in open ? open[key] : def;
     const tog = (key, def) => setOpen(o => ({ ...o, [key]: !(key in o ? o[key] : def) }));
-    const tradeCard = t => React.createElement(TradeCard, { key: t.id, trade: t, startBal: startBal, expanded: expanded === t.id, onToggle: () => setExpanded(expanded === t.id ? null : t.id), onDelete: () => onDelete(t.id), onClose: () => onClose(t), onEdit: () => onEdit(t) });
+    const tradeCard = t => React.createElement(TradeCard, { key: t.id, trade: t, startBal: acctCapAt(account, t.date), expanded: expanded === t.id, onToggle: () => setExpanded(expanded === t.id ? null : t.id), onDelete: () => onDelete(t.id), onClose: () => onClose(t), onEdit: () => onEdit(t) });
     if (status === 'open') { const O = allList.filter(t => t.status !== 'closed').sort((a, b) => new Date(b.date) - new Date(a.date)); return O.length ? React.createElement("div", { className: "gj" }, O.map(tradeCard)) : null; }
     if (!list.length)
         return allList.length ? React.createElement("div", { className: "empty-state" }, React.createElement("span", null, "Belum ada posisi closed. Posisi open ada di filter Open.")) : null;
-    const strip = L => { const sm = jSum(L); return React.createElement(PosStrip, { n: L.length, pnl: sm.pnl, pct: sm.pnl / startBal * 100, pips: sm.pips, cur: cur }); };
+    const strip = L => { const sm = jSum(L); return React.createElement(PosStrip, { n: L.length, pnl: sm.pnl, pct: pctSum(account, L), pips: sm.pips, cur: cur }); };
     const head = (key, title, L, op, def, main) => React.createElement("button", { className: "week-head" + (main ? " gj-main lv-y" : ""), onClick: () => tog(key, def) },
         React.createElement("div", null, React.createElement("strong", null, title)),
         React.createElement(ChevronDown, { size: 17, className: op ? 'rotate' : '' }),
@@ -66,7 +66,7 @@ function HierJournal({ autoOpen, kind, status, list: allList, account, startBal,
         head(key, jMonthLabel(mk), L, op, def, false),
         op && React.createElement(React.Fragment, null,
             React.createElement("div", { className: "gj-chart" },
-                React.createElement(HeroChart, { trades: L.filter(t => t.status === 'closed').sort((a, b) => new Date(a.date) - new Date(b.date)), startBal: startBal, tfs: ['H1', 'SES', 'D1', 'W1'], defTf: 'D1', persist: false, hh: 330, fixed: true, onSelect: (c, tf) => setSels(s => ({ ...s, [key]: c ? { c, tf } : null })) })),
+                React.createElement(HeroChart, { trades: withPct(account, L.filter(t => t.status === 'closed')).sort((a, b) => new Date(a.date) - new Date(b.date)), startBal: startBal, tfs: ['H1', 'SES', 'D1', 'W1'], defTf: 'D1', persist: false, hh: 330, fixed: true, onSelect: (c, tf) => setSels(s => ({ ...s, [key]: c ? { c, tf } : null })) })),
             selBlock(key, L))); }); };
     return React.createElement("div", { className: "gj" },
         kind === 'M1' ? monthCards(list, lastMonth) : years.map((y, yi) => { const L = byY[y]; const key = 'y' + y; const def = !!autoOpen && yi === 0; const op = isOpen(key, def); const nM = Object.keys(jGroup(L, t => jCal(t).slice(0, 7))).length; return React.createElement("div", { className: "week-block", key: key },
@@ -79,7 +79,7 @@ function Journal({ account, trades, filters, setFilters, expanded, setExpanded, 
     const [addMenu, setAddMenu] = useState(false);
     const fileRef = useRef(null);
     const [openWeeks, setOpenWeeks] = useState({});
-    const startBal = acctStartBal(account);
+    const startBal = acctCapBal(account); /* dasar % = modal sekarang */
     const sumOf = list => ({ pnl: list.reduce((x, t) => x + (t.status === 'closed' ? Number(t.pnl) || 0 : 0), 0), pips: list.reduce((x, t) => x + tradePips(t), 0) });
     const filtered = trades.filter(t => (filters.status === 'all' || t.status === filters.status) && (filters.side === 'all' || t.side === filters.side) && (!filters.search || t.symbol.toLowerCase().includes(filters.search.toLowerCase()) || String(t.setup || '').toLowerCase().includes(filters.search.toLowerCase())) && (!filters.date || dateOnly(t.date) === filters.date) && (!filters.ids || filters.ids.includes(t.id)));
     const groups = filtered.reduce((acc, t) => { const key = dateOnly(t.date); (acc[key] || (acc[key] = [])).push(t); return acc; }, {});
@@ -119,12 +119,12 @@ function Journal({ account, trades, filters, setFilters, expanded, setExpanded, 
                 React.createElement("div", null,
                     React.createElement("strong", null, label)),
                 React.createElement(ChevronDown, { size: 17, className: open ? 'rotate' : '' }),
-                React.createElement(PosStrip, { n: list.length, pnl: pnl, pct: pnl / startBal * 100, pips: wsum.pips, cur: account.currency })),
+                React.createElement(PosStrip, { n: list.length, pnl: pnl, pct: pctSum(account, list), pips: wsum.pips, cur: account.currency })),
             open && Object.keys(w).sort((x, y) => y.localeCompare(x)).map(day => { const dsum = sumOf(w[day]), dp = dsum.pnl; return React.createElement("div", { key: day },
                 React.createElement("div", { className: "date-label" },
                     React.createElement("span", null, new Date(`${day}T12:00`).toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })),
-                    React.createElement(PosStrip, { n: w[day].length, pnl: dp, pct: dp / startBal * 100, pips: dsum.pips, cur: account.currency })),
-                w[day].map(t => React.createElement(TradeCard, { key: t.id, trade: t, startBal: startBal, expanded: expanded === t.id, onToggle: () => setExpanded(expanded === t.id ? null : t.id), onDelete: () => onDelete(t.id), onClose: () => onClose(t), onEdit: () => onEdit(t) }))); })); }); })(),
+                    React.createElement(PosStrip, { n: w[day].length, pnl: dp, pct: pctSum(account, w[day]), pips: dsum.pips, cur: account.currency })),
+                w[day].map(t => React.createElement(TradeCard, { key: t.id, trade: t, startBal: acctCapAt(account, t.date), expanded: expanded === t.id, onToggle: () => setExpanded(expanded === t.id ? null : t.id), onDelete: () => onDelete(t.id), onClose: () => onClose(t), onEdit: () => onEdit(t) }))); })); }); })(),
         !filtered.length && React.createElement("div", { className: "empty-state" },
             React.createElement(BookOpen, { size: 26 }),
             React.createElement("strong", null, "Tidak ada trade yang cocok"),
