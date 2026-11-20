@@ -41,9 +41,35 @@ function acctCapAt(account, date) {
     const cap = (Number(account && account.balance) || 0) - dep + wd + depTo - wdTo;
     return cap >= 1 ? cap : acctCapBal(account);
 }
-/* % satu posisi = P&L / modal pada tanggal posisi itu */
-function tradePct(account, t) { return (Number(t && t.pnl) || 0) / acctCapAt(account, t && t.date) * 100; }
-function pctSum(account, list) { return (list || []).reduce((a, t) => a + (t.status === 'closed' ? tradePct(account, t) : 0), 0); }
+/* ===== Hitungan % baku (time-weighted): P&L posisi ÷ equity SAAT POSISI DIBUKA ===== */
+/* equity = modal pada waktu itu (deposit - WD yang sudah lewat) + P&L semua posisi yang sudah tertutup sebelum posisi dibuka */
+const _eqKey = v => { const s = String(v || ''); return s.length <= 10 ? s + 'T00:00:00' : s.length === 16 ? s + ':00' : s.slice(0, 19); };
+function acctEquityAt(account, date, excludeId) {
+    const k = _eqKey(date), cap = acctCapAt(account, date);
+    const real = ((account && account.trades) || []).reduce((a, t) => a + (t.status === 'closed' && t.id !== excludeId && _eqKey(t.closeDate || t.date) <= k ? Number(t.pnl) || 0 : 0), 0);
+    const eq = cap + real;
+    return eq >= 1 ? eq : Math.max(cap, 1);
+}
+const _EQC = new WeakMap();
+function acctBases(account) { /* id posisi -> equity saat dibuka (dihitung sekali, di-cache) */
+    const tr = (account && account.trades) || [], c = _EQC.get(tr);
+    if (c && c.h === account.capitalHistory && c.b === account.balance && c.n === tr.length) return c.m;
+    const cls = tr.filter(t => t.status === 'closed'), byOpen = cls.slice().sort((x, y) => _eqKey(x.date) < _eqKey(y.date) ? -1 : _eqKey(x.date) > _eqKey(y.date) ? 1 : 0);
+    const byClose = cls.map(t => ({ k: _eqKey(t.closeDate || t.date), p: Number(t.pnl) || 0 })).sort((x, y) => x.k < y.k ? -1 : x.k > y.k ? 1 : 0);
+    const m = {}; let i = 0, run = 0;
+    byOpen.forEach(t => { const k = _eqKey(t.date); while (i < byClose.length && byClose[i].k <= k) { run += byClose[i].p; i++; }
+        const self = _eqKey(t.closeDate || t.date) <= k ? Number(t.pnl) || 0 : 0, cap = acctCapAt(account, t.date), eq = cap + run - self;
+        m[t.id] = eq >= 1 ? eq : Math.max(cap, 1); });
+    _EQC.set(tr, { h: account.capitalHistory, b: account.balance, n: tr.length, m });
+    return m;
+}
+/* % satu posisi = P&L / equity saat dibuka */
+function tradePct(account, t) { const b = t && acctBases(account)[t.id]; return (Number(t && t.pnl) || 0) / (b || acctEquityAt(account, t && t.date, t && t.id)) * 100; }
+/* gabung dua persen secara berantai: (1+a)(1+b)-1 */
+function chainAdd(a, b) { return ((1 + (Number(a) || 0) / 100) * (1 + (Number(b) || 0) / 100) - 1) * 100; }
+function pctChain(account, list) { return (list || []).reduce((a, t) => t.status === 'closed' ? chainAdd(a, tradePct(account, t)) : a, 0); }
+/* drawdown maksimum (%) dari kurva pertumbuhan berantai: tidak terpengaruh deposit/WD */
+function ddChain(account, list) { let idx = 100, peak = 100, dd = 0; (list || []).filter(t => t.status === 'closed').slice().sort((a, b) => _eqKey(a.closeDate || a.date) < _eqKey(b.closeDate || b.date) ? -1 : 1).forEach(t => { idx *= 1 + tradePct(account, t) / 100; peak = Math.max(peak, idx); dd = Math.max(dd, (peak - idx) / peak * 100); }); return dd; }
 function withPct(account, list) { return (list || []).map(t => t.status === 'closed' ? { ...t, pct: tradePct(account, t) } : t); }
 function tradePips(t) { return t && t.status === 'closed' ? pipsOf(t) : 0; }
 function fmtPctS(v) { const x = Number(v) || 0; return (x > 0 ? '+' : x < 0 ? '-' : '') + Math.abs(x).toFixed(2) + '%'; }

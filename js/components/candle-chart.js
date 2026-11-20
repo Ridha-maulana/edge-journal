@@ -67,7 +67,7 @@ function buildCandles(trades, tf) {
             cur.l = Math.min(cur.l, before, after);
             cur.n++;
             cur.pc = pa;
-            if (t.pct !== undefined) cur.pp = (cur.pp || 0) + t.pct;
+            if (t.pct !== undefined) cur.pp = chainAdd(cur.pp || 0, t.pct);
             cur.ids.push(t.id);
         }
         else {

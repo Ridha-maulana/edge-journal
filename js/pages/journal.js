@@ -33,7 +33,7 @@ function HierJournal({ autoOpen, kind, status, list: allList, account, startBal,
     if (status === 'open') { const O = allList.filter(t => t.status !== 'closed').sort((a, b) => new Date(b.date) - new Date(a.date)); return O.length ? React.createElement("div", { className: "gj" }, O.map(tradeCard)) : null; }
     if (!list.length)
         return allList.length ? React.createElement("div", { className: "empty-state" }, React.createElement("span", null, "Belum ada posisi closed. Posisi open ada di filter Open.")) : null;
-    const strip = L => { const sm = jSum(L); return React.createElement(PosStrip, { n: L.length, pnl: sm.pnl, pct: pctSum(account, L), pips: sm.pips, cur: cur }); };
+    const strip = L => { const sm = jSum(L); return React.createElement(PosStrip, { n: L.length, pnl: sm.pnl, pct: pctChain(account, L), pips: sm.pips, cur: cur }); };
     const head = (key, title, L, op, def, main) => React.createElement("button", { className: "week-head" + (main ? " gj-main lv-y" : ""), onClick: () => tog(key, def) },
         React.createElement("div", null, React.createElement("strong", null, title)),
         React.createElement(ChevronDown, { size: 17, className: op ? 'rotate' : '' }),
@@ -119,11 +119,11 @@ function Journal({ account, trades, filters, setFilters, expanded, setExpanded, 
                 React.createElement("div", null,
                     React.createElement("strong", null, label)),
                 React.createElement(ChevronDown, { size: 17, className: open ? 'rotate' : '' }),
-                React.createElement(PosStrip, { n: list.length, pnl: pnl, pct: pctSum(account, list), pips: wsum.pips, cur: account.currency })),
+                React.createElement(PosStrip, { n: list.length, pnl: pnl, pct: pctChain(account, list), pips: wsum.pips, cur: account.currency })),
             open && Object.keys(w).sort((x, y) => y.localeCompare(x)).map(day => { const dsum = sumOf(w[day]), dp = dsum.pnl; return React.createElement("div", { key: day },
                 React.createElement("div", { className: "date-label" },
                     React.createElement("span", null, new Date(`${day}T12:00`).toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })),
-                    React.createElement(PosStrip, { n: w[day].length, pnl: dp, pct: pctSum(account, w[day]), pips: dsum.pips, cur: account.currency })),
+                    React.createElement(PosStrip, { n: w[day].length, pnl: dp, pct: pctChain(account, w[day]), pips: dsum.pips, cur: account.currency })),
                 w[day].map(t => React.createElement(TradeCard, { key: t.id, trade: t, startBal: acctCapAt(account, t.date), expanded: expanded === t.id, onToggle: () => setExpanded(expanded === t.id ? null : t.id), onDelete: () => onDelete(t.id), onClose: () => onClose(t), onEdit: () => onEdit(t) }))); })); }); })(),
         !filtered.length && React.createElement("div", { className: "empty-state" },
             React.createElement(BookOpen, { size: 26 }),

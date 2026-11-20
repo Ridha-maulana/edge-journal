@@ -34,7 +34,7 @@ function ddStat(rs) {
     const w = rs.filter(r => r.pnl > 0), l = rs.filter(r => r.pnl < 0);
     const sum = (a, k = 'pnl') => a.reduce((x, r) => x + r[k], 0);
     return {
-        n: rs.length, wins: w.length, losses: l.length, wr: rs.length ? w.length / rs.length * 100 : 0, profit: sum(rs), profitPct: sum(rs, 'pct'), pips: sum(rs, 'pips'),
+        n: rs.length, wins: w.length, losses: l.length, wr: rs.length ? w.length / rs.length * 100 : 0, profit: sum(rs), profitPct: rs.reduce((a, r) => chainAdd(a, r.pct), 0), pips: sum(rs, 'pips'),
         avgWin: w.length ? sum(w) / w.length : 0, avgLoss: l.length ? sum(l) / l.length : 0,
         days: new Set(rs.map(r => r.iso)).size, weeks: new Set(rs.map(r => r.mk + r.wk)).size, sessions: new Set(rs.map(r => r.ses)).size
     };
@@ -68,7 +68,7 @@ function DrillDown({ account, trades, rangeText }) {
     const tn = n => n > 0 ? 'pos' : n < 0 ? 'neg' : 'zero';
     // dasar % = modal sekarang (setelah deposit/WD), sama seperti kartu lain
     const hist = account.capitalHistory || [];
-    const pct = v => `${v > 0 ? '+' : ''}${v.toFixed(2)}%`; /* v = jumlah % posisi (modal pada tanggalnya) */
+    const pct = v => `${v > 0 ? '+' : ''}${v.toFixed(2)}%`; /* v = % berantai posisi (equity saat dibuka) */
     const pipTxt = v => `${v > 0 ? '+' : ''}${v.toFixed(1)} pips`;
     // Hierarki penyaringan: Periode -> pilihan Monthly gain -> kartu ini. `trades` sudah berupa trade closed
     // yang lolos Periode (termasuk rentang bulan yang dipilih di Monthly gain), jadi kartu selalu satu data dengan Monthly gain.

@@ -73,7 +73,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     const depS = cdH.filter(h => h.type !== 'withdraw').reduce((a, h) => a + (Number(h.amount) || 0), 0), wdS = cdH.filter(h => h.type === 'withdraw').reduce((a, h) => a + (Number(h.amount) || 0), 0);
     const startBal = Math.max((account.balance || 0) - depS + wdS, 1), capBal = Math.max(account.balance || 0, 1); /* startBal = tampilan Saldo Awal; capBal = dasar semua % (modal sekarang) */
     const activeDays = new Set(filtered.map(t => dateOnly(t.date))).size;
-    const growthPct = pctSum(account, filtered); /* jumlah % tiap posisi terhadap modal pada tanggalnya */
+    const growthPct = pctChain(account, filtered); /* % berantai tiap posisi terhadap equity saat dibuka */
     const cs = withPct(account, filtered).sort((a, b) => new Date(a.date) - new Date(b.date));
     let cr = 0;
     const cv = [0, ...cs.map(t => (cr += Number(t.pnl) || 0))];
@@ -83,7 +83,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     const cy0 = 12 + (chi - 0) / csp * 100;
     const ccol = cr >= 0 ? EJC("#34d399") : EJC("#ff6b81");
     const mm = {}, mmP = {};
-    cs.forEach(t => { const k = dateOnly(t.date).slice(0, 7); mm[k] = (mm[k] || 0) + (Number(t.pnl) || 0); mmP[k] = (mmP[k] || 0) + (t.pct || 0); });
+    cs.forEach(t => { const k = dateOnly(t.date).slice(0, 7); mm[k] = (mm[k] || 0) + (Number(t.pnl) || 0); mmP[k] = chainAdd(mmP[k] || 0, t.pct || 0); });
     const mKs = Object.keys(mm);
     const bestMk = mKs.length ? mKs.reduce((a, b) => mm[b] > mm[a] ? b : a) : null;
     const MS = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
@@ -94,14 +94,14 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     const avgRR0 = rr0.length ? rr0.reduce((a, b) => a + b, 0) / rr0.length : null;
     const pips0 = cs.reduce((a, t) => a + pipsOf(t), 0);
     const dm0 = {}, dmP = {};
-    cs.forEach(t => { const k = dateOnly(t.date); dm0[k] = (dm0[k] || 0) + (Number(t.pnl) || 0); dmP[k] = (dmP[k] || 0) + (t.pct || 0); });
+    cs.forEach(t => { const k = dateOnly(t.date); dm0[k] = (dm0[k] || 0) + (Number(t.pnl) || 0); dmP[k] = chainAdd(dmP[k] || 0, t.pct || 0); });
     const dvals0 = Object.values(dm0);
     const bd0 = dvals0.length ? Math.max(...dvals0) : 0;
     const cLabels = ['Awal', ...cs.map(t => new Date(t.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }))];
     const sgn = v => v > 0.005 ? '+' : '';
     const heroRecs = ddBuild(filtered), heroFx = Object.assign(ddStat(heroRecs), { years: new Set(heroRecs.map(r => r.iso.slice(0, 4))).size, months: new Set(heroRecs.map(r => r.mk)).size });   // sama dengan kartu Performa per bulan: tahun, bulan, minggu, hari, sesi, posisi
     const bestTxt = bestMk ? `${MS[Number(bestMk.slice(5, 7)) - 1]} ${mm[bestMk] >= 0 ? '+' : ''}${(mmP[bestMk]).toFixed(1)}%` : '—';
-    const ddTxt = maxDd ? `-${(maxDd / (account.balance || 1) * 100).toFixed(1)}%` : '0%';
+    const ddTxt = maxDd ? `-${ddChain(account, filtered).toFixed(1)}%` : '0%';
     const periodTxt = period === 'Custom date range' && customStart && customEnd ? `${fmtLong(customStart)} – ${fmtLong(customEnd)}` : period;
     const periodBlock = React.createElement(React.Fragment, null,
         React.createElement("div", { className: "section-row detail-period-row" },
@@ -197,7 +197,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
                     React.createElement("span", null,
                         React.createElement("i", { style: { background: EJC("#ff6b81") } }),
                         "Drawdown terdalam: ",
-                        React.createElement("b", null, maxDd ? `-${(maxDd / (account.balance || 1) * 100).toFixed(1)}%` : '0%'))),
+                        React.createElement("b", null, maxDd ? `-${ddChain(account, filtered).toFixed(1)}%` : '0%'))),
                 React.createElement("div", { className: "combo-mini" }, [['Win rate', `${winRate}%`, filtered.length ? (winRate >= 50 ? 'positive' : 'negative') : ''], ['Profit Factor', pf0 === Infinity ? '∞' : pf0.toFixed(2), filtered.length ? (pf0 >= 1 ? 'positive' : 'negative') : ''], ['Total Trades', String(filtered.length), ''], ['Avg. R:R', avgRR0 ? avgRR0.toFixed(1) : '—', ''], ['Perolehan Pips', `${pips0 > 0 ? '+' : ''}${pips0.toFixed(1)}`, pips0 > 0 ? 'positive' : pips0 < 0 ? 'negative' : ''], ['Best Day', bd0 > 0 ? `+${money(bd0, account.currency)}` : '—', bd0 > 0 ? 'positive' : '']].map(([l, v, t]) => React.createElement("div", { key: l },
                     React.createElement("span", null, l),
                     React.createElement("b", { className: t }, v)))),
