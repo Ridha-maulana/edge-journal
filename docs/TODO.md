@@ -501,3 +501,4 @@
 - v5.9.87: semua % profit/loss dihitung dari modal sekarang (saldo setelah deposit/WD), bukan modal awal; kalkulator risiko ikut.
 - v5.9.88: % tiap posisi dihitung dari modal pada tanggal posisi itu (deposit/WD baru tidak mengubah % posisi lama); total/bulan/hari = jumlah % posisinya.
 - v5.9.89: Deposit/WD tercatat sampai jam:menit:detik; modal untuk % posisi memakai deposit/WD yang waktunya sudah lewat sebelum posisi dibuka.
+- v5.9.90: Tambah trade: Risk % dan hitung lot memakai modal pada waktu entry yang dipilih (ikut deposit/WD).
