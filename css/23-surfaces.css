@@ -661,3 +661,11 @@ html[data-mode]:not(#a):not(#b) .dd-nav .dd-step{font-size:15px;font-weight:700;
 html[data-mode]:not(#a):not(#b) .tp-card.t6-ch{padding:calc(var(--u)*25.5)!important}
 /* v5.9.81 kartu baris Performa per bulan: sudut tumpul 14px seperti kotak bulan */
 html[data-mode]:not(#a):not(#b) .dd-item{border-radius:14px!important}
+
+/* v5.9.92 ikon screenshot posisi di samping Hapus + penampil gambar */
+.shot-btn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;color:var(--tg2,currentColor);padding:8px 2px;font-weight:600}
+.shot-btn small{font-size:11px;opacity:.8}
+.shot-viewer{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 12px 20px}
+.shot-viewer .shot-close{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;width:44px;height:44px;border-radius:14px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;display:grid;place-items:center}
+.shot-viewer .shot-list{width:100%;max-width:560px;max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.shot-viewer .shot-list img{width:100%;height:auto;border-radius:14px;display:block}

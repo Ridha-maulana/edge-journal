@@ -30,7 +30,7 @@ function buildPrefill(row, tzMode) {
     const method = near(row.exit, row.tp) ? 'TP' : near(row.exit, row.sl) ? 'SL' : 'Manual';
     const feeTotal = -((Number(row.swap) || 0) + (Number(row.commission) || 0));
     const net = row.profit == null ? null : row.profit + (Number(row.swap) || 0) + (Number(row.commission) || 0);
-    return { symbol: row.symbol || 'XAUUSD', symbolRaw: row.symbolRaw, symbolKnown: !!row.symbol, side: row.side, entry: row.entry, exit: row.exit, lots: row.lots, sl: row.sl, tp: row.tp, fees: Math.round(feeTotal * 100) / 100, exitMethod: method, ticket: row.ticket, profit: row.profit, net, rawOpen: row.openTime || row.closeTime, rawClose: row.closeTime, hasOpen, date: openW, closeDate: closeW };
+    return { symbol: row.symbol || 'XAUUSD', symbolRaw: row.symbolRaw, symbolKnown: !!row.symbol, side: row.side, entry: row.entry, exit: row.exit, lots: row.lots, sl: row.sl, tp: row.tp, fees: Math.round(feeTotal * 100) / 100, exitMethod: method, ticket: row.ticket, shot: row.shot || '', profit: row.profit, net, rawOpen: row.openTime || row.closeTime, rawClose: row.closeTime, hasOpen, date: openW, closeDate: closeW };
 }
 /* hasil baca grafik MT5 (posisi open) -> isi awal form Tambah trade. Waktu buka tidak ada di grafik, jadi diisi waktu sekarang. */
 function buildChartPrefill(ch) {

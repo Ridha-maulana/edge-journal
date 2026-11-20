@@ -92,6 +92,7 @@ function parseMt5Text(text) {
         }
         if (row.entry === null)
             continue;
+        row.hi = i; row.ei = after; /* indeks baris teks: kepala posisi .. baris terakhir yang dipakai (untuk memotong gambar) */
         // tanda profit dari arah dan harga (lebih andal daripada membaca tanda minus hasil OCR)
         if (row.profit !== null) {
             const move = (side === 'Long' ? row.exit - row.entry : row.entry - row.exit);
@@ -104,6 +105,7 @@ function parseMt5Text(text) {
             const tk = lines[j].match(/#\s*(\d{5,})/);
             if (tk && !row.ticket) {
                 row.ticket = tk[1];
+                row.ei = Math.min(lines.length - 1, j + 2);
                 const od = lines[j].match(MT5_DT);
                 if (od)
                     row.openTime = od[0];

@@ -62,10 +62,38 @@ function prepareOcrCanvas(file) {
         img.src = url;
     });
 }
+/* Potong gambar riwayat MT5 per posisi: kotak tiap baris teks dari OCR -> irisan penuh lebar per posisi (JPEG kecil).
+   Mengembalikan array dataURL sejajar dengan parseMt5Text(data.text).rows; kosong bila kotak baris tidak cocok. */
+function cropMt5Rows(data, src) {
+    try {
+        if (!src || typeof parseMt5Text !== 'function') return [];
+        let ls = Array.isArray(data.lines) && data.lines.length ? data.lines : [];
+        if (!ls.length && Array.isArray(data.blocks)) data.blocks.forEach(b => (b.paragraphs || []).forEach(p => (p.lines || []).forEach(l => ls.push(l))));
+        const L = ls.filter(l => String(l.text || '').trim() && l.bbox).map(l => ({ y0: l.bbox.y0, y1: l.bbox.y1 }));
+        const nText = String(data.text || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean).length;
+        if (!L.length || L.length !== nText) return [];
+        const rows = parseMt5Text(data.text || '').rows, W = src.width, H = src.height, out = [];
+        rows.forEach((r, k) => {
+            const head = L[r.hi], last = L[r.ei]; if (!head || !last) { out.push(''); return; }
+            const lh = Math.max(8, head.y1 - head.y0), prev = rows[k - 1], next = rows[k + 1];
+            const top = prev && L[prev.ei] ? Math.max((L[prev.ei].y1 + head.y0) / 2, head.y0 - lh) : head.y0 - lh * .7;
+            const bot = next && L[next.hi] ? Math.min((last.y1 + L[next.hi].y0) / 2, last.y1 + lh) : last.y1 + lh * .7;
+            const y0 = Math.max(0, Math.round(top)), y1 = Math.min(H, Math.round(bot)), h = y1 - y0;
+            if (h < 10) { out.push(''); return; }
+            const sc = Math.min(1, 760 / W), c = document.createElement('canvas');
+            c.width = Math.max(1, Math.round(W * sc)); c.height = Math.max(1, Math.round(h * sc));
+            c.getContext('2d').drawImage(src, 0, y0, W, h, 0, 0, c.width, c.height);
+            out.push(c.toDataURL('image/jpeg', .74));
+            c.width = c.height = 1;
+        });
+        return out;
+    } catch (e) { return []; }
+}
 /* Banyak gambar sekaligus: mesin dimuat sekali, gambar dibaca satu per satu. onProgress(0..1, teks) -> array teks per gambar */
 async function ocrImageFiles(files, onProgress) {
     const list = [...files], total = list.length, texts = [];
     texts.charts = [];
+    texts.crops = [];
     let cur = 0;
     const report = (p, t) => { try {
         onProgress && onProgress(Math.min(0.99, (cur + p) / total), (total > 1 ? 'Gambar ' + Math.min(cur + 1, total) + ' dari ' + total + ' \u00B7 ' : '') + t);
@@ -86,6 +114,7 @@ async function ocrImageFiles(files, onProgress) {
                 const canvas = await prepareOcrCanvas(list[cur]);
                 const { data } = await worker.recognize(canvas);
                 texts.push(data.text || '');
+                texts.crops.push(cropMt5Rows(data, canvas._color));
                 // bukan riwayat MT5 -> coba baca sebagai grafik posisi open (garis BUY/SELL, TP, SL)
                 let chart = null;
                 try {
@@ -105,6 +134,7 @@ async function ocrImageFiles(files, onProgress) {
             }
             catch (e) {
                 texts.push('');
+                texts.crops.push([]);
                 texts.charts.push(null);
             }
         }

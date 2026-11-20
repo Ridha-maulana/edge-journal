@@ -184,10 +184,20 @@ function TradeCard({ trade, startBal, expanded, onToggle, onDelete, onClose, onE
         trade.closeDate && React.createElement("div", null,
             React.createElement("span", null, "Closed at"),
             React.createElement("b", null, new Date(trade.closeDate).toLocaleString('id-ID').replace(/\./g, ':'))),
-        ((_d = trade.screenshots) === null || _d === void 0 ? void 0 : _d.length) > 0 && React.createElement("div", { className: "screenshot-strip" }, trade.screenshots.map((src, i) => React.createElement("img", { key: i, src: src, alt: `Chart ${i + 1}` }))),
         trade.status === 'open' && React.createElement("button", { className: "secondary-btn detail-action", onClick: e => { e.stopPropagation(); onClose(); } }, "Tutup posisi"),
         React.createElement("div", { className: "trade-actions" },
             React.createElement("button", { className: "edit-btn", onClick: e => { e.stopPropagation(); onEdit(); } }, "\u270E Edit"),
             React.createElement("button", { className: "delete-btn", onClick: e => { e.stopPropagation(); onDelete(); } },
                 React.createElement(Trash2, { size: 14 }),
-                " Hapus")))); }
+                " Hapus"),
+            ((_d = trade.screenshots) === null || _d === void 0 ? void 0 : _d.length) > 0 && React.createElement(ShotButton, { shots: trade.screenshots })))); }
+/* ikon gambar di samping Hapus: ketuk untuk melihat potongan screenshot posisi ini */
+function ShotButton({ shots }) {
+    const [open, setOpen] = useState(false);
+    return React.createElement(React.Fragment, null,
+        React.createElement("button", { type: "button", className: "shot-btn", "aria-label": "Lihat screenshot posisi", onClick: e => { e.stopPropagation(); setOpen(true); } },
+            React.createElement(Icon, { name: "Image", size: 16 }), shots.length > 1 ? React.createElement("small", null, shots.length) : null),
+        open && ReactDOM.createPortal(React.createElement("div", { className: "shot-viewer", role: "dialog", onClick: e => { e.stopPropagation(); setOpen(false); } },
+            React.createElement("button", { type: "button", className: "shot-close", "aria-label": "Tutup", onClick: e => { e.stopPropagation(); setOpen(false); } }, React.createElement(X, { size: 20 })),
+            React.createElement("div", { className: "shot-list", onClick: e => e.stopPropagation() }, shots.map((src, i) => React.createElement("img", { key: i, src: src, alt: "Screenshot " + (i + 1) })))), document.body));
+}
