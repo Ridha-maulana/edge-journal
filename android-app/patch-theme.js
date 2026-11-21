@@ -42,3 +42,38 @@ try {
     console.log('patch-theme: plugin EjTheme terpasang');
   } else console.log('patch-theme: folder java belum ada, splash tema dilewati');
 } catch (e) { console.log('patch-theme: splash tema dilewati: ' + e.message); }
+
+/* Alarm (v5.9.93): izin notifikasi dan alarm tepat waktu + nada alarm (res/raw/ej_alarm.wav) untuk plugin LocalNotifications.
+   Nada dibuat langsung di sini (WAV 16-bit, bunyi bip bergantian ~12 detik), jadi tidak ada file biner di repo. Aman dijalankan berulang kali. */
+try {
+  const M = 'android/app/src/main/AndroidManifest.xml';
+  if (fs.existsSync(M)) {
+    let m = fs.readFileSync(M, 'utf8');
+    for (const perm of ['POST_NOTIFICATIONS', 'SCHEDULE_EXACT_ALARM', 'USE_EXACT_ALARM', 'USE_FULL_SCREEN_INTENT', 'WAKE_LOCK', 'RECEIVE_BOOT_COMPLETED', 'VIBRATE']) {
+      if (!m.includes('android.permission.' + perm + '"')) m = m.replace('</manifest>', '    <uses-permission android:name="android.permission.' + perm + '" />\n</manifest>');
+    }
+    fs.writeFileSync(M, m);
+    console.log('patch-theme: izin alarm terpasang');
+  }
+  const rawDir = 'android/app/src/main/res/raw';
+  if (fs.existsSync('android/app/src/main/res')) {
+    fs.mkdirSync(rawDir, { recursive: true });
+    const sr = 22050, secs = 12, n = sr * secs, buf = Buffer.alloc(44 + n * 2);
+    buf.write('RIFF', 0); buf.writeUInt32LE(36 + n * 2, 4); buf.write('WAVE', 8); buf.write('fmt ', 12);
+    buf.writeUInt32LE(16, 16); buf.writeUInt16LE(1, 20); buf.writeUInt16LE(1, 22); buf.writeUInt32LE(sr, 24); buf.writeUInt32LE(sr * 2, 28);
+    buf.writeUInt16LE(2, 32); buf.writeUInt16LE(16, 34); buf.write('data', 36); buf.writeUInt32LE(n * 2, 40);
+    for (let i = 0; i < n; i++) {
+      const t = i / sr, cyc = t % 1.5; let v = 0;
+      if (cyc < 1.0) {
+        const k = Math.floor(cyc / 0.25), u = cyc - k * 0.25;
+        if (u < 0.17) {
+          const f = k % 2 ? 1046.5 : 880, env = Math.min(1, u / 0.01, (0.17 - u) / 0.02);
+          v = env * (Math.sin(2 * Math.PI * f * t) + 0.3 * Math.sin(4 * Math.PI * f * t)) * 0.55;
+        }
+      }
+      buf.writeInt16LE(Math.max(-32767, Math.min(32767, Math.round(v * 32767))), 44 + i * 2);
+    }
+    fs.writeFileSync(rawDir + '/ej_alarm.wav', buf);
+    console.log('patch-theme: nada alarm ej_alarm.wav dibuat');
+  }
+} catch (e) { console.log('patch-theme: alarm dilewati: ' + e.message); }
