@@ -30,7 +30,21 @@ function markLocalChanged() {
     try { const m = JSON.parse(localStorage.getItem('edge-sync-meta') || '{}'); m.dirty = true; m.localRev = (m.localRev || 0) + 1; localStorage.setItem('edge-sync-meta', JSON.stringify(m)); } catch (e) { }
     try { if (window.cloudSync && window.cloudSync.localChanged) window.cloudSync.localChanged(); } catch (e) { }
 }
-function saveStore(activeAccountId, accounts) { localStorage.setItem('edge-journal-v3', JSON.stringify({ activeAccountId, accounts })); markLocalChanged(); }
+/* Data alarm ikut tersimpan di data jurnal (field "alarms") supaya ikut sinkron ke akun online */
+function currentAlarmData() {
+    try {
+        const p = JSON.parse(localStorage.getItem('edge-journal-v3') || 'null');
+        if (p && p.alarms) return p.alarms;
+        const s = JSON.parse(localStorage.getItem('ej-alarms-v1') || 'null');
+        if (s && Array.isArray(s.list) && s.list.length) return { v: 1, list: s.list, seq: s.seq | 0 };
+    } catch (e) { }
+    return null;
+}
+function saveStore(activeAccountId, accounts) {
+    const o = { activeAccountId, accounts }, al = currentAlarmData();
+    if (al) o.alarms = al;
+    localStorage.setItem('edge-journal-v3', JSON.stringify(o)); markLocalChanged();
+}
 function normalizeAccounts(accounts) { return (accounts || []).map(a => ({ ...a, capitalHistory: Array.isArray(a.capitalHistory) ? a.capitalHistory : [] })); }
 function validateBackup(data) {
     if (!data || typeof data !== 'object' || !Array.isArray(data.accounts) || !data.accounts.length)

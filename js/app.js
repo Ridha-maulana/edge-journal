@@ -30,7 +30,9 @@ function App() {
                 return false;
             const next = normalizeAccounts(d.accounts);
             const active = next.some(a => a.id === d.activeAccountId) ? d.activeAccountId : next[0].id;
-            localStorage.setItem('edge-journal-v3', JSON.stringify({ activeAccountId: active, accounts: next }));
+            const saved = { activeAccountId: active, accounts: next }, al = (d.alarms && Array.isArray(d.alarms.list)) ? d.alarms : currentAlarmData();
+            if (al) saved.alarms = al;
+            localStorage.setItem('edge-journal-v3', JSON.stringify(saved));
             setAccounts(next); setActiveAccountId(active);
             return true;
         } catch (e) { return false; }

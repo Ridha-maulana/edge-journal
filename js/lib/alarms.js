@@ -1,4 +1,4 @@
-/* Alarm (v5.9.95): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
+/* Alarm (v5.9.96): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
    - Data hanya di HP ini (localStorage "ej-alarms-v1"), tidak ikut sinkron online.
    - Aplikasi terbuka (web/PWA): jam dicek tiap detik, layar alarm + nada + getar.
    - APK 1.4.0+ (plugin EjAlarm): jadwal dikirim ke AlarmManager Android, jadi alarm berbunyi walau aplikasi tertutup atau HP terkunci,
@@ -31,9 +31,36 @@
     }
     function persist(sync) {
         try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { }
+        mirror();
         subs.slice().forEach(f => { try { f(); } catch (e) { } });
         if (sync !== false) syncNative();
     }
+    /* Daftar alarm ikut disimpan di data jurnal (edge-journal-v3, field "alarms") sehingga ikut sinkron ke akun online.
+       Yang ikut hanya definisi alarm; riwayat bunyi (fired) dan tunda tetap di HP ini. */
+    const STORE = 'edge-journal-v3';
+    function mirror() {
+        try {
+            const raw = localStorage.getItem(STORE); if (!raw) return;
+            const o = JSON.parse(raw); if (!o || !Array.isArray(o.accounts)) return;
+            const d = { v: 1, list: st.list, seq: st.seq };
+            if (o.alarms ? JSON.stringify(o.alarms) === JSON.stringify(d) : !st.list.length) return;
+            o.alarms = d; localStorage.setItem(STORE, JSON.stringify(o));
+            if (typeof markLocalChanged === 'function') markLocalChanged();
+        } catch (e) { }
+    }
+    /* Data baru datang dari akun online (atau login di HP baru): pakai daftar alarm dari sana */
+    function reload() {
+        try {
+            const o = JSON.parse(localStorage.getItem(STORE) || 'null'), sa = o && o.alarms;
+            if (!sa || !Array.isArray(sa.list)) { mirror(); return; }
+            if (JSON.stringify(sa.list) === JSON.stringify(st.list)) return;
+            st.list = sa.list; st.seq = Math.max(st.seq | 0, sa.seq | 0);
+            try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { }
+            subs.slice().forEach(f => { try { f(); } catch (e) { } });
+            syncNative();
+        } catch (e) { }
+    }
+    window.addEventListener('ej-state-applied', reload);
     const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
     const hm = (h, m, s) => pad(h) + ':' + pad(m) + (s ? ':' + pad(s) : '');
     function toneName(id, a) { return id === 'sistem' ? 'Alarm bawaan HP' : id === 'hp' ? ((a && a.tt) || 'Nada pilihan dari HP') : (TONES[id] || TONES.klasik).name; }
@@ -219,6 +246,10 @@
     }
     function start() {
         if (tickTimer) return;
+        try {   /* HP baru: daftar kosong tetapi data jurnal sudah berisi alarm -> ambil; sebaliknya kirim alarm lama ke data jurnal */
+            const o = JSON.parse(localStorage.getItem(STORE) || 'null');
+            if (o && o.alarms && Array.isArray(o.alarms.list) && !st.list.length && o.alarms.list.length) reload(); else if (!(o && o.alarms)) mirror();
+        } catch (e) { }
         tickTimer = setInterval(tick, 1000);
         document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { tick(); syncNative(); pullRinging(); } });
         tick(); nativeInit();
@@ -402,7 +433,7 @@
     }
     function remove(id) { st.list = st.list.filter(a => a.id !== id); persist(); }
     window.EJAlarm = {
-        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, pickRingtone, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
+        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, pickRingtone, reload, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
         get list() { return st.list; },
         get ringing() { return ring.slice(); },
         get isNative() { return !!(ejReady || (native && nativeReady)); },

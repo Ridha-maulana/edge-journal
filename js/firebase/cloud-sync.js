@@ -302,8 +302,11 @@ async function boot() {
         storage: ls,
         backend,
         applyState(text) {
-            if (typeof window.__applyRemoteState === 'function') return window.__applyRemoteState(text);
-            try { JSON.parse(text); ls.setItem(STORE_KEY, text); return true; } catch (e) { return false; }   // aplikasi belum tampil: dibaca saat mulai
+            let ok = false;
+            if (typeof window.__applyRemoteState === 'function') ok = window.__applyRemoteState(text);
+            else { try { JSON.parse(text); ls.setItem(STORE_KEY, text); ok = true; } catch (e) { ok = false; } }   // aplikasi belum tampil: dibaca saat mulai
+            if (ok) { try { window.dispatchEvent(new Event('ej-state-applied')); } catch (e) { } }
+            return ok;
         },
     });
 
