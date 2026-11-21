@@ -3,6 +3,8 @@ package com.ridha.edgejournal;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -24,6 +26,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(EjThemePlugin.class);
+        registerPlugin(EjAlarmPlugin.class);
         int bg = 0;
         boolean has = false;
         try {
@@ -33,6 +36,7 @@ public class MainActivity extends BridgeActivity {
             if (has) getWindow().setBackgroundDrawable(new ColorDrawable(bg));
         } catch (Throwable e) { has = false; }
         super.onCreate(savedInstanceState);
+        showOverLock(getIntent());
         try {
             if (has && getBridge() != null && getBridge().getWebView() != null) getBridge().getWebView().setBackgroundColor(bg);
         } catch (Throwable e) { }
@@ -41,6 +45,27 @@ public class MainActivity extends BridgeActivity {
         } catch (Throwable e) {
             edge = false;
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        showOverLock(intent);
+    }
+
+    /* Dibuka oleh alarm yang berbunyi: tampil di atas layar kunci dan menyalakan layar */
+    private void showOverLock(Intent it) {
+        try {
+            if (it == null || !it.getBooleanExtra("ej_alarm_ring", false)) return;
+            if (Build.VERSION.SDK_INT >= 27) {
+                setShowWhenLocked(true);
+                setTurnScreenOn(true);
+            } else {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+            }
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } catch (Throwable e) { }
     }
 
     /* Halaman web digambar sampai ke belakang bilah status (transparan), seperti launcher HP.
