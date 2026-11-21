@@ -200,14 +200,17 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
     const preFont = i => { [i - 1, i, i + 1].forEach(j => { if (fontKeys[j])
         fontKeys[j].forEach(EJ.preload); }); };
     return React.createElement(React.Fragment, null,
-        React.createElement("div", { className: "sec-label" }, "Tampilan aplikasi"),
+        React.createElement("div", { className: "sec-label" }, "Umum"),
         React.createElement(ApRow, { icon: React.createElement(Home, { size: 18 }), title: "Halaman utama", desc: "Template lengkap: header, isi, dan menu bawah", value: (HOME_LIST.find(x => x[0] === (homeT || 0)) || HOME_LIST[0])[1].replace(/^Template (\d) · /, 'T$1 · ').replace(' (sekarang)', ''), onOpen: () => setDlg('home') }),
         React.createElement(ApRow, { icon: st.mode === 'light' || (st.mode === 'auto' && EJ.resolved === 'light') ? React.createElement(Sun, { size: 18 }) : React.createElement(Moon, { size: 18 }), title: "Mode tampilan", desc: "Terang, gelap, atau otomatis", value: modeLabel, onOpen: () => setDlg('mode') }),
+        React.createElement("div", { className: "sec-label" }, "Warna & huruf"),
         React.createElement(ApRow, { icon: React.createElement(Palette, { size: 18 }), title: "Tema aplikasi", desc: "78 tema, masing-masing terang & gelap", value: th.name, dot: th.grad[0], onOpen: () => setDlg('theme') }),
         React.createElement(ApRow, { icon: React.createElement(TypeIcon, { size: 18 }), title: "Font aplikasi", desc: "Jenis huruf di seluruh aplikasi", value: fo.name, onOpen: () => { preFont(startF); setDlg('font'); } }),
+        React.createElement("div", { className: "sec-label" }, "Efek & latar"),
         React.createElement(ApRow, { icon: React.createElement(Sparkles, { size: 18 }), title: "Efek tampilan", desc: "Kartu, tombol, ikon, latar, dan gerak: pilih semua atau satu per satu", value: fxCount(st), onOpen: () => setDlg('fx') }),
         React.createElement(ApRow, { icon: React.createElement(Layers, { size: 18 }), title: "Efek permukaan kartu", desc: "Doff, solid, transparan, bayangan: kartu, header, dan menu bawah", value: sfcName(EJ, st.sfc | 0), onOpen: () => setDlg('sfc') }),
         React.createElement(ApRow, { icon: React.createElement(Icon, { name: "Image", size: 18 }), title: "Latar aplikasi", desc: "Warna dasar, doff, kaca, anime, atau pola di belakang aplikasi", value: bgName(EJ, st.bg), onOpen: () => setDlg('bg') }),
+        React.createElement("div", { className: "sec-label" }, "Header & menu"),
         React.createElement(HeaderPicker, { value: headerVariant || 0, onChange: onHeaderVariant }),
         React.createElement(NavPicker, { value: navVariant || 0, onChange: onNavVariant }),
         React.createElement("button", { type: "button", className: "ap-reset" + (sure ? ' sure' : ''), onClick: resetAll }, sure ? "Ketuk lagi untuk mengembalikan" : "Kembalikan tampilan standar"),
@@ -226,4 +229,15 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
         dlg === 'custom' && React.createElement(CustomEditor, { EJ: EJ, onClose: close }),
         dlg === 'font' && React.createElement(ApDialog, { title: "Font", onClose: close, className: "ap-wide" },
             React.createElement(ApPager, { pages: fontPages, titles: fontKeys.map((_, i) => String(i + 1)), start: startF, onPage: preFont })));
+}
+
+/* Baris di Tools: ringkasan pengaturan sekarang dalam bentuk chip (v5.9.97) */
+function AppearanceEntry({ onOpen }) {
+    const EJ = useAppearance(), st = EJ.state, th = EJ.THEMES[st.theme], fo = EJ.FONTS[st.font];
+    const mode = { light: 'Terang', dark: 'Gelap', auto: 'Otomatis' }[st.mode];
+    return React.createElement("button", { type: "button", className: "pick-row sp-entry", onClick: onOpen },
+        React.createElement("span", { className: "pick-ic" }, React.createElement(Icon, { name: "Paintbrush", size: 18 })),
+        React.createElement("span", { className: "pick-tx" }, React.createElement("b", null, "Tampilan aplikasi"),
+            React.createElement("span", { className: "sp-chips" }, React.createElement("u", null, mode), React.createElement("u", null, th ? th.name : ''), React.createElement("u", null, fo ? fo.name : ''))),
+        React.createElement(ChevronRight, { size: 18 }));
 }

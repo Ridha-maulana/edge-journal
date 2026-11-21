@@ -1,4 +1,4 @@
-const C='ej3-5.9.96';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.9.97';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -10,7 +10,7 @@ const SHELL=[
   './css/00-colors.css', './js/lib/color-table.js', './js/lib/appearance.js',
   './css/01-base.css',
   './css/02-splash.css',
-  './css/15-header-variants.css', './css/16-design-system.css', './css/17-nav-variants.css', './css/18-flat-pages.css', './css/19-appearance.css', './css/20-effects.css', './css/21-home-templates.css', './css/22-edge.css', './css/23-surfaces.css', './css/24-alarm.css',
+  './css/15-header-variants.css', './css/16-design-system.css', './css/17-nav-variants.css', './css/18-flat-pages.css', './css/19-appearance.css', './css/20-effects.css', './css/21-home-templates.css', './css/22-edge.css', './css/23-surfaces.css', './css/24-alarm.css', './css/25-pages.css',
   './css/03-nav-legacy.css',
   './css/04-drilldown.css',
   './css/05-nav-simple-fullscreen.css',
@@ -30,7 +30,7 @@ const SHELL=[
   './js/components/app-header.js',
   './js/components/home-parts.js',
   './js/components/home-templates.js',
-  './js/components/nav-variants.js', './js/components/risk-calc.js', './js/components/alarm-ui.js', './js/lib/alarms.js', './js/components/appearance-ui.js',
+  './js/components/nav-variants.js', './js/components/risk-calc.js', './js/components/alarm-ui.js', './js/lib/alarms.js', './js/components/subpage.js', './js/components/appearance-ui.js',
   './js/watchdog.js',
   './js/lib/concentric.js',
   './js/components/account-modal.js',
