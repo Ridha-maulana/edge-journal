@@ -76,7 +76,7 @@ public class EjAlarmService extends Service {
                 if (!wake.isHeld()) wake.acquire(MAX_RING_MS + 15000L);
             }
         } catch (Throwable e) { }
-        playTone(b.getString("tone", "klasik"));
+        playTone(b.getString("tone", "klasik"), b.getString("tu", ""));
         if (b.getBoolean("vib", true)) vibrate();
         handler.removeCallbacks(autoStop);
         handler.postDelayed(autoStop, MAX_RING_MS);
@@ -109,8 +109,9 @@ public class EjAlarmService extends Service {
         return nb.build();
     }
 
-    private Uri toneUri(String tone) {
+    private Uri toneUri(String tone, String tu) {
         try {
+            if ("hp".equals(tone) && tu != null && tu.length() > 0) return Uri.parse(tu);
             if (tone != null && !"sistem".equals(tone) && tone.matches("[a-z0-9_]+")) {
                 int rid = getResources().getIdentifier("ej_t_" + tone, "raw", getPackageName());
                 if (rid != 0) return Uri.parse("android.resource://" + getPackageName() + "/" + rid);
@@ -121,11 +122,11 @@ public class EjAlarmService extends Service {
         return u;
     }
 
-    private void playTone(String tone) {
+    private void playTone(String tone, String tu) {
         try {
             player = new MediaPlayer();
             player.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
-            player.setDataSource(this, toneUri(tone));
+            player.setDataSource(this, toneUri(tone, tu));
             player.setLooping(true);
             player.prepare();
             player.start();

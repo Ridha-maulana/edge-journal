@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 
+import androidx.activity.result.ActivityResult;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -19,6 +22,7 @@ import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.ActivityCallback;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 /* Jembatan JavaScript untuk alarm native (v5.9.94).
@@ -28,6 +32,7 @@ import com.getcapacitor.annotation.CapacitorPlugin;
    openSettings({kind}): buka pengaturan 'notif' | 'exact' | 'full'
    getRinging()       : alarm yang sedang berbunyi (bila ada)
    stop() / snooze({min}) : matikan atau tunda alarm yang sedang berbunyi
+   pickRingtone({uri})  : buka daftar nada dering HP, hasil {ok,uri,title} (v5.9.95)
    Peristiwa: alarmRing (alarm mulai berbunyi), alarmStop (berhenti) */
 @CapacitorPlugin(name = "EjAlarm")
 public class EjAlarmPlugin extends Plugin {
@@ -89,6 +94,7 @@ public class EjAlarmPlugin extends Plugin {
             }
             r.put("full", full);
             r.put("sdk", Build.VERSION.SDK_INT);
+            r.put("picker", true);
         } catch (Throwable e) { }
         call.resolve(r);
     }
@@ -124,6 +130,48 @@ public class EjAlarmPlugin extends Plugin {
             c.startActivity(i);
         } catch (Throwable e) { }
         call.resolve();
+    }
+
+    @PluginMethod
+    public void pickRingtone(PluginCall call) {
+        try {
+            Intent i = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+            i.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM | RingtoneManager.TYPE_RINGTONE);
+            i.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+            i.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+            i.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Nada dering alarm");
+            String cur = call.getString("uri", "");
+            Uri existing = (cur != null && cur.length() > 0) ? Uri.parse(cur) : RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            i.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, existing);
+            startActivityForResult(call, i, "ringtoneResult");
+        } catch (Throwable e) {
+            call.reject(String.valueOf(e.getMessage()));
+        }
+    }
+
+    @ActivityCallback
+    private void ringtoneResult(PluginCall call, ActivityResult result) {
+        if (call == null) return;
+        JSObject r = new JSObject();
+        try {
+            Intent d = result.getData();
+            Uri u = d == null ? null : (Uri) d.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            if (result.getResultCode() == Activity.RESULT_OK && u != null) {
+                String title = "Nada pilihan dari HP";
+                try {
+                    Ringtone rt = RingtoneManager.getRingtone(getContext(), u);
+                    if (rt != null) { String t = rt.getTitle(getContext()); if (t != null && t.length() > 0) title = t; }
+                } catch (Throwable e) { }
+                r.put("ok", true);
+                r.put("uri", u.toString());
+                r.put("title", title);
+            } else {
+                r.put("ok", false);
+            }
+        } catch (Throwable e) {
+            r.put("ok", false);
+        }
+        call.resolve(r);
     }
 
     @PluginMethod

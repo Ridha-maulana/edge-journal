@@ -1,4 +1,4 @@
-/* Alarm (v5.9.94): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
+/* Alarm (v5.9.95): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
    - Data hanya di HP ini (localStorage "ej-alarms-v1"), tidak ikut sinkron online.
    - Aplikasi terbuka (web/PWA): jam dicek tiap detik, layar alarm + nada + getar.
    - APK 1.4.0+ (plugin EjAlarm): jadwal dikirim ke AlarmManager Android, jadi alarm berbunyi walau aplikasi tertutup atau HP terkunci,
@@ -36,7 +36,7 @@
     }
     const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
     const hm = (h, m, s) => pad(h) + ':' + pad(m) + (s ? ':' + pad(s) : '');
-    function toneName(id) { return id === 'sistem' ? 'Nada alarm HP' : (TONES[id] || TONES.klasik).name; }
+    function toneName(id, a) { return id === 'sistem' ? 'Alarm bawaan HP' : id === 'hp' ? ((a && a.tt) || 'Nada pilihan dari HP') : (TONES[id] || TONES.klasik).name; }
     /* "1 hari 2 jam 5 menit"; detik ikut ditulis bila sec=true atau sisa waktu di bawah semenit */
     function fmtDur(ms, sec) {
         let tot = Math.max(1, Math.ceil(ms / 1000));
@@ -297,7 +297,7 @@
         all.sort((x, y) => x.t - y.t);
         return all.slice(0, MAXITEMS).map((o, i) => {
             const a = o.alarm;
-            return { id: i + 1, at: o.t, grp: o.key.slice(0, o.key.lastIndexOf('|')), step: o.step, time: clock(o.t, a), body: bodyOf(a, o.step, o.msg), sub: o.step === 0 ? 'Alarm' : 'Alarm susulan' + (a.label ? ' · ' + a.label + ' ' + hm(a.h, a.m, a.s) : ''), tone: a.tone || 'klasik', vib: a.vibrate !== false, snz: 5, pre: o.step === 0 };
+            return { id: i + 1, at: o.t, grp: o.key.slice(0, o.key.lastIndexOf('|')), step: o.step, time: clock(o.t, a), body: bodyOf(a, o.step, o.msg), sub: o.step === 0 ? 'Alarm' : 'Alarm susulan' + (a.label ? ' · ' + a.label + ' ' + hm(a.h, a.m, a.s) : ''), tone: a.tone || 'klasik', tu: a.tone === 'hp' ? (a.tu || '') : '', vib: a.vibrate !== false, snz: 5, pre: o.step === 0 };
         });
     }
     function buildNative() {
@@ -369,6 +369,12 @@
         if (!native) nativeInit();
         return res;
     }
+    /* Buka daftar nada dering asli HP (APK 1.5.0+). Hasil: {uri,title}, null bila dibatalkan, {err:true} bila APK belum mendukung */
+    async function pickRingtone(cur) {
+        if (!ejReady) return { err: true };
+        try { const r = await ej.pickRingtone({ uri: cur || '' }); return r && r.ok && r.uri ? { uri: r.uri, title: r.title || 'Nada pilihan dari HP' } : null; }
+        catch (e) { return { err: true }; }
+    }
     function openSettings(kind) { if (ejReady) { try { ej.openSettings({ kind }); } catch (e) { } } }
     /* ===== Operasi daftar ===== */
     function blank(h, m, label) {
@@ -376,7 +382,7 @@
         return { id: '', n: 0, h: new Date(t).getHours(), m: new Date(t).getMinutes(), s: 0, repeat: 'days', days: [1, 2, 3, 4, 5], date: '', label: label || '', vibrate: true, tone: 'klasik', del: false, on: true, follows: [] };
     }
     function save(a) {
-        const o = Object.assign({}, a, { s: Math.max(0, Math.min(59, +a.s || 0)), tone: (a.tone === 'sistem' || TONES[a.tone]) ? a.tone : 'klasik', follows: (a.follows || []).map(f => ({ min: Math.max(1, Math.min(720, +f.min || 5)), msg: String(f.msg || '').slice(0, 80) })).sort((x, y) => x.min - y.min), label: String(a.label || '').slice(0, 60) });
+        const o = Object.assign({}, a, { s: Math.max(0, Math.min(59, +a.s || 0)), tone: (a.tone === 'sistem' || (a.tone === 'hp' && a.tu) || TONES[a.tone]) ? a.tone : 'klasik', tu: String(a.tu || '').slice(0, 400), tt: String(a.tt || '').slice(0, 80), follows: (a.follows || []).map(f => ({ min: Math.max(1, Math.min(720, +f.min || 5)), msg: String(f.msg || '').slice(0, 80) })).sort((x, y) => x.min - y.min), label: String(a.label || '').slice(0, 60) });
         if (o.repeat !== 'once' && !(o.days && o.days.length)) o.repeat = 'once';
         if (o.repeat === 'once') o.date = ymd(new Date(nextAt(o.h, o.m, o.s)));
         o.on = true;
@@ -396,7 +402,7 @@
     }
     function remove(id) { st.list = st.list.filter(a => a.id !== id); persist(); }
     window.EJAlarm = {
-        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
+        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, pickRingtone, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
         get list() { return st.list; },
         get ringing() { return ring.slice(); },
         get isNative() { return !!(ejReady || (native && nativeReady)); },

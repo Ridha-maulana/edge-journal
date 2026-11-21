@@ -9,6 +9,8 @@
     ICONS.AlVib = [["path", { d: "M2 8v8" }], ["path", { d: "M5 6v12" }], ["path", { d: "M22 8v8" }], ["path", { d: "M19 6v12" }], ["rect", { x: 8, y: 3, width: 8, height: 18, rx: 2 }]];
     ICONS.AlMusic = [["path", { d: "M9 18V5l12-2v13" }], ["circle", { cx: 6, cy: 18, r: 3 }], ["circle", { cx: 18, cy: 16, r: 3 }]];
     ICONS.AlPlay = [["path", { d: "M6 4l14 8-14 8z" }]];
+    ICONS.AlZz = [["path", { d: "M3 4h7L3 13h7" }], ["path", { d: "M13 12h6l-6 8h6" }]];
+    ICONS.AlClose = P("M18 6 6 18M6 6l12 12");
     ICONS.AlTag = [["path", { d: "M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8Z" }], ["circle", { cx: 7, cy: 7, r: 1.2 }]];
     ICONS.AlCheck = P("M20 6 9 17l-5-5");
     ICONS.AlBack = P("m15 18-6-6 6-6");
@@ -80,6 +82,13 @@
     function TonePage({ a, set, onBack }) {
         const cur = a.tone || 'klasik';
         const ids = A.TONE_IDS.concat(A.isEj ? ['sistem'] : []);
+        async function pickHp() {
+            A.stopPreview();
+            const r = await A.pickRingtone(a.tu);
+            if (!r) return;
+            if (r.err) { toast('Perbarui APK ke versi terbaru untuk memilih nada dari HP'); return; }
+            set({ tone: 'hp', tu: r.uri, tt: r.title });
+        }
         return h(React.Fragment, null,
             h("div", { className: "al-sh" },
                 h("button", { type: "button", className: "al-ib", "aria-label": "Kembali", onClick: onBack }, ic("AlBack", 22, 2)),
@@ -90,7 +99,13 @@
                     h("b", null, A.toneName(id)),
                     id === 'sistem' && h("small", null, "Nada alarm bawaan HP"),
                     cur === id && ic("AlCheck", 18, 2.4)))),
-                h("p", { className: "al-note" }, "Ketuk nada untuk mendengar contohnya." + (A.isEj ? "" : " Nada bawaan HP tersedia di APK terbaru."))));
+                h("div", { className: "al-cap" }, "Dari HP Anda"),
+                h("div", { className: "al-grp" },
+                    h("button", { type: "button", className: "al-op" + (cur === 'hp' ? " sel" : ""), role: "radio", "aria-checked": cur === 'hp', onClick: pickHp, disabled: !A.isEj, style: A.isEj ? null : { opacity: .5 } },
+                        ic("AlMusic"), h("b", null, "Pilih dari daftar nada dering HP"),
+                        h("small", null, cur === 'hp' ? (a.tt || 'Nada pilihan') : (A.isEj ? "Buka" : "Perlu APK terbaru")),
+                        cur === 'hp' ? ic("AlCheck", 18, 2.4) : ic("ChevronRight", 18, 2))),
+                h("p", { className: "al-note" }, "Ketuk nada untuk mendengar contohnya. Nada dari HP diputar oleh HP sendiri saat memilih, dan dipakai saat alarm berbunyi, juga di layar kunci.")));
     }
     function Follow({ f, i, at, sec, open, onOpen, onChange, onDel }) {
         const t = new Date(at + f.min * 60000);
@@ -120,7 +135,7 @@
         const set = p => setA(x => Object.assign({}, x, p));
         const editing = !!a.id;
         const baseAt = A.nextAt(a.h, a.m, a.s || 0);
-        const sub = 'Alarm dalam ' + A.fmtDur(baseAt - Date.now(), (a.s || 0) > 0);
+        const sub = 'Alarm dalam ' + A.fmtDur(baseAt - Date.now(), true);
         const setFollow = (i, p) => setA(x => ({ ...x, follows: x.follows.map((f, j) => j === i ? Object.assign({}, f, p) : f) }));
         const addFollow = () => { const last = a.follows.length ? a.follows[a.follows.length - 1].min : 0; setA(x => ({ ...x, follows: x.follows.concat([{ min: last + 5, msg: '' }]) })); setOpen(a.follows.length); };
         const delFollow = i => { setA(x => ({ ...x, follows: x.follows.filter((_, j) => j !== i) })); setOpen(-1); };
@@ -165,13 +180,61 @@
                     h("div", { className: "al-grp" },
                         h("button", { type: "button", className: "al-op", onClick: () => setPage('repeat') }, ic("AlRepeat"), h("b", null, "Ulangi"), h("small", null, A.repeatLabel(a)), ic("ChevronRight", 18, 2)),
                         h("div", { className: "al-op" }, ic("AlVib"), h("b", null, "Getar saat alarm berbunyi"), h(Switch, { on: a.vibrate !== false, onChange: v => set({ vibrate: v }), label: "Getar" })),
-                        h("button", { type: "button", className: "al-op", onClick: () => setPage('tone') }, ic("AlMusic"), h("b", null, "Nada dering"), h("small", null, A.toneName(a.tone || 'klasik')), ic("ChevronRight", 18, 2)),
+                        h("button", { type: "button", className: "al-op", onClick: () => setPage('tone') }, ic("AlMusic"), h("b", null, "Nada dering"), h("small", null, A.toneName(a.tone || 'klasik', a)), ic("ChevronRight", 18, 2)),
                         a.repeat === 'once' && h("div", { className: "al-op" }, h("span", { className: "al-sp18" }), h("b", null, "Hapus setelah alarm berbunyi"), h(Switch, { on: !!a.del, onChange: v => set({ del: v }), label: "Hapus setelah berbunyi" }))),
                     h("label", { className: "al-op al-lab" }, ic("AlTag"), h("b", null, "Label"), h("input", { type: "text", maxLength: 60, value: a.label, placeholder: "Masukkan label", onChange: e => set({ label: e.target.value }) })),
                     h("p", { className: "al-note" }, A.isEj ? "Alarm berbunyi, bergetar, dan tampil di layar kunci walau aplikasi ditutup." : A.isNative ? "Alarm berbunyi walau aplikasi ditutup. Pasang APK terbaru untuk banner Tunda/Matikan dan layar kunci." : "Versi web: alarm hanya berbunyi selama aplikasi terbuka. Pasang APK terbaru agar tetap berbunyi saat aplikasi ditutup."),
                     editing && h("button", { type: "button", className: "al-del" + (sure ? " sure" : ""), onClick: del }, ic("AlTrash"), sure ? " Ketuk lagi untuk menghapus" : " Hapus alarm")));
+        const shRef = useRef(null), dr = useRef(null), mode = useRef('mid');
+        const MID = '76dvh', FULL = 'calc(100dvh - var(--sat, env(safe-area-inset-top, 0px)) - 8px)';
+        const hpx = (el, css) => { const o = el.style.height, tr = el.style.transition; el.style.transition = 'none'; el.style.height = css; const v = el.getBoundingClientRect().height; el.style.height = o; el.getBoundingClientRect(); el.style.transition = tr; return v; };
+        function goMode(m) {
+            const el = shRef.current; if (!el) return;
+            mode.current = m;
+            el.classList.remove('drag');
+            el.style.height = m === 'full' ? FULL : MID;
+        }
+        function closeAnim() {
+            const el = shRef.current; if (!el) { onClose(); return; }
+            el.classList.remove('drag'); el.style.transition = 'transform .2s ease-in'; el.style.transform = 'translateY(100%)';
+            setTimeout(onClose, 190);
+        }
+        /* Tarik gagang atau header: pantau di document supaya tetap jalan saat jari/mouse keluar dari popup */
+        function dStart(e) {
+            if (e.pointerType === 'mouse' && e.button > 0) return;
+            const t = e.target; if (!t.closest || !t.closest('.al-grab,.al-sh') || t.closest('input,textarea')) return;
+            const el = shRef.current; if (!el || dr.current) return;
+            const d = dr.current = { id: e.pointerId, y: e.clientY, h0: el.getBoundingClientRect().height, mid: hpx(el, MID), full: hpx(el, FULL), moved: false, v: 0, ly: e.clientY, lt: performance.now(), grab: !!t.closest('.al-grab') };
+            const mv = ev => {
+                if (ev.pointerId !== d.id) return;
+                const dy = ev.clientY - d.y;
+                if (!d.moved) { if (Math.abs(dy) < 8) return; d.moved = true; el.classList.add('drag'); }
+                const now = performance.now(); if (now > d.lt) { d.v = (ev.clientY - d.ly) / (now - d.lt) * .5 + d.v * .5; d.ly = ev.clientY; d.lt = now; }
+                el.style.height = Math.max(d.mid * .35, Math.min(d.full, d.h0 - dy)) + 'px';
+                if (ev.cancelable) ev.preventDefault();
+            };
+            const up = ev => {
+                if (ev.pointerId !== d.id) return;
+                document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', up);
+                dr.current = null;
+                if (!d.moved) { if (d.grab && ev.type === 'pointerup') goMode(mode.current === 'full' ? 'mid' : 'full'); return; }
+                suppress.current = performance.now();
+                const hh = el.getBoundingClientRect().height, upv = d.v < -.45, dn = d.v > .45;
+                if (ev.type === 'pointercancel') return goMode(mode.current);
+                if (upv) return goMode('full');
+                if (dn) return mode.current === 'full' ? goMode('mid') : closeAnim();
+                if (hh > (d.mid + d.full) / 2) goMode('full');
+                else if (hh > d.mid * .72) goMode('mid');
+                else closeAnim();
+            };
+            document.addEventListener('pointermove', mv, { passive: false }); document.addEventListener('pointerup', up); document.addEventListener('pointercancel', up);
+        }
+        const suppress = useRef(0);
         return ReactDOM.createPortal(h("div", { className: "modal-backdrop sheet-layer ap-bs al-bs", onClick: e => { if (e.target === e.currentTarget) onClose(); } },
-            h("div", { className: "tsel-sheet ap-bsheet al-sheet", role: "dialog", "aria-modal": "true", "aria-label": editing ? "Ubah alarm" : "Tambah alarm" }, h("div", { className: "al-grab" }), body)), document.body);
+            h("div", { ref: shRef, className: "tsel-sheet ap-bsheet al-sheet", role: "dialog", "aria-modal": "true", "aria-label": editing ? "Ubah alarm" : "Tambah alarm",
+                onPointerDown: dStart,
+                onClickCapture: e => { if (performance.now() - suppress.current < 350) { e.stopPropagation(); e.preventDefault(); } } },
+                h("div", { className: "al-grab", role: "button", tabIndex: 0, "aria-label": "Tarik untuk memperbesar atau memperkecil", onKeyDown: e => { if (e.key === 'Enter') goMode(mode.current === 'full' ? 'mid' : 'full'); } }), body)), document.body);
     }
     function presets() {
         const offMin = -(new Date().getTimezoneOffset()) - 420;
@@ -183,7 +246,7 @@
         }).filter(Boolean);
     }
     function AlarmPage({ onClose }) {
-        useNow(20000); useAlarms();
+        useNow(1000); useAlarms();
         const [sheet, setSheet] = useState(null);
         const list = A.list.slice().sort((x, y) => (x.h * 60 + x.m) - (y.h * 60 + y.m));
         const nx = A.next();
@@ -208,7 +271,7 @@
             h("div", { className: "al-scroll" },
                 h("div", { className: "al-next" },
                     h("small", null, nx ? "Alarm berikutnya" : "Tidak ada alarm aktif"),
-                    nx && h("b", null, "Dalam " + A.fmtDur(nx.t - Date.now(), !!(nx.alarm && nx.alarm.s))),
+                    nx && h("b", { className: "al-cd" }, "Dalam " + A.fmtDur(nx.t - Date.now(), true)),
                     nx && h("em", null, nxLabel + " · " + A.clock(nx.t, nx.alarm))),
                 list.length === 0
                     ? h("div", { className: "al-empty" },
@@ -232,22 +295,42 @@
                 h(ChevronRight, { size: 18 })),
             open && h(AlarmPage, { onClose: () => setOpen(false) }));
     }
-    /* Layar alarm berbunyi: root React terpisah, aktif di halaman mana pun */
+    /* Layar alarm berbunyi (desain C): jam analog hidup + jam digital + dua tombol bulat berikon */
+    function Dial() {
+        const [off] = useState(() => -((Date.now() % 60000) / 1000));
+        const d = new Date(), hh = d.getHours(), mm = d.getMinutes(), ss = d.getSeconds();
+        const ah = (hh % 12 + mm / 60) * 30, am = (mm + ss / 60) * 6;
+        const ticks = [];
+        for (let i = 0; i < 12; i++) ticks.push(h("line", { key: i, x1: 100, y1: i % 3 === 0 ? 14 : 18, x2: 100, y2: 24, transform: "rotate(" + (i * 30) + " 100 100)", className: i % 3 === 0 ? "q" : "" }));
+        return h("div", { className: "al-cl", "aria-hidden": "true" },
+            h("i", { className: "al-rp" }), h("i", { className: "al-rp" }), h("i", { className: "al-rp" }),
+            h("svg", { className: "al-cs", viewBox: "0 0 200 200" },
+                h("circle", { cx: 100, cy: 100, r: 96, className: "f" }),
+                ticks,
+                h("line", { x1: 100, y1: 100, x2: 100, y2: 60, className: "hh", transform: "rotate(" + ah + " 100 100)" }),
+                h("line", { x1: 100, y1: 100, x2: 100, y2: 38, className: "hm", transform: "rotate(" + am + " 100 100)" }),
+                h("g", { className: "hs", style: { animationDelay: off + 's', transform: "rotate(" + (ss * 6) + "deg)" } }, h("line", { x1: 100, y1: 116, x2: 100, y2: 30 })),
+                h("circle", { cx: 100, cy: 100, r: 5, className: "pv" })),
+            null);
+    }
     function Ring() {
         const [list, setList] = useState(A.ringing);
         useEffect(() => A.onRing(setList), []);
         useEffect(() => { document.body.classList.toggle('al-ringing', list.length > 0); }, [list.length]);
-        if (!list.length) return null;
-        const r = list[list.length - 1];
+        return list.length ? h(RingView, { list }) : null;
+    }
+    function RingView({ list }) {
+        useNow(1000);
+        const r = list[list.length - 1], d = new Date();
         return h("div", { className: "al-ring", role: "alertdialog", "aria-modal": "true", "aria-label": "Alarm berbunyi" },
-            h("div", { className: "al-rb2" }, ic("AlAlarm", 46, 1.6)),
+            h(Dial, null),
             h("small", { className: "al-rs" }, r.sub),
-            h("div", { className: "al-rt" }, r.time),
+            h("div", { className: "al-rt", "aria-live": "off" }, A.pad(d.getHours()) + ":" + A.pad(d.getMinutes()) + ":" + A.pad(d.getSeconds())),
             r.msg && h("b", { className: "al-rm" }, r.msg),
             list.length > 1 && h("small", { className: "al-ro" }, (list.length - 1) + " alarm lain ikut berbunyi"),
             h("div", { className: "al-rbtn" },
-                h("button", { type: "button", className: "snz", onClick: () => A.snooze(r.key, 5) }, "Tunda 5 menit"),
-                h("button", { type: "button", className: "stp", onClick: () => A.dismiss(r.key) }, "Matikan")),
+                h("div", { className: "al-bw" }, h("button", { type: "button", className: "snz", "aria-label": "Tunda 5 menit", onClick: () => A.snooze(r.key, 5) }, ic("AlZz", 30, 1.8)), h("span", null, "Tunda 5 menit")),
+                h("div", { className: "al-bw" }, h("button", { type: "button", className: "stp", "aria-label": "Matikan", onClick: () => A.dismiss(r.key) }, ic("AlClose", 30, 1.9)), h("span", null, "Matikan"))),
             h("small", { className: "al-rn" }, "Berbunyi dan bergetar sampai dimatikan"));
     }
     try {

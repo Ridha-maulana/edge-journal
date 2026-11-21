@@ -108,6 +108,7 @@ final class EjAlarmCore {
         i.putExtra("sub", o.optString("sub", "Alarm"));
         i.putExtra("step", o.optInt("step", 0));
         i.putExtra("tone", o.optString("tone", "klasik"));
+        i.putExtra("tu", o.optString("tu", ""));
         i.putExtra("vib", o.optBoolean("vib", true));
         i.putExtra("snz", o.optInt("snz", 5));
     }
@@ -195,6 +196,7 @@ final class EjAlarmCore {
             o.put("sub", "Tunda");
             o.put("step", b.getInt("step", 0));
             o.put("tone", b.getString("tone", "klasik"));
+            o.put("tu", b.getString("tu", ""));
             o.put("vib", b.getBoolean("vib", true));
             o.put("snz", b.getInt("snz", 5));
             o.put("pre", false);
