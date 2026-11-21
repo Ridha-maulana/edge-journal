@@ -1,5 +1,8 @@
 /* Halaman Performance */
 "use strict";
+/* format tanggal pendek (id-ID) memakai satu formatter yang dipakai ulang */
+const PERF_DM_FMT = new Intl.DateTimeFormat('id-ID', { day: '2-digit', month: 'short' });
+function perfDM(v) { const d = new Date(v); return isNaN(d) ? 'Invalid Date' : PERF_DM_FMT.format(d); }
 function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, trades, period, setPeriod, customStart, customEnd, setCustomStart, setCustomEnd }) {
     const [rangeOpen, setRangeOpen] = useState(false);
     const [performanceView, setPerformanceView] = useState('overview');
@@ -62,19 +65,19 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     const pct = (value, base) => base ? `${value >= 0 ? '+' : ''}${(value / base * 100).toFixed(2)}%` : '0.00%';
     let equity = account.balance, high = equity, maxDd = 0;
     const curve = [];
-    filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date)).forEach(t => { equity += Number(t.pnl) || 0; high = Math.max(high, equity); maxDd = Math.max(maxDd, high - equity); curve.push({ date: t.date, equity }); });
+    filtered.slice().sort(byDateAsc).forEach(t => { equity += Number(t.pnl) || 0; high = Math.max(high, equity); maxDd = Math.max(maxDd, high - equity); curve.push({ date: t.date, equity }); });
     let run = 0, peak = 0;
-    filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date)).forEach(t => { run += Number(t.pnl) || 0; peak = Math.max(peak, run); });
+    filtered.slice().sort(byDateAsc).forEach(t => { run += Number(t.pnl) || 0; peak = Math.max(peak, run); });
     const hwm = peak;
-    const points = curve.length ? curve.map((p, i) => { const min = Math.min(...curve.map(x => x.equity), account.balance); const max = Math.max(...curve.map(x => x.equity), account.balance + 1); return `${curve.length === 1 ? 250 : (i / (curve.length - 1)) * 500},${145 - ((p.equity - min) / (max - min || 1)) * 125}`; }).join(' ') : '0,145 100,135 200,140 300,115 400,120 500,95';
     const bySymbol = SYMBOLS.map(symbol => { const xs = filtered.filter(t => t.symbol === symbol); return { symbol, count: xs.length, pnl: xs.reduce((a, t) => a + t.pnl, 0) }; }).filter(x => x.count);
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => { const xs = filtered.filter(t => new Date(t.date).toLocaleDateString('en-US', { weekday: 'short' }) === day); return { day, count: xs.length, wins: xs.filter(t => t.pnl > 0).length, losses: xs.filter(t => t.pnl < 0).length, pnl: xs.reduce((a, t) => a + (Number(t.pnl) || 0), 0) }; }).filter(x => x.count).sort((a, b) => b.pnl - a.pnl);
+    const dowBuckets = [[], [], [], [], [], [], []]; filtered.forEach(t => { const w = new Date(t.date).getDay(); if (w >= 0) dowBuckets[w].push(t); });   /* kelompokkan hari sekali jalan (toLocaleDateString per posisi sangat lambat) */
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, di) => { const xs = dowBuckets[di]; return { day, count: xs.length, wins: xs.filter(t => t.pnl > 0).length, losses: xs.filter(t => t.pnl < 0).length, pnl: xs.reduce((a, t) => a + (Number(t.pnl) || 0), 0) }; }).filter(x => x.count).sort((a, b) => b.pnl - a.pnl);
     const cdH = account.capitalHistory || [];
     const depS = cdH.filter(h => h.type !== 'withdraw').reduce((a, h) => a + (Number(h.amount) || 0), 0), wdS = cdH.filter(h => h.type === 'withdraw').reduce((a, h) => a + (Number(h.amount) || 0), 0);
     const startBal = Math.max((account.balance || 0) - depS + wdS, 1), capBal = Math.max(account.balance || 0, 1); /* startBal = tampilan Saldo Awal; capBal = dasar semua % (modal sekarang) */
     const activeDays = new Set(filtered.map(t => dateOnly(t.date))).size;
     const growthPct = pctChain(account, filtered); /* % berantai tiap posisi terhadap equity saat dibuka */
-    const cs = withPct(account, filtered).sort((a, b) => new Date(a.date) - new Date(b.date));
+    const cs = withPct(account, filtered).sort(byDateAsc);
     let cr = 0;
     const cv = [0, ...cs.map(t => (cr += Number(t.pnl) || 0))];
     const clo = Math.min(...cv), chi = Math.max(...cv), csp = (chi - clo) || 1;
@@ -97,7 +100,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     cs.forEach(t => { const k = dateOnly(t.date); dm0[k] = (dm0[k] || 0) + (Number(t.pnl) || 0); dmP[k] = chainAdd(dmP[k] || 0, t.pct || 0); });
     const dvals0 = Object.values(dm0);
     const bd0 = dvals0.length ? Math.max(...dvals0) : 0;
-    const cLabels = ['Awal', ...cs.map(t => new Date(t.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }))];
+    const cLabels = ['Awal', ...cs.map(t => perfDM(t.date))];
     const sgn = v => v > 0.005 ? '+' : '';
     const heroRecs = ddBuild(filtered), heroFx = Object.assign(ddStat(heroRecs), { years: new Set(heroRecs.map(r => r.iso.slice(0, 4))).size, months: new Set(heroRecs.map(r => r.mk)).size });   // sama dengan kartu Performa per bulan: tahun, bulan, minggu, hari, sesi, posisi
     const bestTxt = bestMk ? `${MS[Number(bestMk.slice(5, 7)) - 1]} ${mm[bestMk] >= 0 ? '+' : ''}${(mmP[bestMk]).toFixed(1)}%` : '—';

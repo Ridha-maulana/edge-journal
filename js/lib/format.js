@@ -1,6 +1,6 @@
 /* Versi aplikasi, format uang, tanggal, waktu WIB, sesi trading, helper kecil */
 "use strict";
-const APP_VERSION = '5.9.97';
+const APP_VERSION = '5.9.98';
 // Dialog & toast sendiri (alert/confirm browser diblokir di halaman terhosting)
 function fmtLong(iso) { return new Date(iso + 'T12:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
 const money = (n, currency = 'USD') => new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(Number(n) || 0);
@@ -15,13 +15,25 @@ function fmtHold(min) { if (!isFinite(min) || min <= 0)
     return m ? `${h} j ${m} mnt` : `${h} j`;
 } const d = Math.floor(min / 1440), h = Math.round((min % 1440) / 60); return h ? `${d} hr ${h} j` : `${d} hr`; }
 const WIB_FMT = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jakarta', hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', weekday: 'short' });
-function wib(d) { const p = {}; WIB_FMT.formatToParts(new Date(d)).forEach(x => { p[x.type] = x.value; }); return { day: `${p.year}-${p.month}-${p.day}`, month: `${p.year}-${p.month}`, year: p.year, mi: Number(p.month) - 1, hour: Number(p.hour), wd: p.weekday }; }
+function _wibRaw(d) { const p = {}; WIB_FMT.formatToParts(new Date(d)).forEach(x => { p[x.type] = x.value; }); return { day: `${p.year}-${p.month}-${p.day}`, month: `${p.year}-${p.month}`, year: p.year, mi: Number(p.month) - 1, hour: Number(p.hour), wd: p.weekday }; }
+/* hasil dihitung sekali per waktu (Intl.formatToParts lambat; dipanggil berkali-kali per posisi) */
+/* urut waktu naik: waktu tiap posisi dihitung sekali (membuat Date di dalam sort sangat boros) */
+const _TS_C = new Map();
+function tsOf(s) { let v = _TS_C.get(s); if (v === undefined) { v = +new Date(s); if (_TS_C.size > 50000) _TS_C.clear(); _TS_C.set(s, v); } return v; }
+function byDateAsc(a, b) { return tsOf(a.date) - tsOf(b.date); }
+const _WIB_C = new Map();
+function wib(d) { const k = +new Date(d); let r = _WIB_C.get(k); if (r === undefined) { r = _wibRaw(d); if (_WIB_C.size > 20000) _WIB_C.clear(); _WIB_C.set(k, r); } return r; }
 /* Sesi pasar mengikuti jam asli kota (otomatis ikut musim panas/dingin), jam entry tetap WIB.
    Sydney/London/New York 08:00-17:00 waktu lokal, Tokyo 09:00-18:00. Kelompok: Asia, London, New York (jam London+NY buka bersamaan dihitung New York). */
 const SES_CITY = [['Sydney', 'Australia/Sydney', 8, 17], ['Tokyo', 'Asia/Tokyo', 9, 18], ['London', 'Europe/London', 8, 17], ['New York', 'America/New_York', 8, 17]];
 const _SES_FMT = {};
 function _sesLocalHour(tz, ts) { const f = _SES_FMT[tz] || (_SES_FMT[tz] = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hourCycle: 'h23', hour: '2-digit' })); return Number(f.format(new Date(ts))); }
+const _SES_C = new Map();
 function sesOf(ts) {
+    const ck = +ts, hit = _SES_C.get(ck); if (hit !== undefined) return hit;
+    const res = _sesCalc(ts); if (_SES_C.size > 20000) _SES_C.clear(); _SES_C.set(ck, res); return res;
+}
+function _sesCalc(ts) {
     const o = {};
     SES_CITY.forEach(([n, tz, a, b]) => { const h = _sesLocalHour(tz, ts); o[n] = h >= a && h < b; });
     if (o['New York']) return 'New York';

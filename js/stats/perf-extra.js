@@ -12,7 +12,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const dep = hist.filter(h => h.type !== 'withdraw'), wdr = hist.filter(h => h.type === 'withdraw');
     const depSum = sumOf(dep, h => h.amount), wdSum = sumOf(wdr, h => h.amount);
     const start = Math.max((account.balance || 0) - depSum + wdSum, 1), capBal = Math.max(account.balance || 0, 1);
-    const sorted = filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    const sorted = filtered.slice().sort(byDateAsc);
     const wins = sorted.filter(t => t.pnl > 0), losses = sorted.filter(t => t.pnl < 0);
     const gW = sumOf(wins, t => t.pnl), gL = Math.abs(sumOf(losses, t => t.pnl));
     const pf = gL ? gW / gL : (gW ? Infinity : 0);

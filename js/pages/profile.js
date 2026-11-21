@@ -44,8 +44,6 @@ function PfTile({ icon, title, sub, onOpen }) {
 function AccountPage({ accounts, activeAccount, onSelect, onCreate, onDelete, onUpdate, onCapital, onExport, onBackup, onRestore }) {
     const st = useCloudStatus();
     const [page, setPage] = useState(null);
-    const [sure, setSure] = useState(false);
-    useEffect(() => { if (!sure) return; const t = setTimeout(() => setSure(false), 4000); return () => clearTimeout(t); }, [sure]);
     const go = v => { setPage(v); try { window.scrollTo(0, 0); } catch (e) { } };
     const sy = syncShort(st), ss = acctStats(activeAccount), cur = activeAccount.currency;
     const email = st && st.user && st.user.email ? String(st.user.email) : '';
@@ -53,12 +51,6 @@ function AccountPage({ accounts, activeAccount, onSelect, onCreate, onDelete, on
     const name = clean ? clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase() : 'Trader';
     const initials = clean ? clean.slice(0, 2).toUpperCase() : String(activeAccount.name || 'T').trim().charAt(0).toUpperCase();
     const signed = !!(st && st.user);
-    function logout() {
-        if (!sure) { setSure(true); return; }
-        setSure(false);
-        try { markSignedOut(); } catch (e) { }
-        try { window.cloudSync.signOut(); } catch (e) { }
-    }
     if (page) {
         const titles = { account: 'Account management', sync: 'Sinkron online', backup: 'Cloud backup', export: 'Export & share' };
         const body = page === 'account'
@@ -102,8 +94,6 @@ function AccountPage({ accounts, activeAccount, onSelect, onCreate, onDelete, on
             React.createElement(PfRow, { icon: React.createElement(FileJson, { size: 18 }), title: "Cloud backup", value: "JSON", onOpen: () => go('backup') }),
             React.createElement(PfRow, { icon: React.createElement(Share2, { size: 18 }), title: "Export & share", value: "CSV", onOpen: () => go('export') }),
             React.createElement(PfRow, { icon: React.createElement(Zap, { size: 18 }), title: "Tes getar", onOpen: () => hapticTest().then(msg => notify(msg)) })),
-        signed
-            ? React.createElement("button", { type: "button", className: "pf-out" + (sure ? ' sure' : ''), onClick: logout }, sure ? "Ketuk lagi untuk keluar" : "Keluar")
-            : React.createElement("button", { type: "button", className: "pf-out in", onClick: () => go('sync') }, "Masuk ke akun online"),
+        !signed && React.createElement("button", { type: "button", className: "pf-out in", onClick: () => go('sync') }, "Masuk ke akun online"),
         React.createElement("p", { className: "sync-note foot pf-ver" }, "Edge Journal v" + APP_VERSION + " \u00B7 data tersimpan lokal di perangkat ini"));
 }

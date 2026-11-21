@@ -66,7 +66,7 @@ function HierJournal({ autoOpen, kind, status, list: allList, account, startBal,
         head(key, jMonthLabel(mk), L, op, def, false),
         op && React.createElement(React.Fragment, null,
             React.createElement("div", { className: "gj-chart" },
-                React.createElement(HeroChart, { trades: withPct(account, L.filter(t => t.status === 'closed')).sort((a, b) => new Date(a.date) - new Date(b.date)), startBal: startBal, tfs: ['H1', 'SES', 'D1', 'W1'], defTf: 'D1', persist: false, hh: 330, fixed: true, onSelect: (c, tf) => setSels(s => ({ ...s, [key]: c ? { c, tf } : null })) })),
+                React.createElement(HeroChart, { trades: withPct(account, L.filter(t => t.status === 'closed')).sort(byDateAsc), startBal: startBal, tfs: ['H1', 'SES', 'D1', 'W1'], defTf: 'D1', persist: false, hh: 330, fixed: true, onSelect: (c, tf) => setSels(s => ({ ...s, [key]: c ? { c, tf } : null })) })),
             selBlock(key, L))); }); };
     return React.createElement("div", { className: "gj" },
         kind === 'M1' ? monthCards(list, lastMonth) : years.map((y, yi) => { const L = byY[y]; const key = 'y' + y; const def = !!autoOpen && yi === 0; const op = isOpen(key, def); const nM = Object.keys(jGroup(L, t => jCal(t).slice(0, 7))).length; return React.createElement("div", { className: "week-block", key: key },

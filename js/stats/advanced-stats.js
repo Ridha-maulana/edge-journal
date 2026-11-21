@@ -33,7 +33,7 @@ function AdvancedStats({ account, filtered, total, maxDd, hwm, view, part = 'all
     const tn = n => n > 0 ? 'pos' : n < 0 ? 'neg' : '';
     const pf1 = (n, d = 1) => `${n > 0 ? '+' : ''}${n.toFixed(d)}`;
     const MSx = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-    const cl = filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    const cl = filtered.slice().sort(byDateAsc);
     const n = cl.length;
     const wins = cl.filter(t => t.pnl > 0), losses = cl.filter(t => t.pnl < 0);
     const gW = sumOf(wins, t => t.pnl), gL = Math.abs(sumOf(losses, t => t.pnl));
