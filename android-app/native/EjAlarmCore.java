@@ -111,6 +111,7 @@ final class EjAlarmCore {
         i.putExtra("tu", o.optString("tu", ""));
         i.putExtra("vib", o.optBoolean("vib", true));
         i.putExtra("snz", o.optInt("snz", 5));
+        i.putExtra("dur", o.optInt("dur", 5));
     }
 
     static void cancelOne(Context c, int id) {
@@ -199,6 +200,7 @@ final class EjAlarmCore {
             o.put("tu", b.getString("tu", ""));
             o.put("vib", b.getBoolean("vib", true));
             o.put("snz", b.getInt("snz", 5));
+            o.put("dur", b.getInt("dur", 5));
             o.put("pre", false);
             JSONArray z = new JSONArray(sp.getString("snz", "[]"));
             z.put(o);

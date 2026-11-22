@@ -36,7 +36,7 @@ html .tsel-sheet.al-sheet.drag{transition:none}
 .al-wcol{display:flex;flex-direction:column;align-items:center;gap:4px;width:84px}.al-wcol>small{font:700 11px/1 var(--font);opacity:.62}
 .al-wheel{position:relative;height:220px;width:100%;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain;-webkit-mask-image:linear-gradient(transparent,#000 28%,#000 72%,transparent);mask-image:linear-gradient(transparent,#000 28%,#000 72%,transparent)}
 .al-wheel::-webkit-scrollbar{display:none}.al-sp{height:88px}
-.al-wi{display:block;width:100%;height:44px;border:0;background:none;color:inherit;scroll-snap-align:center;font:500 30px/44px var(--font);font-variant-numeric:tabular-nums;text-align:center;padding:0;opacity:.28}
+.al-wi{user-select:none;-webkit-user-select:none;display:block;width:100%;height:44px;border:0;background:none;color:inherit;scroll-snap-align:center;font:500 30px/44px var(--font);font-variant-numeric:tabular-nums;text-align:center;padding:0;opacity:.28}
 .al-wi.n{opacity:.5;font-size:32px}.al-wi.s{opacity:1;font-weight:600;font-size:42px}
 .al-colon{font:500 34px/44px var(--font);opacity:.6;padding-bottom:88px;width:12px;text-align:center}
 .al-tl{position:relative;padding:2px 0 4px}

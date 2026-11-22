@@ -1,4 +1,4 @@
-/* Alarm (v5.9.99): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
+/* Alarm (v5.9.100): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
    - Data hanya di HP ini (localStorage "ej-alarms-v1"), tidak ikut sinkron online.
    - Aplikasi terbuka (web/PWA): jam dicek tiap detik, layar alarm + nada + getar.
    - APK 1.4.0+ (plugin EjAlarm): jadwal dikirim ke AlarmManager Android, jadi alarm berbunyi walau aplikasi tertutup atau HP terkunci,
@@ -6,7 +6,7 @@
    - APK 1.3.0 (plugin LocalNotifications): jalur lama, hanya notifikasi biasa. */
 "use strict";
 (function () {
-    const KEY = 'ej-alarms-v1', CH = 'ej-alarm-v1', BASE_ID = 1000000, LATE = 90000, MAXRING = 180000, HORIZON = 21 * 86400000, MAXITEMS = 300;
+    const KEY = 'ej-alarms-v1', CH = 'ej-alarm-v1', BASE_ID = 1000000, LATE = 90000, MAXRING = 300000, HORIZON = 21 * 86400000, MAXITEMS = 300;
     const DN = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
     const DS = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
     const ORDER = [1, 2, 3, 4, 5, 6, 0];
@@ -113,9 +113,13 @@
         if (step === 0) return a.label || 'Alarm';
         return msg || 'Alarm susulan';
     }
+    /* lama bunyi (menit) kalau tidak dimatikan atau ditunda */
+    const DURS = [1, 2, 3, 5, 10, 15, 20, 30], DUR_DEF = 5;
+    const durOf = a => { const d = Math.round(+(a && a.dur)); return d >= 1 && d <= 60 ? d : DUR_DEF; };
+    const durMs = d => (d >= 1 && d <= 60 ? d : DUR_DEF) * 60000;
     function ringOf(o) {
         const a = o.alarm;
-        return { key: o.key, aid: a.id, step: o.step, t: o.t, vib: a.vibrate !== false, tone: a.tone || 'klasik', title: titleOf(a, o.step), time: clock(o.t, a), sub: o.step === 0 ? 'Alarm' : 'Alarm susulan' + (a.label ? ' · ' + a.label + ' ' + hm(a.h, a.m, a.s) : ''), msg: o.step === 0 ? (a.label || '') : (o.msg || 'Alarm susulan') };
+        return { key: o.key, aid: a.id, step: o.step, t: o.t, vib: a.vibrate !== false, tone: a.tone || 'klasik', dur: durOf(a), title: titleOf(a, o.step), time: clock(o.t, a), sub: o.step === 0 ? 'Alarm' : 'Alarm susulan' + (a.label ? ' · ' + a.label + ' ' + hm(a.h, a.m, a.s) : ''), msg: o.step === 0 ? (a.label || '') : (o.msg || 'Alarm susulan') };
     }
     /* Alarm berikutnya di seluruh daftar (termasuk susulan dan tunda) */
     function next(now) {
@@ -163,33 +167,34 @@
         });
     }
     function vibBurst() { try { if (typeof hapticFire === 'function') hapticFire([500, 250, 500]); else if (navigator.vibrate) navigator.vibrate([500, 250, 500]); } catch (e) { } }
-    function startNoise(vib, tone) {
+    function startNoise(vib, tone, dur) {
         stopNoise();
         const id = (tone && TONES[tone]) ? tone : 'klasik', per = TONES[id].period * 1000;
         toneBurst(id); beepTimer = setInterval(() => toneBurst(id), per);
         if (vib) { vibBurst(); vibTimer = setInterval(vibBurst, 2000); }
-        stopAudioTimer = setTimeout(stopNoise, MAXRING);
+        stopAudioTimer = setTimeout(stopNoise, durMs(dur));
     }
     function stopNoise() {
         clearInterval(beepTimer); clearInterval(vibTimer); clearTimeout(stopAudioTimer); beepTimer = vibTimer = stopAudioTimer = null;
         try { navigator.vibrate && navigator.vibrate(0); } catch (e) { }
     }
     /* Dengar contoh nada (tombol pada daftar Nada dering); 'sistem' memakai nada klasik sebagai contoh */
-    function preview(id) {
+    function preview(id, uri) {
         stopPreview();
+        if ((id === 'hp' || id === 'sistem') && ejReady) { try { const r = ej.previewTone({ tone: id, uri: uri || '' }); if (r && r.catch) r.catch(() => { }); } catch (e) { } return; }
         const k = TONES[id] ? id : 'klasik';
         toneBurst(k);
         previewTimer = setInterval(() => toneBurst(k), TONES[k].period * 1000);
         setTimeout(stopPreview, Math.min(4200, TONES[k].period * 1000 * 3 - 50));
     }
-    function stopPreview() { clearInterval(previewTimer); previewTimer = null; }
+    function stopPreview() { clearInterval(previewTimer); previewTimer = null; if (ejReady) { try { const r = ej.stopPreview(); if (r && r.catch) r.catch(() => { }); } catch (e) { } } }
     /* ===== Layar alarm ===== */
     function emitRing() { ringSubs.slice().forEach(f => { try { f(ring.slice()); } catch (e) { } }); }
     function fire(o, quiet) {
         const r = o.alarm ? ringOf(o) : o;
         if (ring.some(x => x.key === r.key)) return;
         ring.push(r);
-        if (!quiet) startNoise(r.vib, r.tone);
+        if (!quiet) startNoise(r.vib, r.tone, r.dur);
         emitRing();
         /* Di APK lama (LocalNotifications), notifikasi yang ikut muncul saat aplikasi terbuka dibuang supaya bunyinya tidak dobel */
         if (native && nativeReady && !ejReady && document.visibilityState === 'visible' && !quiet) setTimeout(() => { try { native.removeAllDeliveredNotifications(); } catch (e) { } }, 1500);
@@ -328,7 +333,7 @@
         all.sort((x, y) => x.t - y.t);
         return all.slice(0, MAXITEMS).map((o, i) => {
             const a = o.alarm;
-            return { id: i + 1, at: o.t, grp: o.key.slice(0, o.key.lastIndexOf('|')), step: o.step, time: clock(o.t, a), body: bodyOf(a, o.step, o.msg), sub: o.step === 0 ? 'Alarm' : 'Alarm susulan' + (a.label ? ' · ' + a.label + ' ' + hm(a.h, a.m, a.s) : ''), tone: a.tone || 'klasik', tu: a.tone === 'hp' ? (a.tu || '') : '', vib: a.vibrate !== false, snz: 5, pre: o.step === 0 };
+            return { id: i + 1, at: o.t, grp: o.key.slice(0, o.key.lastIndexOf('|')), step: o.step, time: clock(o.t, a), body: bodyOf(a, o.step, o.msg), sub: o.step === 0 ? 'Alarm' : 'Alarm susulan' + (a.label ? ' · ' + a.label + ' ' + hm(a.h, a.m, a.s) : ''), tone: a.tone || 'klasik', tu: a.tone === 'hp' ? (a.tu || '') : '', vib: a.vibrate !== false, snz: 5, dur: durOf(a), pre: o.step === 0 };
         });
     }
     function buildNative() {
@@ -422,10 +427,10 @@
     /* ===== Operasi daftar ===== */
     function blank(h, m, label) {
         const now = new Date(), t = nextAt(h == null ? now.getHours() : h, m == null ? now.getMinutes() : m, 0);
-        return { id: '', n: 0, h: new Date(t).getHours(), m: new Date(t).getMinutes(), s: 0, repeat: 'days', days: [1, 2, 3, 4, 5], date: '', label: label || '', vibrate: true, tone: 'klasik', del: false, on: true, follows: [] };
+        return { id: '', n: 0, h: new Date(t).getHours(), m: new Date(t).getMinutes(), s: 0, repeat: 'days', days: [1, 2, 3, 4, 5], date: '', label: label || '', vibrate: true, tone: 'klasik', dur: DUR_DEF, del: false, on: true, follows: [] };
     }
     function save(a) {
-        const o = Object.assign({}, a, { s: Math.max(0, Math.min(59, +a.s || 0)), tone: (a.tone === 'sistem' || (a.tone === 'hp' && a.tu) || TONES[a.tone]) ? a.tone : 'klasik', tu: String(a.tu || '').slice(0, 400), tt: String(a.tt || '').slice(0, 80), follows: (a.follows || []).map(f => ({ min: Math.max(1, Math.min(720, +f.min || 5)), msg: String(f.msg || '').slice(0, 80) })).sort((x, y) => x.min - y.min), label: String(a.label || '').slice(0, 60) });
+        const o = Object.assign({}, a, { dur: durOf(a), s: Math.max(0, Math.min(59, +a.s || 0)), tone: (a.tone === 'sistem' || (a.tone === 'hp' && a.tu) || TONES[a.tone]) ? a.tone : 'klasik', tu: String(a.tu || '').slice(0, 400), tt: String(a.tt || '').slice(0, 80), follows: (a.follows || []).map(f => ({ min: Math.max(1, Math.min(720, +f.min || 5)), msg: String(f.msg || '').slice(0, 80) })).sort((x, y) => x.min - y.min), label: String(a.label || '').slice(0, 60) });
         if (o.repeat !== 'once' && !(o.days && o.days.length)) o.repeat = 'once';
         if (o.repeat === 'once') o.date = ymd(new Date(nextAt(o.h, o.m, o.s)));
         o.on = true;
@@ -445,7 +450,7 @@
     }
     function remove(id) { st.list = st.list.filter(a => a.id !== id); persist(); }
     window.EJAlarm = {
-        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, pickRingtone, savedTones, addTone, removeTone, reload, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
+        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, pickRingtone, DURS, durOf, savedTones, addTone, removeTone, reload, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
         get list() { return st.list; },
         get ringing() { return ring.slice(); },
         get isNative() { return !!(ejReady || (native && nativeReady)); },

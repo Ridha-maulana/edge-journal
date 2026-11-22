@@ -54,6 +54,7 @@ public class EjAlarmPlugin extends Plugin {
         o.put("tone", b.getString("tone", "klasik"));
         o.put("vib", b.getBoolean("vib", true));
         o.put("snz", b.getInt("snz", 5));
+        o.put("dur", b.getInt("dur", 5));
         return o;
     }
 
@@ -172,6 +173,42 @@ public class EjAlarmPlugin extends Plugin {
             r.put("ok", false);
         }
         call.resolve(r);
+    }
+
+    /* Contoh nada: memutar nada pilihan (atau nada alarm bawaan) beberapa detik lewat suara media */
+    private android.media.MediaPlayer pv;
+    private final android.os.Handler pvH = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable pvStop = new Runnable() { @Override public void run() { stopPv(); } };
+    private void stopPv() {
+        pvH.removeCallbacks(pvStop);
+        try { if (pv != null) pv.stop(); } catch (Throwable e) { }
+        try { if (pv != null) pv.release(); } catch (Throwable e) { }
+        pv = null;
+    }
+
+    @PluginMethod
+    public void previewTone(PluginCall call) {
+        try {
+            stopPv();
+            if (EjAlarmService.current != null) { call.resolve(); return; }
+            String tone = call.getString("tone", "sistem"), tu = call.getString("uri", "");
+            Uri u = ("hp".equals(tone) && tu != null && tu.length() > 0) ? Uri.parse(tu) : RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            if (u == null) u = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+            pv = new android.media.MediaPlayer();
+            pv.setAudioAttributes(new android.media.AudioAttributes.Builder().setUsage(android.media.AudioAttributes.USAGE_MEDIA).setContentType(android.media.AudioAttributes.CONTENT_TYPE_MUSIC).build());
+            pv.setDataSource(getContext(), u);
+            pv.setLooping(false);
+            pv.prepare();
+            pv.start();
+            pvH.postDelayed(pvStop, 4500);
+        } catch (Throwable e) { stopPv(); }
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void stopPreview(PluginCall call) {
+        stopPv();
+        call.resolve();
     }
 
     @PluginMethod

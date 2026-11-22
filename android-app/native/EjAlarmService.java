@@ -27,7 +27,8 @@ import androidx.core.app.NotificationCompat;
    dengan tombol Tunda dan Matikan. Di layar kunci, pemberitahuan membuka layar alarm (full-screen intent). */
 public class EjAlarmService extends Service {
     static final int NOTIF_ID = 4242;
-    static final long MAX_RING_MS = 5L * 60L * 1000L;
+    static final long MAX_RING_MS = 5L * 60L * 1000L;   /* bawaan bila alarm tidak membawa lama bunyi */
+    private static long ringMs(Bundle b) { int m = b == null ? 5 : b.getInt("dur", 5); if (m < 1 || m > 60) m = 5; return m * 60000L; }
     /* info alarm yang sedang berbunyi (null bila tidak ada); dibaca oleh plugin */
     static volatile Bundle current = null;
 
@@ -73,13 +74,13 @@ public class EjAlarmService extends Service {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             if (pm != null) {
                 if (wake == null) wake = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ej:alarm");
-                if (!wake.isHeld()) wake.acquire(MAX_RING_MS + 15000L);
+                if (!wake.isHeld()) wake.acquire(ringMs(b) + 15000L);
             }
         } catch (Throwable e) { }
         playTone(b.getString("tone", "klasik"), b.getString("tu", ""));
         if (b.getBoolean("vib", true)) vibrate();
         handler.removeCallbacks(autoStop);
-        handler.postDelayed(autoStop, MAX_RING_MS);
+        handler.postDelayed(autoStop, ringMs(b));
         EjAlarmPlugin.emit("alarmRing", b);
     }
 

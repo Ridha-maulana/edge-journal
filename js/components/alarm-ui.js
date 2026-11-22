@@ -28,24 +28,33 @@
     function Switch({ on, onChange, label }) {
         return h("button", { type: "button", role: "switch", "aria-checked": !!on, "aria-label": label, className: "al-tg" + (on ? " on" : ""), onClick: e => { e.stopPropagation(); onChange(!on); } }, h("i", null));
     }
-    /* Roda geser (jam / menit) */
+    /* Roda geser (jam / menit / detik) yang berputar terus: daftar diulang beberapa kali, lalu diposisikan ulang ke tengah saat berhenti */
     function Wheel({ n, value, onChange, label }) {
-        const ref = useRef(null), cur = useRef(value), H = 44;
-        useEffect(() => { if (ref.current) ref.current.scrollTop = value * H; }, []);
-        useEffect(() => { if (cur.current !== value) { cur.current = value; if (ref.current) ref.current.scrollTop = value * H; } }, [value]);
+        const H = 44, copies = n * H >= 2000 ? 5 : 11, mid = (copies - 1) >> 1;
+        const ref = useRef(null), cur = useRef(value), idle = useRef(0);
+        const place = (v, smooth) => { const el = ref.current; if (!el) return; const top = (mid * n + v) * H; if (smooth) el.scrollTo({ top, behavior: 'smooth' }); else el.scrollTop = top; };
+        useEffect(() => { place(value); return () => clearTimeout(idle.current); }, []);
+        useEffect(() => { if (cur.current !== value) { cur.current = value; place(value); } }, [value]);
         const onScroll = () => {
             const el = ref.current; if (!el) return;
-            const v = Math.min(n - 1, Math.max(0, Math.round(el.scrollTop / H)));
+            const r = Math.max(0, Math.round(el.scrollTop / H)), v = ((r % n) + n) % n;
             if (v !== cur.current) { cur.current = v; onChange(v); }
+            clearTimeout(idle.current);
+            idle.current = setTimeout(() => {
+                const e = ref.current; if (!e) return;
+                const rr = Math.round(e.scrollTop / H), tgt = mid * n + (((rr % n) + n) % n);
+                if (rr !== tgt) { const st = e.style.scrollSnapType; e.style.scrollSnapType = 'none'; e.scrollTop = tgt * H; requestAnimationFrame(() => { e.style.scrollSnapType = st; }); }
+            }, 160);
         };
         const items = [];
-        for (let i = 0; i < n; i++) {
-            const d = Math.abs(i - value);
-            items.push(h("button", { type: "button", key: i, tabIndex: -1, className: "al-wi " + (d === 0 ? "s" : d === 1 ? "n" : "f"), onClick: () => { if (ref.current) ref.current.scrollTo({ top: i * H, behavior: 'smooth' }); } }, A.pad(i)));
+        for (let k = 0; k < copies * n; k++) {
+            const i = k % n, d0 = Math.abs(i - value), d = Math.min(d0, n - d0);
+            items.push(h("div", { key: k, role: "option", "aria-selected": d === 0, "data-r": k, className: "al-wi " + (d === 0 ? "s" : d === 1 ? "n" : "f") }, A.pad(i)));
         }
         return h("div", { className: "al-wcol" },
             h("small", null, label),
-            h("div", { className: "al-wheel", ref: ref, onScroll: onScroll, role: "listbox", "aria-label": label },
+            h("div", { className: "al-wheel", ref: ref, onScroll: onScroll, role: "listbox", "aria-label": label,
+                onClick: e => { const t = e.target.closest && e.target.closest('.al-wi'); if (t && ref.current) ref.current.scrollTo({ top: (+t.getAttribute('data-r')) * H, behavior: 'smooth' }); } },
                 h("div", { className: "al-sp" }), items, h("div", { className: "al-sp" })));
     }
     const sameSet = (a, b) => a.length === b.length && a.every(x => b.indexOf(x) >= 0);
@@ -108,12 +117,24 @@
                 h("div", { className: "al-cap" }, "Dari HP Anda"),
                 h("div", { className: "al-grp" },
                     lib.map(t => { const on = cur === 'hp' && a.tu === t.u; return h("div", { key: t.u, className: "al-op al-hpt" + (on ? " sel" : "") },
-                        h("button", { type: "button", className: "al-hpb", role: "radio", "aria-checked": on, onClick: () => set({ tone: 'hp', tu: t.u, tt: t.t }) }, ic("AlMusic"), h("b", null, t.t), on && ic("AlCheck", 18, 2.4)),
+                        h("button", { type: "button", className: "al-hpb", role: "radio", "aria-checked": on, onClick: () => { set({ tone: 'hp', tu: t.u, tt: t.t }); A.preview('hp', t.u); } }, ic("AlMusic"), h("b", null, t.t), on && ic("AlCheck", 18, 2.4)),
                         h("button", { type: "button", className: "al-ib al-hpd", "aria-label": "Hapus " + t.t + " dari daftar", onClick: () => delHp(t) }, ic("AlTrash", 16))); }),
                     h("button", { type: "button", className: "al-op", onClick: pickHp, disabled: !A.isEj, style: A.isEj ? null : { opacity: .5 } },
                         ic("AlPlus", 18, 2.2), h("b", null, lib.length ? "Tambah nada dari HP" : "Pilih dari daftar nada dering HP"),
                         h("small", null, A.isEj ? "" : "Perlu APK terbaru"), A.isEj && ic("ChevronRight", 18, 2))),
                 h("p", { className: "al-note" }, lib.length ? "Nada yang sudah ditambahkan tersimpan di daftar ini dan bisa dipakai di semua alarm, tidak perlu memilih ulang. Ikon tempat sampah hanya menghapusnya dari daftar." : "Pilih sekali, nadanya tersimpan di daftar dan bisa dipakai di semua alarm. Nada dari HP dipakai saat alarm berbunyi, juga di layar kunci.")));
+    }
+    function DurPage({ a, set, onBack }) {
+        const cur = A.durOf(a);
+        return h(React.Fragment, null,
+            h("div", { className: "al-sh" },
+                h("button", { type: "button", className: "al-ib", "aria-label": "Kembali", onClick: onBack }, ic("AlBack", 22, 2)),
+                h("div", { className: "al-shc" }, h("b", null, "Berbunyi selama")),
+                h("span", { className: "al-ib ph" })),
+            h("div", { className: "al-sbody" },
+                h("div", { className: "al-grp" }, A.DURS.map(d => h("button", { type: "button", key: d, className: "al-op" + (cur === d ? " sel" : ""), role: "radio", "aria-checked": cur === d, onClick: () => set({ dur: d }) },
+                    h("b", null, d + " menit"), cur === d && ic("AlCheck", 18, 2.4)))),
+                h("p", { className: "al-note" }, "Alarm berbunyi sampai Anda mematikan atau menundanya. Kalau tidak, bunyi dan getar berhenti sendiri setelah waktu ini. Alarm susulan tetap berbunyi pada waktunya.")));
     }
     function Follow({ f, i, at, sec, open, onOpen, onChange, onDel }) {
         const t = new Date(at + f.min * 60000);
@@ -166,6 +187,8 @@
         useEffect(() => { const k = e => { if (e.key === 'Escape') onClose(); }; document.addEventListener('keydown', k); return () => document.removeEventListener('keydown', k); }, []);
         const body = page === 'repeat'
             ? h(RepeatPage, { a, set, onBack: () => setPage('main') })
+            : page === 'dur'
+            ? h(DurPage, { a, set, onBack: () => setPage('main') })
             : page === 'tone'
             ? h(TonePage, { a, set, onBack: () => { A.stopPreview(); setPage('main'); } })
             : h(React.Fragment, null,
@@ -189,6 +212,7 @@
                         h("button", { type: "button", className: "al-op", onClick: () => setPage('repeat') }, ic("AlRepeat"), h("b", null, "Ulangi"), h("small", null, A.repeatLabel(a)), ic("ChevronRight", 18, 2)),
                         h("div", { className: "al-op" }, ic("AlVib"), h("b", null, "Getar saat alarm berbunyi"), h(Switch, { on: a.vibrate !== false, onChange: v => set({ vibrate: v }), label: "Getar" })),
                         h("button", { type: "button", className: "al-op", onClick: () => setPage('tone') }, ic("AlMusic"), h("b", null, "Nada dering"), h("small", null, A.toneName(a.tone || 'klasik', a)), ic("ChevronRight", 18, 2)),
+                        h("button", { type: "button", className: "al-op", onClick: () => setPage('dur') }, ic("AlAlarm"), h("b", null, "Berbunyi selama"), h("small", null, A.durOf(a) + " menit"), ic("ChevronRight", 18, 2)),
                         a.repeat === 'once' && h("div", { className: "al-op" }, h("span", { className: "al-sp18" }), h("b", null, "Hapus setelah alarm berbunyi"), h(Switch, { on: !!a.del, onChange: v => set({ del: v }), label: "Hapus setelah berbunyi" }))),
                     h("label", { className: "al-op al-lab" }, ic("AlTag"), h("b", null, "Label"), h("input", { type: "text", maxLength: 60, value: a.label, placeholder: "Masukkan label", onChange: e => set({ label: e.target.value }) })),
                     h("p", { className: "al-note" }, A.isEj ? "Alarm berbunyi, bergetar, dan tampil di layar kunci walau aplikasi ditutup." : A.isNative ? "Alarm berbunyi walau aplikasi ditutup. Pasang APK terbaru untuk banner Tunda/Matikan dan layar kunci." : "Versi web: alarm hanya berbunyi selama aplikasi terbuka. Pasang APK terbaru agar tetap berbunyi saat aplikasi ditutup."),
