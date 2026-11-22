@@ -366,5 +366,13 @@
         ReactDOM.createRoot(el).render(h(Ring));
     } catch (e) { }
     window.AlarmRow = AlarmRow;
+    window.AlarmPage = AlarmPage;
+    /* Ringkasan untuk halaman Tools: jumlah alarm aktif + alarm berikutnya (nama dan hitung mundur) */
+    window.useAlarmSummary = function () {
+        useNow(15000); useAlarms();
+        const on = A.list.filter(a => a.on).length, nx = A.next();
+        const label = nx ? (nx.alarm ? (nx.step === 0 ? (nx.alarm.label || 'Alarm') : (nx.msg || 'Alarm susulan')) : (nx.label || 'Tunda')) : '';
+        return { on, next: nx ? { label, dur: A.fmtDur(nx.t - Date.now(), false), at: A.clock(nx.t, nx.alarm) } : null };
+    };
     A.start();
 })();

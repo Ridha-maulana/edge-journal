@@ -28,7 +28,7 @@ const ICON_COLORS = {
     Database: '#3b82f6', Wallet: '#14b8a6', BarsFill: '#06b6d4', BarsThin: '#3b82f6', Calendar: '#f97316', CalendarDays: '#3b82f6',
     Trophy: '#f59e0b', LineChart: '#22c55e', FileText: '#0ea5e9', Scale: '#84cc16', Target: '#ec4899', Star: '#eab308',
     Shield: '#ef4444', Activity: '#f97316', BarChart3: '#3b82f6', Share2: '#3b82f6', Infinity: '#22c55e', TrendingUp: '#22c55e', TrendingDown: '#ef4444',
-    Coins: '#eab308', Leaf: '#22c55e', Pencil: '#3b82f6', Info: '#0ea5e9', UserRound: '#0ea5e9', User: '#0ea5e9', BookOpen: '#f59e0b', SlidersHorizontal: '#06b6d4'
+    Coins: '#eab308', Leaf: '#22c55e', Pencil: '#3b82f6', Info: '#0ea5e9', UserRound: '#0ea5e9', User: '#0ea5e9', BookOpen: '#f59e0b', SlidersHorizontal: '#06b6d4', Cloud: '#0ea5e9', FileJson: '#f59e0b', Zap: '#eab308', Calculator: '#22c55e', Palette: '#ec4899', Paintbrush: '#ec4899', AlAlarm: '#f97316'
 };
 function Icon({ name, size = 24, strokeWidth = 2, className, style }) {
     const node = ICONS[name] || [];

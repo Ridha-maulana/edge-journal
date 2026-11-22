@@ -50,3 +50,16 @@ html .sp-panel .sync-note+.button-row:not(#_),html .sp-panel .sync-note+.seconda
 /* tema "permukaan" memberi kotak/bayangan ke semua input dan panel; di sini harus polos (id di :not menaikkan prioritas) */
 html .al-lab input:not(#_){background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;outline:0!important;padding:0!important}
 html .backup-panel:not(#_){background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important}
+/* ===== v5.10.1 — Tools: peluncur ikon bulat + ringkasan ===== */
+.tl-launch{display:flex;justify-content:space-between;padding:6px 4px 4px}
+.tl-btn{display:flex;flex-direction:column;align-items:center;gap:10px;width:96px;background:none;border:0;padding:0;color:inherit;font-family:inherit}
+.tl-btn b{font-size:13.5px;font-weight:700}
+.tl-ic{width:76px;height:76px;border-radius:50%;border:1px solid var(--ej-bd,var(--c4));background:var(--ej-sf,var(--c2));color:var(--ej-pr,var(--c6));display:grid;place-items:center}
+.tl-btn:active .tl-ic{filter:brightness(.93);transform:scale(.97)}
+.tl-lab{font-size:12.5px;font-weight:600;color:var(--c5);margin:28px 4px 8px}
+.tl-sum{border-radius:20px;border:1px solid var(--ej-bd,var(--c4));background:var(--ej-sf,var(--c2));padding:2px 16px}
+.tl-row{padding:13px 0;border-bottom:1px solid var(--ej-bd,var(--c4))}.tl-row.last{border-bottom:0}
+.tl-row small{display:block;font-size:12px;color:var(--c5)}
+.tl-row b{display:block;font-size:14.5px;font-weight:700;margin-top:2px;overflow-wrap:anywhere}
+/* ikon berwarna (Efek ikon) di Profil dan Tools */
+html[data-fxi="1"] :is(.pf-chp,.pf-tile,.tl-ic) svg[data-i]{color:var(--ico,currentColor)}
