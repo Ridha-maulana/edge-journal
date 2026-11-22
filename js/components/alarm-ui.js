@@ -82,12 +82,18 @@
     function TonePage({ a, set, onBack }) {
         const cur = a.tone || 'klasik';
         const ids = A.TONE_IDS.concat(A.isEj ? ['sistem'] : []);
+        const [lib, setLib] = useState(() => A.savedTones());
         async function pickHp() {
             A.stopPreview();
             const r = await A.pickRingtone(a.tu);
             if (!r) return;
             if (r.err) { toast('Perbarui APK ke versi terbaru untuk memilih nada dari HP'); return; }
+            setLib(A.addTone(r.uri, r.title));
             set({ tone: 'hp', tu: r.uri, tt: r.title });
+        }
+        function delHp(t) {
+            setLib(A.removeTone(t.u));
+            if (cur === 'hp' && a.tu === t.u) set({ tone: 'klasik', tu: '', tt: '' });
         }
         return h(React.Fragment, null,
             h("div", { className: "al-sh" },
@@ -101,11 +107,13 @@
                     cur === id && ic("AlCheck", 18, 2.4)))),
                 h("div", { className: "al-cap" }, "Dari HP Anda"),
                 h("div", { className: "al-grp" },
-                    h("button", { type: "button", className: "al-op" + (cur === 'hp' ? " sel" : ""), role: "radio", "aria-checked": cur === 'hp', onClick: pickHp, disabled: !A.isEj, style: A.isEj ? null : { opacity: .5 } },
-                        ic("AlMusic"), h("b", null, "Pilih dari daftar nada dering HP"),
-                        h("small", null, cur === 'hp' ? (a.tt || 'Nada pilihan') : (A.isEj ? "Buka" : "Perlu APK terbaru")),
-                        cur === 'hp' ? ic("AlCheck", 18, 2.4) : ic("ChevronRight", 18, 2))),
-                h("p", { className: "al-note" }, "Ketuk nada untuk mendengar contohnya. Nada dari HP diputar oleh HP sendiri saat memilih, dan dipakai saat alarm berbunyi, juga di layar kunci.")));
+                    lib.map(t => { const on = cur === 'hp' && a.tu === t.u; return h("div", { key: t.u, className: "al-op al-hpt" + (on ? " sel" : "") },
+                        h("button", { type: "button", className: "al-hpb", role: "radio", "aria-checked": on, onClick: () => set({ tone: 'hp', tu: t.u, tt: t.t }) }, ic("AlMusic"), h("b", null, t.t), on && ic("AlCheck", 18, 2.4)),
+                        h("button", { type: "button", className: "al-ib al-hpd", "aria-label": "Hapus " + t.t + " dari daftar", onClick: () => delHp(t) }, ic("AlTrash", 16))); }),
+                    h("button", { type: "button", className: "al-op", onClick: pickHp, disabled: !A.isEj, style: A.isEj ? null : { opacity: .5 } },
+                        ic("AlPlus", 18, 2.2), h("b", null, lib.length ? "Tambah nada dari HP" : "Pilih dari daftar nada dering HP"),
+                        h("small", null, A.isEj ? "" : "Perlu APK terbaru"), A.isEj && ic("ChevronRight", 18, 2))),
+                h("p", { className: "al-note" }, lib.length ? "Nada yang sudah ditambahkan tersimpan di daftar ini dan bisa dipakai di semua alarm, tidak perlu memilih ulang. Ikon tempat sampah hanya menghapusnya dari daftar." : "Pilih sekali, nadanya tersimpan di daftar dan bisa dipakai di semua alarm. Nada dari HP dipakai saat alarm berbunyi, juga di layar kunci.")));
     }
     function Follow({ f, i, at, sec, open, onOpen, onChange, onDel }) {
         const t = new Date(at + f.min * 60000);
@@ -194,11 +202,6 @@
             el.classList.remove('drag');
             el.style.height = m === 'full' ? FULL : MID;
         }
-        function closeAnim() {
-            const el = shRef.current; if (!el) { onClose(); return; }
-            el.classList.remove('drag'); el.style.transition = 'transform .2s ease-in'; el.style.transform = 'translateY(100%)';
-            setTimeout(onClose, 190);
-        }
         /* Tarik gagang atau header: pantau di document supaya tetap jalan saat jari/mouse keluar dari popup */
         function dStart(e) {
             if (e.pointerType === 'mouse' && e.button > 0) return;
@@ -222,15 +225,15 @@
                 const hh = el.getBoundingClientRect().height, upv = d.v < -.45, dn = d.v > .45;
                 if (ev.type === 'pointercancel') return goMode(mode.current);
                 if (upv) return goMode('full');
-                if (dn) return mode.current === 'full' ? goMode('mid') : closeAnim();
+                if (dn) return goMode('mid');
                 if (hh > (d.mid + d.full) / 2) goMode('full');
                 else if (hh > d.mid * .72) goMode('mid');
-                else closeAnim();
+                else goMode('mid');
             };
             document.addEventListener('pointermove', mv, { passive: false }); document.addEventListener('pointerup', up); document.addEventListener('pointercancel', up);
         }
         const suppress = useRef(0);
-        return ReactDOM.createPortal(h("div", { className: "modal-backdrop sheet-layer ap-bs al-bs", onClick: e => { if (e.target === e.currentTarget) onClose(); } },
+        return ReactDOM.createPortal(h("div", { className: "modal-backdrop sheet-layer ap-bs al-bs", },
             h("div", { ref: shRef, className: "tsel-sheet ap-bsheet al-sheet", role: "dialog", "aria-modal": "true", "aria-label": editing ? "Ubah alarm" : "Tambah alarm",
                 onPointerDown: dStart,
                 onClickCapture: e => { if (performance.now() - suppress.current < 350) { e.stopPropagation(); e.preventDefault(); } } },

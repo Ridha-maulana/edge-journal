@@ -1,4 +1,4 @@
-/* Alarm (v5.9.98): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
+/* Alarm (v5.9.99): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
    - Data hanya di HP ini (localStorage "ej-alarms-v1"), tidak ikut sinkron online.
    - Aplikasi terbuka (web/PWA): jam dicek tiap detik, layar alarm + nada + getar.
    - APK 1.4.0+ (plugin EjAlarm): jadwal dikirim ke AlarmManager Android, jadi alarm berbunyi walau aplikasi tertutup atau HP terkunci,
@@ -406,6 +406,18 @@
         try { const r = await ej.pickRingtone({ uri: cur || '' }); return r && r.ok && r.uri ? { uri: r.uri, title: r.title || 'Nada pilihan dari HP' } : null; }
         catch (e) { return { err: true }; }
     }
+    /* Perpustakaan nada dari HP: dipilih sekali, lalu tersedia di semua alarm (disimpan di perangkat ini) */
+    const TL_KEY = 'ej-alarm-tones-v1';
+    function readTones() { try { const l = JSON.parse(localStorage.getItem(TL_KEY) || '[]'); return Array.isArray(l) ? l.filter(x => x && x.u) : []; } catch (e) { return []; } }
+    function writeTones(l) { try { localStorage.setItem(TL_KEY, JSON.stringify(l)); } catch (e) { } }
+    function savedTones() {
+        const l = readTones(); let ch = false;
+        st.list.forEach(a => { if (a.tone === 'hp' && a.tu && !l.some(x => x.u === a.tu)) { l.push({ u: a.tu, t: a.tt || 'Nada pilihan dari HP' }); ch = true; } });
+        if (ch) writeTones(l);
+        return l;
+    }
+    function addTone(u, t) { const l = savedTones(); const i = l.findIndex(x => x.u === u); if (i >= 0) l[i].t = t || l[i].t; else l.push({ u, t: t || 'Nada pilihan dari HP' }); writeTones(l); return l; }
+    function removeTone(u) { const l = savedTones().filter(x => x.u !== u); writeTones(l); return l; }
     function openSettings(kind) { if (ejReady) { try { ej.openSettings({ kind }); } catch (e) { } } }
     /* ===== Operasi daftar ===== */
     function blank(h, m, label) {
@@ -433,7 +445,7 @@
     }
     function remove(id) { st.list = st.list.filter(a => a.id !== id); persist(); }
     window.EJAlarm = {
-        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, pickRingtone, reload, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
+        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, pickRingtone, savedTones, addTone, removeTone, reload, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
         get list() { return st.list; },
         get ringing() { return ring.slice(); },
         get isNative() { return !!(ejReady || (native && nativeReady)); },
