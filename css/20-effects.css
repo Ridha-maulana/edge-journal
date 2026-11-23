@@ -11,15 +11,15 @@
 .week-head.gj-main.lv-y{background:var(--ej-so)!important}
 /* v5.9.9 — efek dipecah jadi 7 saklar (Tools > Efek tampilan): data-fxl latar · data-fxk kartu · data-fxb tombol · data-fxi ikon kartu · data-fxh ikon header · data-fxn ikon menu bawah · data-fxg gerak ("1" = aktif) */
 /* Kartu tanpa efek: datar, tanpa bayangan */
-html[data-fxk="0"] :is(.hero-card,.pe-card,.tool-card,.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.acc-panel,.flat-sec.card-sec,.hd-card,.backup-panel,.panel,.pf-hero,.pf-grp,.pf-tile,.tl-sum){box-shadow:none!important}
+html[data-fxk="0"] :is(.hero-card,.pe-card,.tool-card,.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.acc-panel,.flat-sec.card-sec,.hd-card,.backup-panel,.panel,.pf-hero,.pf-grp,.pf-tile,.tl-card){box-shadow:none!important}
 /* Tombol tanpa efek */
-html[data-fxb="0"] :is(.primary-btn,.gate-btn,.performance-action,.account-switcher,.icon-btn,.header-icon,.pill,.ct-pill,.pf-cb,.pf-pill,.tl-ic){box-shadow:none!important}
+html[data-fxb="0"] :is(.primary-btn,.gate-btn,.performance-action,.account-switcher,.icon-btn,.header-icon,.pill,.ct-pill,.pf-cb,.pf-pill,.tl-kb){box-shadow:none!important}
 html[data-fxb="0"] .bottom-nav .nav-item:nth-child(3) svg{box-shadow:none!important}
 html[data-fxi="0"] :is(.brand-mark,.prof-av){box-shadow:none!important}
 /* Efek latar */
 html[data-fxl="1"] body{background:radial-gradient(70% 36% at 6% 0%,var(--fx-s95),transparent 72%),radial-gradient(60% 30% at 100% 22%,var(--fx-s60),transparent 72%),var(--ej-cv)!important;background-attachment:fixed}
 /* Efek kartu */
-html[data-fxk="1"] :is(.hero-card,.pe-card,.tool-card,.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.acc-panel,.flat-sec.card-sec,.hd-card,.backup-panel,.panel,.tsel-sheet,.pf-grp,.pf-tile,.tl-sum){
+html[data-fxk="1"] :is(.hero-card,.pe-card,.tool-card,.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.acc-panel,.flat-sec.card-sec,.hd-card,.backup-panel,.panel,.tsel-sheet,.pf-grp,.pf-tile,.tl-card){
   background:radial-gradient(120% 90% at 0% 0%,var(--fx-s55),transparent 60%),var(--ej-sf)!important;
   box-shadow:0 12px 30px var(--fx-sh),inset 0 1px 0 var(--fx-hi)!important}
 html[data-fxk="1"] .pf-hero{box-shadow:0 12px 30px var(--fx-sh),inset 0 1px 0 var(--fx-hi)!important}
@@ -27,7 +27,7 @@ html[data-fxk="1"] .week-head.gj-main.lv-y{background:radial-gradient(120% 90% a
 html[data-fxk="1"] :is(.pe-tile,.combo-stats>*,.search-box,.tsel,.filter-chip){
   box-shadow:0 6px 16px var(--fx-sh),inset 0 1px 0 var(--fx-hi)}
 /* Efek tombol */
-html[data-fxb="1"] :is(.account-switcher,.performance-action,.icon-btn,.header-icon,.pf-cb,.pf-pill,.tl-ic,.sp-back){
+html[data-fxb="1"] :is(.account-switcher,.performance-action,.icon-btn,.header-icon,.pf-cb,.pf-pill,.tl-kb,.sp-back){
   box-shadow:0 6px 16px var(--fx-sh),inset 0 1px 0 var(--fx-hi)}
 html[data-fxb="1"] :is(.primary-btn,.gate-btn,.share-actions .primary,.pill.active,.ct-pill.is-line){
   background:var(--accg)!important;color:var(--onacc)!important;border-color:transparent!important;
@@ -37,9 +37,9 @@ html[data-fxb="1"] .bottom-nav:not([class*="nv-"]) .nav-item:nth-child(3) svg{bo
 html[data-fxi="1"] .brand-mark,html[data-fxi="1"] .prof-av{box-shadow:0 8px 22px rgba(var(--fx-gl),.40)}
 /* Efek gerak */
 @keyframes ejRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-html[data-fxg="1"] :is(.hero-card,.pe-card,.tool-card,.week-head,.trade-card,.gj-chart,.flat-sec.card-sec,.pf-hero,.pf-tile,.pf-grp,.tl-sum){animation:ejRise .34s cubic-bezier(.2,.7,.2,1) both}
-html[data-fxg="1"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn,.pf-tile,.pf-li,.pf-cb,.pf-pill,.tl-ic,.tl-sum){transition:transform .14s ease,box-shadow .2s ease}
-html[data-fxg="1"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn,.pf-tile,.pf-li,.pf-cb,.pf-pill,.tl-ic,.tl-sum):active{transform:scale(.985)}
+html[data-fxg="1"] :is(.hero-card,.pe-card,.tool-card,.week-head,.trade-card,.gj-chart,.flat-sec.card-sec,.pf-hero,.pf-tile,.pf-grp,.tl-card){animation:ejRise .34s cubic-bezier(.2,.7,.2,1) both}
+html[data-fxg="1"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn,.pf-tile,.pf-li,.pf-cb,.pf-pill,.tl-kb,.tl-card){transition:transform .14s ease,box-shadow .2s ease}
+html[data-fxg="1"] :is(.week-head,.trade-card,.pick-row,.primary-btn,.secondary-btn,.pill,.performance-action,.icon-btn,.pf-tile,.pf-li,.pf-cb,.pf-pill,.tl-kb,.tl-card):active{transform:scale(.985)}
 @media (prefers-reduced-motion:reduce){html[data-fxg="1"] *{animation:none!important;transition:none!important}}
 /* Ikon berwarna tetap (tiap ikon punya warna sendiri: js/lib/icons.js ICON_COLORS) */
 html[data-fxi="1"] :is(.tp1,.tp2,.tp5,.tp6) svg[data-i]{color:var(--ico,currentColor)}

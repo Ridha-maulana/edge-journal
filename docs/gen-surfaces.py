@@ -83,7 +83,7 @@ S_=S
 # ---------------------------------------------------------------------------------------------
 # Selektor yang ikut permukaan: kartu + header + menu bawah (semua varian)
 CARDS=(".tp-card,.hero-card,.pe-card,.tool-card:not(.acct-inline),.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,"
-       ".flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act,.dd-item,.pf-hero,.pf-grp,.pf-tile,.tl-sum")
+       ".flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act,.dd-item,.pf-hero,.pf-grp,.pf-tile,.tl-card")
 CHROME=(".brand-mark,.header-icon,.account-switcher,.hd-strip,.ht-logo,.ht-cal,.ht-acc,.ht-date,.ht-dcard,"
         '.topbar[class*="hd-v"],.bottom-nav')
 CONTROLS=("button.icon-btn,.performance-detail-badge,button.tsel,button.sel,.search-box,button.pill:not(.active),button.dfield,"
@@ -91,7 +91,7 @@ CONTROLS=("button.icon-btn,.performance-detail-badge,button.tsel,button.sel,.sea
   ".direction button,.rc-seg button,.capital-toggle button,.calc-result,.secondary-btn,.dna-grade,.dna-quick,.dna-item,.dna-badge,.tool-icon,.as-edit,.capital-balance,.rc-swap,.rc-out,.rc-res>*,.performance-action,.share-btn,.detail-action-btn,.ct-pill,.cal-cell:not(.win):not(.loss):not(.los),.pe-years button,.pe-sum>div,.pe-tabs button:not(.on),.dd-crumb:not(.on),.dd-lock:not(.on),.dd-btn,.dd-item.click,.tp-fx,"
   "button.tp-kind,.dd-tag.cnt,.k-thumb,.prof-av,.pick-ic,.account-avatar,"
   ".primary-btn,.fab,.gate-btn,.share-actions .primary,button.pill.active,.t1-wal,.t2-accb,.t2-nb,.t5-ai,.t5-mi,.t6-mi,.t2-ki,.t2-ii,.t6-more,.t5-dt,"
-  ".pf-chp,.pf-cb,.pf-pill,.tl-ic,"
+  ".pf-chp,.pf-cb,.pf-pill,.tl-kb,"
   "")
 CARDS=','.join(c+':not(.acc-panel *)' for c in CARDS.split(','))
 ALL=CARDS+','+CHROME+','+CONTROLS

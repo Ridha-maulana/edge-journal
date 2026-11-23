@@ -50,16 +50,32 @@ html .sp-panel .sync-note+.button-row:not(#_),html .sp-panel .sync-note+.seconda
 /* tema "permukaan" memberi kotak/bayangan ke semua input dan panel; di sini harus polos (id di :not menaikkan prioritas) */
 html .al-lab input:not(#_){background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;outline:0!important;padding:0!important}
 html .backup-panel:not(#_){background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important}
-/* ===== v5.10.1 — Tools: peluncur ikon bulat + ringkasan ===== */
-.tl-launch{display:flex;justify-content:space-between;padding:6px 4px 4px}
-.tl-btn{display:flex;flex-direction:column;align-items:center;gap:10px;width:96px;background:none;border:0;padding:0;color:inherit;font-family:inherit}
-.tl-btn b{font-size:13.5px;font-weight:700}
-.tl-ic{width:76px;height:76px;border-radius:50%;border:1px solid var(--ej-bd,var(--c4));background:var(--ej-sf,var(--c2));color:var(--ej-pr,var(--c6));display:grid;place-items:center}
-.tl-btn:active .tl-ic{filter:brightness(.93);transform:scale(.97)}
-.tl-lab{font-size:12.5px;font-weight:600;color:var(--c5);margin:28px 4px 8px}
-.tl-sum{border-radius:20px;border:1px solid var(--ej-bd,var(--c4));background:var(--ej-sf,var(--c2));padding:2px 16px}
-.tl-row{padding:13px 0;border-bottom:1px solid var(--ej-bd,var(--c4))}.tl-row.last{border-bottom:0}
-.tl-row small{display:block;font-size:12px;color:var(--c5)}
-.tl-row b{display:block;font-size:14.5px;font-weight:700;margin-top:2px;overflow-wrap:anywhere}
-/* ikon berwarna (Efek ikon) di Profil dan Tools */
-html[data-fxi="1"] :is(.pf-chp,.pf-tile,.tl-ic) svg[data-i]{color:var(--ico,currentColor)}
+/* ===== v5.10.2 — Tools: cari, kartu geser, ringkasan struk ===== */
+.tl-search{margin:0 0 16px}
+.tl-search input{flex:1;min-width:0}
+.tl-clear{background:none;border:0;color:inherit;opacity:.7;display:grid;place-items:center;padding:4px;min-width:32px;min-height:32px;margin-right:-6px}
+.tl-hint{font-size:12.5px;color:var(--c5);margin:0 2px 10px}
+.tl-car{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 0 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tl-car::-webkit-scrollbar{display:none}
+.tl-card{flex:none;width:min(292px,78vw);scroll-snap-align:start;box-sizing:border-box;padding:20px;border-radius:26px;border:1px solid var(--ej-bd,var(--c4));background:var(--ej-sf,var(--c2))}
+.tl-car.one .tl-card{width:100%}
+.tl-kt{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;margin-bottom:22px;color:var(--tc);background:color-mix(in srgb,var(--tc) 16%,transparent)}
+.tl-cat{font-size:12.5px;font-weight:800;letter-spacing:.04em;color:var(--tc)}
+.tl-card h3{margin:8px 0;font-size:23px;font-weight:800;line-height:1.15}
+.tl-card p{margin:0 0 18px;font-size:14px;line-height:1.5;color:var(--c5);min-height:42px}
+.tl-kb{width:100%;height:46px;border:0;border-radius:15px;background:var(--tc);color:#fff;font-weight:700;font-size:15px;font-family:inherit}
+.tl-kb:active{filter:brightness(.92)}
+.tl-sbar{height:5px;border-radius:5px;background:color-mix(in srgb,currentColor 12%,transparent);margin:14px 0 24px;overflow:hidden;position:relative}
+.tl-sbar i{position:absolute;top:0;bottom:0;left:0;border-radius:5px;background:color-mix(in srgb,currentColor 38%,transparent)}
+.tl-rc{font-family:ui-monospace,"DejaVu Sans Mono",Menlo,monospace;padding:0 2px}
+.tl-rt{text-align:center;font-weight:800;letter-spacing:.14em;font-size:16px}
+.tl-rs{text-align:center;font-size:12px;color:var(--c5);margin:6px 0 12px}
+.tl-dash{border-top:1.5px dashed var(--ej-bd,var(--c4));margin:10px 0}
+.tl-r1{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.tl-r1 b{font-size:15px;font-weight:700}
+.tl-r1 em{font-style:normal;font-weight:800;font-size:14px;text-align:right}
+.tl-rd{font-size:12px;line-height:1.55;color:var(--c5);margin:5px 0 4px}
+.tl-rf{text-align:center;font-size:12px;color:var(--c5);margin-top:12px}
+.tl-none{text-align:center;color:var(--c5);font-size:13.5px;padding:28px 0}
+/* ikon berwarna (Efek ikon) di Profil */
+html[data-fxi="1"] :is(.pf-chp,.pf-tile) svg[data-i]{color:var(--ico,currentColor)}
