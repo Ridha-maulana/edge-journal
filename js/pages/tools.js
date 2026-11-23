@@ -76,8 +76,8 @@ function Tools({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNa
         needle ? (total ? React.createElement("div", { className: "tl-res" },
                 React.createElement("div", { className: "tl-hint" }, total + " hasil untuk \u201C" + q.trim() + "\u201D"),
                 results.map(g => { const T = TOOL[g.k], open = !!more[g.k], rows = open ? g.rows : g.rows.slice(0, 6);
-                    return React.createElement("div", { key: g.k, className: "tl-gp", style: { "--tc": T.tc } },
-                        React.createElement("div", { className: "tl-cat" }, T.name),
+                    return React.createElement("div", { key: g.k, className: "tl-gp" },
+                        React.createElement("div", { className: "sec-label" }, T.name),
                         React.createElement("div", { className: "tl-grp" },
                             rows.map((r, n) => React.createElement("button", { type: "button", key: g.k + n, className: "tl-li", onClick: r.act },
                                 React.createElement("span", { className: "tl-lt" }, React.createElement(Icon, { name: T.icon, size: 18 })),

@@ -83,7 +83,7 @@ S_=S
 # ---------------------------------------------------------------------------------------------
 # Selektor yang ikut permukaan: kartu + header + menu bawah (semua varian)
 CARDS=(".tp-card,.hero-card,.pe-card,.tool-card:not(.acct-inline),.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,"
-       ".flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act,.dd-item,.pf-hero,.pf-grp,.pf-tile,.tl-card,.tl-grp")
+       ".flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act,.dd-item,.pf-hero,.pf-grp,.pf-tile,.tl-card")
 CHROME=(".brand-mark,.header-icon,.account-switcher,.hd-strip,.ht-logo,.ht-cal,.ht-acc,.ht-date,.ht-dcard,"
         '.topbar[class*="hd-v"],.bottom-nav')
 CONTROLS=("button.icon-btn,.performance-detail-badge,button.tsel,button.sel,.search-box,button.pill:not(.active),button.dfield,"
