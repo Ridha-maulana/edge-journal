@@ -161,7 +161,7 @@ async function readMt5Chart(worker, canvas) {
     let symRaw = '', sym = null;
     for (const mode of ['inv', 'max']) {
         const t = await chartOcr(worker, chartCrop(canvas, 0, H * .07, W * .7, H * .15, 2, mode), 6, '');
-        const m = t.match(/([A-Z][A-Za-z0-9._]{2,12})\s*[^A-Za-z0-9\s]?\s*(?:M1|M5|M15|M30|H1|H4|D1|W1|MN)\b/);
+        const m = t.match(/([A-Z][A-Za-z0-9._#]{2,12})\s*[^A-Za-z0-9\s]?\s*(?:M1|M5|M15|M30|H1|H4|D1|W1|MN)\b/);
         if (m) { symRaw = m[1]; sym = mt5NormSymbol(symRaw); if (sym) break; }
         if (/Gold\s*vs/i.test(t)) { symRaw = 'XAUUSD'; sym = 'XAUUSD'; break; }
     }

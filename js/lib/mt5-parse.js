@@ -45,7 +45,7 @@ function mt5ToWib(str, mode) {
 }
 const MT5_NUM = /-?\d{1,3}(?:[   ]\d{3})+[.,]\d+|-?\d+[.,]\d+/g;
 const MT5_DT = /(\d{4})[.\-/](\d{2})[.\-/](\d{2})[ T]+(\d{1,2}):(\d{2})(?::(\d{2}))?/;
-const MT5_HEAD = /([A-Za-z][A-Za-z0-9._]{1,14})\s*[,;]\s*(buy|b[uv]y|se[l1!|iI]{1,3})\s+(\d+(?:[.,]\d+)?)/i;
+const MT5_HEAD = /([A-Za-z][A-Za-z0-9._#$+\-]{1,18})\s*[,;]\s*(buy|b[uv]y|se[l1!|iI]{1,3})\s+(\d+(?:[.,]\d+)?)/i;
 function mt5Num(s) { return Number(String(s).replace(/[   ]/g, '').replace(',', '.')); }
 function mt5Numbers(line) { return (String(line).match(MT5_NUM) || []).map(mt5Num); }
 /* samakan nama simbol broker (XAUUSDm, GOLD., EURUSD.pro) dengan daftar simbol aplikasi */
@@ -62,7 +62,12 @@ function mt5NormSymbol(raw) {
         return 'XAUUSD';
     if (u.startsWith('GOLD'))
         return 'GOLD';
-    return null;
+    /* simbol lain yang tidak ada di daftar (US30.cash, ETHUSDm, USTEC#): pakai nama dasarnya, buang akhiran broker */
+    let base = String(raw || '').trim().split(/[.#_\-+$\s]/)[0].replace(/[^A-Za-z0-9]/g, '');
+    if (/^[A-Z0-9]{5,}[a-z]$/.test(base))
+        base = base.slice(0, -1);
+    base = base.toUpperCase();
+    return /^[A-Z][A-Z0-9]{2,11}$/.test(base) ? base : null;
 }
 /* hasil: { rows: [...], pick: row terbaik atau null } */
 function parseMt5Text(text) {

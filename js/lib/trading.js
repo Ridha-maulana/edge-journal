@@ -2,7 +2,12 @@
 "use strict";
 const CONTRACT_SIZES = { XAUUSD: 100, GOLD: 100, EURUSD: 100000, GBPUSD: 100000, USDJPY: 100000, GBPJPY: 100000, AUDUSD: 100000, USDCAD: 100000, USDCHF: 100000, NAS100: 1, BTCUSD: 1 };
 const SYMBOLS = Object.keys(CONTRACT_SIZES);
-function contractSize(symbol) { return CONTRACT_SIZES[symbol] || 100000; }
+/* ukuran kontrak: simbol bawaan dari tabel; simbol lain ditebak dari namanya (emas, perak, minyak, indeks, kripto), selain itu dianggap pair forex */
+function contractSize(symbol) { if (CONTRACT_SIZES[symbol]) return CONTRACT_SIZES[symbol]; const u = String(symbol || '').toUpperCase(); if (/^(XAU|GOLD)/.test(u)) return 100; if (/^(XAG|SILVER)/.test(u)) return 5000; if (/(OIL|WTI|BRENT|XTI|XBR)/.test(u)) return 1000; if (/^(US30|US500|US100|NAS|SPX|DJ|DAX|GER|DE40|DE30|UK100|FTSE|JP225|NIKKEI|HK50|FRA40|AUS200|STOXX|USTEC|BTC|ETH|LTC|XRP|SOL|DOGE|ADA)/.test(u)) return 1; return 100000; }
+/* simbol trade boleh simbol apa saja (bukan hanya daftar bawaan) */
+function isTradeSymbol(s) { return typeof s === 'string' && /^[A-Za-z0-9._#$+\-]{2,24}$/.test(s); }
+/* daftar pilihan simbol: bawaan + simbol lain yang pernah dicatat di semua akun + simbol yang sedang dipilih */
+function symbolOptions(current) { const out = SYMBOLS.slice(), seen = new Set(out); const add = s => { if (isTradeSymbol(s) && !seen.has(s)) { seen.add(s); out.push(s); } }; try { const raw = JSON.parse(localStorage.getItem('edge-journal-v3') || '{}'); ((raw && raw.accounts) || []).forEach(a => ((a && a.trades) || []).forEach(t => add(t && t.symbol))); } catch (e) { } add(current); return out; }
 function pnlFor(trade, exit = trade.exit) { if (exit === null || exit === undefined || exit === '')
     return 0; const gross = (trade.side === 'Long' ? Number(exit) - Number(trade.entry) : Number(trade.entry) - Number(exit)) * Number(trade.lots) * contractSize(trade.symbol); return gross - (Number(trade.fees) || 0); }
 function riskFor(entry, sl, lots, symbol) { return entry && sl && lots ? Math.abs(Number(entry) - Number(sl)) * Number(lots) * contractSize(symbol) : 0; }

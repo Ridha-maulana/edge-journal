@@ -11,6 +11,7 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
             : initial ? { ...initial, entry: str(initial.entry), exit: str(initial.exit), lots: str(initial.lots), sl: str(initial.sl), tp: str(initial.tp), fees: str(initial.fees || 0), closeDate: initial.closeDate || '', exitMethod: initial.exitMethod || '', setup: initial.setup || '', review: initial.review || '', brokerPnl: '', screenshots: initial.screenshots || [] }
                 : { symbol: 'XAUUSD', side: 'Long', date: isoNow(), closeDate: '', entry: '', exit: '', lots: '0.01', sl: '', tp: '', fees: '0', exitMethod: '', setup: '', review: '', brokerPnl: '', screenshots: [] });
     const [closed, setClosed] = useState(!!(pf ? (!pf.chart && pf.exit != null) : initial ? initial.status === 'closed' : false));
+    const symOpts = React.useMemo(() => symbolOptions(pf && pf.symbol), []);
     const [adjOpen, setAdjOpen] = useState(false);
     const [adjPct, setAdjPct] = useState('1');
     const fileRef = useRef(null);
@@ -51,7 +52,8 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
         h("strong", null, "Hasil baca screenshot (Pro)"),
         h("small", null, "Periksa tiap kolom sebelum disimpan — pembacaan teks bisa keliru."),
         pf.ticket && h("small", null, "Tiket MT5: #", pf.ticket),
-        !pf.symbolKnown && h("small", { className: "warn" }, "Simbol \"", pf.symbolRaw, "\" tidak ada di daftar, dipilih XAUUSD. Silakan ganti jika salah."),
+        !pf.symbolKnown && h("small", { className: "warn" }, "Simbol \"", pf.symbolRaw, "\" tidak terbaca jelas, dipilih XAUUSD. Silakan ganti jika salah."),
+        pf.symbolKnown && pf.symbolRaw && String(pf.symbolRaw).toUpperCase() !== pf.symbol && h("small", null, "Simbol broker \"", pf.symbolRaw, "\" dibaca sebagai ", pf.symbol, ". Ganti jika salah."),
         !pf.hasOpen && h("small", { className: "warn" }, "Waktu buka tidak terbaca (baris detail posisi tidak ikut di screenshot). Tanggal di bawah memakai waktu tutup — sesuaikan. SL/TP juga perlu diisi manual."),
         dupTicket && h("small", { className: "warn" }, "Peringatan: tiket ini sudah pernah dicatat di akun ini."),
         h("label", null, "Zona waktu server MT5",
@@ -68,7 +70,7 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
     const formEl = h("form", { onSubmit: submit, onPaste: handlePaste, className: "add-trade" },
         scanBox,
         h("div", { className: "form-grid at-one" },
-            h("label", null, "Symbol", h(TSelect, { title: "Symbol", value: form.symbol, options: SYMBOLS, onChange: v => set('symbol', v) })),
+            h("label", null, "Symbol", h(TSelect, { title: "Symbol", value: form.symbol, options: symOpts, onChange: v => set('symbol', v) })),
             h("label", null, "Tanggal & waktu", h(DateField, { withTime: true, value: form.date, onChange: v => set('date', v) }))),
         h("label", null, "Trade setup / alasan entry", h("textarea", { value: form.setup, onChange: e => set('setup', e.target.value), placeholder: "Contoh: breakout + retest di resistance H1..." })),
         h("div", { className: "direction" },

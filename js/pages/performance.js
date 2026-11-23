@@ -69,7 +69,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     let run = 0, peak = 0;
     filtered.slice().sort(byDateAsc).forEach(t => { run += Number(t.pnl) || 0; peak = Math.max(peak, run); });
     const hwm = peak;
-    const bySymbol = SYMBOLS.map(symbol => { const xs = filtered.filter(t => t.symbol === symbol); return { symbol, count: xs.length, pnl: xs.reduce((a, t) => a + t.pnl, 0) }; }).filter(x => x.count);
+    const bySymbol = SYMBOLS.concat(Array.from(new Set(filtered.map(t => t.symbol))).filter(s => !SYMBOLS.includes(s))).map(symbol => { const xs = filtered.filter(t => t.symbol === symbol); return { symbol, count: xs.length, pnl: xs.reduce((a, t) => a + t.pnl, 0) }; }).filter(x => x.count);
     const dowBuckets = [[], [], [], [], [], [], []]; filtered.forEach(t => { const w = new Date(t.date).getDay(); if (w >= 0) dowBuckets[w].push(t); });   /* kelompokkan hari sekali jalan (toLocaleDateString per posisi sangat lambat) */
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, di) => { const xs = dowBuckets[di]; return { day, count: xs.length, wins: xs.filter(t => t.pnl > 0).length, losses: xs.filter(t => t.pnl < 0).length, pnl: xs.reduce((a, t) => a + (Number(t.pnl) || 0), 0) }; }).filter(x => x.count).sort((a, b) => b.pnl - a.pnl);
     const cdH = account.capitalHistory || [];
