@@ -162,9 +162,11 @@ function CustomEditor({ EJ, onClose }) {
             React.createElement("button", { type: "button", className: "ok", onClick: onClose }, "Selesai")));
 }
 
-function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNavVariant }) {
+function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNavVariant, openDlg, scrollTo }) {
     const EJ = useAppearance();
-    const [dlg, setDlg] = useState(null);
+    const [dlg, setDlg] = useState(openDlg || null);
+    /* dari pencarian di halaman Tools: gulir ke bagian Header & menu */
+    useEffect(() => { if (!scrollTo) return; const t = setTimeout(() => { const el = [].slice.call(document.querySelectorAll('.sec-label')).find(n => n.textContent === scrollTo); if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start' }); }, 60); return () => clearTimeout(t); }, []);
     const st = EJ.state, th = EJ.THEMES[st.theme], fo = EJ.FONTS[st.font];
     const modeLabel = { light: 'Terang', dark: 'Gelap', auto: 'Otomatis' }[st.mode];
     const close = () => setDlg(null);
@@ -240,4 +242,26 @@ function AppearanceEntry({ onOpen }) {
         React.createElement("span", { className: "pick-tx" }, React.createElement("b", null, "Tampilan aplikasi"),
             React.createElement("span", { className: "sp-chips" }, React.createElement("u", null, mode), React.createElement("u", null, th ? th.name : ''), React.createElement("u", null, fo ? fo.name : ''))),
         React.createElement(ChevronRight, { size: 18 }));
+}
+
+/* Indeks pencarian pengaturan Tampilan (dipakai kolom cari di halaman Tools).
+   Tiap entri: judul, jalur, kata kunci tambahan, dan tujuan (dlg = dialog yang dibuka, scroll = judul bagian yang digulir). */
+function apSearchIndex(EJ) {
+    const out = [], add = (title, sub, key, dlg, scroll) => out.push({ title, sub, key: key || '', dlg: dlg || null, scroll: scroll || null });
+    add('Halaman utama', 'Tampilan \u203A Umum', 'template beranda dasbor', 'home');
+    add('Mode tampilan', 'Tampilan \u203A Umum', 'terang gelap otomatis dark light siang malam', 'mode');
+    add('Tema aplikasi', 'Tampilan \u203A Warna & huruf', 'warna tema', 'theme');
+    add('Font aplikasi', 'Tampilan \u203A Warna & huruf', 'huruf jenis tulisan', 'font');
+    add('Efek tampilan', 'Tampilan \u203A Efek & latar', 'efek semua tanpa efek', 'fx');
+    FX_ROWS.forEach(r => add(r[1], 'Tampilan \u203A Efek tampilan', r[2], 'fx'));
+    add('Efek permukaan kartu', 'Tampilan \u203A Efek & latar', 'doff solid transparan bayangan kaca permukaan', 'sfc');
+    (EJ.SFC || []).forEach(m => { if (m && m[0]) add(m[0], 'Tampilan \u203A Efek permukaan kartu', 'efek permukaan kartu', 'sfc'); });
+    add('Latar aplikasi', 'Tampilan \u203A Efek & latar', 'wallpaper background kaca anime pola warna dasar', 'bg');
+    ((EJ.WP && EJ.WP.LIST) || []).forEach(w => add(w.name, 'Tampilan \u203A Latar aplikasi', 'latar ' + (w.cat || ''), 'bg'));
+    add('Tampilan header', 'Tampilan \u203A Header & menu', 'gaya header atas', null, 'Header & menu');
+    add('Tampilan menu bawah', 'Tampilan \u203A Header & menu', 'gaya menu bar navigasi bawah', null, 'Header & menu');
+    (EJ.THEME_ORDER || []).forEach(k => { const t = EJ.THEMES[k]; if (t && k !== 'custom') add(t.name, 'Tampilan \u203A Tema aplikasi', 'tema warna ' + (t.tag || ''), 'theme'); });
+    (EJ.FONT_ORDER || []).forEach(k => { const f = EJ.FONTS[k]; if (f) add(f.name, 'Tampilan \u203A Font aplikasi', 'font huruf ' + (f.desc || ''), 'font'); });
+    HOME_LIST.forEach(([v, l]) => add(l.replace(' (sekarang)', ''), 'Tampilan \u203A Halaman utama', 'template beranda', 'home'));
+    return out;
 }

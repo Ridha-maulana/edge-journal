@@ -19,13 +19,15 @@ function Tools({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNa
     const [alarmOpen, setAlarmOpen] = useState(false);
     const [q, setQ] = useState('');
     const [prog, setProg] = useState({ w: 33, l: 0 });
+    const [ap, setAp] = useState({ dlg: null, scroll: null });
+    const [more, setMore] = useState({});
     const EJ = useAppearance(), al = window.useAlarmSummary ? window.useAlarmSummary() : { on: 0, next: null };
-    const go = v => { setPage(v); try { window.scrollTo(0, 0); } catch (e) { } };
+    const go = (v, o) => { setAp(o || { dlg: null, scroll: null }); setPage(v); try { window.scrollTo(0, 0); } catch (e) { } };
     if (page === 'appearance')
         return React.createElement("section", null,
             React.createElement(SubHead, { title: "Tampilan aplikasi", onBack: () => go(null) }),
             React.createElement("div", { className: "acc-list" },
-                React.createElement(AppearanceRows, { homeT: homeT, onHome: onHome, headerVariant: headerVariant, onHeaderVariant: onHeaderVariant, navVariant: navVariant, onNavVariant: onNavVariant })));
+                React.createElement(AppearanceRows, { openDlg: ap.dlg, scrollTo: ap.scroll, homeT: homeT, onHome: onHome, headerVariant: headerVariant, onHeaderVariant: onHeaderVariant, navVariant: navVariant, onNavVariant: onNavVariant })));
     if (page === 'risk')
         return React.createElement("section", null,
             React.createElement(SubHead, { title: "Risk calculator", onBack: () => go(null) }),
@@ -42,24 +44,57 @@ function Tools({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNa
             sum: { name: 'Tampilan', value: themeName, color: '#ec4899', desc: (mode ? mode + ' · ' : '') + 'Ganti tema, efek, header, dan navigasi.' } }
     ];
     const needle = q.trim().toLowerCase();
-    const list = needle ? all.filter(t => (t.title + ' ' + t.cat + ' ' + t.key).toLowerCase().includes(needle)) : all;
     const onScroll = e => { const el = e.currentTarget, max = el.scrollWidth - el.clientWidth, w = Math.min(100, el.clientWidth * 100 / Math.max(1, el.scrollWidth)); setProg({ w, l: max > 0 ? (el.scrollLeft / max) * (100 - w) : 0 }); };
+    const TOOL = { risk: { name: 'KALKULATOR', tc: '#22c55e', icon: 'Calculator' }, alarm: { name: 'PENGINGAT', tc: '#f97316', icon: 'AlAlarm' }, look: { name: 'PERSONALISASI', tc: '#ec4899', icon: 'Paintbrush' } };
+    let results = null;
+    if (needle) {
+        const E = [];
+        all.forEach(t => E.push({ tool: t.id, title: t.title, sub: t.cat.charAt(0) + t.cat.slice(1).toLowerCase() + ' \u203A buka tool', key: t.key, act: t.open, top: 1 }));
+        const rk = (title, key) => E.push({ tool: 'risk', title, sub: 'Risk Calculator', key: key || '', act: () => go('risk') });
+        rk('Risk %', 'persentase risiko per trade'); rk('Saldo akun', 'balance modal'); rk('Entry', 'harga masuk open'); rk('Stop loss', 'sl batas rugi'); rk('Take profit', 'tp target untung');
+        rk('Lot disarankan', 'ukuran posisi volume lots'); rk('Reward', 'rasio risk reward rr'); rk('Mata uang', 'currency usd idr'); rk('Symbol', 'pair instrumen xauusd'); rk('Arah', 'long short buy sell');
+        rk('Buat posisi', 'pakai lot ini jurnal catat'); rk('Tukar lot dan risk persen', 'ganti isian');
+        const ar = (title, key) => E.push({ tool: 'alarm', title, sub: 'Alarm', key: key || '', act: () => setAlarmOpen(true) });
+        ar('Nada dering', 'pilih dari daftar nada dering hp suara ringtone'); ar('Berbunyi selama', 'durasi menit lama bunyi'); ar('Getar saat alarm berbunyi', 'getaran vibrasi');
+        ar('Hapus setelah alarm berbunyi', 'sekali pakai'); ar('Label', 'nama alarm'); ar('Ulangi', 'hari senin selasa rabu kamis jumat sabtu minggu'); ar('Jam alarm', 'waktu menit detik');
+        ar('Tunda', 'snooze'); ar('Alarm susulan', 'pengingat lanjutan'); ar('Alarm baru', 'tambah buat');
+        (al.names || []).forEach(n => ar(n, 'alarm saya'));
+        const idx = window.apSearchIndex ? window.apSearchIndex(EJ) : [];
+        idx.forEach(x => E.push({ tool: 'look', title: x.title, sub: x.sub, key: x.key, act: () => go('appearance', { dlg: x.dlg, scroll: x.scroll }) }));
+        const words = needle.split(/\s+/).filter(Boolean);
+        const sc = e => { const t = e.title.toLowerCase(), h = t + ' ' + e.sub.toLowerCase() + ' ' + e.key.toLowerCase(); if (!words.every(w => h.indexOf(w) >= 0)) return -1; return (e.top ? 0 : 10) + (t.indexOf(needle) === 0 ? 0 : t.indexOf(needle) > 0 ? 2 : 5) + (words.every(w => t.indexOf(w) >= 0) ? 0 : 3); };
+        const hit = E.map(e => ({ e, s: sc(e) })).filter(x => x.s >= 0);
+        results = ['risk', 'alarm', 'look'].map(k => ({ k, rows: hit.filter(x => x.e.tool === k).sort((a, b) => a.s - b.s).map(x => x.e) })).filter(g => g.rows.length);
+    }
+    const total = results ? results.reduce((n, g) => n + g.rows.length, 0) : 0;
     return React.createElement("section", { className: "tl" },
         React.createElement(PageHeading, { title: "Trading Tools", description: "Kalkulator risk, alarm, dan tampilan aplikasi.", className: "relaxed" }),
         React.createElement("div", { className: "search-box tl-search" },
             React.createElement(Search, { size: 15 }),
-            React.createElement("input", { value: q, onChange: e => setQ(e.target.value), placeholder: "Cari tool: risk, alarm, tampilan…", "aria-label": "Cari tool" }),
-            q && React.createElement("button", { type: "button", className: "tl-clear", "aria-label": "Hapus pencarian", onClick: () => setQ('') }, React.createElement(X, { size: 15 }))),
-        list.length ? React.createElement(React.Fragment, null,
+            React.createElement("input", { value: q, onChange: e => { setQ(e.target.value); setMore({}); }, placeholder: "Cari tool atau pengaturan\u2026", "aria-label": "Cari tool atau pengaturan" }),
+            q && React.createElement("button", { type: "button", className: "tl-clear", "aria-label": "Hapus pencarian", onClick: () => { setQ(''); setMore({}); } }, React.createElement(X, { size: 15 }))),
+        needle ? (total ? React.createElement("div", { className: "tl-res" },
+                React.createElement("div", { className: "tl-hint" }, total + " hasil untuk \u201C" + q.trim() + "\u201D"),
+                results.map(g => { const T = TOOL[g.k], open = !!more[g.k], rows = open ? g.rows : g.rows.slice(0, 6);
+                    return React.createElement("div", { key: g.k, className: "tl-gp", style: { "--tc": T.tc } },
+                        React.createElement("div", { className: "tl-cat" }, T.name),
+                        React.createElement("div", { className: "tl-grp" },
+                            rows.map((r, n) => React.createElement("button", { type: "button", key: g.k + n, className: "tl-li", onClick: r.act },
+                                React.createElement("span", { className: "tl-lt" }, React.createElement(Icon, { name: T.icon, size: 18 })),
+                                React.createElement("span", { className: "tl-lx" }, React.createElement("b", null, r.title), React.createElement("small", null, r.sub)),
+                                React.createElement(ChevronRight, { size: 16 }))),
+                            g.rows.length > 6 && React.createElement("button", { type: "button", className: "tl-more", onClick: () => setMore({ ...more, [g.k]: !open }) }, open ? "Tampilkan lebih sedikit" : "Tampilkan " + (g.rows.length - 6) + " lainnya")));
+                }))
+            : React.createElement("div", { className: "tl-none" }, "Tidak ada hasil untuk \u201C" + q.trim() + "\u201D"))
+        : React.createElement(React.Fragment, null,
             React.createElement("div", { className: "tl-hint" }, "Geser untuk melihat menu tools"),
-            React.createElement("div", { className: "tl-car" + (list.length === 1 ? " one" : ""), onScroll: onScroll, key: needle }, list.map(t => React.createElement(TlCard, { key: t.id, tc: t.tc, icon: t.icon, cat: t.cat, title: t.title, desc: t.desc, onOpen: t.open }))),
-            list.length > 1 && React.createElement("div", { className: "tl-sbar", "aria-hidden": "true" }, React.createElement("i", { style: { width: prog.w + '%', left: prog.l + '%' } })))
-            : React.createElement("div", { className: "tl-none" }, "Tidak ada tool untuk “" + q.trim() + "”"),
-        list.length ? React.createElement("div", { className: "tl-rc" + (list.length === 1 ? " gap" : "") },
-            React.createElement("div", { className: "tl-rt" }, "RINGKASAN TOOLS"),
-            React.createElement("div", { className: "tl-rs" }, needle ? 'hasil pencarian: "' + q.trim() + '"' : 'dipakai di akun ' + account.name),
-            React.createElement("div", { className: "tl-dash" }),
-            list.map(t => React.createElement(TlRow, { key: t.id, name: t.sum.name, value: t.sum.value, color: t.sum.color, desc: t.sum.desc })),
-            React.createElement("div", { className: "tl-rf" }, needle ? list.length + ' dari 3 tool.' : 'Geser kartu untuk membuka tool.')) : null,
+            React.createElement("div", { className: "tl-car", onScroll: onScroll }, all.map(t => React.createElement(TlCard, { key: t.id, tc: t.tc, icon: t.icon, cat: t.cat, title: t.title, desc: t.desc, onOpen: t.open }))),
+            React.createElement("div", { className: "tl-sbar", "aria-hidden": "true" }, React.createElement("i", { style: { width: prog.w + '%', left: prog.l + '%' } })),
+            React.createElement("div", { className: "tl-rc" },
+                React.createElement("div", { className: "tl-rt" }, "RINGKASAN TOOLS"),
+                React.createElement("div", { className: "tl-rs" }, 'dipakai di akun ' + account.name),
+                React.createElement("div", { className: "tl-dash" }),
+                all.map(t => React.createElement(TlRow, { key: t.id, name: t.sum.name, value: t.sum.value, color: t.sum.color, desc: t.sum.desc })),
+                React.createElement("div", { className: "tl-rf" }, 'Geser kartu untuk membuka tool.'))),
         alarmOpen && window.AlarmPage && React.createElement(window.AlarmPage, { onClose: () => setAlarmOpen(false) }));
 }

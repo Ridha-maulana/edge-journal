@@ -79,3 +79,14 @@ html .backup-panel:not(#_){background:none!important;border:0!important;box-shad
 .tl-none{text-align:center;color:var(--c5);font-size:13.5px;padding:28px 0}
 /* ikon berwarna (Efek ikon) di Profil */
 html[data-fxi="1"] :is(.pf-chp,.pf-tile) svg[data-i]{color:var(--ico,currentColor)}
+/* hasil pencarian Tools */
+.tl-res .tl-hint{margin-bottom:12px}
+.tl-gp{margin:0 0 20px}.tl-gp .tl-cat{margin:0 4px 8px}
+.tl-grp{border-radius:20px;border:1px solid var(--ej-bd,var(--c4));background:var(--ej-sf,var(--c2));overflow:hidden}
+.tl-li{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;background:none;border:0;border-bottom:1px solid var(--ej-bd,var(--c4));color:inherit;font-family:inherit;text-align:left}
+.tl-li:last-child{border-bottom:0}.tl-li:active{background:color-mix(in srgb,var(--tc) 10%,transparent)}
+.tl-lt{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:var(--tc);background:color-mix(in srgb,var(--tc) 16%,transparent)}
+.tl-lx{flex:1;min-width:0}.tl-lx b{display:block;font-size:14.5px;font-weight:700;overflow-wrap:anywhere}.tl-lx small{display:block;font-size:12px;color:var(--c5);margin-top:2px;overflow-wrap:anywhere}
+.tl-li>svg:last-child{flex:none;opacity:.55}
+.tl-more{display:block;width:100%;padding:12px;background:none;border:0;border-top:1px solid var(--ej-bd,var(--c4));color:var(--tc);font-weight:700;font-size:13px;font-family:inherit}
+.tl-rc{margin-top:2px}
