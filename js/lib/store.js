@@ -40,9 +40,15 @@ function currentAlarmData() {
     } catch (e) { }
     return null;
 }
+/* Teks Metode Satu Warna yang diubah pengguna ikut tersimpan di data jurnal (field "metode") */
+function currentMetodeData() {
+    try { const p = JSON.parse(localStorage.getItem('edge-journal-v3') || 'null'); if (p && p.metode && typeof p.metode === 'object') return p.metode; const m = JSON.parse(localStorage.getItem('ej-metode-v1') || 'null'); if (m && typeof m === 'object') return m; } catch (e) { }
+    return null;
+}
 function saveStore(activeAccountId, accounts) {
-    const o = { activeAccountId, accounts }, al = currentAlarmData();
+    const o = { activeAccountId, accounts }, al = currentAlarmData(), mt = currentMetodeData();
     if (al) o.alarms = al;
+    if (mt) o.metode = mt;
     localStorage.setItem('edge-journal-v3', JSON.stringify(o)); markLocalChanged();
 }
 function normalizeAccounts(accounts) { return (accounts || []).map(a => ({ ...a, capitalHistory: Array.isArray(a.capitalHistory) ? a.capitalHistory : [] })); }

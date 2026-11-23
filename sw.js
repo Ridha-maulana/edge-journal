@@ -1,4 +1,4 @@
-const C='ej3-5.10.5';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.10.6';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -30,7 +30,7 @@ const SHELL=[
   './js/components/app-header.js',
   './js/components/home-parts.js',
   './js/components/home-templates.js',
-  './js/components/nav-variants.js', './js/components/risk-calc.js', './js/components/alarm-ui.js', './js/lib/alarms.js', './js/components/subpage.js', './js/components/appearance-ui.js',
+  './js/components/nav-variants.js', './js/components/risk-calc.js', './js/components/alarm-ui.js', './js/lib/alarms.js', './js/lib/metode.js', './js/components/metode-ui.js', './js/components/subpage.js', './js/components/appearance-ui.js',
   './js/watchdog.js',
   './js/lib/concentric.js',
   './js/components/account-modal.js',

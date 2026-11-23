@@ -32,6 +32,8 @@ function App() {
             const active = next.some(a => a.id === d.activeAccountId) ? d.activeAccountId : next[0].id;
             const saved = { activeAccountId: active, accounts: next }, al = (d.alarms && Array.isArray(d.alarms.list)) ? d.alarms : currentAlarmData();
             if (al) saved.alarms = al;
+            const mt = (d.metode && typeof d.metode === 'object') ? d.metode : currentMetodeData();
+            if (mt) saved.metode = mt;
             localStorage.setItem('edge-journal-v3', JSON.stringify(saved));
             setAccounts(next); setActiveAccountId(active);
             return true;

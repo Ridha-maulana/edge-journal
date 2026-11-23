@@ -21,6 +21,7 @@ function Tools({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNa
     const [prog, setProg] = useState({ w: 33, l: 0 });
     const [ap, setAp] = useState({ dlg: null, scroll: null });
     const [more, setMore] = useState({});
+    const MT = window.METODE.useMetode();
     const EJ = useAppearance(), al = window.useAlarmSummary ? window.useAlarmSummary() : { on: 0, next: null };
     const go = (v, o) => { setAp(o || { dlg: null, scroll: null }); setPage(v); try { window.scrollTo(0, 0); } catch (e) { } };
     if (page === 'appearance')
@@ -28,6 +29,8 @@ function Tools({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNa
             React.createElement(SubHead, { title: "Tampilan aplikasi", onBack: () => go(null) }),
             React.createElement("div", { className: "acc-list" },
                 React.createElement(AppearanceRows, { openDlg: ap.dlg, scrollTo: ap.scroll, homeT: homeT, onHome: onHome, headerVariant: headerVariant, onHeaderVariant: onHeaderVariant, navVariant: navVariant, onNavVariant: onNavVariant })));
+    if (page === 'metode')
+        return React.createElement(window.MetodePage, { onBack: () => go(null), sec: ap.sec, tab: ap.tab });
     if (page === 'risk')
         return React.createElement("section", null,
             React.createElement(SubHead, { title: "Risk calculator", onBack: () => go(null) }),
@@ -41,11 +44,13 @@ function Tools({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNa
         { id: 'alarm', tc: '#f97316', icon: React.createElement(Icon, { name: "AlAlarm", size: 28 }), cat: 'PENGINGAT', title: 'Alarm', desc: 'Notifikasi sesi Asia, London & New York, lengkap dengan nada dan durasi.', key: 'alarm pengingat notifikasi sesi asia london new york nada', open: () => setAlarmOpen(true),
             sum: { name: 'Alarm', value: al.on + ' aktif', color: '#f97316', desc: (al.next ? 'Berikutnya ' + al.next.label + ' dalam ' + al.next.dur + '. ' : 'Belum ada alarm aktif. ') + 'Nada dan durasi bisa diatur.' } },
         { id: 'look', tc: '#ec4899', icon: React.createElement(Icon, { name: "Paintbrush", size: 28 }), cat: 'PERSONALISASI', title: 'Tampilan', desc: 'Tema, efek kartu, latar, header, dan navigasi aplikasi.', key: 'tampilan tema efek kartu latar header navigasi personalisasi warna', open: () => go('appearance'),
-            sum: { name: 'Tampilan', value: themeName, color: '#ec4899', desc: (mode ? mode + ' · ' : '') + 'Ganti tema, efek, header, dan navigasi.' } }
+            sum: { name: 'Tampilan', value: themeName, color: '#ec4899', desc: (mode ? mode + ' · ' : '') + 'Ganti tema, efek, header, dan navigasi.' } },
+        { id: 'metode', tc: '#eab308', icon: React.createElement(BookOpen, { size: 28 }), cat: 'STRATEGI', title: 'Metode Satu Warna', desc: 'SOP H1 mekanis: syarat Buy/Sell, aturan Skip, alarm :15/:20, dan evaluasi 100 posisi.', key: 'metode satu warna sop strategi h1 mekanis buy sell skip fibonacci', open: () => go('metode'),
+            sum: { name: 'Metode Satu Warna', value: 'H1 \u00B7 Lot 0.01', color: '#eab308', desc: 'Cek chart di menit :15 atau :20. Tiga syarat lengkap = entry, kurang satu = skip.' } }
     ];
     const needle = q.trim().toLowerCase();
     const onScroll = e => { const el = e.currentTarget, max = el.scrollWidth - el.clientWidth, w = Math.min(100, el.clientWidth * 100 / Math.max(1, el.scrollWidth)); setProg({ w, l: max > 0 ? (el.scrollLeft / max) * (100 - w) : 0 }); };
-    const TOOL = { risk: { name: 'KALKULATOR', tc: '#22c55e', icon: 'Calculator' }, alarm: { name: 'PENGINGAT', tc: '#f97316', icon: 'AlAlarm' }, look: { name: 'PERSONALISASI', tc: '#ec4899', icon: 'Paintbrush' } };
+    const TOOL = { risk: { name: 'KALKULATOR', tc: '#22c55e', icon: 'Calculator' }, alarm: { name: 'PENGINGAT', tc: '#f97316', icon: 'AlAlarm' }, look: { name: 'PERSONALISASI', tc: '#ec4899', icon: 'Paintbrush' }, metode: { name: 'STRATEGI', tc: '#eab308', icon: 'BookOpen' } };
     let results = null;
     if (needle) {
         const E = [];
@@ -61,14 +66,15 @@ function Tools({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNa
         (al.names || []).forEach(n => ar(n, 'alarm saya'));
         const idx = window.apSearchIndex ? window.apSearchIndex(EJ) : [];
         idx.forEach(x => E.push({ tool: 'look', title: x.title, sub: x.sub, key: x.key, act: () => go('appearance', { dlg: x.dlg, scroll: x.scroll }) }));
+        window.METODE.searchIndex(MT).forEach(x => E.push({ tool: 'metode', title: x.title, sub: x.sub, key: x.key, act: () => go('metode', { sec: x.n, tab: x.tab }) }));
         const words = needle.split(/\s+/).filter(Boolean);
         const sc = e => { const t = e.title.toLowerCase(), h = t + ' ' + e.sub.toLowerCase() + ' ' + e.key.toLowerCase(); if (!words.every(w => h.indexOf(w) >= 0)) return -1; return (e.top ? 0 : 10) + (t.indexOf(needle) === 0 ? 0 : t.indexOf(needle) > 0 ? 2 : 5) + (words.every(w => t.indexOf(w) >= 0) ? 0 : 3); };
         const hit = E.map(e => ({ e, s: sc(e) })).filter(x => x.s >= 0);
-        results = ['risk', 'alarm', 'look'].map(k => ({ k, rows: hit.filter(x => x.e.tool === k).sort((a, b) => a.s - b.s).map(x => x.e) })).filter(g => g.rows.length);
+        results = ['risk', 'alarm', 'metode', 'look'].map(k => ({ k, rows: hit.filter(x => x.e.tool === k).sort((a, b) => a.s - b.s).map(x => x.e) })).filter(g => g.rows.length);
     }
     const total = results ? results.reduce((n, g) => n + g.rows.length, 0) : 0;
     return React.createElement("section", { className: "tl" },
-        React.createElement(PageHeading, { title: "Trading Tools", description: "Kalkulator risk, alarm, dan tampilan aplikasi.", className: "relaxed" }),
+        React.createElement(PageHeading, { title: "Trading Tools", description: "Kalkulator risk, alarm, metode, dan tampilan aplikasi.", className: "relaxed" }),
         React.createElement("div", { className: "search-box tl-search" },
             React.createElement(Search, { size: 15 }),
             React.createElement("input", { value: q, onChange: e => { setQ(e.target.value); setMore({}); }, placeholder: "Cari tool atau pengaturan\u2026", "aria-label": "Cari tool atau pengaturan" }),
