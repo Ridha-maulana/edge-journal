@@ -51,8 +51,8 @@ function MetodePage({ onBack, sec, tab }) {
             d.info.map((p, i) => React.createElement("div", { key: i, className: "mt-kv" }, React.createElement("small", null, p[0]), React.createElement("b", null, p[1]))),
             d.goal && React.createElement("p", { className: "mt-pp" }, d.goal));
         if (n === 2) return React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "mt-sl" }, "Rutinitas alarm"), pairs(d.alarms, "mt-al"),
-            React.createElement("div", { className: "mt-sl" }, "Peta chart"), pairs(d.map, "mt-al"));
+            React.createElement("div", { className: "mt-sl" }, "Peta S&R dan Fibonacci"), pairs(d.map, "mt-al"),
+            React.createElement("div", { className: "mt-sl" }, "Jadwal alarm sesi"), pairs(d.alarms, "mt-al"));
         if (n === 3) { const b = side === 'buy';
             return React.createElement(React.Fragment, null,
                 React.createElement("div", { className: "mt-seg", role: "tablist" },
@@ -61,7 +61,9 @@ function MetodePage({ onBack, sec, tab }) {
                 steps(b ? d.buy : d.sell),
                 (b ? d.buyDec : d.sellDec) && React.createElement("div", { className: "mt-dec " + (b ? "g" : "r") }, b ? d.buyDec : d.sellDec)); }
         if (n === 4) return React.createElement(React.Fragment, null,
+            React.createElement("div", { className: "mt-sl" }, "Mekanisme Opsi Kedua (+1 jam)"),
             d.skipIntro && React.createElement("p", { className: "mt-pp", style: { marginTop: 0 } }, d.skipIntro),
+            React.createElement("div", { className: "mt-sl" }, "Kondisi wajib Skip sesi"),
             d.skip.map((p, i) => React.createElement("div", { key: i, className: "mt-sk" }, React.createElement(X, { size: 16 }), React.createElement("div", null, React.createElement("b", null, p[0]), p[1] && React.createElement("p", null, p[1])))));
         return steps(d.flow);
     };

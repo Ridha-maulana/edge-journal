@@ -7,24 +7,24 @@
     /* tipe: pairs = baris "Judul | isi", lines = satu baris satu butir, text = satu paragraf */
     const TYPES = { info: 'pairs', goal: 'text', alarms: 'pairs', map: 'pairs', buy: 'lines', buyDec: 'text', sell: 'lines', sellDec: 'text', skipIntro: 'text', skip: 'pairs', flow: 'lines' };
     const DEF = {
-        info: [['Nama metode', 'Metode Satu Warna'], ['Timeframe acuan', 'H1 murni (single timeframe)'], ['Instrumen', 'GOLD (XAU/USD) dan major forex'], ['Ukuran lot', 'Fixed 0.01. Tanpa averaging atau martingale']],
-        goal: 'Menghilangkan intervensi emosi (feeling, penasaran, overtrading) dengan mengunci keputusan trading secara biner (Entry atau Skip) berdasarkan batas struktur S&R, warna candle H1, dan jarak matematis Fibonacci.',
-        alarms: [['Alarm 1 · Cek dan eksekusi', 'Menit :15 atau :20, misalnya 09:15, 10:15, dan seterusnya.'], ['Alarm 2 · Penutup MT5', '5 sampai 10 menit setelah Alarm 1, misalnya 09:25. Wajib tutup aplikasi setelah alarm ini berbunyi.']],
-        map: [['Resistance (S&R atas)', 'Titik tertinggi (High) dari candle paling atas pada ayunan acuan yang sudah dilewati (break) oleh bodi atau ekor candle lain.'], ['Support (S&R bawah)', 'Titik terendah (Low) dari candle paling bawah pada ayunan acuan yang sudah dilewati (break) oleh candle lain.'], ['Fibonacci retracement', 'Ditarik dari High (0.0) ke Low (100.0) pada ayunan acuan terakhir. Level 38.2% jadi batas area retest sekaligus Take Profit (TP).']],
-        buy: ['Arah tren utama H1: S&R atas (titik ekstrem candle pendek atau konsolidasi) berhasil dilewati ke atas oleh harga.', 'Warna candle H1 saat alarm: wajib HIJAU / naik (selaras tren H1).', 'Ruang Fibonacci: ada ruang gerak yang masuk akal menuju target dan tidak berada di batas puncak pembalikan.'],
-        buyDec: 'ENTRY BUY (Lot 0.01). Gagal satu syarat = SKIP.',
-        sell: ['Arah tren utama H1: S&R bawah dilewati ke bawah, ATAU terjadi penolakan terkonfirmasi di puncak candle paling tinggi.', 'Warna candle H1 saat alarm: wajib MERAH / turun (selaras tren H1).', 'Filter pembalikan puncak: jika candle H1 di puncak HIJAU = 2 pelanggaran (dilarang Sell).', 'Ruang Fibonacci: jarak ke level 38.2% masih cukup dan masuk akal.'],
-        sellDec: 'ENTRY SELL (Lot 0.01). Gagal satu syarat = SKIP.',
-        skipIntro: 'Ambil keputusan SKIP tanpa perdebatan batin bila salah satu terjadi saat alarm berbunyi:',
-        skip: [['Discrepancy warna', 'Warna candle H1 berlawanan dengan tren utama (contoh: tren naik, tetapi candle H1 jam alarm merah).'], ['Fase retest mepet', 'Harga sedang retest dan jaraknya sudah terlalu mepet ke level Fibonacci target (38.2%).'], ['Sideways / tanpa breakout', 'Harga masih bolak-balik di dalam rentang S&R tanpa penembusan candle yang jelas.'], ['Curiga atau penasaran', 'Memantau chart di luar jadwal alarm resmi.']],
-        flow: ['Alarm berbunyi (:15 atau :20), buka chart H1.', 'Verifikasi 3 syarat: tren S&R, warna H1, jarak Fibo.', 'Lengkap: entry Lot 0.01 + pasang TP/SL objektif. Tidak lengkap: SKIP.', 'Alarm penutup berbunyi (5 sampai 10 menit): wajib tutup MT5.', 'Dokumentasi: unggah screenshot transaksi ke Jurnal.', 'Evaluasi: kunci SOP sampai terkumpul 100 posisi. Fokus pada kepatuhan jam alarm dan persentase Win/Loss.']
+        info: [['Nama sistem', 'Metode Satu Warna (mekanis murni)'], ['Peran timeframe', 'H1 = tren utama (arah dominan). H4 = konfirmasi eksekusi / entry posisi.'], ['Pasar dan ukuran lot', 'GOLD (XAU/USD) dan major forex. Fixed 0.01 (strict risk dan money management).'], ['Batas posisi harian', 'Maksimal 3 posisi per hari. Hanya 1 posisi per sesi: Asia, London, New York.']],
+        goal: 'Bukan mencari sistem 100% winrate, melainkan menekan kebocoran modal akibat keputusan berdasarkan feeling dan meningkatkan winrate objektif (misalnya 53% menjadi 56%+) menuju data 100 posisi.',
+        alarms: [['Sesi Asia', 'Alarm utama 09:14:30. Alarm tutup 09:21:30. Opsi kedua 10:14:30 (tutup 10:21:30).'], ['Sesi London', 'Alarm utama 17:14:30. Alarm tutup 17:21:30. Opsi kedua 18:14:30 (tutup 18:21:30).'], ['Sesi New York', 'Alarm utama 21:14:30. Alarm tutup 21:21:30. Opsi kedua 22:14:30 (tutup 22:21:30).']],
+        map: [['Struktur S&R baku', 'Garis S&R mengunci candle paling atas (High) dan candle paling bawah (Low) yang sudah terkonfirmasi di-break oleh bodi atau ekor candle berikutnya.'], ['Fibonacci retracement', 'Ditarik dari High (0.0) ke Low (100.0) ayunan acuan. Level 38.2% dan 50.0% sebagai area retest / ruang gerak, serta 161.8% sebagai proyeksi lanjutan.']],
+        buy: ['Tren utama H1: naik (S&R atas berhasil tertembus ke atas).', 'Warna candle H4 (alarm): wajib HIJAU / naik (searah H1).', 'Syarat Fibonacci: masih ada ruang gerak terukur menuju target dan tidak sedang mepet puncak.'],
+        buyDec: 'ENTRY BUY (maksimal 1 posisi per sesi).',
+        sell: ['Tren utama H1: turun (S&R bawah tertembus atau penolakan puncak terkonfirmasi).', 'Warna candle H4 (alarm): wajib MERAH / turun (searah H1).', 'Filter retest: jika candle H4/H1 masih hijau (sedang buat wick), SKIP jam pertama dan tunggu Opsi Kedua (+1 jam).'],
+        sellDec: 'ENTRY SELL (jika syarat lengkap).',
+        skipIntro: 'Jika saat alarm pertama jam sesi (misalnya 21:14:30) tren utama H1 menunjukkan arah turun namun candle H4/H1 masih berwarna hijau (sedang retest / membentuk ekor), dilarang masuk. Tutup MT5, lalu buka kembali saat alarm Opsi Kedua (22:14:30). Jika warna sudah berubah searah (merah), barulah boleh ENTRY SELL. Jika masih hijau atau tidak selaras, SKIP total sesi tersebut.',
+        skip: [['Warna H4 berlawanan', 'Warna candle H4 berlawanan dengan arah tren utama H1 setelah dicek pada opsi kedua.'], ['Retest terlalu mepet', 'Harga sedang retest dan jaraknya sudah terlalu dekat atau mepet dengan level target Fibonacci.'], ['Sideways murni', 'Harga bergerak rata ke samping tanpa pola ayunan.'], ['Sudah 1 posisi di sesi ini', 'Sudah membuka 1 posisi pada sesi berjalan tersebut (maksimal 1 posisi per sesi).']],
+        flow: ['Alarm utama sesi (:14:30): cek tren H1 dan warna H4, lalu evaluasi syarat jarak Fibonacci.', 'Searah dan syarat lengkap: eksekusi entry (0.01), pasang SL (150/200) dan TP (225), lalu tutup MT5 (:21:30).', 'Belum searah / beda warna (sedang retest/wick): SKIP jam pertama dan tunggu alarm Opsi Kedua (+1 jam).', 'Cek Opsi Kedua (:14:30): jika searah, entry. Jika tetap beda warna, SKIP total sesi ini.', 'Dokumentasi jurnal: unggah screenshot transaksi setelah posisi selesai (HIT TP / HIT SL).', 'Evaluasi 100 posisi: dilarang mengubah SOP hingga tercapai kuota 100 sampel transaksi.']
     };
     const SECS = [
-        { n: 1, id: 'ringkasan', title: 'Ringkasan dan tujuan', fields: [['info', 'Identitas metode', 'Satu baris satu butir, format: Judul | isi'], ['goal', 'Tujuan']] },
-        { n: 2, id: 'peta', title: 'Peta chart dan rutinitas', fields: [['alarms', 'Rutinitas alarm', 'Satu baris satu butir, format: Judul | isi'], ['map', 'Peta chart', 'Satu baris satu butir, format: Judul | isi']] },
-        { n: 3, id: 'entry', title: 'Syarat entry Buy dan Sell', fields: [['buy', 'Syarat Entry Buy', 'Satu baris satu syarat'], ['buyDec', 'Keputusan Buy'], ['sell', 'Syarat Entry Sell', 'Satu baris satu syarat'], ['sellDec', 'Keputusan Sell']] },
-        { n: 4, id: 'skip', title: 'Aturan Skip', fields: [['skipIntro', 'Pengantar'], ['skip', 'Kondisi Skip', 'Satu baris satu butir, format: Judul | isi']] },
-        { n: 5, id: 'alur', title: 'Alur kerja dan evaluasi', fields: [['flow', 'Langkah kerja', 'Satu baris satu langkah']] }
+        { n: 1, id: 'ringkasan', title: 'Parameter utama dan tujuan', fields: [['info', 'Parameter utama', 'Satu baris satu butir, format: Judul | isi'], ['goal', 'Prinsip psikologi']] },
+        { n: 2, id: 'peta', title: 'Peta S&R, Fibonacci dan jadwal alarm', fields: [['map', 'Peta S&R dan Fibonacci', 'Satu baris satu butir, format: Judul | isi'], ['alarms', 'Jadwal alarm sesi', 'Satu baris satu butir, format: Judul | isi']] },
+        { n: 3, id: 'entry', title: 'Aturan entry Buy dan Sell', fields: [['buy', 'Syarat Entry Buy', 'Satu baris satu syarat'], ['buyDec', 'Keputusan Buy'], ['sell', 'Syarat Entry Sell', 'Satu baris satu syarat'], ['sellDec', 'Keputusan Sell']] },
+        { n: 4, id: 'skip', title: 'Opsi kedua dan kondisi Skip', fields: [['skipIntro', 'Mekanisme Opsi Kedua'], ['skip', 'Kondisi wajib Skip sesi', 'Satu baris satu butir, format: Judul | isi']] },
+        { n: 5, id: 'alur', title: 'Alur kerja harian dan jurnal', fields: [['flow', 'Langkah kerja', 'Satu baris satu langkah']] }
     ];
     const clone = o => JSON.parse(JSON.stringify(o));
     const str = v => typeof v === 'string';
@@ -81,14 +81,15 @@
         const L = [];
         const add = (n, title, sub, key, tab) => L.push({ n, title, sub, key: key || '', tab });
         SECS.forEach(s => add(s.n, 'Bagian ' + s.n + ': ' + s.title, 'Metode Satu Warna', 'bagian sop'));
-        d.info.forEach(p => add(1, p[0], 'Metode › Ringkasan', p[1]));
-        add(1, 'Tujuan metode', 'Metode › Ringkasan', d.goal);
-        d.alarms.forEach(p => add(2, p[0], 'Metode › Rutinitas', p[1]));
-        d.map.forEach(p => add(2, p[0], 'Metode › Peta chart', p[1]));
+        d.info.forEach(p => add(1, p[0], 'Metode › Parameter', p[1]));
+        add(1, 'Prinsip psikologi', 'Metode › Parameter', d.goal);
+        d.alarms.forEach(p => add(2, p[0], 'Metode › Jadwal alarm', p[1]));
+        d.map.forEach(p => add(2, p[0], 'Metode › Peta S&R', p[1]));
         d.buy.forEach((x, i) => add(3, 'Entry Buy · syarat ' + (i + 1), 'Metode › ' + x.split(':')[0].slice(0, 44), x, 'buy'));
         d.sell.forEach((x, i) => add(3, 'Entry Sell · syarat ' + (i + 1), 'Metode › ' + x.split(':')[0].slice(0, 44), x, 'sell'));
-        d.skip.forEach(p => add(4, p[0], 'Metode › Aturan Skip', p[1] + ' skip lewati tidak entry'));
+        d.skip.forEach(p => add(4, p[0], 'Metode › Kondisi Skip', p[1] + ' skip lewati tidak entry'));
         d.flow.forEach((x, i) => add(5, 'Langkah ' + (i + 1), 'Metode › ' + x.slice(0, 44), x));
+        add(4, 'Opsi Kedua (+1 jam)', 'Metode › Opsi kedua', d.skipIntro + ' opsi kedua jam berikutnya');
         return L;
     }
     window.METODE = { DEF, SECS, TYPES, save, useMetode, toText, fromText, searchIndex, get: () => cur };

@@ -523,3 +523,4 @@
 - v5.10.9: kartu Tools di carousel sama tinggi dan tombol Buka Tool sejajar di bawah (kartu flex kolom, deskripsi min 3 baris).
 - v5.10.10: tombol Buka Tool di kartu Tools tidak lagi hilang di mode terang (efek permukaan kartu menimpa warna tombol); tombol selalu berwarna penuh, teks gelap untuk kuning.
 - v5.11.1: kartu P&L Breakdown di Template 5 · Sederhana didesain ulang (angka win rate besar, bar bertumpuk Wins hijau / Losses merah / BE abu, legenda; ukuran kartu tetap); teks tombol Buka Tool semua putih, tombol kuning dipertegas.
+- v5.11.2: isi Metode Satu Warna diganti dengan SOP terbaru (H1 + H4, jadwal alarm sesi Asia/London/New York, opsi kedua +1 jam, 4 kondisi skip, alur harian); judul bagian dan pencarian Tools ikut disesuaikan.
