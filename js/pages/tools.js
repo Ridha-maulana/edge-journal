@@ -21,6 +21,7 @@ function Tools({ homeT, onHome, headerVariant, onHeaderVariant, navVariant, onNa
     const [prog, setProg] = useState({ w: 33, l: 0 });
     const [ap, setAp] = useState({ dlg: null, scroll: null });
     const [more, setMore] = useState({});
+    useEffect(() => { const f = e => { if (e.detail !== 'tools') return; setPage(null); setAlarmOpen(false); setQ(''); setAp({ dlg: null, scroll: null }); setMore({}); }; window.addEventListener('tab-home', f); return () => window.removeEventListener('tab-home', f); }, []);
     const MT = window.METODE.useMetode();
     const EJ = useAppearance(), al = window.useAlarmSummary ? window.useAlarmSummary() : { on: 0, next: null };
     const go = (v, o) => { setAp(o || { dlg: null, scroll: null }); setPage(v); try { window.scrollTo(0, 0); } catch (e) { } };

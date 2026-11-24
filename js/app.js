@@ -66,10 +66,13 @@ function App() {
     function recordCapital(data) { const amount = Number(data.amount) || 0; if (amount <= 0)
         return; const delta = data.type === 'withdraw' ? -amount : amount; const updated = accounts.map(a => a.id === activeAccountId ? { ...a, balance: Number(a.balance || 0) + delta, capitalHistory: [...(a.capitalHistory || []), { id: uid('capital'), type: data.type, amount, date: data.date, note: data.note || '' }] } : a); persist(updated); }
     function updateAccount(patch) { persist(accounts.map(a => a.id === activeAccountId ? { ...a, ...patch } : a)); }
-    function closePopups() { setBatch(null); setShowAdd(false); setPrefill(null); setEditingTrade(null); setClosingTrade(null); setShowAccount(false); setAccountMode('manage'); document.querySelectorAll('[data-confirm]').forEach(n => n.dispatchEvent(new Event('confirm-cancel'))); }
+    function closePopups() { setBatch(null); setShowAdd(false); setPrefill(null); setEditingTrade(null); setClosingTrade(null); setShowAccount(false); setShowCalendar(false); setAccountMode('manage'); document.querySelectorAll('[data-confirm]').forEach(n => n.dispatchEvent(new Event('confirm-cancel'))); }
     function pickHome(n) { setHomeT(n); homeSet(n); if (n > 0) { const hv = n === 1 ? 15 : 10 + (n === 7 ? 6 : n); setHeaderV(hv); headerVariantSet(hv); const nv = n === 1 ? 0 : 4; setNavV(nv); navVariantSet(nv); } else { if (headerV >= 11) { setHeaderV(0); headerVariantSet(0); } if (navV >= 5 || (navV === 4 && homeT >= 2)) { setNavV(0); navVariantSet(0); } } setNavHidden(false); window.scrollTo(0, 0); }
-    function goTab(t) { closePopups(); setNavHidden(false); if (t === 'performance' && tab === 'performance')
-        window.dispatchEvent(new Event('perf-home')); setTab(t); window.scrollTo(0, 0); }
+    /* Ketuk menu bawah: tutup popup (termasuk kalender) dan kembali ke halaman awal menu itu; di menu yang sama, halaman dalam ikut ditutup */
+    function goTab(t) { closePopups(); setNavHidden(false); if (t === tab) {
+        if (t === 'performance') window.dispatchEvent(new Event('perf-home'));
+        window.dispatchEvent(new CustomEvent('tab-home', { detail: t })); }
+        setTab(t); try { window.scrollTo({ top: 0, behavior: t === tab ? 'smooth' : 'auto' }); } catch (e) { window.scrollTo(0, 0); } }
     function openCalcTrade(d) { setEditingTrade(null); setClosingTrade(null); setPrefill({ calc: true, ...d }); setShowAdd(true); }
     function openAdd() { setEditingTrade(null); setClosingTrade(null); setPrefill(null); setShowAdd(true); }
     async function scanScreenshot(files) { files = [].concat(files || []).filter(Boolean); if (!files.length) return; setScan({ p: 0, t: 'Menyiapkan\u2026' }); try {

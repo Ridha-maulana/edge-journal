@@ -44,6 +44,7 @@ function PfTile({ icon, title, sub, onOpen }) {
 function AccountPage({ accounts, activeAccount, onSelect, onCreate, onDelete, onUpdate, onCapital, onExport, onBackup, onRestore }) {
     const st = useCloudStatus();
     const [page, setPage] = useState(null);
+    useEffect(() => { const f = e => { if (e.detail === 'account') setPage(null); }; window.addEventListener('tab-home', f); return () => window.removeEventListener('tab-home', f); }, []);
     const go = v => { setPage(v); try { window.scrollTo(0, 0); } catch (e) { } };
     const sy = syncShort(st), ss = acctStats(activeAccount), cur = activeAccount.currency;
     const email = st && st.user && st.user.email ? String(st.user.email) : '';

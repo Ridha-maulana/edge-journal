@@ -21,6 +21,7 @@ function jGroup(list, fn) { const o = {}; list.forEach(t => { (o[fn(t)] || (o[fn
 function HierJournal({ autoOpen, kind, status, list: allList, account, startBal, expanded, setExpanded, onDelete, onClose, onEdit }) {
     const [open, setOpen] = useState({});
     const [sels, setSels] = useState({});
+    useEffect(() => { const f = e => { if (e.detail === 'journal') { setOpen({}); setSels({}); } }; window.addEventListener('tab-home', f); return () => window.removeEventListener('tab-home', f); }, []);
     const list = allList.filter(t => t.status === 'closed'); // posisi open tidak ikut di tampilan bertingkat
     const cur = account.currency;
     const TFN = { H1: '1H', SES: '1S', D1: '1D', W1: '1W' };
@@ -79,6 +80,7 @@ function Journal({ account, trades, filters, setFilters, expanded, setExpanded, 
     const [addMenu, setAddMenu] = useState(false);
     const fileRef = useRef(null);
     const [openWeeks, setOpenWeeks] = useState({});
+    useEffect(() => { const f = e => { if (e.detail !== 'journal') return; setAddMenu(false); setOpenWeeks({}); setExpanded(null); }; window.addEventListener('tab-home', f); return () => window.removeEventListener('tab-home', f); }, []);
     const startBal = acctCapBal(account); /* dasar % = modal sekarang */
     const sumOf = list => ({ pnl: list.reduce((x, t) => x + (t.status === 'closed' ? Number(t.pnl) || 0 : 0), 0), pips: list.reduce((x, t) => x + tradePips(t), 0) });
     const filtered = trades.filter(t => (filters.status === 'all' || t.status === filters.status) && (filters.side === 'all' || t.side === filters.side) && (!filters.search || t.symbol.toLowerCase().includes(filters.search.toLowerCase()) || String(t.setup || '').toLowerCase().includes(filters.search.toLowerCase())) && (!filters.date || dateOnly(t.date) === filters.date) && (!filters.ids || filters.ids.includes(t.id)));
