@@ -8,7 +8,7 @@
 .al-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 16px calc(110px + env(safe-area-inset-bottom,0px))}
 .al-next{text-align:center;padding:18px 0 22px}.al-next small{display:block;font-size:13px;opacity:.62}
 .al-next b{display:block;font:800 24px/1.2 var(--font);margin:6px 0 4px}.al-next em{font:700 13px/1 var(--font);font-style:normal;color:var(--ej-pr,var(--c6))}
-.al-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--ej-sf,var(--c2));border:1px solid var(--ej-bd,var(--c4));border-radius:22px;padding:16px 18px;margin-bottom:10px;cursor:pointer}
+.al-card{display:block;background:var(--ej-sf,var(--c2));border:1px solid var(--ej-bd,var(--c4));border-radius:24px;padding:0;margin-bottom:12px;cursor:pointer;overflow:hidden}
 .al-card.off .al-cm{opacity:.5}.al-card:active{filter:brightness(.96)}
 .al-cm{min-width:0}.al-time{display:block;font:600 34px/1.1 var(--font);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
 .al-cm small{display:block;font-size:12.5px;opacity:.65;margin-top:3px}
@@ -97,3 +97,31 @@ html .tsel-sheet.al-sheet.drag{transition:none}
 .al-hpb>svg{opacity:.65;flex:none}.al-hpb b{flex:1;font:600 14.5px/1.3 var(--font);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .al-hpt.sel .al-hpb b,.al-hpt.sel .al-hpb>svg{color:var(--ej-pr,var(--c6));opacity:1}
 .al-hpd{width:48px;height:48px;flex:none;opacity:.6}
+
+/* v5.10.7 — kartu alarm dua lapis, popup matikan alarm, tombol + yang bisa hilang */
+.al-up{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px}
+.al-card.off .al-up .al-cm{opacity:.5}.al-card.off .al-ft{opacity:.5}
+.al-ft{display:flex;flex-direction:column;gap:6px;padding:11px 18px;background:color-mix(in srgb,currentColor 7%,transparent);border-top:1px solid var(--ej-bd,var(--c4))}
+.al-ft span{display:flex;align-items:center;gap:8px;font:500 12.5px/1.35 var(--font);color:var(--ej-ik,var(--c0))}
+.al-ft span>svg{flex:none;color:var(--ej-pr,var(--c6))}.al-ft span b{font-weight:800;color:var(--ej-pr,var(--c6));font-variant-numeric:tabular-nums}
+.al-ft .al-skp{flex-wrap:wrap}
+.al-fab{transition:transform .22s cubic-bezier(.2,.8,.2,1),opacity .18s}
+.al-fab.hide{transform:translateY(24px) scale(.6);opacity:0;pointer-events:none}
+.modal-backdrop.sheet-layer.ap-bs.al-bs.al-offbd{z-index:100040!important}
+html .ap-bsheet.al-off{padding:8px 18px calc(18px + env(safe-area-inset-bottom,0px));overflow:auto;background:var(--ej-cv,var(--c1))!important;border-top:1px solid var(--ej-bd,var(--c4))}
+.al-offg{width:40px;height:4px;border-radius:2px;background:var(--ej-bd,var(--c4));margin:4px auto 14px;flex:none}
+.al-offh{display:flex;align-items:center;gap:12px;margin-bottom:14px}.al-offh b{display:block;font:700 17px/1.25 var(--font)}.al-offh small{display:block;font-size:13px;opacity:.65;margin-top:2px}
+.al-offi{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--ej-so,var(--c3));color:var(--ej-pr,var(--c6))}
+.al-offl{display:flex;flex-direction:column;gap:10px}
+.al-orad{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border-radius:18px;border:1px solid var(--ej-bd,var(--c4));background:none;color:inherit;text-align:left;font-family:inherit;min-height:60px}
+.al-orad.on{border-color:var(--ej-pr,var(--c6));background:color-mix(in srgb,var(--ej-pr,var(--c6)) 12%,transparent)}
+.al-ori{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--ej-so,var(--c3))}
+.al-ort{flex:1;min-width:0}.al-ort b{display:block;font-size:15.5px;font-weight:700}.al-ort small{display:block;font-size:12.5px;line-height:1.4;opacity:.65;margin-top:1px}
+.al-orc{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--ej-bd,var(--c4));display:grid;place-items:center}
+.al-orad.on .al-orc{background:var(--ej-pr,var(--c6));border-color:var(--ej-pr,var(--c6));color:var(--onacc,#fff)}
+.al-orad.dg{border-color:color-mix(in srgb,var(--red,#ef4444) 35%,transparent)}.al-orad.dg .al-ori{background:color-mix(in srgb,var(--red,#ef4444) 18%,transparent);color:var(--red,#ef4444)}.al-orad.dg b{color:var(--red,#ef4444)}
+.al-orad.dg.on{border-color:var(--red,#ef4444);background:color-mix(in srgb,var(--red,#ef4444) 10%,transparent)}.al-orad.dg.on .al-orc{background:var(--red,#ef4444);border-color:var(--red,#ef4444);color:#fff}
+.al-offb{display:flex;gap:10px;margin-top:14px}
+.al-ob{min-height:52px;border-radius:16px;border:1px solid var(--ej-bd,var(--c4));font:700 15px/1 var(--font);padding:0 16px}
+.al-ob.sec{flex:1;background:none;color:inherit}.al-ob.pri{flex:1.6;background:var(--ej-pr,var(--c6));border-color:var(--ej-pr,var(--c6));color:var(--onacc,#fff)}
+.al-ob.pri.dg{background:var(--red,#ef4444);border-color:var(--red,#ef4444);color:#fff}

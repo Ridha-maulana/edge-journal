@@ -1,4 +1,4 @@
-/* Alarm (v5.10.6): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
+/* Alarm (v5.10.7): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
    - Data hanya di HP ini (localStorage "ej-alarms-v1"), tidak ikut sinkron online.
    - Aplikasi terbuka (web/PWA): jam dicek tiap detik, layar alarm + nada + getar.
    - APK 1.4.0+ (plugin EjAlarm): jadwal dikirim ke AlarmManager Android, jadi alarm berbunyi walau aplikasi tertutup atau HP terkunci,
@@ -99,6 +99,7 @@
         const d = new Date(from - maxMin * 60000 - 86400000); d.setHours(0, 0, 0, 0);
         for (; d.getTime() <= to; d.setDate(d.getDate() + 1)) {
             if (!matchDay(a, d)) continue;
+            if (a.skip && a.skip === ymd(d)) continue; /* "matikan hari ini": kejadian pada tanggal ini dilewati */
             const base = baseOfDate(a, d);
             steps.forEach(s => {
                 const t = base + s.min * 60000;
@@ -433,7 +434,7 @@
         const o = Object.assign({}, a, { dur: durOf(a), s: Math.max(0, Math.min(59, +a.s || 0)), tone: (a.tone === 'sistem' || (a.tone === 'hp' && a.tu) || TONES[a.tone]) ? a.tone : 'klasik', tu: String(a.tu || '').slice(0, 400), tt: String(a.tt || '').slice(0, 80), follows: (a.follows || []).map(f => ({ min: Math.max(1, Math.min(720, +f.min || 5)), msg: String(f.msg || '').slice(0, 80) })).sort((x, y) => x.min - y.min), label: String(a.label || '').slice(0, 60) });
         if (o.repeat !== 'once' && !(o.days && o.days.length)) o.repeat = 'once';
         if (o.repeat === 'once') o.date = ymd(new Date(nextAt(o.h, o.m, o.s)));
-        o.on = true;
+        o.on = true; o.skip = '';
         if (!o.id) { o.id = 'al' + Date.now().toString(36) + (++st.seq); o.n = (st.list.reduce((m, x) => Math.max(m, x.n | 0), 0)) + 1; st.list.push(o); }
         else st.list = st.list.map(x => x.id === o.id ? Object.assign({}, x, o) : x);
         persist();
@@ -442,15 +443,38 @@
     function toggle(id, on) {
         st.list = st.list.map(a => {
             if (a.id !== id) return a;
-            const b = Object.assign({}, a, { on });
+            const b = Object.assign({}, a, { on, skip: '' });
             if (on && b.repeat === 'once') b.date = ymd(new Date(nextAt(b.h, b.m, b.s || 0)));
             return b;
         });
         persist();
     }
+    /* Lewati kejadian berikutnya saja (hari ini atau yang terdekat); alarm tetap aktif dan berbunyi lagi sesudahnya */
+    function skipNext(id) {
+        const a = st.list.find(x => x.id === id); if (!a) return null;
+        const o = occs(a, Date.now(), Date.now() + 8 * 86400000)[0]; if (!o) return null;
+        const day = ymd(new Date(+o.key.split('|')[1]));
+        st.list = st.list.map(x => x.id === id ? Object.assign({}, x, { skip: day }) : x);
+        persist();
+        const b = st.list.find(x => x.id === id);
+        return { day, next: occs(b, Date.now(), Date.now() + 9 * 86400000)[0] || null };
+    }
+    /* kejadian terdekat dan apakah masih dilewati: dipakai untuk tulisan di kartu dan popup */
+    function nextOcc(a) { return occs(a, Date.now(), Date.now() + 9 * 86400000)[0] || null; }
+    function afterSkip(a) {
+        const o = nextOcc(a); if (!o) return null;
+        return occs(Object.assign({}, a, { skip: ymd(new Date(+o.key.split('|')[1])) }), Date.now(), Date.now() + 9 * 86400000)[0] || null;
+    }
+    function skipping(a) { return !!(a && a.on && a.skip && a.skip >= ymd(new Date())); }
+    function dayLabel(t) {
+        const d = new Date(t), n = new Date(), tm = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1);
+        const same = (x, y) => x.getFullYear() === y.getFullYear() && x.getMonth() === y.getMonth() && x.getDate() === y.getDate();
+        if (same(d, n)) return 'hari ini'; if (same(d, tm)) return 'besok';
+        return DS[d.getDay()] + ', ' + d.getDate() + ' ' + ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][d.getMonth()];
+    }
     function remove(id) { st.list = st.list.filter(a => a.id !== id); persist(); }
     window.EJAlarm = {
-        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, ensurePermission, openSettings, pickRingtone, DURS, durOf, savedTones, addTone, removeTone, reload, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
+        DN, DS, ORDER, TONES, TONE_IDS, pad, hm, fmtDur, nextAt, repeatLabel, toneName, next, occs, blank, save, toggle, remove, skipNext, nextOcc, afterSkip, skipping, dayLabel, ensurePermission, openSettings, pickRingtone, DURS, durOf, savedTones, addTone, removeTone, reload, start, fire, dismiss, snooze, unlock, preview, stopPreview, clock,
         get list() { return st.list; },
         get ringing() { return ring.slice(); },
         get isNative() { return !!(ejReady || (native && nativeReady)); },

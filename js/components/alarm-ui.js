@@ -272,6 +272,36 @@
             return { label: l, h: Math.floor(tot / 60), m: tot % 60 };
         }).filter(Boolean);
     }
+    /* Popup dari bawah saat alarm dimatikan: pilih dulu (hari ini / selamanya / hapus), lalu konfirmasi */
+    function OffSheet({ a, onClose }) {
+        const once = a.repeat === 'once', skipped = A.skipping(a);
+        const o1 = once || skipped ? null : A.nextOcc(a), o2 = o1 ? A.afterSkip(a) : null;
+        const opts = [];
+        if (o1) opts.push({ id: 'today', ic: 'AlZz', t: A.dayLabel(o1.t) === 'hari ini' ? 'Matikan hari ini' : 'Matikan sekali ini', s: o2 ? 'Aktif lagi ' + A.dayLabel(o2.t) + ', ' + A.clock(o2.t, a) : 'Tidak ada jadwal berikutnya', ok: 'Matikan hari ini' });
+        opts.push({ id: 'off', ic: 'AlAlarm', t: 'Matikan selamanya', s: 'Tetap tersimpan, bisa dinyalakan lagi', ok: 'Matikan' });
+        opts.push({ id: 'del', ic: 'AlTrash', t: 'Hapus alarm', s: 'Hilang dari daftar, tidak bisa dikembalikan', ok: 'Hapus', dg: true });
+        const [sel, setSel] = useState(opts[0].id);
+        const cur = opts.find(x => x.id === sel) || opts[0];
+        useEffect(() => { const k = e => { if (e.key === 'Escape') onClose(); }; document.addEventListener('keydown', k); return () => document.removeEventListener('keydown', k); }, []);
+        function go() {
+            if (cur.id === 'today') { const r = A.skipNext(a.id); toast(r && r.next ? 'Dilewati sekali. Berbunyi lagi ' + A.dayLabel(r.next.t) + ', ' + A.clock(r.next.t, a) : 'Alarm dilewati'); }
+            else if (cur.id === 'off') { A.toggle(a.id, false); toast('Alarm dimatikan'); }
+            else { A.remove(a.id); toast('Alarm dihapus'); }
+            onClose();
+        }
+        return h("div", { className: "modal-backdrop sheet-layer ap-bs al-bs al-offbd", onClick: e => { if (e.target === e.currentTarget) onClose(); } },
+            h("div", { className: "ap-bsheet al-off", role: "dialog", "aria-modal": "true", "aria-label": "Matikan alarm" },
+                h("div", { className: "al-offg" }),
+                h("div", { className: "al-offh" }, h("span", { className: "al-offi" }, ic("AlAlarm", 22, 1.9)),
+                    h("div", null, h("b", null, "Matikan alarm ini?"), h("small", null, A.hm(a.h, a.m, a.s) + (a.label ? " \u00B7 " + a.label : "")))),
+                h("div", { className: "al-offl", role: "radiogroup" }, opts.map(x => h("button", { type: "button", key: x.id, role: "radio", "aria-checked": sel === x.id, className: "al-orad" + (sel === x.id ? " on" : "") + (x.dg ? " dg" : ""), onClick: () => setSel(x.id) },
+                    h("span", { className: "al-ori" }, ic(x.ic, 20, 1.9)),
+                    h("span", { className: "al-ort" }, h("b", null, x.t), h("small", null, x.s)),
+                    h("span", { className: "al-orc" }, sel === x.id && ic("AlCheck", 14, 3))))),
+                h("div", { className: "al-offb" },
+                    h("button", { type: "button", className: "al-ob sec", onClick: onClose }, "Batal"),
+                    h("button", { type: "button", className: "al-ob pri" + (cur.id === 'del' ? " dg" : ""), onClick: go }, cur.ok))));
+    }
     function AlarmPage({ onClose }) {
         useNow(1000); useAlarms();
         const [sheet, setSheet] = useState(null);
@@ -279,23 +309,33 @@
         const nx = A.next();
         const nxLabel = nx ? (nx.alarm ? (nx.step === 0 ? (nx.alarm.label || 'Alarm') : (nx.msg || 'Alarm susulan')) : (nx.label || 'Tunda')) : '';
         useEffect(() => { const k = e => { if (e.key === 'Escape' && !sheet) onClose(); }; document.addEventListener('keydown', k); document.body.classList.add('al-open'); return () => { document.removeEventListener('keydown', k); document.body.classList.remove('al-open'); }; }, [sheet]);
+        const [off, setOff] = useState(null), [fab, setFab] = useState(true), lastTop = useRef(0);
+        /* tombol + hilang saat daftar digulir naik, muncul lagi saat digulir balik atau di paling atas */
+        const onScroll = e => { const t = e.currentTarget.scrollTop, d = t - lastTop.current; if (Math.abs(d) < 6) return; lastTop.current = t; setFab(t < 40 || d < 0); };
         const card = a => {
-            const fl = (a.follows || []).slice().sort((x, y) => x.min - y.min);
+            const fl = (a.follows || []).slice().sort((x, y) => x.min - y.min), sk = A.skipping(a);
+            const nxo = sk ? A.nextOcc(a) : null;
             return h("div", { key: a.id, className: "al-card" + (a.on ? "" : " off"), role: "button", tabIndex: 0, onClick: () => setSheet(a), onKeyDown: e => { if (e.key === 'Enter') setSheet(a); } },
-                h("div", { className: "al-cm" },
-                    h("b", { className: "al-time" }, A.hm(a.h, a.m, a.s)),
-                    h("small", null, A.repeatLabel(a) + (a.label ? " · " + a.label : "")),
-                    fl.length > 0 && h("div", { className: "al-fl" }, fl.map((f, i) => {
+                h("div", { className: "al-up" },
+                    h("div", { className: "al-cm" },
+                        h("b", { className: "al-time" }, A.hm(a.h, a.m, a.s)),
+                        h("small", null, A.repeatLabel(a) + (a.label ? " \u00B7 " + a.label : ""))),
+                    h(Switch, { on: a.on, label: "Aktifkan alarm " + A.hm(a.h, a.m, a.s), onChange: v => {
+                        if (!v) { setOff(a); return; }
+                        A.toggle(a.id, true);
+                        const o = A.list.find(z => z.id === a.id), t = o && A.occs(o, Date.now(), Date.now() + 8 * 86400000)[0]; if (t) toast(A.fmtDur(t.t - Date.now(), !!(o && o.s)) + ' lagi alarm akan berbunyi'); } })),
+                (sk || fl.length > 0) && h("div", { className: "al-ft" },
+                    sk && h("span", { className: "al-skp" }, ic("AlZz", 13, 2), h("b", null, "Dilewati sekali"), nxo ? "Berbunyi lagi " + A.dayLabel(nxo.t) + ", " + A.clock(nxo.t, a) : "Tidak ada jadwal berikutnya"),
+                    fl.map((f, i) => {
                         const t = a.h * 60 + a.m + f.min, tm = A.hm(Math.floor((t % 1440) / 60), t % 60, a.s);
-                        return h("span", { key: i }, ic("AlAlarm", 13, 2), tm + (f.msg ? " · " + f.msg : ""));
-                    }))),
-                h(Switch, { on: a.on, label: "Aktifkan alarm " + A.hm(a.h, a.m, a.s), onChange: v => { A.toggle(a.id, v); if (v) { const o = A.list.find(z => z.id === a.id), t = o && A.occs(o, Date.now(), Date.now() + 8 * 86400000)[0]; if (t) toast(A.fmtDur(t.t - Date.now(), !!(o && o.s)) + ' lagi alarm akan berbunyi'); } } }));
+                        return h("span", { key: i }, ic("AlAlarm", 14, 2), h("b", null, tm), f.msg || "Alarm susulan");
+                    })));
         };
         return ReactDOM.createPortal(h("div", { className: "al-page", role: "dialog", "aria-modal": "true", "aria-label": "Alarm" },
             h("div", { className: "al-bar" },
                 h("button", { type: "button", className: "al-ib", "aria-label": "Kembali", onClick: onClose }, ic("AlBack", 22, 2)),
                 h("b", null, "Alarm"), h("span", { className: "al-ib ph" })),
-            h("div", { className: "al-scroll" },
+            h("div", { className: "al-scroll", onScroll: onScroll },
                 h("div", { className: "al-next" },
                     h("small", null, nx ? "Alarm berikutnya" : "Tidak ada alarm aktif"),
                     nx && h("b", { className: "al-cd" }, "Dalam " + A.fmtDur(nx.t - Date.now(), true)),
@@ -307,8 +347,9 @@
                         h("div", { className: "al-cap" }, "Cepat tambah"),
                         presets().map(p => h("button", { type: "button", key: p.label, className: "al-pr", onClick: () => setSheet(A.blank(p.h, p.m, p.label)) }, h("span", null, h("b", null, p.label), h("small", null, "Sen sampai Jum")), h("em", null, A.hm(p.h, p.m)))))
                     : list.map(card)),
-            h("button", { type: "button", className: "al-fab", "aria-label": "Tambah alarm", onClick: () => setSheet(A.blank()) }, ic("AlPlus", 24, 2.2)),
-            sheet && h(AlarmSheet, { key: sheet.id || 'new', initial: sheet, onClose: () => setSheet(null) })), document.body);
+            h("button", { type: "button", className: "al-fab" + (fab ? "" : " hide"), "aria-label": "Tambah alarm", tabIndex: fab ? 0 : -1, onClick: () => setSheet(A.blank()) }, ic("AlPlus", 24, 2.2)),
+            sheet && h(AlarmSheet, { key: sheet.id || 'new', initial: sheet, onClose: () => setSheet(null) }),
+            off && h(OffSheet, { a: off, onClose: () => setOff(null) })), document.body);
     }
     function AlarmRow() {
         const [open, setOpen] = useState(false);
