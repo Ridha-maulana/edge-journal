@@ -520,3 +520,4 @@
 - v5.10.6: kartu baru "Metode Satu Warna" di Tools (SOP H1 mekanis): halaman baca bagian lipat, tab Entry Buy/Sell, tombol pensil untuk ubah teks, bisa dicari lewat kolom cari Tools. Teks ubahan disimpan di field "metode" pada edge-journal-v3 (ikut sinkron), salinan lokal ej-metode-v1.
 - v5.10.7: Alarm: kartu dua lapis (kaki berisi alarm susulan/tutup MT5), popup dari bawah saat alarm dimatikan (Matikan hari ini = lewati sekali, field `skip` pada alarm; Matikan selamanya; Hapus alarm), tombol + hilang saat daftar digulir naik dan muncul lagi saat digulir balik.
 - v5.10.8: ketuk menu bawah selalu ke halaman awal menu itu: Tools/Profil menutup halaman dalam, Journal melipat panel terbuka, kalender dari ikon header ikut tertutup. Mekanisme: event window 'tab-home' dari goTab (app.js), didengar tiap halaman.
+- v5.10.9: kartu Tools di carousel sama tinggi dan tombol Buka Tool sejajar di bawah (kartu flex kolom, deskripsi min 3 baris).
