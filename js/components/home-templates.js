@@ -299,7 +299,6 @@ function HomeT6({ d }) {
 function HomeT7({ d }) {
     const fit = useTplFit(170, 480), ctl = useTplChart('candle'), c = d.cur;
     const m = tpMetrics(d), wins = d.wins, losses = d.losses, be = Math.max(0, d.nTrades - wins - losses), tot = d.nTrades || 1;
-    const RR = 64, CI = 2 * Math.PI * RR, seg = (n, off) => ({ strokeDasharray: `${n / tot * CI} ${CI}`, strokeDashoffset: -off / tot * CI });
     return tpE("div", { className: "tp tp6 tp7", ref: fit.root },
         tpE("i", { className: "t6-blob b1", "aria-hidden": "true" }), tpE("i", { className: "t6-blob b2", "aria-hidden": "true" }), tpE("i", { className: "t6-blob b3", "aria-hidden": "true" }),
         tpE("section", { className: "tp-card t7-top" },
@@ -309,10 +308,11 @@ function HomeT7({ d }) {
         tpE("section", { className: "tp-card t6-ch t7-ch" }, tpE("div", { className: "t6-fb", ref: fit.box }, tpE(HeroChart, { trades: d.cs, startBal: d.capBal || d.startBal, onOpen: d.onOpen, hh: fit.m.w ? Math.max(200, Math.round(500 * fit.m.h / fit.m.w)) : 360, ro: 1.05, fs: 1.45, floor: 5, ext: ctl, hideTools: true, persist: true })), tpE("div", { className: "t6-ft" }, tpE(TplChips, { ctl }), tpE(TplKind, { ctl }))),
         tpE("div", { className: "tp-card t6-m3" }, [[3, 'Scale'], [4, 'Target'], [5, 'Star']].map(([k, n]) => tpE("div", { key: m[k][0] }, tpE("small", null, tpE("span", { className: "t7-mi", style: { color: ICON_COLORS[n] } }, tpIc(n, 17)), k === 4 ? 'Pips' : m[k][0]), tpE("b", { className: m[k][2] }, m[k][1])))),
         tpE("div", { className: "t6-m2" },
-            tpE("section", { className: "tp-card t7-bd" }, tpE("span", { className: "t7-ti" }, tpIc('Activity', 14), "P&L BREAKDOWN"),
-                tpE("div", { className: "t7-bb" },
-                    tpE("div", { className: "t7-donut", role: "img", "aria-label": "Wins " + wins + ", Losses " + losses + ", BE " + be }, tpE("svg", { viewBox: "0 0 160 160", "aria-hidden": "true" }, tpE("g", { transform: "rotate(-90 80 80)", fill: "none", strokeWidth: "26" }, tpE("circle", { cx: 80, cy: 80, r: RR, className: "dn-bg" }), wins > 0 && tpE("circle", { cx: 80, cy: 80, r: RR, className: "dn-w", style: seg(wins, 0) }), losses > 0 && tpE("circle", { cx: 80, cy: 80, r: RR, className: "dn-l", style: seg(losses, wins) }), be > 0 && tpE("circle", { cx: 80, cy: 80, r: RR, className: "dn-b", style: seg(be, wins + losses) }))), tpE("div", { className: "t7-dc" }, tpE("b", null, d.nTrades), tpE("small", null, "TRADES"))),
-                    tpE("ul", { className: "t7-lg" }, [['dn-w', 'Wins', wins], ['dn-l', 'Losses', losses], ['dn-b', 'BE', be]].map(([k, l, n]) => tpE("li", { key: l }, tpE("i", { className: k }), tpE("span", null, l, tpE("b", null, n + ' (' + Math.round(n / tot * (d.nTrades ? 100 : 0)) + '%)'))))))),
+            tpE("section", { className: "tp-card t7-bd" },
+                tpE("span", { className: "t7-ti" }, tpIc('Activity', 14), "P&L BREAKDOWN", tpE("em", { className: "t7-bn" }, d.nTrades + " trade")),
+                tpE("div", { className: "t7-wr", role: "img", "aria-label": "Win rate " + d.winRate + " persen. Wins " + wins + ", Losses " + losses + ", BE " + be }, tpE("b", null, d.winRate + "%"), tpE("span", null, "win rate")),
+                tpE("div", { className: "t7-sb", "aria-hidden": "true" }, d.nTrades ? [['dn-w', wins], ['dn-l', losses], ['dn-b', be]].filter(x => x[1] > 0).map(x => tpE("i", { key: x[0], className: x[0], style: { flex: x[1] } })) : tpE("i", { className: "dn-e", style: { flex: 1 } })),
+                tpE("ul", { className: "t7-lg" }, [['dn-w', 'Wins', wins], ['dn-l', 'Losses', losses], ['dn-b', 'BE', be]].map(([k, l, n]) => tpE("li", { key: l }, tpE("i", { className: k }), l, " ", tpE("b", null, n))))),
             tpE("div", { className: "t6-m2r" }, [[1, 'LineChart'], [2, 'FileText']].map(([k, n]) => tpE("div", { key: m[k][0], className: "tp-card" }, tpE("span", { className: "t6-mi", style: { '--ico': ICON_COLORS[n] } }, tpIc(n, 17)), tpE("small", null, m[k][0]), tpE("b", { className: m[k][2] }, m[k][1]))))),
         tpActions(d));
 }

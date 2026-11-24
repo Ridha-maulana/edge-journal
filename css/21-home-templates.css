@@ -637,3 +637,19 @@ body[data-home] .app-shell:has(.tp1),body[data-home] .app-shell:has(.tp2),body[d
 .tp6.tp7 .t6-m2r .t6-mi{width:calc(var(--u)*90);height:calc(var(--u)*90)}.tp6.tp7 .t6-m2r .t6-mi svg{width:calc(var(--u)*44);height:calc(var(--u)*44)}
 .tp6.tp7 .t6-m2r small{font-size:max(11px,calc(var(--u)*30))}.tp6.tp7 .t6-m2r b{font-size:max(11px,calc(var(--u)*44))}
 @media (max-width:385px){.tp6.tp7 .t7-donut{width:calc(var(--u)*190);height:calc(var(--u)*190)}.tp6.tp7 .t7-bb{gap:calc(var(--u)*18)}.tp6.tp7 .t7-lg span{font-size:max(11px,calc(var(--u)*28))}.tp6.tp7 .t7-lg b{font-size:max(11px,calc(var(--u)*29))}}
+
+/* v5.11.1: kartu P&L Template 5 · Sederhana: angka win rate besar + bar bertumpuk + legenda (ukuran kartu tidak berubah) */
+.tp6.tp7 .t7-bd{gap:calc(var(--u)*20)}
+.tp6.tp7 .t7-bn{margin-left:auto;font-style:normal;font-weight:700;letter-spacing:0;font-size:max(11px,calc(var(--u)*28));padding:calc(var(--u)*8) calc(var(--u)*20);border-radius:99px;background:color-mix(in srgb,#22b573 18%,transparent);color:#15803d}
+html[data-mode="dark"] .tp6.tp7 .t7-bn,html:not([data-mode="light"]) .tp6.tp7 .t7-bn{color:#3ccf8e}
+.tp6.tp7 .t7-wr{display:flex;align-items:baseline;gap:calc(var(--u)*20);flex:none;min-width:0}
+.tp6.tp7 .t7-wr b{font-size:max(22px,calc(var(--u)*82));font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--ej-ik)}
+.tp6.tp7 .t7-wr span{font-size:max(11px,calc(var(--u)*30));color:var(--t-mu)}
+.tp6.tp7 .t7-sb{display:flex;gap:calc(var(--u)*8);height:calc(var(--u)*24);flex:none}
+.tp6.tp7 .t7-sb i{display:block;height:100%;border-radius:99px;min-width:calc(var(--u)*24)}
+.tp6.tp7 .t7-sb i.dn-w{background:#22b573}.tp6.tp7 .t7-sb i.dn-l{background:#ef6b7b}.tp6.tp7 .t7-sb i.dn-b{background:#9aa3ab}.tp6.tp7 .t7-sb i.dn-e{background:color-mix(in srgb,var(--ej-ik) 14%,transparent)}
+.tp6.tp7 .t7-lg{flex:none;flex-direction:row;justify-content:space-between;gap:calc(var(--u)*10);width:100%}
+.tp6.tp7 .t7-lg li{display:flex;align-items:center;gap:calc(var(--u)*12);font-size:max(11px,calc(var(--u)*30));color:var(--t-mu);white-space:nowrap}
+.tp6.tp7 .t7-lg li i{margin:0;width:calc(var(--u)*22);height:calc(var(--u)*22);border-radius:50%;flex:none}
+.tp6.tp7 .t7-lg li i.dn-w{background:#22b573}.tp6.tp7 .t7-lg li i.dn-l{background:#ef6b7b}.tp6.tp7 .t7-lg li i.dn-b{background:#9aa3ab}
+.tp6.tp7 .t7-lg li b{font-size:max(11px,calc(var(--u)*34));font-weight:800;color:var(--ej-ik)}

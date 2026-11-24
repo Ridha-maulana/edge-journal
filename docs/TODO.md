@@ -522,3 +522,4 @@
 - v5.10.8: ketuk menu bawah selalu ke halaman awal menu itu: Tools/Profil menutup halaman dalam, Journal melipat panel terbuka, kalender dari ikon header ikut tertutup. Mekanisme: event window 'tab-home' dari goTab (app.js), didengar tiap halaman.
 - v5.10.9: kartu Tools di carousel sama tinggi dan tombol Buka Tool sejajar di bawah (kartu flex kolom, deskripsi min 3 baris).
 - v5.10.10: tombol Buka Tool di kartu Tools tidak lagi hilang di mode terang (efek permukaan kartu menimpa warna tombol); tombol selalu berwarna penuh, teks gelap untuk kuning.
+- v5.11.1: kartu P&L Breakdown di Template 5 · Sederhana didesain ulang (angka win rate besar, bar bertumpuk Wins hijau / Losses merah / BE abu, legenda; ukuran kartu tetap); teks tombol Buka Tool semua putih, tombol kuning dipertegas.

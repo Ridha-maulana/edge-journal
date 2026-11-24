@@ -130,4 +130,4 @@ html[data-fxi="1"] :is(.pf-chp,.pf-tile) svg[data-i]{color:var(--ico,currentColo
 .mt-ask{margin-top:12px;padding:14px;border-radius:14px;border:1px solid color-mix(in srgb,var(--red) 40%,transparent)}.mt-ask p{margin:0;font-size:13.5px;line-height:1.5}.mt-ask .mt-bar{margin-top:12px}
 /* v5.10.10: tombol Buka Tool tetap berwarna penuh (efek permukaan kartu di mode terang membuatnya terang dan teks putih jadi tak terbaca) */
 html:not(#_) .tl-card button.tl-kb{background:var(--tc)!important;background-image:none!important;color:#fff!important;border:1px solid transparent!important;text-shadow:none}
-html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{color:#1a1400!important}
+html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!important}
