@@ -1,4 +1,4 @@
-const C='ej3-5.11.5';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.11.6';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -67,6 +67,7 @@ const SHELL=[
   './js/pages/tools.js',
   './js/stats/advanced-stats.js',
   './js/stats/drilldown.js',
+  './js/stats/entry-perf.js',
   './js/stats/perf-extra.js'
 ];
 const CDN=[]; /* React kini lokal (js/vendor), tidak ada lagi berkas CDN wajib */

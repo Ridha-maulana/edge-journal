@@ -183,6 +183,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                     w ? '-' : '+',
                     fm(h.amount))); }))),
         React.createElement(DrillDown, { key: account.id, account: account, trades: filtered, rangeText: rangeText }),
+        React.createElement(EntryPerf, { key: account.id + '-ep', account: account, trades: filtered, rangeText: rangeText }),
         advancedStats,
         React.createElement("div", { className: "pe-card" },
             React.createElement("h3", null, "P&L per pair"),
