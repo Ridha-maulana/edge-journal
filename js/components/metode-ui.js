@@ -1,6 +1,6 @@
-/* Halaman baca Metode Satu Warna: bagian lipat, tab zona, visual Fibonacci, jadwal alarm, PDF asli, dan ubah teks (v5.11.3) */
+/* Halaman baca Metode Satu Warna: bagian lipat, tab zona, visual Fibonacci, jadwal alarm, PDF asli, dan ubah teks (v5.11.4) */
 "use strict";
-/* ===== visual bagian 2 (v5.11.3): chart GOLD H1 bergambar, tangga zona, strip jam alarm ===== */
+/* ===== visual bagian 2 (v5.11.4): chart GOLD H1 bergambar, tangga zona, strip jam alarm ===== */
 const MV_PDF = { file: 'assets/sop-metode-satu-warna.pdf', pages: ['assets/sop-metode-1.jpg', 'assets/sop-metode-2.jpg'], name: 'SOP-Metode-Satu-Warna.pdf' };
 const MV_CSS = `
 .mv{--mg:#6fe0a6;--ma:#f5c85a;--mr:#ff8d9b;--mc:#22b573;--mk:#f0b429;--mx:#ef6b7b}
@@ -8,16 +8,19 @@ html[data-mode="light"] .mv{--mg:#15803d;--ma:#a16207;--mr:#b91c4a}
 .mv-chart{display:block;width:100%;height:auto;color:inherit;margin:0 0 4px}
 .mv-chart text{font-family:inherit}
 .mv-chart .t-g{fill:var(--mg)}.mv-chart .t-a{fill:var(--ma)}.mv-chart .t-r{fill:var(--mr)}.mv-chart .t-m{fill:currentColor;opacity:.55}.mv-chart .t-k{fill:currentColor}
-.mv-lad{margin:0 0 4px}
-.mv-row{display:flex;gap:10px;margin:0 0 6px}
-.mv-row>em{width:40px;flex:none;text-align:right;font-style:normal;font-size:11px;font-weight:700;color:inherit;opacity:.62;padding-top:2px}
-.mv-row>i{width:4px;border-radius:99px;flex:none;margin:0 5px}
-.mv-row>div{flex:1;min-width:0;border:1px solid;border-radius:12px;padding:9px 12px}
-.mv-row b{display:block;font-size:13.5px;font-weight:700}
-.mv-row p{margin:2px 0 0;font-size:12.5px;line-height:1.5;opacity:.72}
-.mv-row.g>i{background:var(--mc)}.mv-row.g>div{border-color:color-mix(in srgb,var(--mc) 45%,transparent);background:color-mix(in srgb,var(--mc) 11%,transparent)}.mv-row.g b{color:var(--mg)}
-.mv-row.a>i{background:var(--mk)}.mv-row.a>div{border-color:color-mix(in srgb,var(--mk) 45%,transparent);background:color-mix(in srgb,var(--mk) 11%,transparent)}.mv-row.a b{color:var(--ma)}
-.mv-row.r>i{background:var(--mx)}.mv-row.r>div{border-color:color-mix(in srgb,var(--mx) 45%,transparent);background:color-mix(in srgb,var(--mx) 11%,transparent)}.mv-row.r b{color:var(--mr)}
+.mv .mt-acb.mv-full{padding-left:0!important;padding-right:0!important;margin-left:0!important;margin-right:0!important}
+.mv-zl{margin:0 0 4px}
+.mv-zr{display:flex;gap:10px;padding:9px 0;border-top:1px solid color-mix(in srgb,currentColor 12%,transparent)}.mv-zr:first-child{border-top:0}
+.mv-zr>i{width:3px;border-radius:99px;flex:none}
+.mv-zr>div{flex:1;min-width:0}
+.mv-zr .h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.mv-zr b{font-size:13.5px;font-weight:700}
+.mv-zr .c{font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;white-space:nowrap;border:1px solid}
+.mv-zr p{margin:2px 0 0;font-size:12px;line-height:1.45;opacity:.74}
+.mv-zr.g>i{background:var(--mc)}.mv-zr.g b,.mv-zr.g .c{color:var(--mg)}.mv-zr.g .c{border-color:color-mix(in srgb,var(--mc) 50%,transparent);background:color-mix(in srgb,var(--mc) 12%,transparent)}
+.mv-zr.a>i{background:var(--mk)}.mv-zr.a b,.mv-zr.a .c{color:var(--ma)}.mv-zr.a .c{border-color:color-mix(in srgb,var(--mk) 50%,transparent);background:color-mix(in srgb,var(--mk) 12%,transparent)}
+.mv-zr.t>i{background:#2fd28a;opacity:.7}.mv-zr.t b,.mv-zr.t .c{color:var(--mg)}.mv-zr.t .c{border-color:color-mix(in srgb,#2fd28a 50%,transparent);background:color-mix(in srgb,#2fd28a 10%,transparent)}
+.mv-zr.r>i{background:var(--mx)}.mv-zr.r b,.mv-zr.r .c{color:var(--mr)}.mv-zr.r .c{border-color:color-mix(in srgb,var(--mx) 50%,transparent);background:color-mix(in srgb,var(--mx) 12%,transparent)}
 .mv-strip{position:relative;height:50px;margin:4px 4px 0}
 .mv-strip .bar{position:absolute;left:0;right:0;top:30px;height:10px;border-radius:99px;background:color-mix(in srgb,currentColor 10%,transparent)}
 .mv-strip .u,.mv-strip .o{position:absolute;top:26px;height:18px;border-radius:5px}
@@ -50,29 +53,29 @@ html[data-mode="light"] .mt-seg button.on.a,html[data-mode="light"] .mt-dec.a{co
 .mv-zm span{flex:1}
 `;
 function mvStyle() { if (document.getElementById('mv-css')) return; const st = document.createElement('style'); st.id = 'mv-css'; st.textContent = MV_CSS; document.head.appendChild(st); }
-/* chart contoh: harga turun dari 0.0 (High 3646) ke 100.0 (Low 3533), lalu memantul di zona retest */
+/* chart contoh: harga turun dari 0.0 (High 3646) ke 100.0 (Low 3533), lalu memantul di zona retest. Zona: Follow Trend 0-100, Retest 38.2-100, Lanjutan 100-161.8, Ekstensi Jenuh >161.8 */
 function mvChartSvg() {
-    const P0 = 3646, P100 = 3533, D = P0 - P100, lv = x => P0 - D * x / 100, W = 356, H = 330, pmin = 3405, pmax = 3662, lw = 62, pw = W - lw;
+    const P0 = 3646, P100 = 3533, D = P0 - P100, lv = x => P0 - D * x / 100, W = 372, H = 300, pmin = 3405, pmax = 3662, pw = W;
     const y = p => 6 + (pmax - p) / (pmax - pmin) * (H - 12);
     const C = [[3552, 3560, 3546, 3558], [3558, 3570, 3554, 3566], [3566, 3585, 3562, 3580], [3580, 3600, 3576, 3596], [3596, 3625, 3592, 3620], [3620, 3646, 3616, 3640], [3640, 3644, 3622, 3626], [3626, 3632, 3606, 3610], [3610, 3622, 3598, 3618], [3618, 3624, 3596, 3600], [3600, 3604, 3570, 3574], [3574, 3578, 3548, 3552], [3552, 3560, 3536, 3556], [3556, 3562, 3533, 3540], [3540, 3548, 3535, 3546], [3546, 3575, 3542, 3572]];
-    const G = '#22b573', R = '#ef6b7b', A = '#f0b429', cw = 214 / C.length;
-    let s = '<defs><pattern id="mvh" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="' + R + '" opacity=".3"/></pattern></defs>';
-    s += '<rect x="0" y="' + y(P0) + '" width="' + pw + '" height="' + (y(lv(38.2)) - y(P0)) + '" fill="' + G + '" opacity=".14"/>';
+    const G = '#22b573', G2 = '#2fd28a', R = '#ef6b7b', A = '#f0b429', cw = 13.2;
+    let s = '<defs><pattern id="mvh" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="' + R + '" opacity=".32"/></pattern></defs>';
+    s += '<rect x="0" y="' + y(P0) + '" width="' + pw + '" height="' + (y(P100) - y(P0)) + '" fill="' + G + '" opacity=".12"/>';
     s += '<rect x="0" y="' + y(lv(38.2)) + '" width="' + pw + '" height="' + (y(P100) - y(lv(38.2))) + '" fill="' + A + '" opacity=".16"/>';
+    s += '<rect x="0.5" y="' + y(P100) + '" width="' + (pw - 1) + '" height="' + (y(lv(161.8)) - y(P100)) + '" fill="' + G2 + '" opacity=".09" stroke="' + G2 + '" stroke-opacity=".5" stroke-dasharray="5 4"/>';
     s += '<rect x="0" y="' + y(lv(161.8)) + '" width="' + pw + '" height="' + (y(pmin) - y(lv(161.8))) + '" fill="url(#mvh)"/>';
     [[0, '0.0'], [38.2, '38.2'], [50, '50.0'], [100, '100.0'], [161.8, '161.8']].forEach(([x, t]) => {
         const yy = y(lv(x)), cls = x === 161.8 ? 't-r' : (x === 38.2 || x === 50) ? 't-a' : 't-k', col = x === 161.8 ? R : (x === 38.2 || x === 50) ? A : 'currentColor';
-        s += '<line x1="0" x2="' + pw + '" y1="' + yy + '" y2="' + yy + '" stroke="' + col + '" stroke-width="' + (x === 0 || x === 100 ? 1.4 : 1) + '" ' + (x === 50 ? 'stroke-dasharray="4 3" ' : '') + 'opacity="' + (col === 'currentColor' ? .75 : .95) + '"/>';
-        const ty = x === 38.2 ? yy - 4 : x === 50 ? yy + 13 : yy + 4;
-        s += '<text x="' + (pw + 6) + '" y="' + ty + '" class="' + cls + '" font-size="11.5" font-weight="700">' + t + '</text>';
-        if (x !== 38.2 && x !== 50) s += '<text x="' + (pw + 6) + '" y="' + (yy + 16) + '" class="t-m" font-size="10">' + lv(x).toFixed(0) + '</text>';
+        s += '<line x1="0" x2="' + pw + '" y1="' + yy + '" y2="' + yy + '" stroke="' + col + '" stroke-width="' + (x === 0 || x === 100 ? 1.3 : 1) + '" ' + (x === 50 ? 'stroke-dasharray="4 3" ' : '') + 'opacity="' + (col === 'currentColor' ? .7 : .9) + '"/>';
+        s += '<text x="' + (pw - 4) + '" y="' + (x === 50 ? yy + 12 : yy - 4) + '" text-anchor="end" class="' + cls + '" font-size="11" font-weight="800">' + t + '</text>';
     });
     C.forEach((c, i) => { const op = c[0], h = c[1], l = c[2], cl = c[3], x = 4 + i * cw + cw / 2, col = cl >= op ? G : R;
-        s += '<line x1="' + x + '" x2="' + x + '" y1="' + y(h) + '" y2="' + y(l) + '" stroke="' + col + '" stroke-width="1.4"/><rect x="' + (x - cw * .32) + '" y="' + y(Math.max(op, cl)) + '" width="' + (cw * .64) + '" height="' + Math.max(2, Math.abs(y(op) - y(cl))) + '" rx="1.5" fill="' + col + '"/>'; });
-    const ax = pw - 14, y2 = y(lv(161.8));
-    s += '<line x1="' + ax + '" x2="' + ax + '" y1="' + y(lv(38.2)) + '" y2="' + (y2 - 8) + '" stroke="' + G + '" stroke-width="2.4"/><path d="M' + (ax - 6) + ' ' + (y2 - 10) + 'L' + ax + ' ' + y2 + 'L' + (ax + 6) + ' ' + (y2 - 10) + 'Z" fill="' + G + '"/>';
-    s += '<g text-anchor="end" font-size="11" font-weight="800"><text x="' + (pw - 30) + '" y="' + (y(lv(19)) + 4) + '" class="t-g">FOLLOW TREND</text><text x="' + (pw - 30) + '" y="' + (y(lv(75)) + 4) + '" class="t-a">RETEST</text><text x="' + (pw - 30) + '" y="' + (y(lv(125)) + 4) + '" class="t-g" font-weight="600" font-size="10">menuju 161.8</text><text x="' + (pw - 8) + '" y="' + (y(lv(190)) + 4) + '" class="t-r">DILARANG ENTRY</text></g>';
-    return '<svg class="mv-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Contoh chart GOLD H1 dengan zona Fibonacci: Follow Trend 0.0 sampai 38.2, Retest 38.2 sampai 100, dilarang entry di atas 161.8">' + s + '</svg>';
+        s += '<line x1="' + x + '" x2="' + x + '" y1="' + y(h) + '" y2="' + y(l) + '" stroke="' + col + '" stroke-width="1.3"/><rect x="' + (x - cw * .33) + '" y="' + y(Math.max(op, cl)) + '" width="' + (cw * .66) + '" height="' + Math.max(2, Math.abs(y(op) - y(cl))) + '" rx="1.5" fill="' + col + '"/>'; });
+    const lab = (t, yy, cls) => '<text x="' + (pw - 74) + '" y="' + (yy + 4) + '" text-anchor="end" class="' + cls + '" font-size="11" font-weight="800">' + t + '</text>';
+    s += lab('FOLLOW TREND', y(lv(19)), 't-g') + lab('RETEST', y(lv(72)), 't-a') + lab('LANJUTAN FOLLOW TREND', y(lv(131)), 't-g') + lab('DILARANG ENTRY', y(lv(190)), 't-r');
+    const bx = pw - 62;
+    s += '<g fill="none" stroke-width="2.6" stroke-linecap="round"><path d="M' + bx + ' ' + (y(P0) + 4) + ' V' + (y(P100) - 4) + '" stroke="' + G + '"/><path d="M' + (bx + 9) + ' ' + (y(lv(38.2)) + 4) + ' V' + (y(P100) - 4) + '" stroke="' + A + '"/></g>';
+    return '<svg class="mv-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Contoh chart GOLD H1 dengan zona Fibonacci: Follow Trend 0.0 sampai 100, Retest 38.2 sampai 100, Lanjutan Follow Trend 100 sampai 161.8, dilarang entry di atas 161.8">' + s + '</svg>';
 }
 function mvTimes(v) { return String(v || '').match(/\d{1,2}:\d{2}(?::\d{2})?/g) || []; }
 const mvHour = t => { const a = String(t).split(':'); return (+a[0]) + (+a[1]) / 60; };
@@ -96,10 +99,14 @@ function MvAlarmStrip({ rows }) {
                     ? React.createElement("tr", { key: i }, React.createElement("td", null, r[0].replace(/^Sesi\s+/i, '')), t.slice(0, 4).map((x, j) => React.createElement("td", { key: j }, x)))
                     : React.createElement("tr", { key: i }, React.createElement("td", { colSpan: 5, style: { whiteSpace: 'normal' } }, React.createElement("b", null, r[0]), r[1] ? ': ' + r[1] : '')); }))));
 }
+/* tiap baris zona: "Judul 38.2 – 100%" dipecah menjadi judul + chip rentang */
+function mvSplitZone(t) { const m = String(t).match(/^(.*?)\s*((?:[>≥]\s*)?\d[\d.]*(?:\s*[–-]\s*\d[\d.]*)?\s*%)\s*$/); return m && m[1] ? [m[1], m[2]] : [String(t), '']; }
 function MvLadder({ zones }) {
-    const cls = ['g', 'a', 'g', 'r'], lab = ['0.0', '38.2', '100', '161.8'];
-    return React.createElement("div", { className: "mv-lad" }, zones.map((p, i) => React.createElement("div", { key: i, className: "mv-row " + (cls[i] || 'g') },
-        React.createElement("em", null, lab[i] || ''), React.createElement("i", null), React.createElement("div", null, React.createElement("b", null, p[0]), p[1] && React.createElement("p", null, p[1])))));
+    const cls = ['g', 'a', 't', 'r'];
+    return React.createElement("div", { className: "mv-zl" }, zones.map((p, i) => { const z = mvSplitZone(p[0]);
+        return React.createElement("div", { key: i, className: "mv-zr " + (cls[i] || 'g') },
+            React.createElement("i", null),
+            React.createElement("div", null, React.createElement("div", { className: "h" }, React.createElement("b", null, z[0]), z[1] && React.createElement("span", { className: "c" }, z[1])), p[1] && React.createElement("p", null, p[1]))); }));
 }
 async function mvDownloadPdf() {
     try {
@@ -182,14 +189,14 @@ function MetodePage({ onBack, sec, tab }) {
             d.info.map((p, i) => React.createElement("div", { key: i, className: "mt-kv" }, React.createElement("small", null, p[0]), React.createElement("b", null, p[1]))));
         if (n === 2) return React.createElement(React.Fragment, null,
             React.createElement("div", { className: "mt-sl" }, "Peta harga nyata (contoh GOLD H1)"), React.createElement("div", { dangerouslySetInnerHTML: { __html: mvChartSvg() } }),
-            React.createElement("div", { className: "mt-sl" }, "Tangga zona Fibonacci"), React.createElement(MvLadder, { zones: d.zones }),
+            React.createElement("div", { className: "mt-sl" }, "Zona Fibonacci"), React.createElement(MvLadder, { zones: d.zones }),
             React.createElement("div", { className: "mt-sl" }, "Jam alarm dalam sehari (WIB)"), React.createElement(MvAlarmStrip, { rows: d.alarms }));
         if (n === 3) { const b = side === 'retest';
             return React.createElement(React.Fragment, null,
                 React.createElement("div", { className: "mt-seg", role: "tablist" },
                     React.createElement("button", { type: "button", role: "tab", "aria-selected": b, className: b ? "on a" : "", onClick: () => setSide('retest') }, "Zona Retest"),
-                    React.createElement("button", { type: "button", role: "tab", "aria-selected": !b, className: !b ? "on g" : "", onClick: () => setSide('follow') }, "Zona Follow Trend")),
-                React.createElement("p", { className: "mt-pp", style: { marginTop: 0 } }, b ? "Level 100 sampai 38.2%" : "Level 38.2 sampai 161.8%"),
+                    React.createElement("button", { type: "button", role: "tab", "aria-selected": !b, className: !b ? "on g" : "", onClick: () => setSide('follow') }, "Follow Trend & Lanjutan")),
+                React.createElement("p", { className: "mt-pp", style: { marginTop: 0 } }, b ? "Rentang 38.2 sampai 100%" : "Rentang 0.0 sampai 161.8%"),
                 steps(b ? d.retest : d.follow),
                 (b ? d.retestDec : d.followDec) && React.createElement("div", { className: "mt-dec " + (b ? "a" : "g") }, b ? d.retestDec : d.followDec)); }
         if (n === 4) return React.createElement(React.Fragment, null,
@@ -208,7 +215,7 @@ function MetodePage({ onBack, sec, tab }) {
         M.SECS.map(s => React.createElement("div", { key: s.n, className: "mt-ac" + (open[s.n] ? " open" : ""), "data-n": s.n },
             React.createElement("button", { type: "button", className: "mt-ach", "aria-expanded": !!open[s.n], onClick: () => toggle(s.n) },
                 React.createElement("span", { className: "mt-nn" }, s.n), React.createElement("b", null, s.title), React.createElement(ChevronRight, { size: 18 })),
-            open[s.n] && React.createElement("div", { className: "mt-acb" }, body(s.n)))),
+            open[s.n] && React.createElement("div", { className: "mt-acb" + (s.n === 2 ? " mv-full" : "") }, body(s.n)))),
         React.createElement("div", { className: "mv-pdf" },
             React.createElement("h3", null, "Versi PDF"),
             React.createElement("div", { className: "mv-pf" }, React.createElement("div", { className: "mv-ic", "aria-hidden": "true" }, "PDF"), React.createElement("div", null, React.createElement("b", null, "SOP Metode Satu Warna"), React.createElement("small", null, "Dokumen asli \u00B7 2 halaman"))),
