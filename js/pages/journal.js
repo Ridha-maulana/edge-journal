@@ -83,7 +83,7 @@ function Journal({ account, trades, filters, setFilters, expanded, setExpanded, 
     useEffect(() => { const f = e => { if (e.detail !== 'journal') return; setAddMenu(false); setOpenWeeks({}); setExpanded(null); }; window.addEventListener('tab-home', f); return () => window.removeEventListener('tab-home', f); }, []);
     const startBal = acctCapBal(account); /* dasar % = modal sekarang */
     const sumOf = list => ({ pnl: list.reduce((x, t) => x + (t.status === 'closed' ? Number(t.pnl) || 0 : 0), 0), pips: list.reduce((x, t) => x + tradePips(t), 0) });
-    const filtered = trades.filter(t => (filters.status === 'all' || t.status === filters.status) && (filters.side === 'all' || t.side === filters.side) && (!filters.search || t.symbol.toLowerCase().includes(filters.search.toLowerCase()) || String(t.setup || '').toLowerCase().includes(filters.search.toLowerCase())) && (!filters.date || dateOnly(t.date) === filters.date) && (!filters.ids || filters.ids.includes(t.id)));
+    const filtered = trades.filter(t => (filters.status === 'all' || t.status === filters.status) && (filters.side === 'all' || t.side === filters.side) && (!filters.search || t.symbol.toLowerCase().includes(filters.search.toLowerCase()) || String(t.setup || '').toLowerCase().includes(filters.search.toLowerCase()) || (t.zone && window.METODE && window.METODE.zoneText(t.zone).toLowerCase().includes(filters.search.toLowerCase()))) && (!filters.date || dateOnly(t.date) === filters.date) && (!filters.ids || filters.ids.includes(t.id)));
     const groups = filtered.reduce((acc, t) => { const key = dateOnly(t.date); (acc[key] || (acc[key] = [])).push(t); return acc; }, {});
     return React.createElement("section", null,
         React.createElement(PageHeading, { eyebrow: "LOGBOOK / TRADE HISTORY", title: "My Journal", description: `Semua transaksi akun ${account.name}.` }),
@@ -147,7 +147,7 @@ function TradeCard({ trade, startBal, expanded, onToggle, onDelete, onClose, onE
             React.createElement("small", null,
                 new Date(trade.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':'),
                 " \u00B7 ",
-                trade.setup || 'Tanpa setup')),
+                trade.zone && window.METODE && window.METODE.zoneOf(trade.zone) ? React.createElement(React.Fragment, null, window.METODE.zoneText(trade.zone), window.METODE.zoneOf(trade.zone).banned && React.createElement("em", { className: "zs-vio" }, "Melanggar SOP")) : trade.setup || 'Tanpa setup')),
         React.createElement("div", { className: "trade-result" },
             trade.status === 'open' ? React.createElement(React.Fragment, null,
                 React.createElement("strong", { className: "open-text" }, "OPEN"),

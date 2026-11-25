@@ -36,44 +36,63 @@ function buildPrefill(row, tzMode) {
 function buildChartPrefill(ch) {
     return { chart: true, notes: ch.notes || [], symbol: ch.symbol || 'XAUUSD', symbolRaw: ch.symbolRaw, symbolKnown: !!ch.symbol, side: ch.side, entry: ch.entry, exit: null, lots: ch.lots || 0.01, sl: ch.sl, tp: ch.tp, fees: 0, exitMethod: undefined, ticket: '', profit: null, net: null, hasOpen: true, rawOpen: '', rawClose: '', date: isoNow(), closeDate: '' };
 }
-/* Layar daftar: beberapa posisi sekaligus dari satu screenshot. Hanya kartu berinformasi lengkap yang bisa dipilih. */
-function ImportListModal({ account, rows, onClose, onSave }) {
+/* Layar daftar (v5.11.5): beberapa posisi dari satu screenshot. Ketuk posisi untuk membuka halaman Tambah trade dan memilih zona entry, simpan satu per satu.
+   Tiket yang sudah tercatat ditandai dan harus dicentang dulu kalau tetap mau dicatat ulang. */
+function ImportListModal({ account, rows, onClose, onAdd, onDone }) {
     const [tz, setTz] = useState(mt5GetTz());
     const full = rows.filter(r => r.detailed);
     const skipped = rows.length - full.length;
     const items = useMemo(() => full.map(r => buildPrefill(r, tz)), [rows, tz]);
     const have = new Set((account.trades || []).map(t => t.mt5Ticket).filter(Boolean));
-    const isDup = pf => have.has(pf.ticket);
-    const [off, setOff] = useState(() => new Set(full.filter(r => have.has(r.ticket)).map(r => r.ticket)));
-    const picked = items.filter(pf => !off.has(pf.ticket));
-    const toggle = t => { const n = new Set(off); n.has(t) ? n.delete(t) : n.add(t); setOff(n); };
+    const [saved, setSaved] = useState({}); /* tiket -> id zona, untuk yang disimpan di layar ini */
+    const [again, setAgain] = useState(new Set()); /* tiket ganda yang dicentang: tetap dicatat ulang */
+    const [openPf, setOpenPf] = useState(null);
+    const isDup = pf => have.has(pf.ticket) && !(pf.ticket in saved);
+    const usable = items.filter(pf => !isDup(pf) || again.has(pf.ticket) || (pf.ticket in saved));
+    const nSaved = Object.keys(saved).length;
+    const toggleAgain = t => { const n = new Set(again); n.has(t) ? n.delete(t) : n.add(t); setAgain(n); };
     function changeTz(v) { mt5SetTz(v); setTz(v); }
     const fmt = s => s ? new Date(s).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':') : '-';
-    return React.createElement("div", { className: "modal-backdrop fs" },
-        React.createElement("div", { className: "modal wide-modal fs" },
-            React.createElement("div", { className: "modal-head" },
-                React.createElement("div", null,
-                    React.createElement("p", { className: "eyebrow" }, "SCREENSHOT ENTRY / PRO"),
-                    React.createElement("h2", null, items.length + " posisi terbaca")),
-                React.createElement("button", { className: "icon-btn", onClick: onClose }, React.createElement(X, { size: 19 }))),
-            React.createElement("div", { className: "scan-result" },
-                React.createElement("small", null, "Centang posisi yang mau dicatat. Hanya kartu dengan info lengkap (tiket, waktu buka, SL, TP) yang dibaca."),
-                skipped > 0 && React.createElement("small", { className: "warn" }, skipped + " kartu dilewati karena infonya tidak lengkap (belum diketuk/dibuka di MT5)."),
-                React.createElement("label", null, "Zona waktu server MT5",
-                    React.createElement("select", { value: tz, onChange: e => changeTz(e.target.value) }, MT5_TZ_OPTIONS.map(o => React.createElement("option", { key: o.v, value: o.v }, o.l)))),
-                React.createElement("small", null, "Waktu ditampilkan dalam WIB (UTC+7).")),
-            items.map(pf => {
-                const on = !off.has(pf.ticket), dup = isDup(pf);
-                return React.createElement("button", { type: "button", key: pf.ticket, className: "import-row" + (on ? " on" : ""), onClick: () => toggle(pf.ticket) },
-                    React.createElement("span", { className: "import-check" }, on ? "✓" : ""),
-                    React.createElement("span", { className: "import-body" },
-                        React.createElement("strong", null, pf.symbol + " ", React.createElement("em", { className: pf.side === 'Long' ? 'positive' : 'negative' }, pf.side), " " + pf.lots, React.createElement("b", { className: (pf.net || 0) >= 0 ? 'positive' : 'negative' }, (pf.net || 0) >= 0 ? '+' : '', (pf.net || 0).toFixed(2))),
-                        React.createElement("small", null, pf.entry + " → " + pf.exit + " · " + pf.exitMethod),
-                        React.createElement("small", null, fmt(pf.date) + " → " + fmt(pf.closeDate)),
-                        React.createElement("small", null, "SL " + (pf.sl == null ? '-' : pf.sl) + " · TP " + (pf.tp == null ? '-' : pf.tp) + " · #" + pf.ticket),
-                        dup && React.createElement("small", { className: "warn" }, "Tiket ini sudah tercatat di akun ini.")));
-            }),
-            React.createElement("div", { className: "fs-actions import-actions" },
-                React.createElement("button", { type: "button", className: "secondary-btn", onClick: onClose }, "Batal"),
-                React.createElement("button", { type: "button", className: "primary-btn", disabled: !picked.length, onClick: () => onSave(picked) }, "Simpan " + picked.length + " trade"))));
+    const h = React.createElement, M = window.METODE;
+    const row = (pf, i) => {
+        const dup = isDup(pf), zid = saved[pf.ticket], z = zid && M ? M.zoneOf(zid) : null, canOpen = !dup || again.has(pf.ticket);
+        const idx = usable.findIndex(u => u.ticket === pf.ticket);
+        const open = () => { if (canOpen && !z) setOpenPf({ pf, n: idx + 1 }); };
+        return h("div", { key: pf.ticket, className: "imp-row" + (z ? " done" : dup && !canOpen ? " dup" : " need") },
+            dup && h("button", { type: "button", className: "imp-ck" + (again.has(pf.ticket) ? " on" : ""), role: "checkbox", "aria-checked": again.has(pf.ticket), "aria-label": "Catat ulang tiket " + pf.ticket, onClick: () => toggleAgain(pf.ticket) }, h("span", { className: "imp-box" }, again.has(pf.ticket) ? "\u2713" : "")),
+            h("button", { type: "button", className: "imp-main", disabled: !canOpen || !!z, onClick: open },
+                h("span", { className: "imp-t1" },
+                    h("b", null, pf.symbol), h("em", { className: pf.side === 'Long' ? 'positive' : 'negative' }, pf.side), h("span", { className: "imp-lots" }, pf.lots),
+                    h("strong", { className: (pf.net || 0) >= 0 ? 'positive' : 'negative' }, (pf.net || 0) >= 0 ? '+' : '', (pf.net || 0).toFixed(2))),
+                h("small", null, pf.entry + " \u2192 " + pf.exit + " \u00B7 " + pf.exitMethod),
+                h("small", null, fmt(pf.date) + " \u2192 " + fmt(pf.closeDate) + " \u00B7 #" + pf.ticket),
+                h("span", { className: "imp-st" },
+                    z ? h(React.Fragment, null, h("em", { className: "zs-chip " + z.tone }, z.name + " " + z.range), h("span", { className: "imp-ok" }, "\u2713 Tersimpan"))
+                        : dup ? h("span", { className: "imp-warn" }, canOpen ? "Sudah tercatat \u00B7 akan dicatat ulang" : "Tiket sudah tercatat \u00B7 centang untuk catat ulang")
+                            : h("em", { className: "zs-chip need" }, "Pilih zona entry"))),
+            canOpen && !z && h(ChevronRight, { size: 20, className: "imp-go" }));
+    };
+    return h(React.Fragment, null,
+        h("div", { className: "modal-backdrop fs" },
+            h("div", { className: "modal wide-modal fs" },
+                h("div", { className: "modal-head" },
+                    h("div", null,
+                        h("p", { className: "eyebrow" }, "SCREENSHOT ENTRY / PRO"),
+                        h("h2", null, items.length + " posisi terbaca")),
+                    h("button", { className: "icon-btn", type: "button", "aria-label": "Tutup", onClick: onClose }, h(X, { size: 19 }))),
+                h("div", { className: "imp-prog" }, h("span", null, nSaved + " dari " + usable.length + " tersimpan"), h("div", { className: "imp-bar" }, h("i", { style: { width: (usable.length ? nSaved / usable.length * 100 : 0) + '%' } }))),
+                h("div", { className: "scan-result" },
+                    h("small", null, "Ketuk posisi untuk memilih zona entry, lalu simpan satu per satu."),
+                    skipped > 0 && h("small", { className: "warn" }, skipped + " kartu dilewati karena infonya tidak lengkap (belum diketuk/dibuka di MT5)."),
+                    h("label", null, "Zona waktu server MT5",
+                        h("select", { value: tz, onChange: e => changeTz(e.target.value) }, MT5_TZ_OPTIONS.map(o => h("option", { key: o.v, value: o.v }, o.l)))),
+                    h("small", null, "Waktu ditampilkan dalam WIB (UTC+7).")),
+                items.map(row),
+                h("div", { className: "fs-actions import-actions" },
+                    h("button", { type: "button", className: "secondary-btn", onClick: onClose }, "Batal"),
+                    h("button", { type: "button", className: "primary-btn", disabled: !nSaved, onClick: () => onDone(nSaved) }, nSaved ? "Selesai \u00B7 " + nSaved + " tersimpan" : "Selesai")),
+                nSaved < usable.length && h("div", { className: "zs-hint" }, (usable.length - nSaved) + " posisi belum disimpan dan tidak akan tercatat"))),
+        openPf && h(AddTradeModal, { key: openPf.pf.ticket, account, prefill: openPf.pf, step: "Posisi " + openPf.n + " dari " + usable.length + " \u00B7 #" + openPf.pf.ticket, saveLabel: "Simpan & kembali",
+            onClose: () => setOpenPf(null),
+            onSave: data => { onAdd(data); setSaved(sv => ({ ...sv, [openPf.pf.ticket]: data.zone })); setOpenPf(null); } }));
 }

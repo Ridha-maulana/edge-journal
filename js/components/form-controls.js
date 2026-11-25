@@ -16,6 +16,25 @@ function TSelect({ value, onChange, options, title }) {
                     React.createElement("span", null, o.l),
                     React.createElement("i", null))))), document.body));
 }
+/* Pilihan zona entry Metode Satu Warna (v5.11.5): dipakai di form Tambah trade, tampil dan terbuka seperti pilihan Symbol */
+function ZoneSelect({ value, onChange, error }) {
+    const [open, setOpen] = useState(false);
+    const Z = (window.METODE && window.METODE.ZONES) || [];
+    const cur = Z.find(z => z.id === value);
+    const nm = z => z.name;
+    return React.createElement(React.Fragment, null,
+        React.createElement("button", { type: "button", className: "tsel zs-btn" + (cur ? " zs-" + cur.tone : "") + (error && !cur ? " zs-err" : ""), onClick: () => setOpen(true), "aria-haspopup": "listbox" },
+            cur ? React.createElement(React.Fragment, null, React.createElement("i", { className: "zs-dot " + cur.tone }), React.createElement("span", { className: "zs-nm" }, nm(cur)), React.createElement("em", { className: "zs-chip " + cur.tone }, cur.range))
+                : React.createElement("span", { className: "zs-ph" }, "Pilih zona entry\u2026"),
+            React.createElement(ChevronDown, { size: 15 })),
+        open && ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop center top sheet-layer", onClick: e => { if (e.target === e.currentTarget)
+                setOpen(false); } },
+            React.createElement("div", { className: "tsel-sheet", role: "listbox" },
+                React.createElement("div", { className: "tsel-title" }, "Alasan entry \u00B7 zona Metode"),
+                Z.map(z => React.createElement("button", { type: "button", key: z.id, role: "option", "aria-selected": z.id === value, className: z.id === value ? 'on' : '', onClick: () => { setOpen(false); onChange(z.id); } },
+                    React.createElement("span", { className: "zs-opt" }, React.createElement("i", { className: "zs-dot " + z.tone }), React.createElement("span", { className: "zs-nm" }, z.name + (z.note ? ' \u00B7 ' + z.note : '')), React.createElement("em", { className: "zs-chip " + z.tone }, z.range)),
+                    React.createElement("i", null))))), document.body));
+}
 /* Baris pilihan datar: ikon bulat + judul + keterangan + nilai terpilih; sentuh untuk membuka lembar pilihan */
 /* Baris ringkas yang bisa dibuka: sentuh untuk menampilkan isinya di bawah baris */
 function AccRow({ icon, title, desc, open, onToggle, children }) {

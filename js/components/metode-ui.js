@@ -1,6 +1,6 @@
-/* Halaman baca Metode Satu Warna: bagian lipat, tab zona, visual Fibonacci, jadwal alarm, PDF asli, dan ubah teks (v5.11.4) */
+/* Halaman baca Metode Satu Warna: bagian lipat, tab zona, visual Fibonacci, jadwal alarm, PDF asli, dan ubah teks (v5.11.5) */
 "use strict";
-/* ===== visual bagian 2 (v5.11.4): chart GOLD H1 bergambar, tangga zona, strip jam alarm ===== */
+/* ===== visual bagian 2 (v5.11.5): chart GOLD H1 bergambar, tangga zona, strip jam alarm ===== */
 const MV_PDF = { file: 'assets/sop-metode-satu-warna.pdf', pages: ['assets/sop-metode-1.jpg', 'assets/sop-metode-2.jpg'], name: 'SOP-Metode-Satu-Warna.pdf' };
 const MV_CSS = `
 .mv{--mg:#6fe0a6;--ma:#f5c85a;--mr:#ff8d9b;--mc:#22b573;--mk:#f0b429;--mx:#ef6b7b}
@@ -8,7 +8,10 @@ html[data-mode="light"] .mv{--mg:#15803d;--ma:#a16207;--mr:#b91c4a}
 .mv-chart{display:block;width:100%;height:auto;color:inherit;margin:0 0 4px}
 .mv-chart text{font-family:inherit}
 .mv-chart .t-g{fill:var(--mg)}.mv-chart .t-a{fill:var(--ma)}.mv-chart .t-r{fill:var(--mr)}.mv-chart .t-m{fill:currentColor;opacity:.55}.mv-chart .t-k{fill:currentColor}
-.mv .mt-acb.mv-full{padding-left:0!important;padding-right:0!important;margin-left:0!important;margin-right:0!important}
+.mv .mt-acb{padding-left:0!important;padding-right:0!important}
+.mv-pn{margin:0 -12px 12px;padding:0 12px;border-radius:18px;border:1px solid color-mix(in srgb,currentColor 10%,transparent);background:color-mix(in srgb,var(--bg,#111) 55%,transparent);-webkit-backdrop-filter:blur(26px) saturate(1.15);backdrop-filter:blur(26px) saturate(1.15)}
+html[data-mode="light"] .mv-pn{background:color-mix(in srgb,#fff 58%,transparent);border-color:color-mix(in srgb,#000 9%,transparent)}
+.mv-pn .mt-ac:last-child{border-bottom:0}
 .mv-zl{margin:0 0 4px}
 .mv-zr{display:flex;gap:10px;padding:9px 0;border-top:1px solid color-mix(in srgb,currentColor 12%,transparent)}.mv-zr:first-child{border-top:0}
 .mv-zr>i{width:3px;border-radius:99px;flex:none}
@@ -212,10 +215,10 @@ function MetodePage({ onBack, sec, tab }) {
             React.createElement("h1", { style: { margin: 0 } }, "Metode Satu Warna"),
             React.createElement("button", { type: "button", className: "sp-back", "aria-label": "Ubah teks metode", onClick: startEdit }, React.createElement(Pencil, { size: 20 }))),
         React.createElement("button", { type: "button", className: "mt-all", onClick: toAll }, (allOpen ? "Tutup semua" : "Buka semua") + " · " + M.SECS.length + " bagian"),
-        M.SECS.map(s => React.createElement("div", { key: s.n, className: "mt-ac" + (open[s.n] ? " open" : ""), "data-n": s.n },
+        React.createElement("div", { className: "mv-pn" }, M.SECS.map(s => React.createElement("div", { key: s.n, className: "mt-ac" + (open[s.n] ? " open" : ""), "data-n": s.n },
             React.createElement("button", { type: "button", className: "mt-ach", "aria-expanded": !!open[s.n], onClick: () => toggle(s.n) },
                 React.createElement("span", { className: "mt-nn" }, s.n), React.createElement("b", null, s.title), React.createElement(ChevronRight, { size: 18 })),
-            open[s.n] && React.createElement("div", { className: "mt-acb" + (s.n === 2 ? " mv-full" : "") }, body(s.n)))),
+            open[s.n] && React.createElement("div", { className: "mt-acb" }, body(s.n))))),
         React.createElement("div", { className: "mv-pdf" },
             React.createElement("h3", null, "Versi PDF"),
             React.createElement("div", { className: "mv-pf" }, React.createElement("div", { className: "mv-ic", "aria-hidden": "true" }, "PDF"), React.createElement("div", null, React.createElement("b", null, "SOP Metode Satu Warna"), React.createElement("small", null, "Dokumen asli \u00B7 2 halaman"))),

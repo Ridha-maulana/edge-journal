@@ -131,3 +131,38 @@ html[data-fxi="1"] :is(.pf-chp,.pf-tile) svg[data-i]{color:var(--ico,currentColo
 /* v5.10.10: tombol Buka Tool tetap berwarna penuh (efek permukaan kartu di mode terang membuatnya terang dan teks putih jadi tak terbaca) */
 html:not(#_) .tl-card button.tl-kb{background:var(--tc)!important;background-image:none!important;color:#fff!important;border:1px solid transparent!important;text-shadow:none}
 html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!important}
+/* v5.11.5: pilihan zona entry (form Tambah trade) */
+.zs-lab{display:block}
+.zs-req{display:inline-block;margin-left:8px;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:2px 8px;border-radius:99px;background:color-mix(in srgb,var(--red) 16%,transparent);color:var(--red);vertical-align:1px}
+.zs-btn{gap:10px}
+.zs-btn.zs-err{border-color:var(--red)!important}
+.zs-btn.zs-a{border-color:#f0b429!important}.zs-btn.zs-g{border-color:var(--green)!important}.zs-btn.zs-r{border-color:var(--red)!important}
+.zs-ph{flex:1;text-align:left;opacity:.55}
+.zs-nm{flex:1;min-width:0;text-align:left;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zs-dot{width:10px;height:10px;border-radius:50%;flex:none;background:var(--green)}.zs-dot.a{background:#f0b429}.zs-dot.r{background:var(--red)}
+.zs-chip{flex:none;font-style:normal;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap;border:1px solid;color:var(--green);border-color:color-mix(in srgb,var(--green) 50%,transparent);background:color-mix(in srgb,var(--green) 12%,transparent)}
+.zs-chip.a{color:#f0b429;border-color:color-mix(in srgb,#f0b429 50%,transparent);background:color-mix(in srgb,#f0b429 12%,transparent)}
+.zs-chip.r{color:var(--red);border-color:color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 12%,transparent)}
+.zs-chip.need{color:#f0b429;border-color:color-mix(in srgb,#f0b429 60%,transparent);background:color-mix(in srgb,#f0b429 12%,transparent)}
+.zs-opt{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-align:left}
+.zs-em{margin:-6px 2px 10px;font-size:13px;color:var(--red)}
+.zs-warn{margin:0 0 12px;padding:11px 13px;border-radius:14px;border:1.5px solid color-mix(in srgb,var(--red) 55%,transparent);background:color-mix(in srgb,var(--red) 12%,transparent);font-size:13px;line-height:1.45;color:var(--red)}
+.zs-old{margin:0 0 12px;padding:10px 12px;border-radius:12px;border:1px dashed var(--ej-bd,var(--c4))}.zs-old small{font-size:11.5px;opacity:.65}.zs-old p{margin:3px 0 0;font-size:13px;line-height:1.5}
+.zs-hint{text-align:center;font-size:12.5px;opacity:.65;margin:8px 0 0}
+.primary-btn.zs-off{opacity:1;background:var(--c3)!important;background-image:none!important;color:var(--c5)!important;border:1.5px dashed var(--ej-bd,var(--c4))!important;box-shadow:none!important}
+.zs-vio{margin-left:8px;font-style:normal;font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:99px;color:var(--red);border:1px solid color-mix(in srgb,var(--red) 50%,transparent);background:color-mix(in srgb,var(--red) 12%,transparent)}
+/* daftar beberapa posisi dari screenshot */
+.imp-prog{display:flex;align-items:center;gap:12px;margin:2px 0 12px;font-size:13px}.imp-prog span{flex:none}
+.imp-bar{flex:1;height:8px;border-radius:99px;background:var(--c4);overflow:hidden}.imp-bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .25s}
+.imp-row{display:flex;gap:10px;align-items:stretch;border:1.5px solid var(--ej-bd,var(--c4));border-radius:18px;margin:0 0 10px;background:var(--c2)}
+.imp-row.need{border-color:color-mix(in srgb,#f0b429 45%,transparent)}.imp-row.done{border-color:color-mix(in srgb,var(--green) 45%,transparent)}.imp-row.dup .imp-main{opacity:.6}
+.imp-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;text-align:left;background:none;border:0;padding:14px;color:inherit;font-family:inherit}
+.imp-main:disabled{opacity:1}
+.imp-t1{display:flex;align-items:baseline;gap:8px}.imp-t1 b{font-size:17px}.imp-t1 em{font-style:normal;font-size:13px}.imp-lots{font-size:13px;opacity:.6}.imp-t1 strong{margin-left:auto;font-size:16px}
+.imp-main small{font-size:12.5px;line-height:1.4;opacity:.7}
+.imp-st{margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.imp-ok{font-size:12px;font-weight:700;color:var(--green)}.imp-warn{font-size:12.5px;font-weight:600;color:#f0b429}
+.imp-go{flex:none;align-self:center;margin-right:12px;opacity:.55}
+.imp-ck{flex:none;align-self:center;width:44px;height:44px;margin-left:6px;background:none;border:0;display:grid;place-items:center;padding:0}
+.imp-box{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--ej-bd,var(--c5));display:grid;place-items:center;font-size:14px;font-weight:800;line-height:1}
+.imp-ck.on .imp-box{background:var(--green);border-color:var(--green);color:#06231a}

@@ -1,15 +1,15 @@
 /* Popup tambah/edit trade, tutup posisi, hitung risiko */
 "use strict";
-function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
+function AddTradeForm({ account, onClose, onSave, initial, prefill, step, saveLabel }) {
     const h = React.createElement;
     const pf = prefill && !prefill.calc ? prefill : null;
     const cf = prefill && prefill.calc ? prefill : null;
     const str = v => v == null ? '' : String(v);
     const [tzMode, setTzMode] = useState(mt5GetTz());
-    const [form, setForm] = useState(pf ? { symbol: pf.symbol, side: pf.side, date: pf.date, closeDate: pf.closeDate || '', entry: str(pf.entry), exit: str(pf.exit), lots: String(pf.lots), sl: str(pf.sl), tp: str(pf.tp), fees: String(pf.fees || 0), exitMethod: pf.exitMethod || '', setup: '', review: '', brokerPnl: pf.net != null ? String(pf.net) : '', screenshots: pf.shot ? [pf.shot] : [] }
-        : cf ? { symbol: cf.symbol, side: cf.side, date: isoNow(), closeDate: '', entry: str(cf.entry), exit: '', lots: String(cf.lots), sl: str(cf.sl), tp: str(cf.tp), fees: '0', exitMethod: '', setup: '', review: '', brokerPnl: '', screenshots: [] }
-            : initial ? { ...initial, entry: str(initial.entry), exit: str(initial.exit), lots: str(initial.lots), sl: str(initial.sl), tp: str(initial.tp), fees: str(initial.fees || 0), closeDate: initial.closeDate || '', exitMethod: initial.exitMethod || '', setup: initial.setup || '', review: initial.review || '', brokerPnl: '', screenshots: initial.screenshots || [] }
-                : { symbol: 'XAUUSD', side: 'Long', date: isoNow(), closeDate: '', entry: '', exit: '', lots: '0.01', sl: '', tp: '', fees: '0', exitMethod: '', setup: '', review: '', brokerPnl: '', screenshots: [] });
+    const [form, setForm] = useState(pf ? { symbol: pf.symbol, side: pf.side, date: pf.date, closeDate: pf.closeDate || '', entry: str(pf.entry), exit: str(pf.exit), lots: String(pf.lots), sl: str(pf.sl), tp: str(pf.tp), fees: String(pf.fees || 0), exitMethod: pf.exitMethod || '', setup: '', zone: '', review: '', brokerPnl: pf.net != null ? String(pf.net) : '', screenshots: pf.shot ? [pf.shot] : [] }
+        : cf ? { symbol: cf.symbol, side: cf.side, date: isoNow(), closeDate: '', entry: str(cf.entry), exit: '', lots: String(cf.lots), sl: str(cf.sl), tp: str(cf.tp), fees: '0', exitMethod: '', setup: '', zone: '', review: '', brokerPnl: '', screenshots: [] }
+            : initial ? { ...initial, entry: str(initial.entry), exit: str(initial.exit), lots: str(initial.lots), sl: str(initial.sl), tp: str(initial.tp), fees: str(initial.fees || 0), closeDate: initial.closeDate || '', exitMethod: initial.exitMethod || '', setup: initial.setup || '', zone: initial.zone || '', review: initial.review || '', brokerPnl: '', screenshots: initial.screenshots || [] }
+                : { symbol: 'XAUUSD', side: 'Long', date: isoNow(), closeDate: '', entry: '', exit: '', lots: '0.01', sl: '', tp: '', fees: '0', exitMethod: '', setup: '', zone: '', review: '', brokerPnl: '', screenshots: [] });
     const [closed, setClosed] = useState(!!(pf ? (!pf.chart && pf.exit != null) : initial ? initial.status === 'closed' : false));
     const symOpts = React.useMemo(() => symbolOptions(pf && pf.symbol), []);
     const [adjOpen, setAdjOpen] = useState(false);
@@ -30,12 +30,16 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
     function changeTz(v) { mt5SetTz(v); setTzMode(v); setForm(f => ({ ...f, date: mt5ToWib(pf.rawOpen, v), closeDate: mt5ToWib(pf.rawClose, v) })); }
     function pickMethod(m) { const px = m === 'TP' ? form.tp : m === 'SL' ? form.sl : m === 'BE' ? form.entry : form.exit; setForm(f => ({ ...f, exitMethod: m, exit: px !== '' && px != null ? String(px) : f.exit })); }
     const preview = closed && form.exit !== '' && Number(form.entry) ? (form.brokerPnl !== '' && !isNaN(Number(form.brokerPnl)) ? Number(form.brokerPnl) : pnlFor({ ...form, entry: Number(form.entry), lots: Number(form.lots) || 0, fees: Number(form.fees) || 0 }, form.exit)) : null;
+    const zoneMissing = !initial && !form.zone; /* trade baru wajib memilih zona; trade lama (tanpa zona) boleh diedit tanpa dipaksa */
+    const zInfo = form.zone && window.METODE ? window.METODE.zoneOf(form.zone) : null;
     function submit(e) {
         e.preventDefault();
+        if (zoneMissing) return;
         const extra = pf ? { mt5Ticket: pf.ticket || undefined, source: 'screenshot' } : {};
         const hasBroker = closed && form.brokerPnl !== '' && !isNaN(Number(form.brokerPnl));
         const data = { ...form, ...extra, exit: closed ? form.exit : '', closeDate: closed ? (form.closeDate || isoNow()) : '', exitMethod: closed ? (form.exitMethod || 'Manual') : '', review: closed ? form.review : (form.review || ''), mt5Net: hasBroker ? Number(form.brokerPnl) : null };
         delete data.brokerPnl;
+        if (!data.zone) delete data.zone;
         data.pnl = closed && data.exit !== '' ? (hasBroker ? Number(form.brokerPnl) : pnlFor(data, data.exit)) : 0;
         onSave(data);
     }
@@ -72,7 +76,10 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
         h("div", { className: "form-grid at-one" },
             h("label", null, "Symbol", h(TSelect, { title: "Symbol", value: form.symbol, options: symOpts, onChange: v => set('symbol', v) })),
             h("label", null, "Tanggal & waktu", h(DateField, { withTime: true, value: form.date, onChange: v => set('date', v) }))),
-        h("label", null, "Trade setup / alasan entry", h("textarea", { value: form.setup, onChange: e => set('setup', e.target.value), placeholder: "Contoh: breakout + retest di resistance H1..." })),
+        h("label", { className: "zs-lab" }, h("span", null, "Alasan entry \u00B7 zona Metode", !initial && h("em", { className: "zs-req" }, "WAJIB")), h(ZoneSelect, { value: form.zone, error: zoneMissing, onChange: v => set('zone', v) })),
+        zoneMissing && h("div", { className: "zs-em", role: "alert" }, "Pilih salah satu zona sebelum menyimpan trade"),
+        zInfo && zInfo.banned && h("div", { className: "zs-warn", role: "alert" }, h("b", null, "Melanggar SOP."), " Zona di atas 161.8% dilarang entry. Trade tetap bisa disimpan dan ditandai \"Melanggar SOP\" di jurnal."),
+        initial && form.setup && h("div", { className: "zs-old" }, h("small", null, "Catatan setup lama"), h("p", null, form.setup)),
         h("div", { className: "direction" },
             h("button", { type: "button", className: form.side === 'Long' ? 'selected long' : '', "aria-pressed": form.side === 'Long', onClick: () => set('side', 'Long') }, "Long / Buy"),
             h("button", { type: "button", className: form.side === 'Short' ? 'selected short' : '', "aria-pressed": form.side === 'Short', onClick: () => set('side', 'Short') }, "Short / Sell")),
@@ -103,12 +110,13 @@ function AddTradeForm({ account, onClose, onSave, initial, prefill }) {
                 h("button", { type: "button", className: "secondary-btn", onClick: () => { set('lots', adjLots.toFixed(2)); setAdjOpen(false); } }, "Pakai ", adjLots.toFixed(2), " lot")) : h("small", { className: "warn" }, "Isi Entry level dan Stop loss dulu untuk menghitung lot.")),
         h("div", { className: "fs-actions" },
             h("button", { type: "button", className: "secondary-btn", "aria-expanded": adjOpen, onClick: () => setAdjOpen(o => !o) }, h(Target, { size: 15 }), " Hitung lot"),
-            h("button", { className: "primary-btn", type: "submit" }, h(Plus, { size: 17 }), closed ? " Simpan trade" : " Simpan posisi")));
+            h("button", { className: "primary-btn" + (zoneMissing ? " zs-off" : ""), type: "submit", disabled: zoneMissing }, h(Plus, { size: 17 }), saveLabel ? " " + saveLabel : closed ? " Simpan trade" : " Simpan posisi")),
+        zoneMissing && h("div", { className: "zs-hint" }, "Tombol aktif setelah zona dipilih"));
     return h("div", { className: "modal-backdrop fs" },
         h("div", { className: "modal wide-modal fs" },
             h("div", { className: "modal-head" },
                 h("div", null,
-                    h("p", { className: "eyebrow" }, initial ? 'Edit trade' : pf ? 'Trade baru · dari screenshot' : 'Trade baru · input manual'),
+                    h("p", { className: "eyebrow" }, initial ? 'Edit trade' : step ? step : pf ? 'Trade baru · dari screenshot' : 'Trade baru · input manual'),
                     h("h2", null, initial ? 'Ubah trade' : 'Tambah trade')),
                 h("button", { className: "icon-btn", type: "button", "aria-label": "Tutup", onClick: onClose }, h(X, { size: 19 }))),
             formEl));
