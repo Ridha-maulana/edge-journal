@@ -322,8 +322,7 @@ const HUB_OPT = [
     ['mg', 'Monthly gain', 'Gain, profit & target per bulan', 'TrendingUp'],
     ['all', 'Performa Keseluruhan', 'Grafik P&L, Growth, Balance', 'ChartUp', 'Ringkasan akun'],
     ['adv', 'Advanced Statistics', 'Profitability, pips, drawdown', 'BarChart3'],
-    ['pair', 'P&L per Pair', 'Profit & loss tiap pair', 'Coins', 'Per pair'],
-    ['pop', 'Pair Terpopuler', 'Pair paling sering ditrade', 'Star']
+    ['pair', 'Performa Pair', 'P&L & porsi trade tiap pair', 'Coins']
 ];
 function PerfHubHead({ mode, onMode, sub, lockBtn }) {
     const h = React.createElement;

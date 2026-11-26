@@ -163,25 +163,29 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                 React.createElement("b", null, !ms.n ? `Belum ada trade di ${MN[ms.i]}` : ms.pnl > 0 ? `Progres bagus di ${MN[ms.i]}` : ms.pnl < 0 ? `${MN[ms.i]} perlu evaluasi` : `${MN[ms.i]} impas`),
                 React.createElement("span", null, `Trades ${ms.n}  |  Win rate ${ms.n ? Math.round(ms.wins / ms.n * 100) : 0}%  |  Profit ${sg(ms.pnl)}`))));
             if (hub === 'adv') return React.createElement("div", { className: "pe-card hub-adv" }, hh({ sub: `Statistik lengkap akun \u00B7 ${total.n} trade` }), advancedStats);
-            if (hub === 'pair') return React.createElement("div", { className: "pe-card" },
-            hh({ sub: `${syms.length} pair \u00B7 urut dari profit terbesar` }),
-            syms.length ? syms.slice().sort((a, b) => b.pnl - a.pnl).map(x => React.createElement("div", { className: "pe-row", key: x.s },
-                React.createElement("div", { className: "pe-rowhead" },
-                    React.createElement("strong", null, x.s),
-                    React.createElement("b", { className: tone(x.pnl) }, sg(x.pnl))),
-                bar(Math.abs(x.pnl) / maxSym * 100, x.pnl >= 0))) : React.createElement("p", { className: "pe-empty" }, "Belum ada data."));
-            if (hub === 'pop') return React.createElement("div", { className: "pe-card" },
-            hh({ sub: `${syms.length} pair \u00B7 ${sorted.length} trade \u00B7 urut dari paling sering` }),
-            syms.length ? syms.map(x => React.createElement("div", { className: "pe-row", key: x.s },
-                React.createElement("div", { className: "pe-rowhead" },
-                    React.createElement("strong", null, x.s),
-                    React.createElement("span", null,
-                        (x.n / sorted.length * 100).toFixed(1),
-                        "% (",
-                        x.n,
-                        ")")),
-                React.createElement("div", { className: "pe-bar" },
-                    React.createElement("i", { style: { width: `${x.n / sorted.length * 100}%`, background: EJC("#6b8dff") } })))) : React.createElement("p", { className: "pe-empty" }, "Belum ada data."));
+            if (hub === 'pair') {
+                const N = sorted.length, byP = syms.slice().sort((x, y) => y.pnl - x.pnl);
+                const best = byP[0], pop = syms[0];
+                const COL = ['#6b8dff', '#34d399', '#f5b942', '#ff6b81', '#a78bfa', '#22d3ee', '#fb923c', '#94a3b8'];
+                const R = 44, C = 2 * Math.PI * R; let off = 0;
+                return React.createElement("div", { className: "pe-card pm" },
+                    hh({ sub: `${syms.length} pair \u00B7 ${N} trade \u00B7 ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
+                    !syms.length ? React.createElement("p", { className: "pe-empty" }, "Belum ada data.") : React.createElement(React.Fragment, null,
+                        React.createElement("div", { className: "pm-dn" },
+                            React.createElement("svg", { viewBox: "0 0 120 120", width: 124, height: 124, role: "img", "aria-label": `Porsi trade per pair, ${N} trade` },
+                                React.createElement("circle", { cx: 60, cy: 60, r: R, fill: "none", stroke: "currentColor", strokeOpacity: .12, strokeWidth: 16 }),
+                                syms.map((x, i) => { const len = x.n / N * C; const el = React.createElement("circle", { key: x.s, cx: 60, cy: 60, r: R, fill: "none", stroke: COL[i % COL.length], strokeWidth: 16, strokeDasharray: `${Math.max(0, len - (syms.length > 1 ? 1.5 : 0))} ${C}`, strokeDashoffset: -off, transform: "rotate(-90 60 60)" }); off += len; return el; }),
+                                React.createElement("text", { x: 60, y: 57, textAnchor: "middle", className: "pm-dt1" }, N),
+                                React.createElement("text", { x: 60, y: 74, textAnchor: "middle", className: "pm-dt2" }, "trade")),
+                            React.createElement("div", { className: "pm-dl" },
+                                React.createElement("span", null, "Terbaik", React.createElement("b", { className: tone(best.pnl) }, `${best.s} ${sg(best.pnl)}`)),
+                                React.createElement("span", null, "Terpopuler", React.createElement("b", null, `${pop.s} \u00B7 ${pop.n} trade`)))),
+                        syms.map((x, i) => React.createElement("div", { className: "pm-lr", key: x.s },
+                            React.createElement("i", { style: { background: COL[i % COL.length] } }),
+                            React.createElement("b", null, x.s),
+                            React.createElement("span", null, `${x.n} \u00B7 ${(x.n / N * 100).toFixed(1)}%`),
+                            React.createElement("b", { className: tone(x.pnl) }, sg(x.pnl))))));
+            }
             return React.createElement("div", { className: "pe-card" },
             React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, sub: `Grafik hasil trading · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
             CT.k === 'line' && React.createElement("div", { className: "pe-kw pe-kw-r" }, React.createElement(TplKind, { ctl: kctl })),
