@@ -255,3 +255,34 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .hub-menu .o .t{display:flex;flex-direction:column;flex:1;min-width:0}.hub-menu .o b{font-size:15px}.hub-menu .o small{color:var(--c122);font-size:12px;margin-top:2px;font-weight:500}
 .hub-menu .o .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--c123);color:var(--c109);flex:none}
 .hub-menu .o.on{background:rgba(34,181,115,.16)}.hub-menu .o.on b,.hub-menu .o .ck{color:var(--c118)}
+/* v5.12.1 pips toggle + insight */
+.pe-kw-r{justify-content:flex-end}
+.ep-sh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 0 8px}.ep-sh .ep-sl{margin:0}
+.ep-mt{display:inline-flex;padding:2px;border-radius:10px;background:var(--c123);border:1px solid var(--c82);flex:none}
+.ep-mt button{min-height:32px;padding:0 12px;border:0;border-radius:8px;background:none;color:var(--c109);font:inherit;font-weight:700;font-size:var(--fs-sm);cursor:pointer}
+.ep-mt button.on{background:rgba(34,181,115,.18);color:var(--c118)}
+.ep-in.i{background:rgba(96,140,255,.1);border-color:rgba(96,140,255,.4)}.ep-in.i i{background:#6c93ff}
+.ep-in .pos{color:#22b573}.ep-in .neg{color:#ef6b7b}
+/* v5.12.1 pilihan tampilan tunggal + matriks 3/5 kolom */
+.ep .hub-ttl h3{font-size:24px!important}
+.ep-tabs.ep-sel{display:block;margin:0 0 14px}
+.ep-sel .sel{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 14px;border-radius:12px;border:1px solid var(--c82);background:var(--c123);color:var(--c0);font:inherit;font-weight:600;font-size:15px;cursor:pointer}
+.ep-sel .sel svg{opacity:.7}.ep-sel .sel svg.up{transform:rotate(180deg)}
+.ep-sel .ep-dd{left:0;right:0;width:auto;top:46px}
+.ep-sel .ep-dd .o{height:42px}
+.ep-sel .sep{display:block;height:1px;background:var(--c82);margin:4px 8px}
+.ep-cx b,.ep-cx small{white-space:nowrap}
+.ep-cx b{font-size:clamp(12px,5cqw,14px)}.ep-cx small{font-size:clamp(10px,4.2cqw,12px)}
+.ep-cx.tt{height:40px;flex-direction:column;gap:0;line-height:1.2;font-size:12px}.ep-cx.tt .n{color:var(--c122);font-weight:600;font-size:11px}
+.ep-mxw.w5 .ep-mxl{width:68px}
+.ep-mxw.w5 .ep-mxl .zl{height:46px;font-size:11px;gap:5px;line-height:1.15}
+.ep-mxw.w5 .ep-mxl .zl i{width:8px;height:8px}
+.ep-mxw.w5 .ep-mxl .tl{height:40px;font-size:12px}
+.ep-mxw.w5 .ep-trk{grid-auto-columns:calc((100cqw - 12px)/5);gap:3px}
+.ep-mxw.w5 .ep-ch{font-size:10px;letter-spacing:.02em}
+.ep-mxw.w5 .ep-cx{height:46px;border-radius:8px;padding:0 1px;margin-bottom:3px}
+.ep-mxw.w5 .ep-cx b{font-size:max(9.5px,3.8cqw)}.ep-mxw.w5 .ep-cx small{font-size:max(8.5px,3.3cqw)}
+.ep-mxw.w5 .ep-cx.tt{height:40px;border-radius:0;margin-top:6px}
+.ep-sbar.w5{margin-left:68px}
+.ep-cx.tt span{white-space:nowrap}
+.ep-mxw.w5 .ep-cx.tt{font-size:max(9.5px,3.7cqw)}.ep-mxw.w5 .ep-cx.tt .n{font-size:max(9px,3.3cqw)}

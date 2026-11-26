@@ -5,7 +5,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const fm = n => money(n, cur);
     const sg = n => `${n > 0 ? '+' : ''}${fm(n)}`;
     const [ct, setCt] = useState('daily'), kctl = useTplChart('line');
-    const [hub, setHub] = useState('all');
+    const [hub, setHub] = useState('posisi');
     const [showDet, setShowDet] = useState(false);
     const nowW = wib(new Date());
     const year = view.y, mSel = view.m;
@@ -164,7 +164,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
             return React.createElement(EntryPerf, { key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh });
         })() : React.createElement("div", { className: "pe-card" },
             React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, sub: `Grafik hasil trading · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
-            React.createElement("div", { className: "pe-kw" }, React.createElement("p", { className: "pe-sub" }, CT.t), CT.k === 'line' && React.createElement(TplKind, { ctl: kctl })),
+            CT.k === 'line' && React.createElement("div", { className: "pe-kw pe-kw-r" }, React.createElement(TplKind, { ctl: kctl })),
             React.createElement("div", { className: "pe-tabs icon-tabs" }, [['daily', 'Daily P&L', 'ChartPie'], ['growth', 'Growth', 'ChartUp'], ['balance', 'Balance', 'Scale'], ['profit', 'Profit', 'Coins'], ['dd', 'Drawdown', 'ChartDown']].map(([k, l, ic]) => React.createElement("button", { key: k, type: "button", className: ct === k ? 'on' : '', "aria-label": l, title: l, onClick: () => setCt(k) }, React.createElement(Icon, { name: ic, size: 14 }), React.createElement("span", null, l)))),
                         React.createElement(MiniChart, { key: ct + (kctl.kind === 'candle' ? 'c' : 'l'), vals: CT.v, labels: lab, kind: CT.k, fmt: CT.f, candle: CT.k === 'line' && kctl.kind === 'candle', base: ct === 'balance' ? account.balance : 0 }),
             React.createElement("div", { className: "pe-cap" },

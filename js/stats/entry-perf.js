@@ -1,6 +1,6 @@
 /* Performa per entri / posisi (v5.11.7): hasil trading dikelompokkan menurut zona entry Metode
    (Retest / Follow Trend / Lanjutan / Ekstensi Jenuh). Dua tab:
-   - Per waktu : matriks zona × (Tahun | Bulan | Minggu | Hari | Sesi), kotak bisa digeser kalau kolom > 3
+   - Per waktu : matriks zona × (Sesi | Hari | Minggu | Bulan | Tahun), 3 kolom kalau isinya <= 3, 5 kolom (bisa digeser) kalau lebih (v5.12.1)
    Judul kartu bisa dipilih: "Performa per entri" (baris = zona) atau "Performa per posisi" (baris = Win / Loss / BE).
    - Ringkasan : penyumbang profit / penggerus, kontribusi P&L, kartu zona + detail (Wilson 95%, PF, ekspektasi) */
 "use strict";
@@ -29,7 +29,7 @@ function epBuild(trades) {
             const di = (new Date(y, m, d, 12).getDay() + 6) % 7;
             out.push({
                 z: METODE.zoneOf(t.zone) ? t.zone : '', y: String(y), mk: `${y}-${String(m + 1).padStart(2, '0')}`, wk: Math.floor((d - 1 + off) / 7) + 1,
-                di: Math.min(di, 5), ses: sesOf(new Date(t.date).getTime()), pnl: Number(t.pnl) || 0
+                di: Math.min(di, 5), ses: sesOf(new Date(t.date).getTime()), pnl: Number(t.pnl) || 0, pips: Number(tradePips(t)) || 0
             });
         } catch (e) { /* tanggal rusak: lewati */ }
     });
@@ -37,12 +37,12 @@ function epBuild(trades) {
 }
 /* statistik satu kelompok. Win rate = untung / semua posisi closed (BE ikut penyebut, sama dengan Performa per bulan) */
 function epStat(rs) {
-    let w = 0, l = 0, be = 0, gp = 0, gl = 0, net = 0;
-    rs.forEach(r => { net += r.pnl; if (r.pnl > 0) { w++; gp += r.pnl; } else if (r.pnl < 0) { l++; gl -= r.pnl; } else be++; });
+    let w = 0, l = 0, be = 0, gp = 0, gl = 0, net = 0, pp = 0, wp = 0, lp = 0;
+    rs.forEach(r => { net += r.pnl; pp += r.pips; if (r.pnl > 0) { w++; gp += r.pnl; wp += r.pips; } else if (r.pnl < 0) { l++; gl -= r.pnl; lp += r.pips; } else be++; });
     const n = rs.length, p = n ? w / n : 0, z = 1.96;
     let lo = 0, hi = 0;
     if (n) { const d = 1 + z * z / n, c = (p + z * z / (2 * n)) / d, hw = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d; lo = Math.max(0, c - hw) * 100; hi = Math.min(1, c + hw) * 100; }
-    return { n, w, l, be, net, gp, gl, wr: p * 100, lo, hi, pf: gl > 0 ? gp / gl : (gp > 0 ? Infinity : null), exp: n ? net / n : 0, avgW: w ? gp / w : 0, avgL: l ? -gl / l : 0 };
+    return { n, w, l, be, net, gp, gl, wr: p * 100, lo, hi, pf: gl > 0 ? gp / gl : (gp > 0 ? Infinity : null), exp: n ? net / n : 0, avgW: w ? gp / w : 0, avgL: l ? -gl / l : 0, pips: pp, avgP: n ? pp / n : 0, avgWP: w ? wp / w : 0, avgLP: l ? lp / l : 0 };
 }
 /* kolom matriks menurut pilihan waktu */
 function epCols(dim, recs) {
@@ -60,6 +60,10 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
     const fm = n => money(n, account.currency);
     const sg = n => n > 0 ? `+${fm(n)}` : n < 0 ? `−${fm(Math.abs(n))}` : fm(0);
     const tn = n => n > 0 ? 'pos' : n < 0 ? 'neg' : 'zero';
+    const pp = v => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)} pips`;
+    const [metric, setMetric] = useState('pl');
+    const isP = metric === 'pips';
+    const mtog = h('div', { className: 'ep-mt', role: 'group', 'aria-label': 'Tampilkan' }, [['pl', 'P&L'], ['pips', 'Pips']].map(([k, l]) => h('button', { key: k, type: 'button', className: metric === k ? 'on' : '', 'aria-pressed': metric === k, onClick: () => setMetric(k) }, l)));
     const recs = useMemo(() => epBuild(trades), [trades]);
     const [tab, setTab] = useState('time');
     const [dim, setDim] = useState('Sesi');
@@ -98,13 +102,16 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
     const rowCol = id => pos ? EP_OUT_COL[id] : EP_COL[id];
     const cols = epCols(dim, data);
     const nCol = cols.length;
+    const vis = nCol > 3 ? 5 : 3;
+    const sgc = v => Math.abs(v) >= 1000 ? `${v > 0 ? '+' : '−'}$${(Math.abs(v) / 1000).toFixed(1)}k` : sg(v);
+    const sgx = vis === 5 ? sgc : sg;
     const grid = rowIds.map(id => cols.map(c => epStat(data.filter(r => rowOf(r) === id && epKeyOf(dim, r) === c.key))));
     const tots = cols.map(c => epStat(data.filter(r => epKeyOf(dim, r) === c.key)));
     const maxAbs = Math.max(1, ...grid.flat().map(s => Math.abs(s.net)));
     const onScroll = () => {
-        const el = scrRef.current; if (!el || nCol <= 3) return;
+        const el = scrRef.current; if (!el || nCol <= vis) return;
         const step = el.scrollWidth / nCol;
-        const i = Math.max(0, Math.min(nCol - 3, Math.round(el.scrollLeft / step)));
+        const i = Math.max(0, Math.min(nCol - vis, Math.round(el.scrollLeft / step)));
         setSc(p => p.i === i ? p : { i });
     };
     const cell = (s, k, ci, id) => {
@@ -112,9 +119,9 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
         if (pos && id === 'be') return h('div', { key: k, className: 'ep-cx', style: { background: 'rgba(107,114,128,.28)' } }, h('b', null, `${s.n} · ${Math.round(s.n / tots[ci].n * 100)}%`), h('small', null, `impas ${fm(0)}`));
         const a = .12 + Math.min(1, Math.abs(s.net) / maxAbs) * .5;
         return h('div', { key: k, className: 'ep-cx', style: { background: s.net >= 0 ? `rgba(34,181,115,${a})` : `rgba(239,107,123,${a})` } },
-            h('b', null, `${s.n} · ${Math.round(pos ? s.n / tots[ci].n * 100 : s.wr)}%`), h('small', null, sg(s.net)));
+            h('b', null, `${s.n} · ${Math.round(pos ? s.n / tots[ci].n * 100 : s.wr)}%`), h('small', null, sgx(s.net)));
     };
-    const matrix = h('div', { className: 'ep-mxw' },
+    const matrix = h('div', { className: 'ep-mxw' + (vis === 5 ? ' w5' : '') },
         h('div', { className: 'ep-mxl' },
             h('div', { className: 'hd' }),
             rowIds.map(id => h('div', { key: id, className: 'zl' }, h('i', { style: { background: rowCol(id) } }), rowName(id))),
@@ -124,13 +131,13 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
                 h('div', { className: 'ep-trk' }, cols.map((c, ci) => h('div', { key: c.key, className: 'ep-col' },
                     h('div', { className: 'ep-ch' }, c.label),
                     rowIds.map((id, zi) => cell(grid[zi][ci], id, ci, id)),
-                    h('div', { className: 'ep-cx tt' }, h('span', null, tots[ci].n), h('span', null, '·'), h('span', { className: tn(tots[ci].net) }, sg(tots[ci].net))))))),
-            nCol > 3 && sc.i > 0 && h('i', { className: 'ep-fade l' }),
-            nCol > 3 && sc.i < nCol - 3 && h('i', { className: 'ep-fade r' })));
-    const sbar = nCol > 3 && h('div', { className: 'ep-sbar' },
-        h('span', null, `${cols[sc.i].label}–${cols[Math.min(nCol - 1, sc.i + 2)].label}`),
-        h('div', { className: 'tr' }, h('i', { className: 'th', style: { width: `${3 / nCol * 100}%`, left: `${sc.i / nCol * 100}%` } })),
-        h('span', null, sc.i >= nCol - 3 ? '‹ geser' : 'geser ›'));
+                    h('div', { className: 'ep-cx tt' }, h('span', { className: 'n' }, tots[ci].n), h('span', { className: tn(tots[ci].net) }, sgx(tots[ci].net))))))),
+            nCol > vis && sc.i > 0 && h('i', { className: 'ep-fade l' }),
+            nCol > vis && sc.i < nCol - vis && h('i', { className: 'ep-fade r' })));
+    const sbar = nCol > vis && h('div', { className: 'ep-sbar' + (vis === 5 ? ' w5' : '') },
+        h('span', null, `${cols[sc.i].label}–${cols[Math.min(nCol - 1, sc.i + vis - 1)].label}`),
+        h('div', { className: 'tr' }, h('i', { className: 'th', style: { width: `${vis / nCol * 100}%`, left: `${sc.i / nCol * 100}%` } })),
+        h('span', null, sc.i >= nCol - vis ? '‹ geser' : 'geser ›'));
     const dimLow = dim.toLowerCase();
     const stackIds = pos ? EP_OUT_STACK : EP_ZIDS;
     const mix = cols.map((c, ci) => {
@@ -155,19 +162,21 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
     const used = zs.filter(z => z.st.n > 0);
     const top = used.filter(z => z.st.net > 0).sort((a, b) => b.st.net - a.st.net)[0];
     const bad = used.filter(z => z.st.net < 0).sort((a, b) => a.st.net - b.st.net);
+    const topP = used.filter(z => z.st.pips > 0).sort((a, b) => b.st.pips - a.st.pips)[0];
     const share = top && total.net > 0 ? Math.round(top.st.net / total.net * 100) : null;
     const badTxt = z => h(React.Fragment, { key: z.id }, h('b', null, zInfo(z.id).name), ' ', h('b', { className: 'neg' }, sg(z.st.net)), z.id === 'jenuh' ? ` (${z.st.n} entry di zona dilarang)` : '');
     const insights = h('div', { className: 'ep-ins' },
         top && h('div', { className: 'ep-in p' }, h('i'), h('div', null, 'Penyumbang profit: ', h('b', null, zInfo(top.id).name), ' ', h('b', { className: 'pos' }, sg(top.st.net)), share != null && share <= 100 ? ` · ${share}% dari total P&L` : '')),
-        bad.length > 0 && h('div', { className: 'ep-in n' }, h('i'), h('div', null, 'Penggerus: ', bad.slice(0, 2).map((z, i) => h(React.Fragment, { key: z.id }, i ? ' dan ' : '', badTxt(z))))));
-    const maxContrib = Math.max(1, ...rows.map(r => Math.abs(r.st.net)));
+        bad.length > 0 && h('div', { className: 'ep-in n' }, h('i'), h('div', null, 'Penggerus: ', bad.slice(0, 2).map((z, i) => h(React.Fragment, { key: z.id }, i ? ' dan ' : '', badTxt(z))))),
+        topP && h('div', { className: 'ep-in i' }, h('i'), h('div', null, 'Pips terbanyak: ', h('b', null, zInfo(topP.id).name), ' ', h('b', { className: 'pos' }, pp(topP.st.pips)), ` · total semua ${pp(total.pips)}`)));
+    const maxContrib = Math.max(1, ...rows.map(r => Math.abs(isP ? r.st.pips : r.st.net)));
     const contrib = h('div', { className: 'ep-dv' }, rows.map(r => {
-        const w = Math.abs(r.st.net) / maxContrib * 48, pos = r.st.net >= 0;
+        const mv = isP ? r.st.pips : r.st.net, w = Math.abs(mv) / maxContrib * 48, pos = mv >= 0;
         return h('div', { key: r.id, className: 'ep-dr' + (r.id === 'none' ? ' mu' : '') },
             h('span', { className: 'nm' }, r.id === 'none' ? 'Tanpa zona' : EP_SHORT[r.id]),
             h('div', { className: 'trk' },
                 r.st.n > 0 && h('i', { className: 'bar', style: { width: w + '%', [pos ? 'left' : 'right']: '50%', background: r.id === 'none' ? EP_COL.none : (pos ? '#22b573' : '#ef6b7b') } })),
-            h('span', { className: 'val ' + tn(r.st.net) }, r.st.n ? sg(r.st.net) : '–'));
+            h('span', { className: 'val ' + tn(mv) }, r.st.n ? (isP ? pp(mv) : sg(mv)) : '–'));
     }));
     const maxN = Math.max(1, ...rows.map(r => r.st.n));
     const pfTxt = s => s.pf == null ? '–' : s.pf === Infinity ? '∞' : s.pf.toFixed(2);
@@ -179,7 +188,11 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
             h('div', null, h('span', null, 'Profit factor'), h('b', null, pfTxt(s))),
             h('div', null, h('span', null, 'Ekspektasi / trade'), h('b', { className: tn(s.exp) }, sg(s.exp))),
             h('div', null, h('span', null, 'Rata-rata win'), h('b', { className: 'pos' }, s.w ? sg(s.avgW) : '–')),
-            h('div', null, h('span', null, 'Rata-rata loss'), h('b', { className: 'neg' }, s.l ? sg(s.avgL) : '–'))),
+            h('div', null, h('span', null, 'Rata-rata loss'), h('b', { className: 'neg' }, s.l ? sg(s.avgL) : '–')),
+            h('div', null, h('span', null, 'Total pips'), h('b', { className: tn(s.pips) }, pp(s.pips))),
+            h('div', null, h('span', null, 'Pips rata-rata / trade'), h('b', { className: tn(s.avgP) }, pp(s.avgP))),
+            h('div', null, h('span', null, 'Pips rata-rata win'), h('b', { className: 'pos' }, s.w ? pp(s.avgWP) : '–')),
+            h('div', null, h('span', null, 'Pips rata-rata loss'), h('b', { className: 'neg' }, s.l ? pp(s.avgLP) : '–'))),
         id !== 'none' && h('div', { className: 'ep-smp' }, h('div', { className: 'lb' }, h('span', null, `Sampel menuju ${EP_SAMPLE_SOP} posisi (SOP)`), h('b', null, `${s.n}/${EP_SAMPLE_SOP}`)), h('div', { className: 'pb' }, h('i', { style: { width: Math.min(100, s.n / EP_SAMPLE_SOP * 100) + '%' } }))),
         sesRows(id).length > 0 && h('div', { className: 'ep-ses' }, h('div', { className: 'ep-sl' }, 'Per sesi'),
             sesRows(id).map(x => h('div', { key: x.n, className: 'r' }, h('b', null, x.n), h('span', null, `${x.st.n} posisi · ${Math.round(x.st.wr)}% WR`), h('em', { className: tn(x.st.net) }, sg(x.st.net))))));
@@ -197,13 +210,14 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
                 s.n > 0 && s.n < EP_SAMPLE_MIN && h('span', { className: 'ep-tag' }, 'Sampel kecil'),
                 !dead && h('span', null, h('b', null, `${Math.round(s.wr)}%`), ' WR'),
                 !dead && h('span', null, 'PF ', h('b', null, pfTxt(s))),
-                !dead && h('span', null, h('b', { className: tn(s.exp) }, sg(s.exp)), '/trade')),
+                !dead && h('span', null, h('b', { className: tn(s.exp) }, sg(s.exp)), '/trade'),
+                !dead && h('span', null, h('b', { className: tn(s.pips) }, pp(s.pips)))),
             h('div', { className: 'ep-nb' }, h('i', { style: { width: (s.n / maxN * 100) + '%', background: EP_COL[r.id] } })),
             open && !dead && detail(r.id, s));
     });
     const sumTab = h(React.Fragment, null,
         insights,
-        h('div', { className: 'ep-sl' }, 'Kontribusi P&L per cara entry'), contrib,
+        h('div', { className: 'ep-sh' }, h('div', { className: 'ep-sl' }, 'Kontribusi per cara entry'), mtog), contrib,
         h('div', { className: 'ep-sl', style: { marginTop: 4 } }, 'Detail per zona · ketuk untuk membuka'),
         h('div', { className: 'ep-zl' }, zoneCards),
         h('p', { className: 'pe-note' }, 'Win rate = posisi untung ÷ semua posisi closed (sama dengan kartu Performa per bulan). PF = total profit ÷ total loss. Ekspektasi = rata-rata P&L per trade. Rentang 95% memakai interval Wilson: makin sedikit sampel, makin lebar rentangnya, jadi win rate di bawah 30 posisi belum bisa dijadikan patokan. Posisi open tidak dihitung.'));
@@ -216,17 +230,19 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
     const pIns = h('div', { className: 'ep-ins' },
         ST.w > 0 && ST.l > 0 && h('div', { className: 'ep-in ' + (ratio >= 1 ? 'p' : 'n') }, h('i'), h('div', null, 'Rata-rata win ', h('b', null, sg(ST.avgW)), ' vs rata-rata loss ', h('b', null, sg(ST.avgL)), ' · rasio ', h('b', null, `${ratio.toFixed(2)} : 1`))),
         topZone(wins) && h('div', { className: 'ep-in p' }, h('i'), h('div', null, 'Win terbanyak datang dari ', topZone(wins))),
-        topZone(losses) && h('div', { className: 'ep-in n' }, h('i'), h('div', null, 'Loss terbanyak datang dari ', topZone(losses))));
-    const pMax = Math.max(1, ST.gp, ST.gl);
+        topZone(losses) && h('div', { className: 'ep-in n' }, h('i'), h('div', null, 'Loss terbanyak datang dari ', topZone(losses))),
+        recs.length > 0 && h('div', { className: 'ep-in i' }, h('i'), h('div', null, 'Rata-rata win ', h('b', { className: 'pos' }, pp(ST.avgWP)), ' vs loss ', h('b', { className: 'neg' }, pp(ST.avgLP)), ` · total ${pp(ST.pips)}`)));
+    const pMax = Math.max(1, isP ? Math.abs(ST.pips) : 0, isP ? Math.abs(wins.reduce((a, r) => a + r.pips, 0)) : ST.gp, isP ? Math.abs(losses.reduce((a, r) => a + r.pips, 0)) : ST.gl);
     const pBar = (nm, val, color, mu) => {
         const w = Math.abs(val) / pMax * 48, ps = val >= 0;
         return h('div', { className: 'ep-dr' + (mu ? ' mu' : '') },
             h('span', { className: 'nm' }, nm),
             h('div', { className: 'trk' },
                 val !== 0 && h('i', { className: 'bar', style: { width: w + '%', [ps ? 'left' : 'right']: '50%', background: color } })),
-            h('span', { className: 'val ' + tn(val) }, sg(val)));
+            h('span', { className: 'val ' + tn(val) }, isP ? pp(val) : sg(val)));
     };
-    const pContrib = h('div', { className: 'ep-dv' }, pBar('Total win', ST.gp, '#22b573'), pBar('Total loss', -ST.gl, '#ef6b7b'), pBar('Bersih', ST.net, '#6b7280', true));
+    const sumP = rs => rs.reduce((a, r) => a + r.pips, 0);
+    const pContrib = h('div', { className: 'ep-dv' }, pBar('Total win', isP ? sumP(wins) : ST.gp, '#22b573'), pBar('Total loss', isP ? sumP(losses) : -ST.gl, '#ef6b7b'), pBar('Bersih', isP ? ST.pips : ST.net, '#6b7280', true));
     const dayTop = rs => { const c = {}; rs.forEach(r => { c[EP_DAYS[r.di]] = (c[EP_DAYS[r.di]] || 0) + 1; }); const e = Object.entries(c).sort((a, b) => b[1] - a[1])[0]; return e ? e[0] : '–'; };
     const pDetail = (k, rs, s) => {
         const win = k === 'win', zc = zoneCount(rs), nz = rs.filter(r => !r.z).length;
@@ -239,7 +255,9 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
                 h('div', null, h('span', null, win ? 'Total profit' : 'Total loss'), h('b', { className: cl }, sg(s.net))),
                 h('div', null, h('span', null, 'Rata-rata'), h('b', { className: cl }, sg(win ? s.avgW : s.avgL))),
                 h('div', null, h('span', null, win ? 'Win terbesar' : 'Loss terbesar'), h('b', { className: cl }, sg(big))),
-                h('div', null, h('span', null, 'Hari tersering'), h('b', null, dayTop(rs)))),
+                h('div', null, h('span', null, 'Hari tersering'), h('b', null, dayTop(rs))),
+                h('div', null, h('span', null, win ? 'Total pips win' : 'Total pips loss'), h('b', { className: cl }, pp(s.pips))),
+                h('div', null, h('span', null, 'Pips rata-rata'), h('b', { className: cl }, pp(s.avgP)))),
             (zc.length > 0 || nz > 0) && h('div', { className: 'ep-ses' }, h('div', { className: 'ep-sl' }, 'Berasal dari zona'),
                 zc.map(x => h('div', { key: x.id, className: 'r' }, h('b', null, EP_SHORT[x.id]), h('span', null, `${x.n} posisi · ${Math.round(x.n / rs.length * 100)}%`), h('em', { style: { color: EP_COL[x.id] } }, '●'))),
                 nz > 0 && h('div', { className: 'r' }, h('b', null, 'Belum ada zona'), h('span', null, `${nz} posisi · ${Math.round(nz / rs.length * 100)}%`), h('em', { style: { color: EP_COL.none } }, '●'))),
@@ -263,13 +281,14 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
                 h('span', null, h('b', null, rs.length), ' posisi'),
                 be ? (!empty && h('span', null, 'impas, tidak untung dan tidak rugi')) : !empty && h(React.Fragment, null,
                     h('span', null, 'rata-rata ', h('b', { className: tn(s.net) }, sg(win ? s.avgW : s.avgL))),
-                    h('span', null, 'terbesar ', h('b', { className: tn(s.net) }, sg(big))))),
+                    h('span', null, 'terbesar ', h('b', { className: tn(s.net) }, sg(big))),
+                    h('span', null, h('b', { className: tn(s.pips) }, pp(s.pips))))),
             h('div', { className: 'ep-nb' }, h('i', { style: { width: (rs.length / maxPN * 100) + '%', background: col } })),
             open && clk && pDetail(k, rs, s));
     };
     const pSumTab = h(React.Fragment, null,
         pIns,
-        h('div', { className: 'ep-sl' }, 'Total win vs total loss'), pContrib,
+        h('div', { className: 'ep-sh' }, h('div', { className: 'ep-sl' }, 'Total win vs total loss'), mtog), pContrib,
         h('div', { className: 'ep-sl', style: { marginTop: 4 } }, 'Detail · ketuk Win atau Loss untuk membuka'),
         h('div', { className: 'ep-zl' }, pCard('win', wins), pCard('loss', losses), pCard('be', bes)),
         h('p', { className: 'pe-note' }, 'BE = posisi impas (hasil tepat 0). Persen dihitung dari semua posisi closed. Posisi open tidak dihitung.'));
@@ -277,10 +296,15 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
     /* ======= tab bar: tab pertama = pilihan waktu (menu turun langsung di bawahnya) ======= */
     const onTime = () => { if (tab !== 'time') { setTab('time'); setMenu(false); } else setMenu(m => !m); };
     const colCount = d => epCols(d, pos ? recs : zoned).length;
-    const tabs = h('div', { className: 'ep-tabs', ref: menuRef },
-        h('button', { type: 'button', className: 'tb' + (tab === 'time' ? ' on' : ''), 'aria-haspopup': 'listbox', 'aria-expanded': menu, onClick: onTime }, `Per ${dimLow}`, h(Icon, { name: 'ChevronDown', size: 16, className: menu ? 'up' : '' })),
-        h('button', { type: 'button', className: 'tb' + (tab === 'sum' ? ' on' : ''), onClick: () => { setTab('sum'); setMenu(false); } }, 'Ringkasan'),
-        menu && h('div', { className: 'ep-dd', role: 'listbox' }, EP_DIMS.map(d => h('button', { key: d, type: 'button', role: 'option', 'aria-selected': d === dim, className: 'o' + (d === dim ? ' on' : ''), onClick: () => { setDim(d); setMenu(false); } }, d, colCount(d) > 3 && d !== 'Sesi' ? h('small', null, colCount(d) + ' kolom') : null))));
+    const views = ['Sesi', 'Hari', 'Minggu', 'Bulan', 'Tahun', 'Ringkasan'];
+    const curView = tab === 'sum' ? 'Ringkasan' : dim;
+    const pickView = v => { if (v === 'Ringkasan') setTab('sum'); else { setDim(v); setTab('time'); } setMenu(false); };
+    const tabs = h('div', { className: 'ep-tabs ep-sel', ref: menuRef },
+        h('button', { type: 'button', className: 'sel', 'aria-haspopup': 'listbox', 'aria-expanded': menu, onClick: () => setMenu(m => !m) }, h('span', null, curView), h(Icon, { name: 'ChevronDown', size: 16, className: menu ? 'up' : '' })),
+        menu && h('div', { className: 'ep-dd', role: 'listbox' }, views.map(v => h(React.Fragment, { key: v },
+            v === 'Ringkasan' && h('i', { className: 'sep' }),
+            h('button', { type: 'button', role: 'option', 'aria-selected': v === curView, className: 'o' + (v === curView ? ' on' : ''), onClick: () => pickView(v) }, v,
+                v === 'Ringkasan' ? h('small', null, 'Kontribusi · pips') : (v !== 'Sesi' ? h('small', null, colCount(v) + ' kolom') : null))))));
 
     return h('div', { className: 'pe-card ep' },
         hubHead({ sub: `${pos ? 'Hasil posisi' : 'Zona entry'} · ${total.n} trade · ${rangeLbl}` }),
@@ -292,10 +316,10 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
 
 /* ===== Kartu gabungan (v5.12.0): judul = pilihan mode (menu turun) ===== */
 const HUB_OPT = [
-    ['entri', 'Performa per entri', 'Menurut zona entry Metode', 'Target'],
-    ['posisi', 'Performa per posisi', 'Menurut hasil: Win, Loss, BE', 'Trophy'],
-    ['bulan', 'Performa per bulan', 'Bulan, minggu, hari, sesi', 'CalendarDays'],
-    ['all', 'Performa keseluruhan', 'Grafik P&L, Growth, Balance', 'ChartUp']
+    ['posisi', 'Performa Posisi', 'Menurut hasil: Win, Loss, BE', 'Trophy'],
+    ['entri', 'Performa Entri', 'Menurut zona entry Metode', 'Target'],
+    ['bulan', 'Performa Bulanan', 'Bulan, minggu, hari, sesi', 'CalendarDays'],
+    ['all', 'Performa Keseluruhan', 'Grafik P&L, Growth, Balance', 'ChartUp']
 ];
 function PerfHubHead({ mode, onMode, sub, lockBtn }) {
     const h = React.createElement;
