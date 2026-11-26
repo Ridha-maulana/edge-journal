@@ -335,6 +335,11 @@ function PerfHubHead({ mode, onMode, sub, lockBtn }) {
         document.addEventListener('pointerdown', off); document.addEventListener('keydown', esc);
         return () => { document.removeEventListener('pointerdown', off); document.removeEventListener('keydown', esc); };
     }, [open]);
+    useEffect(() => {
+        if (!open) return;
+        const t = setTimeout(() => { const m = ref.current && ref.current.querySelector('.hub-menu'); if (m && m.scrollIntoView) m.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 30);
+        return () => clearTimeout(t);
+    }, [open]);
     const cur = HUB_OPT.find(o => o[0] === mode) || HUB_OPT[4];
     return h('div', { className: 'hub-hd', ref },
         h('div', { className: 'hub-row' },

@@ -162,7 +162,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
             React.createElement("div", { className: `mg-note ${ms.n ? (ms.pnl > 0 ? 'pos' : ms.pnl < 0 ? 'neg' : '') : ''}` },
                 React.createElement("b", null, !ms.n ? `Belum ada trade di ${MN[ms.i]}` : ms.pnl > 0 ? `Progres bagus di ${MN[ms.i]}` : ms.pnl < 0 ? `${MN[ms.i]} perlu evaluasi` : `${MN[ms.i]} impas`),
                 React.createElement("span", null, `Trades ${ms.n}  |  Win rate ${ms.n ? Math.round(ms.wins / ms.n * 100) : 0}%  |  Profit ${sg(ms.pnl)}`))));
-            if (hub === 'adv') return React.createElement("div", { className: "pe-card hub-adv" }, hh({ sub: `Statistik lengkap akun \u00B7 ${total.n} trade` }), advancedStats);
+            if (hub === 'adv') return React.createElement("div", { className: "pe-card hub-adv" }, hh({ sub: `Statistik lengkap akun \u00B7 ${sorted.length} trade` }), advancedStats);
             if (hub === 'pair') {
                 const N = sorted.length, byP = syms.slice().sort((x, y) => y.pnl - x.pnl);
                 const best = byP[0], pop = syms[0];
@@ -214,7 +214,6 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                     fm(h.amount))); })));
         })(),
         React.createElement("div", { className: "dna-title" },
-            React.createElement("h2", null, "Trader DNA"),
             React.createElement("small", { className: "pe-sub2" }, "Rapor karakter trading berbasis data")),
         React.createElement("div", { className: "pe-card dna" },
             React.createElement("div", { className: "pe-head" },

@@ -288,13 +288,13 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .ep-mxw.w5 .ep-cx.tt{font-size:max(9.5px,3.7cqw)}.ep-mxw.w5 .ep-cx.tt .n{font-size:max(9px,3.3cqw)}
 
 /* v5.12.2 kartu gabungan 8 pilihan */
-.hub-menu{max-height:min(72vh,520px);overflow-y:auto;overscroll-behavior:contain}
+.hub-menu{max-height:min(72vh,520px);overflow-y:auto;scroll-margin-bottom:110px}
 .hub-gl{padding:10px 12px 4px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c122)}
 .hub-gl:first-child{padding-top:6px}
 .hub-menu .o{min-height:48px;padding:6px 12px}
 .hub-menu .o .ic{width:32px;height:32px}
 .hub-adv .adv.adv-card-only{margin:0}
-.hub-adv .adv-card{border:0!important;background:none!important;box-shadow:none!important;padding:0!important;margin-top:4px}
+.hub-adv .adv-card-x{border:0!important;background:none!important;box-shadow:none!important;padding:0!important;margin-top:4px}
 .mg .hub-row .mg-years{flex:none}
 .mg .hub-row .mg-years button{width:30px;height:30px}
 .mg .hub-row .mg-years span{min-width:44px;font-size:15px}
@@ -307,3 +307,8 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .pm-dt1{font-size:22px;font-weight:700;fill:currentColor}.pm-dt2{font-size:11px;fill:currentColor;opacity:.65}
 .pm-dl{display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--c122);min-width:0}.pm-dl span{display:flex;flex-direction:column;gap:2px}.pm-dl b{color:var(--c0);font-size:15px;word-break:break-word}.pm-dl b.pos{color:#34d399}.pm-dl b.neg{color:#ff6b81}
 .pm-lr{display:grid;grid-template-columns:14px 1fr auto 92px;gap:8px;align-items:center;min-height:42px;border-top:1px solid var(--c82);font-size:14px}.pm-lr i{width:10px;height:10px;border-radius:3px}.pm-lr span{font-size:12px;color:var(--c122)}.pm-lr b:last-child{text-align:right}
+
+/* v5.12.4 kartu dalam Advanced Statistics tanpa bingkai ganda; judul besar dihapus */
+.adv-flat{overflow:hidden;margin:6px 0 0}
+.adv-title{margin-bottom:var(--gap-j)}.adv-title small{margin:0!important}
+.dna-title{margin-bottom:0}

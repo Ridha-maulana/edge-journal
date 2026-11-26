@@ -117,12 +117,11 @@ function AdvancedStats({ account, filtered, total, maxDd, hwm, view, part = 'all
         ['Withdrawals', fm(wdSum), wdSum ? 'neg' : '']
     ];
     const title = React.createElement("div", { className: "adv-title" },
-            React.createElement("h2", null, "Advanced Statistics"),
             React.createElement("small", null,
                 "Statistik lengkap akun \u00B7 ",
                 n,
                 " trade"));
-    const card = React.createElement("div", { className: "adv-card" },
+    const card = React.createElement("div", { className: part === 'card' ? "adv-flat" : "adv-card" },
             React.createElement("div", { className: "adv-prof" },
                 React.createElement("div", { className: "adv-profhead" },
                     React.createElement("b", { className: n ? (wr >= 50 ? 'pos' : 'neg') : '' },
