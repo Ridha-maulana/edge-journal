@@ -55,32 +55,27 @@ function epCols(dim, recs) {
 }
 const epKeyOf = (dim, r) => dim === 'Tahun' ? r.y : dim === 'Bulan' ? r.mk : dim === 'Minggu' ? r.wk : dim === 'Hari' ? r.di : r.ses;
 
-function EntryPerf({ account, trades, rangeText }) {
+function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
     const h = React.createElement;
     const fm = n => money(n, account.currency);
     const sg = n => n > 0 ? `+${fm(n)}` : n < 0 ? `−${fm(Math.abs(n))}` : fm(0);
     const tn = n => n > 0 ? 'pos' : n < 0 ? 'neg' : 'zero';
     const recs = useMemo(() => epBuild(trades), [trades]);
-    const [mode, setMode] = useState('entri');
-    const [modeMenu, setModeMenu] = useState(false);
     const [tab, setTab] = useState('time');
     const [dim, setDim] = useState('Sesi');
     const [menu, setMenu] = useState(false);
     const [openZ, setOpenZ] = useState(null);
     const [sc, setSc] = useState({ i: 0 });
-    const scrRef = useRef(null), menuRef = useRef(null), modeRef = useRef(null);
+    const scrRef = useRef(null), menuRef = useRef(null);
 
     useEffect(() => {
-        if (!menu && !modeMenu) return;
-        const off = e => {
-            if (menu && menuRef.current && !menuRef.current.contains(e.target)) setMenu(false);
-            if (modeMenu && modeRef.current && !modeRef.current.contains(e.target)) setModeMenu(false);
-        };
-        const esc = e => { if (e.key === 'Escape') { setMenu(false); setModeMenu(false); } };
+        if (!menu) return;
+        const off = e => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenu(false); };
+        const esc = e => { if (e.key === 'Escape') setMenu(false); };
         document.addEventListener('pointerdown', off); document.addEventListener('keydown', esc);
         return () => { document.removeEventListener('pointerdown', off); document.removeEventListener('keydown', esc); };
-    }, [menu, modeMenu]);
-    useEffect(() => { if (scrRef.current) scrRef.current.scrollLeft = 0; setSc({ i: 0 }); }, [dim, tab, mode]);
+    }, [menu]);
+    useEffect(() => { if (scrRef.current) scrRef.current.scrollLeft = 0; setSc({ i: 0 }); }, [dim, tab]);
 
     const zoned = useMemo(() => recs.filter(r => r.z), [recs]);
     const noZone = recs.length - zoned.length;
@@ -89,7 +84,7 @@ function EntryPerf({ account, trades, rangeText }) {
 
     const pos = mode === 'posisi';
     if (!recs.length) return h('div', { className: 'pe-card ep' },
-        h('h3', null, 'Performa per entri'),
+        hubHead({ sub: `${rangeLbl}` }),
         h('p', { className: 'pe-empty' }, 'Belum ada trade closed. Tutup posisi dan pilih zona entry Metode untuk melihat cara entry mana yang paling menguntungkan.'));
 
     const byZone = id => recs.filter(r => (id === 'none' ? !r.z : r.z === id));
@@ -287,21 +282,41 @@ function EntryPerf({ account, trades, rangeText }) {
         h('button', { type: 'button', className: 'tb' + (tab === 'sum' ? ' on' : ''), onClick: () => { setTab('sum'); setMenu(false); } }, 'Ringkasan'),
         menu && h('div', { className: 'ep-dd', role: 'listbox' }, EP_DIMS.map(d => h('button', { key: d, type: 'button', role: 'option', 'aria-selected': d === dim, className: 'o' + (d === dim ? ' on' : ''), onClick: () => { setDim(d); setMenu(false); } }, d, colCount(d) > 3 && d !== 'Sesi' ? h('small', null, colCount(d) + ' kolom') : null))));
 
-    const pickMode = m => { setMode(m); setModeMenu(false); setMenu(false); setOpenZ(null); };
-    const head = h('div', { className: 'ep-topw', ref: modeRef },
-        h('div', { className: 'ep-top' },
-            h('button', { type: 'button', className: 'ep-ttl', 'aria-haspopup': 'listbox', 'aria-expanded': modeMenu, onClick: () => { setModeMenu(o => !o); setMenu(false); } },
-                h('h3', null, pos ? 'Performa per posisi' : 'Performa per entri'),
-                h('span', { className: 'ep-pill' }, h(Icon, { name: 'ChevronDown', size: 16, className: modeMenu ? 'up' : '' })),
-                h('small', null, `(${rangeLbl})`))),
-        modeMenu && h('div', { className: 'ep-ddt', role: 'listbox' },
-            [['entri', 'Performa per entri', 'Menurut zona: Retest, Follow Trend, Lanjutan, Ekstensi Jenuh'], ['posisi', 'Performa per posisi', 'Menurut hasil: Win, Loss, dan BE']].map(([k, t, d]) =>
-                h('button', { key: k, type: 'button', role: 'option', 'aria-selected': mode === k, className: 'o' + (mode === k ? ' on' : ''), onClick: () => pickMode(k) }, h('b', null, t), h('small', null, d)))));
-
     return h('div', { className: 'pe-card ep' },
-        head,
-        h('div', { className: 'ep-sub' }, `${pos ? 'Dari hasil posisi' : 'Dari zona entry Metode'} · ${total.n} trade closed`),
+        hubHead({ sub: `${pos ? 'Hasil posisi' : 'Zona entry'} · ${total.n} trade · ${rangeLbl}` }),
         tabs,
         tab === 'time' ? timeTab : (pos ? pSumTab : sumTab),
         !pos && noZone > 0 && h('p', { className: 'pe-note' }, `${noZone} posisi lama tanpa zona ${tab === 'time' ? 'tidak masuk matriks, tapi tetap dihitung di total P&L.' : 'dihitung di baris "Belum ada zona". Zonanya bisa diisi lewat Edit trade.'}`));
+}
+
+
+/* ===== Kartu gabungan (v5.12.0): judul = pilihan mode (menu turun) ===== */
+const HUB_OPT = [
+    ['entri', 'Performa per entri', 'Menurut zona entry Metode', 'Target'],
+    ['posisi', 'Performa per posisi', 'Menurut hasil: Win, Loss, BE', 'Trophy'],
+    ['bulan', 'Performa per bulan', 'Bulan, minggu, hari, sesi', 'CalendarDays'],
+    ['all', 'Performa keseluruhan', 'Grafik P&L, Growth, Balance', 'ChartUp']
+];
+function PerfHubHead({ mode, onMode, sub, lockBtn }) {
+    const h = React.createElement;
+    const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+    useEffect(() => {
+        if (!open) return;
+        const off = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+        const esc = e => { if (e.key === 'Escape') setOpen(false); };
+        document.addEventListener('pointerdown', off); document.addEventListener('keydown', esc);
+        return () => { document.removeEventListener('pointerdown', off); document.removeEventListener('keydown', esc); };
+    }, [open]);
+    const cur = HUB_OPT.find(o => o[0] === mode) || HUB_OPT[3];
+    return h('div', { className: 'hub-hd', ref },
+        h('div', { className: 'hub-row' },
+            h('button', { type: 'button', className: 'hub-ttl', 'aria-haspopup': 'listbox', 'aria-expanded': open, onClick: () => setOpen(o => !o) },
+                h('h3', null, cur[1]), h(Icon, { name: 'ChevronDown', size: 18, className: open ? 'up' : '' })),
+            lockBtn || null),
+        sub ? h('p', { className: 'hub-sub' }, sub) : null,
+        open && h('div', { className: 'hub-menu', role: 'listbox' }, HUB_OPT.map(o => h('button', { key: o[0], type: 'button', role: 'option', 'aria-selected': o[0] === mode, className: 'o' + (o[0] === mode ? ' on' : ''), onClick: () => { setOpen(false); if (o[0] !== mode) onMode(o[0]); } },
+            h('i', { className: 'ic' }, h(Icon, { name: o[3], size: 18 })),
+            h('span', { className: 't' }, h('b', null, o[1]), h('small', null, o[2])),
+            o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null))));
 }

@@ -241,3 +241,17 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .ep-ddt .o{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;width:100%;min-height:56px;padding:10px 12px;border:0;border-radius:10px;background:none;color:var(--c0);font:inherit;text-align:left;cursor:pointer}
 .ep-ddt .o b{font-size:15px}.ep-ddt .o small{color:var(--c122);font-size:12px;margin-top:2px;font-weight:500}
 .ep-ddt .o.on{background:rgba(34,181,115,.16)}.ep-ddt .o.on b{color:var(--c118)}
+/* v5.12.0 — kartu gabungan: judul = pilihan mode (opsi C) */
+.hub-hd{position:relative;margin:0 0 14px}
+.hub-row{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:38px}
+.hub-ttl{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:inherit;font:inherit;padding:0;text-align:left;cursor:pointer;min-width:0}
+.hub-ttl h3{margin:0!important;font-size:22px!important;font-weight:700;line-height:1.25}
+.hub-ttl svg{flex:none;opacity:.75}.hub-ttl svg.up{transform:rotate(180deg)}
+.hub-sub{margin:4px 0 0;font-size:12.5px;opacity:.65}
+.hub-row .dd-lock{width:38px;height:38px;min-width:38px;padding:0!important;border-radius:50%;justify-content:center;gap:0;flex:none}
+.hub-row .dd-lock span{display:none}
+.hub-menu{position:absolute;left:0;right:0;top:46px;z-index:40;background:var(--c75);border:1px solid var(--c76);border-radius:16px;padding:4px;box-shadow:0 14px 30px rgba(var(--r7),.5)}
+.hub-menu .o{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:8px 12px;border:0;border-radius:12px;background:none;color:var(--c0);font:inherit;text-align:left;cursor:pointer}
+.hub-menu .o .t{display:flex;flex-direction:column;flex:1;min-width:0}.hub-menu .o b{font-size:15px}.hub-menu .o small{color:var(--c122);font-size:12px;margin-top:2px;font-weight:500}
+.hub-menu .o .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--c123);color:var(--c109);flex:none}
+.hub-menu .o.on{background:rgba(34,181,115,.16)}.hub-menu .o.on b,.hub-menu .o .ck{color:var(--c118)}

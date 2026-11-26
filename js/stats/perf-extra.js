@@ -5,6 +5,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const fm = n => money(n, cur);
     const sg = n => `${n > 0 ? '+' : ''}${fm(n)}`;
     const [ct, setCt] = useState('daily'), kctl = useTplChart('line');
+    const [hub, setHub] = useState('all');
     const [showDet, setShowDet] = useState(false);
     const nowW = wib(new Date());
     const year = view.y, mSel = view.m;
@@ -157,7 +158,12 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
             React.createElement("div", { className: `mg-note ${ms.n ? (ms.pnl > 0 ? 'pos' : ms.pnl < 0 ? 'neg' : '') : ''}` },
                 React.createElement("b", null, !ms.n ? `Belum ada trade di ${MN[ms.i]}` : ms.pnl > 0 ? `Progres bagus di ${MN[ms.i]}` : ms.pnl < 0 ? `${MN[ms.i]} perlu evaluasi` : `${MN[ms.i]} impas`),
                 React.createElement("span", null, `Trades ${ms.n}  |  Win rate ${ms.n ? Math.round(ms.wins / ms.n * 100) : 0}%  |  Profit ${sg(ms.pnl)}`))),
-        React.createElement("div", { className: "pe-card" },
+        hub !== 'all' ? (() => {
+            const hh = p => React.createElement(PerfHubHead, { ...p, mode: hub, onMode: setHub });
+            if (hub === 'bulan') return React.createElement(DrillDown, { key: account.id + '-dd', account: account, trades: filtered, rangeText: rangeText, hubHead: hh });
+            return React.createElement(EntryPerf, { key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh });
+        })() : React.createElement("div", { className: "pe-card" },
+            React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, sub: `Grafik hasil trading · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
             React.createElement("div", { className: "pe-kw" }, React.createElement("p", { className: "pe-sub" }, CT.t), CT.k === 'line' && React.createElement(TplKind, { ctl: kctl })),
             React.createElement("div", { className: "pe-tabs icon-tabs" }, [['daily', 'Daily P&L', 'ChartPie'], ['growth', 'Growth', 'ChartUp'], ['balance', 'Balance', 'Scale'], ['profit', 'Profit', 'Coins'], ['dd', 'Drawdown', 'ChartDown']].map(([k, l, ic]) => React.createElement("button", { key: k, type: "button", className: ct === k ? 'on' : '', "aria-label": l, title: l, onClick: () => setCt(k) }, React.createElement(Icon, { name: ic, size: 14 }), React.createElement("span", null, l)))),
                         React.createElement(MiniChart, { key: ct + (kctl.kind === 'candle' ? 'c' : 'l'), vals: CT.v, labels: lab, kind: CT.k, fmt: CT.f, candle: CT.k === 'line' && kctl.kind === 'candle', base: ct === 'balance' ? account.balance : 0 }),
@@ -182,8 +188,6 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                 React.createElement("b", null,
                     w ? '-' : '+',
                     fm(h.amount))); }))),
-        React.createElement(DrillDown, { key: account.id, account: account, trades: filtered, rangeText: rangeText }),
-        React.createElement(EntryPerf, { key: account.id + '-ep', account: account, trades: filtered, rangeText: rangeText }),
         advancedStats,
         React.createElement("div", { className: "pe-card" },
             React.createElement("h3", null, "P&L per pair"),

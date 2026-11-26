@@ -61,7 +61,7 @@ function DdDonut({ st }) {
         wA > 0 && h('circle', { cx: 90, cy: 90, r, fill: 'none', stroke: EJC("#34d399"), strokeWidth: 24, strokeDasharray: `${wA} ${c}`, transform: 'rotate(-90 90 90)' }),
         h('text', { x: 90, y: 100, textAnchor: 'middle', fontSize: 28, fontWeight: 800, fill: col }, `${st.wr.toFixed(1)}%`));
 }
-function DrillDown({ account, trades, rangeText }) {
+function DrillDown({ account, trades, rangeText, hubHead }) {
     const h = React.createElement;
     const fm = n => money(n, account.currency);
     const sg = n => n > 0 ? `+${fm(n)}` : n < 0 ? `-${fm(Math.abs(n))}` : fm(0);
@@ -102,7 +102,7 @@ function DrillDown({ account, trades, rangeText }) {
     }, [lv, locked]);
 
     if (!recs.length) return h('div', { className: 'pe-card dd', ref: cardRef },
-        h('h3', null, 'Performa per bulan / minggu / hari / sesi'),
+        hubHead ? hubHead({ sub: 'Bulan, minggu, hari, sesi' }) : h('h3', null, 'Performa per bulan / minggu / hari / sesi'),
         h('p', { className: 'pe-empty' }, rangeText && rangeText !== 'All time' ? `Belum ada trade closed pada periode ${rangeText}. Pilih bulan atau periode lain.` : 'Belum ada trade closed. Tutup posisi pertama Anda untuk melihat performa per bulan, minggu, hari, dan sesi.'));
 
     // ----- susun daftar kartu untuk level aktif -----
@@ -235,7 +235,7 @@ function DrillDown({ account, trades, rangeText }) {
     const lockBtn = h('button', { key: 'lock', type: 'button', className: 'dd-lock' + (locked ? ' on' : ''), 'aria-label': locked ? 'Terkunci' : 'Kunci', title: locked ? 'Terkunci' : 'Kunci', onClick: () => setLocked(v => !v), 'aria-pressed': locked }, h(Icon, { name: locked ? 'LockKeyhole' : 'LockKeyholeOpen', size: 15 }), h('span', null, locked ? 'Terkunci' : 'Kunci'));
 
     return h('div', { className: 'pe-card dd', ref: cardRef },
-        h('div', { className: 'dd-top' }, h('h3', { className: 'dd-title' }, title, ' ', h('small', null, `(${small})`)), lockBtn),
+        hubHead ? hubHead({ sub: `${title.replace(/^Performa p/, 'P')} · ${small}`, lockBtn }) : h('div', { className: 'dd-top' }, h('h3', { className: 'dd-title' }, title, ' ', h('small', null, `(${small})`)), lockBtn),
         h('div', { className: 'dd-crumbs' }, crumbs),
         hl, body,
         h('p', { className: 'pe-note' }, 'Minggu mengikuti baris pada Kalender (Senin–Minggu); hari dihitung dari tanggal entry; sesi dihitung dari jam asli Sydney/Tokyo, London, dan New York (otomatis ikut musim panas/dingin); jam entry tetap WIB. Saat ini: Asia ' + sesRangeWib('Asia') + ', London ' + sesRangeWib('London') + ', New York ' + sesRangeWib('New York') + ' WIB. Persen (%) dihitung dari modal awal, sama seperti Gain dan Monthly gain. Data kartu ini mengikuti Periode di atas dan bulan/tahun yang dipilih di Monthly gain (satu data, bulan tanpa trade tidak ditampilkan). Tombol Kunci menampilkan data gabungan dari semua bulan/minggu/hari pada periode itu.'));
