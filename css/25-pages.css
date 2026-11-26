@@ -231,3 +231,13 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .ep-smp{margin-top:14px}.ep-smp .lb{display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--c122);margin-bottom:6px}.ep-smp .lb b{color:var(--c0)}
 .ep-smp .pb{height:6px;border-radius:99px;background:var(--c82);overflow:hidden}.ep-smp .pb i{display:block;height:100%;background:#6b8dff;border-radius:99px}
 .ep-ses{margin-top:14px}.ep-ses .r{display:grid;grid-template-columns:78px 1fr auto;gap:8px;padding:8px 0;border-top:1px solid var(--c82);font-size:var(--fs-sm);align-items:center}.ep-ses .r span{color:var(--c122)}.ep-ses .r em{font-style:normal;font-weight:700}
+/* v5.11.7 — judul kartu bisa dipilih (per entri / per posisi) */
+.ep-topw{position:relative}
+.ep-ttl{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:inherit;font:inherit;padding:0;cursor:pointer;min-height:36px;flex-wrap:wrap;text-align:left}
+.ep-ttl h3{margin:0!important}.ep-ttl small{color:var(--c122);font-size:var(--fs-sm);font-weight:400}
+.ep-pill{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9px;border:1px solid var(--c82);color:var(--c122)}
+.ep-pill svg.up{transform:rotate(180deg)}
+.ep-ddt{position:absolute;left:0;right:0;top:40px;z-index:40;background:var(--c75);border:1px solid var(--c76);border-radius:14px;padding:4px;box-shadow:0 14px 30px rgba(var(--r7),.5)}
+.ep-ddt .o{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;width:100%;min-height:56px;padding:10px 12px;border:0;border-radius:10px;background:none;color:var(--c0);font:inherit;text-align:left;cursor:pointer}
+.ep-ddt .o b{font-size:15px}.ep-ddt .o small{color:var(--c122);font-size:12px;margin-top:2px;font-weight:500}
+.ep-ddt .o.on{background:rgba(34,181,115,.16)}.ep-ddt .o.on b{color:var(--c118)}
