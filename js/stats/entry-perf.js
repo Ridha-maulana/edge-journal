@@ -167,12 +167,12 @@ function EntryPerf({ account, trades, rangeText }) {
         bad.length > 0 && h('div', { className: 'ep-in n' }, h('i'), h('div', null, 'Penggerus: ', bad.slice(0, 2).map((z, i) => h(React.Fragment, { key: z.id }, i ? ' dan ' : '', badTxt(z))))));
     const maxContrib = Math.max(1, ...rows.map(r => Math.abs(r.st.net)));
     const contrib = h('div', { className: 'ep-dv' }, rows.map(r => {
-        const w = Math.abs(r.st.net) / maxContrib * 36, pos = r.st.net >= 0;
+        const w = Math.abs(r.st.net) / maxContrib * 48, pos = r.st.net >= 0;
         return h('div', { key: r.id, className: 'ep-dr' + (r.id === 'none' ? ' mu' : '') },
             h('span', { className: 'nm' }, r.id === 'none' ? 'Tanpa zona' : EP_SHORT[r.id]),
             h('div', { className: 'trk' },
-                r.st.n > 0 && h('i', { className: 'bar', style: { width: w + '%', [pos ? 'left' : 'right']: '50%', background: r.id === 'none' ? EP_COL.none : (pos ? '#22b573' : '#ef6b7b') } }),
-                h('span', { className: 'val ' + tn(r.st.net), style: { [pos ? 'left' : 'right']: `calc(50% + ${w}% + 6px)` } }, r.st.n ? sg(r.st.net) : '–')));
+                r.st.n > 0 && h('i', { className: 'bar', style: { width: w + '%', [pos ? 'left' : 'right']: '50%', background: r.id === 'none' ? EP_COL.none : (pos ? '#22b573' : '#ef6b7b') } })),
+            h('span', { className: 'val ' + tn(r.st.net) }, r.st.n ? sg(r.st.net) : '–'));
     }));
     const maxN = Math.max(1, ...rows.map(r => r.st.n));
     const pfTxt = s => s.pf == null ? '–' : s.pf === Infinity ? '∞' : s.pf.toFixed(2);
@@ -224,12 +224,12 @@ function EntryPerf({ account, trades, rangeText }) {
         topZone(losses) && h('div', { className: 'ep-in n' }, h('i'), h('div', null, 'Loss terbanyak datang dari ', topZone(losses))));
     const pMax = Math.max(1, ST.gp, ST.gl);
     const pBar = (nm, val, color, mu) => {
-        const w = Math.abs(val) / pMax * 32, ps = val >= 0;
+        const w = Math.abs(val) / pMax * 48, ps = val >= 0;
         return h('div', { className: 'ep-dr' + (mu ? ' mu' : '') },
             h('span', { className: 'nm' }, nm),
             h('div', { className: 'trk' },
-                val !== 0 && h('i', { className: 'bar', style: { width: w + '%', [ps ? 'left' : 'right']: '50%', background: color } }),
-                h('span', { className: 'val ' + tn(val), style: { [ps ? 'left' : 'right']: `calc(50% + ${w}% + 6px)` } }, sg(val))));
+                val !== 0 && h('i', { className: 'bar', style: { width: w + '%', [ps ? 'left' : 'right']: '50%', background: color } })),
+            h('span', { className: 'val ' + tn(val) }, sg(val)));
     };
     const pContrib = h('div', { className: 'ep-dv' }, pBar('Total win', ST.gp, '#22b573'), pBar('Total loss', -ST.gl, '#ef6b7b'), pBar('Bersih', ST.net, '#6b7280', true));
     const dayTop = rs => { const c = {}; rs.forEach(r => { c[EP_DAYS[r.di]] = (c[EP_DAYS[r.di]] || 0) + 1; }); const e = Object.entries(c).sort((a, b) => b[1] - a[1])[0]; return e ? e[0] : '–'; };
