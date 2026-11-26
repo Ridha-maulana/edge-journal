@@ -316,10 +316,14 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
 
 /* ===== Kartu gabungan (v5.12.0): judul = pilihan mode (menu turun) ===== */
 const HUB_OPT = [
-    ['posisi', 'Performa Posisi', 'Menurut hasil: Win, Loss, BE', 'Trophy'],
+    ['posisi', 'Performa Posisi', 'Menurut hasil: Win, Loss, BE', 'Trophy', 'Menurut hasil & waktu'],
     ['entri', 'Performa Entri', 'Menurut zona entry Metode', 'Target'],
     ['bulan', 'Performa Bulanan', 'Bulan, minggu, hari, sesi', 'CalendarDays'],
-    ['all', 'Performa Keseluruhan', 'Grafik P&L, Growth, Balance', 'ChartUp']
+    ['mg', 'Monthly gain', 'Gain, profit & target per bulan', 'TrendingUp'],
+    ['all', 'Performa Keseluruhan', 'Grafik P&L, Growth, Balance', 'ChartUp', 'Ringkasan akun'],
+    ['adv', 'Advanced Statistics', 'Profitability, pips, drawdown', 'BarChart3'],
+    ['pair', 'P&L per Pair', 'Profit & loss tiap pair', 'Coins', 'Per pair'],
+    ['pop', 'Pair Terpopuler', 'Pair paling sering ditrade', 'Star']
 ];
 function PerfHubHead({ mode, onMode, sub, lockBtn }) {
     const h = React.createElement;
@@ -332,15 +336,15 @@ function PerfHubHead({ mode, onMode, sub, lockBtn }) {
         document.addEventListener('pointerdown', off); document.addEventListener('keydown', esc);
         return () => { document.removeEventListener('pointerdown', off); document.removeEventListener('keydown', esc); };
     }, [open]);
-    const cur = HUB_OPT.find(o => o[0] === mode) || HUB_OPT[3];
+    const cur = HUB_OPT.find(o => o[0] === mode) || HUB_OPT[4];
     return h('div', { className: 'hub-hd', ref },
         h('div', { className: 'hub-row' },
             h('button', { type: 'button', className: 'hub-ttl', 'aria-haspopup': 'listbox', 'aria-expanded': open, onClick: () => setOpen(o => !o) },
                 h('h3', null, cur[1]), h(Icon, { name: 'ChevronDown', size: 18, className: open ? 'up' : '' })),
             lockBtn || null),
         sub ? h('p', { className: 'hub-sub' }, sub) : null,
-        open && h('div', { className: 'hub-menu', role: 'listbox' }, HUB_OPT.map(o => h('button', { key: o[0], type: 'button', role: 'option', 'aria-selected': o[0] === mode, className: 'o' + (o[0] === mode ? ' on' : ''), onClick: () => { setOpen(false); if (o[0] !== mode) onMode(o[0]); } },
+        open && h('div', { className: 'hub-menu', role: 'listbox' }, HUB_OPT.map(o => h(React.Fragment, { key: o[0] }, o[4] ? h('div', { className: 'hub-gl' }, o[4]) : null, h('button', { type: 'button', role: 'option', 'aria-selected': o[0] === mode, className: 'o' + (o[0] === mode ? ' on' : ''), onClick: () => { setOpen(false); if (o[0] !== mode) onMode(o[0]); } },
             h('i', { className: 'ic' }, h(Icon, { name: o[3], size: 18 })),
             h('span', { className: 't' }, h('b', null, o[1]), h('small', null, o[2])),
-            o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null))));
+            o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null)))));
 }

@@ -264,7 +264,7 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .ep-in.i{background:rgba(96,140,255,.1);border-color:rgba(96,140,255,.4)}.ep-in.i i{background:#6c93ff}
 .ep-in .pos{color:#22b573}.ep-in .neg{color:#ef6b7b}
 /* v5.12.1 pilihan tampilan tunggal + matriks 3/5 kolom */
-.ep .hub-ttl h3{font-size:24px!important}
+.hub-ttl h3{font-size:24px!important}
 .ep-tabs.ep-sel{display:block;margin:0 0 14px}
 .ep-sel .sel{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 14px;border-radius:12px;border:1px solid var(--c82);background:var(--c123);color:var(--c0);font:inherit;font-weight:600;font-size:15px;cursor:pointer}
 .ep-sel .sel svg{opacity:.7}.ep-sel .sel svg.up{transform:rotate(180deg)}
@@ -286,3 +286,18 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .ep-sbar.w5{margin-left:68px}
 .ep-cx.tt span{white-space:nowrap}
 .ep-mxw.w5 .ep-cx.tt{font-size:max(9.5px,3.7cqw)}.ep-mxw.w5 .ep-cx.tt .n{font-size:max(9px,3.3cqw)}
+
+/* v5.12.2 kartu gabungan 8 pilihan */
+.hub-menu{max-height:min(72vh,520px);overflow-y:auto;overscroll-behavior:contain}
+.hub-gl{padding:10px 12px 4px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--c122)}
+.hub-gl:first-child{padding-top:6px}
+.hub-menu .o{min-height:48px;padding:6px 12px}
+.hub-menu .o .ic{width:32px;height:32px}
+.hub-adv .adv.adv-card-only{margin:0}
+.hub-adv .adv-card{border:0!important;background:none!important;box-shadow:none!important;padding:0!important;margin-top:4px}
+.mg .hub-row .mg-years{flex:none}
+.mg .hub-row .mg-years button{width:30px;height:30px}
+.mg .hub-row .mg-years span{min-width:44px;font-size:15px}
+.hub-adv .adv,.hub-adv .adv-card-only{border:0!important;background:none!important;box-shadow:none!important;padding:0!important;margin:0!important;backdrop-filter:none!important}
+.hub-adv .adv-card{margin-top:6px!important}
+.pe-card.hub-adv .adv .adv-card.adv-card.adv-card{border:0!important;background:none!important;box-shadow:none!important;padding:0!important;margin:6px 0 0!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-radius:0!important}

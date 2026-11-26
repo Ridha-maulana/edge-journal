@@ -115,15 +115,19 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                             v.n,
                             " posisi"))); })),
             React.createElement("p", { className: "pe-note" }, "Ketuk tanggal yang punya posisi untuk membuka jurnal hari itu.")),
-        React.createElement("div", { className: "pe-card mg" },
-            React.createElement("div", { className: "mg-head" },
-                React.createElement("div", { className: "mg-ttl" },
-                    React.createElement("h3", null, "Monthly gain"),
-                    React.createElement("p", null, "Ringkasan performa bulanan")),
-                React.createElement("div", { className: "mg-years" },
-                    React.createElement("button", { type: "button", "aria-label": "Tahun sebelumnya", onClick: () => onPickMonth(year - 1, mSel) }, React.createElement(ChevronLeft, { size: 16 })),
-                    React.createElement("span", null, year),
-                    React.createElement("button", { type: "button", "aria-label": "Tahun berikutnya", onClick: () => onPickMonth(year + 1, mSel) }, React.createElement(ChevronRight, { size: 16 })))),
+        (() => {
+            const hh = p => React.createElement(PerfHubHead, { ...p, mode: hub, onMode: setHub });
+            if (hub === 'posisi' || hub === 'entri' || hub === 'bulan') {
+                if (hub === 'bulan') return React.createElement(DrillDown, { key: account.id + '-dd', account: account, trades: filtered, rangeText: rangeText, hubHead: hh });
+                return React.createElement(EntryPerf, { key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh });
+            
+            }
+            if (hub === 'mg') return React.createElement(React.Fragment, null,
+            React.createElement("div", { className: "pe-card mg" },
+            React.createElement(PerfHubHead, { mode: 'mg', onMode: setHub, sub: `Ringkasan performa bulanan · ${MN[mSel]} ${year}`, lockBtn: React.createElement("div", { className: "mg-years" },
+                React.createElement("button", { type: "button", "aria-label": "Tahun sebelumnya", onClick: () => onPickMonth(year - 1, mSel) }, React.createElement(ChevronLeft, { size: 16 })),
+                React.createElement("span", null, year),
+                React.createElement("button", { type: "button", "aria-label": "Tahun berikutnya", onClick: () => onPickMonth(year + 1, mSel) }, React.createElement(ChevronRight, { size: 16 }))) }),
             React.createElement("div", { className: "mg-body" },
                 React.createElement("div", { className: "mg-stats" }, [
                     ['Gain ' + MN[ms.i], fp(ms.pc), tone(ms.pnl), 'ChartUp'],
@@ -157,12 +161,28 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                 React.createElement("em", { className: m.n ? (m.pnl > 0 ? 'pos' : m.pnl < 0 ? 'neg' : '') : 'nil' }, m.n ? sg(m.pnl) : '–')))),
             React.createElement("div", { className: `mg-note ${ms.n ? (ms.pnl > 0 ? 'pos' : ms.pnl < 0 ? 'neg' : '') : ''}` },
                 React.createElement("b", null, !ms.n ? `Belum ada trade di ${MN[ms.i]}` : ms.pnl > 0 ? `Progres bagus di ${MN[ms.i]}` : ms.pnl < 0 ? `${MN[ms.i]} perlu evaluasi` : `${MN[ms.i]} impas`),
-                React.createElement("span", null, `Trades ${ms.n}  |  Win rate ${ms.n ? Math.round(ms.wins / ms.n * 100) : 0}%  |  Profit ${sg(ms.pnl)}`))),
-        hub !== 'all' ? (() => {
-            const hh = p => React.createElement(PerfHubHead, { ...p, mode: hub, onMode: setHub });
-            if (hub === 'bulan') return React.createElement(DrillDown, { key: account.id + '-dd', account: account, trades: filtered, rangeText: rangeText, hubHead: hh });
-            return React.createElement(EntryPerf, { key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh });
-        })() : React.createElement("div", { className: "pe-card" },
+                React.createElement("span", null, `Trades ${ms.n}  |  Win rate ${ms.n ? Math.round(ms.wins / ms.n * 100) : 0}%  |  Profit ${sg(ms.pnl)}`))));
+            if (hub === 'adv') return React.createElement("div", { className: "pe-card hub-adv" }, hh({ sub: `Statistik lengkap akun \u00B7 ${total.n} trade` }), advancedStats);
+            if (hub === 'pair') return React.createElement("div", { className: "pe-card" },
+            hh({ sub: `${syms.length} pair \u00B7 urut dari profit terbesar` }),
+            syms.length ? syms.slice().sort((a, b) => b.pnl - a.pnl).map(x => React.createElement("div", { className: "pe-row", key: x.s },
+                React.createElement("div", { className: "pe-rowhead" },
+                    React.createElement("strong", null, x.s),
+                    React.createElement("b", { className: tone(x.pnl) }, sg(x.pnl))),
+                bar(Math.abs(x.pnl) / maxSym * 100, x.pnl >= 0))) : React.createElement("p", { className: "pe-empty" }, "Belum ada data."));
+            if (hub === 'pop') return React.createElement("div", { className: "pe-card" },
+            hh({ sub: `${syms.length} pair \u00B7 ${sorted.length} trade \u00B7 urut dari paling sering` }),
+            syms.length ? syms.map(x => React.createElement("div", { className: "pe-row", key: x.s },
+                React.createElement("div", { className: "pe-rowhead" },
+                    React.createElement("strong", null, x.s),
+                    React.createElement("span", null,
+                        (x.n / sorted.length * 100).toFixed(1),
+                        "% (",
+                        x.n,
+                        ")")),
+                React.createElement("div", { className: "pe-bar" },
+                    React.createElement("i", { style: { width: `${x.n / sorted.length * 100}%`, background: EJC("#6b8dff") } })))) : React.createElement("p", { className: "pe-empty" }, "Belum ada data."));
+            return React.createElement("div", { className: "pe-card" },
             React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, sub: `Grafik hasil trading · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
             CT.k === 'line' && React.createElement("div", { className: "pe-kw pe-kw-r" }, React.createElement(TplKind, { ctl: kctl })),
             React.createElement("div", { className: "pe-tabs icon-tabs" }, [['daily', 'Daily P&L', 'ChartPie'], ['growth', 'Growth', 'ChartUp'], ['balance', 'Balance', 'Scale'], ['profit', 'Profit', 'Coins'], ['dd', 'Drawdown', 'ChartDown']].map(([k, l, ic]) => React.createElement("button", { key: k, type: "button", className: ct === k ? 'on' : '', "aria-label": l, title: l, onClick: () => setCt(k) }, React.createElement(Icon, { name: ic, size: 14 }), React.createElement("span", null, l)))),
@@ -187,27 +207,8 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                 React.createElement("span", null, fmtLong(String(h.date).slice(0, 10)) + (String(h.date).length > 10 ? ' ' + String(h.date).slice(11, 19) : '')),
                 React.createElement("b", null,
                     w ? '-' : '+',
-                    fm(h.amount))); }))),
-        advancedStats,
-        React.createElement("div", { className: "pe-card" },
-            React.createElement("h3", null, "P&L per pair"),
-            syms.length ? syms.slice().sort((a, b) => b.pnl - a.pnl).map(x => React.createElement("div", { className: "pe-row", key: x.s },
-                React.createElement("div", { className: "pe-rowhead" },
-                    React.createElement("strong", null, x.s),
-                    React.createElement("b", { className: tone(x.pnl) }, sg(x.pnl))),
-                bar(Math.abs(x.pnl) / maxSym * 100, x.pnl >= 0))) : React.createElement("p", { className: "pe-empty" }, "Belum ada data.")),
-        React.createElement("div", { className: "pe-card" },
-            React.createElement("h3", null, "Pair terpopuler"),
-            syms.length ? syms.map(x => React.createElement("div", { className: "pe-row", key: x.s },
-                React.createElement("div", { className: "pe-rowhead" },
-                    React.createElement("strong", null, x.s),
-                    React.createElement("span", null,
-                        (x.n / sorted.length * 100).toFixed(1),
-                        "% (",
-                        x.n,
-                        ")")),
-                React.createElement("div", { className: "pe-bar" },
-                    React.createElement("i", { style: { width: `${x.n / sorted.length * 100}%`, background: EJC("#6b8dff") } })))) : React.createElement("p", { className: "pe-empty" }, "Belum ada data.")),
+                    fm(h.amount))); })));
+        })(),
         React.createElement("div", { className: "dna-title" },
             React.createElement("h2", null, "Trader DNA"),
             React.createElement("small", { className: "pe-sub2" }, "Rapor karakter trading berbasis data")),
