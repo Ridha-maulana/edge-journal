@@ -1,7 +1,7 @@
 /* Tampilan aplikasi: mode (terang/gelap/otomatis), tema warna, font. Dimuat di <head> agar diterapkan sebelum layar tampil pertama kali.
    Semua warna di CSS/JS berupa var(--cN) dari color-table.js; di sini nilainya dihitung ulang per mode + tema. */
 (function () {
-    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx', fxs: 'ej3-fxs', sfc: 'ej3-sfc', sfcg: 'ej3-sfcg', bg: 'ej3-bg', bgd: 'ej3-bgd' };
+    var KEY = { mode: 'ej3-mode', theme: 'ej3-theme', font: 'ej3-font', fx: 'ej3-fx', fxs: 'ej3-fxs', sfc: 'ej3-sfc', sfcg: 'ej3-sfcg', bg: 'ej3-bg', bgd: 'ej3-bgd', nblur: 'ej3-nblur', nshd: 'ej3-nshd', nanim: 'ej3-nanim', hapf: 'ej3-hapf', hz: 'ej3-hz' };
     /* efek permukaan kartu (v5.9.40): 0 = standar, 1-25 = gaya (nama, keluarga warna teks d/l/a, grup). CSS-nya css/23-surfaces.css (dibuat docs/gen-surfaces.py) */
     var SFC = [null, ["Putih Solid", "l", "dasar", "#fafafa"], ["Hitam Solid", "d", "dasar", "#1c1c1e"], ["Abu Solid", "l", "dasar", "#adb1b9"], ["Transparan Ringan", "a", "dasar"], ["Transparan Gelap", "d", "dasar", "#6d727b"], ["Border Berwarna", "a", "dasar"], ["Bayangan Lembut", "a", "dasar"], ["Bayangan Tebal", "a", "dasar"], ["Kaca Buram", "a", "dasar"], ["Border Tipis", "a", "dasar"], ["Doff Hitam", "d", "doff", "#1d1e21"], ["Doff Putih", "l", "doff", "#efeeea"], ["Doff Abu Muda", "l", "doff", "#a4a7ae"], ["Doff Abu Tua", "d", "doff", "#46494e"], ["Doff Navy", "d", "doff", "#2b3d5e"], ["Doff Biru", "d", "doff", "#5878a0"], ["Doff Hijau Sage", "l", "doff", "#94ab95"], ["Doff Hijau Tua", "d", "doff", "#2e4a3c"], ["Doff Olive", "d", "doff", "#62694a"], ["Doff Krem", "l", "doff", "#ecdcc3"], ["Doff Terracotta", "d", "doff", "#b4664a"], ["Doff Merah Marun", "d", "doff", "#5c2a35"], ["Doff Pink Dusty", "l", "doff", "#cf9b9b"], ["Doff Ungu Plum", "d", "doff", "#583d58"], ["Doff Cokelat", "d", "doff", "#624a3e"]];
     /* efek tampilan yang bisa dinyalakan sendiri-sendiri: latar, kartu, tombol, ikon (kartu), hdr (ikon header), nav (ikon menu bawah), gerak */
@@ -241,6 +241,12 @@
         /* latar aplikasi (v5.9.53): '' = standar (ikut tema/template halaman utama), selain itu 'kategori:Nama' dari js/lib/wallpapers.js; bgd = redup 0-80 */
         bg: get('bg', '', function (v) { return /^[a-z]+:[^<>"']{1,40}$/.test(v); }),
         bgd: +get('bgd', '20', function (v) { return /^\d+$/.test(v) && +v >= 0 && +v <= 80; }),
+        /* kecepatan (v5.13.0): matikan blur kaca, matikan bayangan, animasi (0 normal, 1 singkat, 2 mati), getar langsung, laju layar (0 otomatis, 60/90/120) */
+        nblur: +get('nblur', '0', function (v) { return v === '0' || v === '1'; }),
+        nshd: +get('nshd', '0', function (v) { return v === '0' || v === '1'; }),
+        nanim: +get('nanim', '0', function (v) { return v === '0' || v === '1' || v === '2'; }),
+        hapf: +get('hapf', '1', function (v) { return v === '0' || v === '1'; }),
+        hz: +get('hz', '0', function (v) { return v === '0' || v === '60' || v === '90' || v === '120'; }),
         fx: 'on',
         fxs: {}
     };
@@ -385,6 +391,7 @@
         api.bg = bg; api.bgRGB = [parseInt(bg.substr(1, 2), 16), parseInt(bg.substr(3, 2), 16), parseInt(bg.substr(5, 2), 16), 1]; api.resolved = mode;
         var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', bg);
         if (state.bg) root.setAttribute('data-bgw', '1'); else root.removeAttribute('data-bgw');
+        root.setAttribute('data-nblur', state.nblur ? '1' : '0'); root.setAttribute('data-nshd', state.nshd ? '1' : '0'); root.setAttribute('data-nanim', String(state.nanim));
         if (api.bgApply) api.bgApply();
     }
     var loaded = {};
@@ -422,6 +429,25 @@
         if (k === 'font') applyFont(); else applyColors();
         notify();
     }
+    /* kecepatan: paket cepat [blur mati, bayangan mati, animasi, getar langsung] */
+    var SPEED_PRESETS = [[0, 0, 0, 1], [1, 1, 1, 1], [1, 1, 2, 1]];
+    function speedMode() { for (var i = 0; i < SPEED_PRESETS.length; i++) { var q = SPEED_PRESETS[i]; if (q[0] === state.nblur && q[1] === state.nshd && q[2] === state.nanim && q[3] === state.hapf) return i; } return -1; }
+    function setSpeedMode(i) {
+        var q = SPEED_PRESETS[i]; if (!q) return;
+        state.nblur = q[0]; state.nshd = q[1]; state.nanim = q[2]; state.hapf = q[3];
+        try { localStorage.setItem(KEY.nblur, q[0]); localStorage.setItem(KEY.nshd, q[1]); localStorage.setItem(KEY.nanim, q[2]); localStorage.setItem(KEY.hapf, q[3]); } catch (e) { }
+        applyColors(); notify();
+    }
+    /* laju layar: hanya di aplikasi Android (plugin EjTheme dari APK terbaru) */
+    function nativePlugin() { try { var c = window.Capacitor; if (c && c.isNativePlatform && c.isNativePlatform()) return (c.Plugins && c.Plugins.EjTheme) || c.registerPlugin('EjTheme'); } catch (e) { } return null; }
+    function refreshInfo() {
+        var p = nativePlugin(); if (!p) return Promise.resolve({ native: false, ok: false, max: 0 });
+        if (!p.getRefresh) return Promise.resolve({ native: true, ok: false, max: 0 });
+        return Promise.resolve(p.getRefresh()).then(function (r) { return { native: true, ok: true, max: +(r && r.max) || 0 }; }).catch(function () { return { native: true, ok: false, max: 0 }; });
+    }
+    function pushHz() { var p = nativePlugin(); if (p && p.setRefresh) { try { Promise.resolve(p.setRefresh({ hz: state.hz })).catch(function () { }); } catch (e) { } } }
+    function setHz(v) { state.hz = +v; try { localStorage.setItem(KEY.hz, state.hz); } catch (e) { } pushHz(); notify(); }
+    setTimeout(pushHz, 1500);
     function setCustom(c) {
         if (c.bg && validHex(c.bg)) custom.bg = c.bg.toLowerCase();
         if (c.ac && validHex(c.ac)) custom.ac = c.ac.toLowerCase();
@@ -432,7 +458,7 @@
     }
     function preview(bg, ac, mode) { var dl = derive(bg, ac), s = side(dl[mode === 'light' ? 1 : 0], mode !== 'light'); var f = s.f; return { bg: f.bg, pn: f.pn, bd: f.bd, tx: f.tx, mu: f.mu, ac: f.ac, on: s.on }; }
     var api = {
-        THEMES: THEMES, THEME_ORDER: THEME_ORDER, FONTS: FONTS, FONT_ORDER: FONT_ORDER, state: state, set: set, setFx: setFx, setFxAll: setFxAll, FX_KEYS: FX_KEYS, SFC: SFC, preload: preload, custom: custom, validHex: validHex, setCustom: setCustom, preview: preview, bg: '#090d18', bgRGB: [9, 13, 24, 1], resolved: 'dark',
+        THEMES: THEMES, THEME_ORDER: THEME_ORDER, FONTS: FONTS, FONT_ORDER: FONT_ORDER, state: state, set: set, setFx: setFx, setFxAll: setFxAll, speedMode: speedMode, setSpeedMode: setSpeedMode, refreshInfo: refreshInfo, setHz: setHz, FX_KEYS: FX_KEYS, SFC: SFC, preload: preload, custom: custom, validHex: validHex, setCustom: setCustom, preview: preview, bg: '#090d18', bgRGB: [9, 13, 24, 1], resolved: 'dark',
         idx: {}
     };
     (window.EJ_HEX || []).forEach(function (h, i) { api.idx[h] = i; });

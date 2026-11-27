@@ -370,3 +370,10 @@ body.perf-adv .performance-detail-page{padding-left:16px!important;padding-right
 .hub-ctl .mg-years{flex:none}
 .hub-ctl .mg-years button{width:30px;height:30px}
 .hub-ctl .mg-years span{min-width:44px;font-size:15px}
+
+/* v5.12.8 Kecepatan & kelancaran: saklar di Tools > Tampilan (html[data-nblur|nshd|nanim]) */
+html[data-nblur="1"] *,html[data-nblur="1"] *::before,html[data-nblur="1"] *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-nshd="1"] *,html[data-nshd="1"] *::before,html[data-nshd="1"] *::after{box-shadow:none!important;text-shadow:none!important}
+html[data-nanim="1"] *,html[data-nanim="1"] *::before,html[data-nanim="1"] *::after{animation-duration:.12s!important;transition-duration:.12s!important;animation-delay:0s!important;transition-delay:0s!important}
+html[data-nanim="2"] *,html[data-nanim="2"] *::before,html[data-nanim="2"] *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;animation-delay:0s!important;transition-delay:0s!important}
+html[data-nanim="2"] .spin,html[data-nanim="2"] [class*="spinner"],html[data-nanim="2"] [class*="loading"]{animation-iteration-count:infinite!important;animation-duration:.8s!important}

@@ -341,7 +341,7 @@ function PerfHubHead({ mode, onMode, sub, lockBtn, onBack }) {
     const ctl = lockBtn ? ({ bulan: ['Kunci data', 'Gabungkan semua periode'], mg: ['Tahun', 'Pilih tahun ringkasan'] }[mode] || ['', '']) : null;
     return h(React.Fragment, null, h('div', { className: 'hub-hd' },
         h('div', { className: 'hub-row' },
-            onBack && h('button', { type: 'button', className: 'icon-btn hub-back', 'aria-label': 'Kembali ke Performance', onClick: () => { try { if (typeof hapticFire === 'function') hapticFire(10); } catch (e) { } onBack(); } }, h(Icon, { name: 'ChevronLeft', size: 18 })),
+            onBack && h('button', { type: 'button', className: 'icon-btn hub-back', 'aria-label': 'Kembali ke Performance', onClick: onBack }, h(Icon, { name: 'ChevronLeft', size: 18 })),
             h('button', { type: 'button', className: 'hub-ttl', 'aria-haspopup': 'dialog', 'aria-expanded': open, onClick: () => setOpen(true) },
                 h('h3', null, cur[1]), h(Icon, { name: 'ChevronDown', size: 18 })),
             null),

@@ -38,6 +38,37 @@ function ApFxDialog({ EJ, st, onClose }) {
                 FX_MINI[k] && h("span", { className: "fxm-mini" }, FX_MINI[k].map((nm, j) => h("span", { key: nm, style: { color: f[k] ? (k === 'nav' ? FX_NAVC[j] : ICON_COLORS[nm]) : 'var(--ej-ik)', opacity: f[k] ? 1 : .55 } }, h(Icon, { name: nm, size: 15 })))),
                 h("span", { className: "fxm-sw" }))))));
 }
+
+/* Kecepatan & kelancaran (v5.12.8): paket Normal/Ringan/Ngebut, saklar satu per satu, laju layar (APK) */
+const SPD_NAMES = ['Normal', 'Ringan', 'Ngebut'];
+function speedLabel(EJ) { const m = EJ.speedMode(); return m < 0 ? 'Kustom' : SPD_NAMES[m]; }
+function ApSpeedDialog({ EJ, st, onClose }) {
+    const h = React.createElement, mode = EJ.speedMode();
+    const [info, setInfo] = useState(null);
+    useEffect(() => { let ok = true; EJ.refreshInfo().then(r => { if (ok) setInfo(r); }); return () => { ok = false; }; }, []);
+    const MODES = [['Normal', 'Sparkles'], ['Ringan', 'Zap'], ['Ngebut', 'Zap']];
+    const MD = ['Semua efek seperti sebelumnya.', 'Tanpa blur kaca dan bayangan, animasi singkat. Terasa lebih cepat di HP.', 'Tanpa blur, bayangan, dan animasi: paling cepat, tampilan paling polos.', 'Pengaturan diubah satu per satu.'];
+    const flip = (k, on) => { EJ.set(k, on ? 0 : 1); };
+    const ROWS = [
+        ['nblur', 'Matikan blur kaca', 'Penyebab berat terbesar saat membuka halaman', 'Layers', !!st.nblur, () => flip('nblur', !!st.nblur)],
+        ['nshd', 'Matikan bayangan', 'Kartu dan tombol tanpa bayangan lembut', 'FileText', !!st.nshd, () => flip('nshd', !!st.nshd)],
+        ['nanim', 'Animasi singkat', 'Perpindahan halaman dan pop-up lebih cepat', 'Clock', st.nanim > 0, () => EJ.set('nanim', st.nanim > 0 ? 0 : 1)],
+        ['hapf', 'Getar langsung saat ditekan', 'Getar terasa saat jari menyentuh, tanpa menunggu', 'Zap', !!st.hapf, () => flip('hapf', !!st.hapf)]
+    ];
+    const HZ = [0, 60, 90, 120], max = info && info.max || 0, can = info && info.ok;
+    const note = !info ? '' : !info.native ? 'Pilihan laju layar hanya tersedia di aplikasi Android.' : !info.ok ? 'Aplikasi Android kamu belum mendukung ini. Pasang APK terbaru dulu.' : (max > 60 ? 'Layar HP-mu mendukung sampai ' + max + ' Hz. Pilihan ini meminta layar memakai laju itu untuk aplikasi ini, jadi gulir dan animasi lebih mulus.' : 'Layar HP-mu hanya mendukung 60 Hz.');
+    return h(ApDialog, { title: "Kecepatan & kelancaran", onClose: onClose, className: "ap-sp" },
+        h("div", { className: "fxm" },
+            h("div", { className: "sp-lbl" }, "Mode kelancaran"),
+            h("div", { className: "fxm-seg sp3" }, MODES.map(([t, ic], i) => h("button", { type: "button", key: t, className: mode === i ? 'on' : '', "aria-pressed": mode === i, onClick: () => EJ.setSpeedMode(i) }, h(Icon, { name: ic, size: 18 }), h("span", null, t)))),
+            h("p", { className: "sp-desc" }, MD[mode < 0 ? 3 : mode]),
+            h("div", { className: "sp-lbl" }, "Atur satu per satu"),
+            h("div", { className: "fxm-list" }, ROWS.map(([k, t, d, ic, on, fn]) => h("button", { type: "button", key: k, className: "fxm-r" + (on ? ' on' : ''), role: "switch", "aria-checked": on, onClick: fn },
+                h("i", null, h(Icon, { name: ic, size: 18 })), h("div", null, h("b", null, t), h("small", null, d)), h("span", { className: "fxm-sw" })))),
+            h("div", { className: "sp-lbl" }, "Kecepatan layar", info && !can && info.native ? h("em", null, "Perlu APK baru") : null),
+            h("div", { className: "fxm-seg sp4" }, HZ.map(v => { const off = v > 0 && (!can || (max && v > max)); return h("button", { type: "button", key: v, className: st.hz === v ? 'on' : '', disabled: off, style: off ? { opacity: .35 } : null, "aria-pressed": st.hz === v, onClick: () => EJ.setHz(v) }, h("span", null, v ? v + ' Hz' : 'Otomatis')); })),
+            note && h("p", { className: "sp-desc" }, note)));
+}
 /* Efek permukaan kartu: 0 = standar (tampilan sekarang), 25 gaya (10 dasar + 15 doff) untuk kartu, header, dan menu bawah */
 function sfcName(EJ, n) { const m = EJ.SFC[n]; return m ? m[0] : 'Standar'; }
 function ApSfcDialog({ EJ, st, onClose }) {
@@ -175,7 +206,7 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
     function resetAll() {
         if (!sure) { setSure(true); return; }
         setSure(false);
-        EJ.set('mode', 'dark'); EJ.set('theme', 'mint'); EJ.set('font', 'manrope'); EJ.set('sfc', 0); EJ.set('sfcg', 0); EJ.set('bg', ''); EJ.set('bgd', 20);
+        EJ.set('mode', 'dark'); EJ.set('theme', 'mint'); EJ.set('font', 'manrope'); EJ.set('sfc', 0); EJ.set('sfcg', 0); EJ.set('bg', ''); EJ.set('bgd', 20); EJ.setSpeedMode(0);
         EJ.FX_KEYS.forEach(k => EJ.setFx(k, ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'gerak'].indexOf(k) >= 0));
         onHome && onHome(0); onHeaderVariant && onHeaderVariant(0); onNavVariant && onNavVariant(0);
     }
@@ -212,6 +243,8 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
         React.createElement(ApRow, { icon: React.createElement(Sparkles, { size: 18 }), title: "Efek tampilan", desc: "Kartu, tombol, ikon, latar, dan gerak: pilih semua atau satu per satu", value: fxCount(st), onOpen: () => setDlg('fx') }),
         React.createElement(ApRow, { icon: React.createElement(Layers, { size: 18 }), title: "Efek permukaan kartu", desc: "Doff, solid, transparan, bayangan: kartu, header, dan menu bawah", value: sfcName(EJ, st.sfc | 0), onOpen: () => setDlg('sfc') }),
         React.createElement(ApRow, { icon: React.createElement(Icon, { name: "Image", size: 18 }), title: "Latar aplikasi", desc: "Warna dasar, doff, kaca, anime, atau pola di belakang aplikasi", value: bgName(EJ, st.bg), onOpen: () => setDlg('bg') }),
+        React.createElement("div", { className: "sec-label" }, "Kecepatan"),
+        React.createElement(ApRow, { icon: React.createElement(Icon, { name: "Zap", size: 18 }), title: "Kecepatan & kelancaran", desc: "Mode ringan, animasi, getar, dan laju layar", value: speedLabel(EJ), onOpen: () => setDlg('speed') }),
         React.createElement("div", { className: "sec-label" }, "Header & menu"),
         React.createElement(HeaderPicker, { value: headerVariant || 0, onChange: onHeaderVariant }),
         React.createElement(NavPicker, { value: navVariant || 0, onChange: onNavVariant }),
@@ -220,6 +253,7 @@ function AppearanceRows({ homeT, onHome, headerVariant, onHeaderVariant, navVari
             React.createElement("div", { className: "ap-list" }, HOME_LIST.map(([v, l]) => React.createElement("button", { type: "button", key: v, className: ((homeT || 0) === v ? 'on ' : '') + 'ap-font', onClick: () => { onHome && onHome(v); } },
                 React.createElement("span", { className: "ap-nm" }, React.createElement("b", null, l.replace(' (sekarang)', ''))), React.createElement("i", { className: "ap-rad" }))))),
         dlg === 'fx' && React.createElement(ApFxDialog, { EJ: EJ, st: st, onClose: close }),
+        dlg === 'speed' && React.createElement(ApSpeedDialog, { EJ: EJ, st: st, onClose: close }),
         dlg === 'sfc' && React.createElement(ApSfcDialog, { EJ: EJ, st: st, onClose: close }),
         dlg === 'bg' && React.createElement(ApBgDialog, { EJ: EJ, st: st, onClose: close }),
         dlg === 'mode' && React.createElement(ApDialog, { title: "Mode tampilan", onClose: close, className: "ap-wide" },

@@ -65,4 +65,39 @@ public class EjThemePlugin extends Plugin {
         }
         call.resolve(r);
     }
+
+    /* Laju layar yang diminta aplikasi: hz = 0 (otomatis), 60, 90, atau 120. Disimpan dan dipakai lagi saat aplikasi dibuka. */
+    @PluginMethod
+    public void setRefresh(final PluginCall call) {
+        JSObject r = new JSObject();
+        try {
+            int hz = call.getInt("hz", 0);
+            if (hz != 0 && hz != 60 && hz != 90 && hz != 120) hz = 0;
+            getContext().getSharedPreferences("ejtheme", Context.MODE_PRIVATE).edit().putInt("hz", hz).apply();
+            final Activity a = getActivity();
+            final int fhz = hz;
+            if (a != null) a.runOnUiThread(new Runnable() { public void run() { MainActivity.applyRefresh(a, fhz); } });
+            r.put("ok", true);
+        } catch (Throwable e) { r.put("ok", false); }
+        call.resolve(r);
+    }
+
+    /* Laju layar tertinggi yang didukung HP (Hz). */
+    @PluginMethod
+    public void getRefresh(PluginCall call) {
+        JSObject r = new JSObject();
+        try {
+            Activity a = getActivity();
+            float max = 60f;
+            if (a != null && Build.VERSION.SDK_INT >= 23) {
+                android.view.Display d = a.getWindowManager().getDefaultDisplay();
+                for (android.view.Display.Mode m : d.getSupportedModes()) if (m.getRefreshRate() > max) max = m.getRefreshRate();
+            } else if (a != null) {
+                max = a.getWindowManager().getDefaultDisplay().getRefreshRate();
+            }
+            r.put("max", Math.round(max));
+            r.put("ok", true);
+        } catch (Throwable e) { r.put("max", 60); r.put("ok", true); }
+        call.resolve(r);
+    }
 }

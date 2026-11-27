@@ -51,6 +51,8 @@ function setupHaptics() {
     if (window.__hapticsReady || (typeof navigator.vibrate !== 'function' && !nativeHaptics())) return;
     window.__hapticsReady = true;
     const NAV_SEL = '.nav-item';
+    const PERF_FAST = '.hub-back,.hub-ttl,.ep-sel .sel,.pg .cal-nav button';
+    const hapFast = () => !window.EJ || !window.EJ.state || window.EJ.state.hapf !== 0;
     const LIGHT_SEL = '.pill,.tsel,.dfield,.cal-cell,.pe-tabs button,.pe-years button,button[aria-label="Buka kalender"]';
     let pending = null;
     const isTouch = e => e.pointerType === 'touch' || e.pointerType === 'pen';
@@ -70,7 +72,7 @@ function setupHaptics() {
         pending = null;
         const el = targetOf(e);
         if (!el || !isTouch(e) || reduced()) return;
-        if (el.closest('.performance-detail-page')) return;
+        if (el.closest('.performance-detail-page') && !(hapFast() && el.matches(PERF_FAST))) return;   // halaman statistik: hanya tombol utama yang bergetar saat disentuh
         if (el.matches(NAV_SEL)) return;              // menu bawah: getar saat click (sinkron dengan pindah tab)
         const p = patternFor(el);
         if (hasActivation()) { if (fire(p) === false) pending = p; }

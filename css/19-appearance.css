@@ -119,3 +119,12 @@ html[data-bgw][data-bgw][data-bgw][data-bgw][data-bgw] :is(body,.app-shell){back
 .bgx-sl input[type=range]{width:100%;margin:10px 0 4px;accent-color:var(--ej-pr)}.bgx-sl small{display:block;font-size:11px;opacity:.6}
 /* kartu agak tembus agar latar terlihat (hanya saat Efek permukaan = Standar; gaya permukaan punya tampilan sendiri) */
 html[data-bgw][data-bgw]:not([data-sfc]) :is(.tp-card,.pe-card,.tool-card:not(.acct-inline),.adv-card,.chart-card,.scan-card,.week-head,.trade-card,.gj-chart,.flat-sec.card-sec,.hd-card,.panel,.pe-tile,.tp-act,.t2-nt,.t5-card):not(.acc-panel *){background:color-mix(in srgb,var(--ej-sf) 70%,transparent)!important;background-image:none!important;-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
+.sp-lbl{display:flex;align-items:center;justify-content:space-between;margin:16px 0 4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.6}
+.sp-lbl:first-child{margin-top:0}.sp-lbl em{font-style:normal;font-size:11px;letter-spacing:0;text-transform:none;padding:2px 8px;border-radius:99px;background:var(--ej-so);opacity:1;color:var(--ej-ik)}
+.fxm-seg.sp3{grid-template-columns:repeat(3,1fr)}.fxm-seg.sp4{grid-template-columns:repeat(4,1fr)}
+.sp-desc{margin:8px 2px 0;font-size:13px;line-height:1.45;opacity:.62}
+.ap-bsheet.ap-sp .fxm{padding:0 20px 18px}
+.ap-bsheet.ap-sp .fxm-seg button{padding:11px 4px;font-size:13.5px}
+.ap-bsheet.ap-sp .fxm-list>.fxm-r{padding:11px 0;min-height:60px;gap:12px}
+.ap-bsheet.ap-sp .fxm-r b{font-size:14.5px}
+.ap-bsheet.ap-sp .fxm-list{display:block}

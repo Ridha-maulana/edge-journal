@@ -1,5 +1,6 @@
 package com.ridha.edgejournal;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -37,6 +38,7 @@ public class MainActivity extends BridgeActivity {
         } catch (Throwable e) { has = false; }
         super.onCreate(savedInstanceState);
         showOverLock(getIntent());
+        try { applyRefresh(this, getSharedPreferences("ejtheme", MODE_PRIVATE).getInt("hz", 0)); } catch (Throwable e) { }
         try {
             if (has && getBridge() != null && getBridge().getWebView() != null) getBridge().getWebView().setBackgroundColor(bg);
         } catch (Throwable e) { }
@@ -45,6 +47,31 @@ public class MainActivity extends BridgeActivity {
         } catch (Throwable e) {
             edge = false;
         }
+    }
+
+    /* Minta laju layar (Hz) untuk jendela ini; 0 = biarkan sistem memilih. Memilih mode layar terdekat yang ukurannya sama. */
+    public static void applyRefresh(Activity a, int hz) {
+        try {
+            WindowManager.LayoutParams lp = a.getWindow().getAttributes();
+            if (hz <= 0) {
+                lp.preferredRefreshRate = 0f;
+                if (Build.VERSION.SDK_INT >= 23) lp.preferredDisplayModeId = 0;
+            } else {
+                lp.preferredRefreshRate = (float) hz;
+                if (Build.VERSION.SDK_INT >= 23) {
+                    android.view.Display d = a.getWindowManager().getDefaultDisplay();
+                    android.view.Display.Mode cur = d.getMode();
+                    int best = 0; float diff = 1000f;
+                    for (android.view.Display.Mode m : d.getSupportedModes()) {
+                        if (m.getPhysicalWidth() != cur.getPhysicalWidth() || m.getPhysicalHeight() != cur.getPhysicalHeight()) continue;
+                        float df = Math.abs(m.getRefreshRate() - hz);
+                        if (df < diff) { diff = df; best = m.getModeId(); }
+                    }
+                    if (best != 0) lp.preferredDisplayModeId = best;
+                }
+            }
+            a.getWindow().setAttributes(lp);
+        } catch (Throwable e) { }
     }
 
     @Override
