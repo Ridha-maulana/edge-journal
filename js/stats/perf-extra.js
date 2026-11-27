@@ -1,5 +1,28 @@
 /* Performa per bulan, Trader DNA, grafik tambahan */
 "use strict";
+/* Garis/area dan batang kecil untuk halaman Performa Keseluruhan (v5.12.9) */
+function TlLine({ vals, h, col, zero, fill }) {
+    const v = vals.length > 1 ? vals : [vals[0] || 0, vals[0] || 0], W = 300, H = h;
+    let mn = Math.min(...v), mx = Math.max(...v);
+    if (zero) { mn = Math.min(mn, 0); mx = Math.max(mx, 0); }
+    if (mn === mx) { mn -= 1; mx += 1; }
+    const r = mx - mn; mn -= r * .12; mx += r * .12;
+    const y = a => H - (a - mn) / (mx - mn) * H, pts = v.map((a, i) => [i / (v.length - 1) * W, y(a)]);
+    const d = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join('');
+    const base = zero ? y(0) : H, last = pts[pts.length - 1], gid = 'tl' + Math.round(h) + (col || '').replace(/\W/g, '') + v.length;
+    return React.createElement("div", { className: "tl-ln", style: { height: h } },
+        React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: "none", "aria-hidden": "true" },
+            React.createElement("defs", null, React.createElement("linearGradient", { id: gid, x1: 0, x2: 0, y1: 0, y2: 1 }, React.createElement("stop", { offset: 0, stopColor: col, stopOpacity: .3 }), React.createElement("stop", { offset: 1, stopColor: col, stopOpacity: 0 }))),
+            zero && React.createElement("line", { x1: 0, x2: W, y1: base, y2: base, stroke: "currentColor", strokeOpacity: .15, vectorEffect: "non-scaling-stroke" }),
+            fill !== false && React.createElement("path", { d: d + `L${last[0]} ${base}L0 ${base}Z`, fill: `url(#${gid})` }),
+            React.createElement("path", { d, fill: "none", stroke: col, strokeWidth: 2.4, strokeLinejoin: "round", strokeLinecap: "round", vectorEffect: "non-scaling-stroke" })),
+        fill !== false && React.createElement("i", { className: "tl-dt", style: { top: (last[1] / H * 100) + '%', background: col } }));
+}
+function TlBars({ vals, h }) {
+    const n = vals.length || 1, mx = Math.max(1, ...vals.map(Math.abs)), mid = h / 2;
+    return React.createElement("svg", { className: "tl-bs", viewBox: `0 0 ${n * 10} ${h}`, preserveAspectRatio: "none", style: { height: h }, "aria-hidden": "true" },
+        vals.map((a, i) => { const bh = Math.max(2, Math.abs(a) / mx * (mid - 2)); return React.createElement("rect", { key: i, x: i * 10 + 1.5, width: 7, y: a >= 0 ? mid - bh : mid, height: bh, rx: 1.5, fill: EJC(a >= 0 ? "#34d399" : "#ff6b81") }); }));
+}
 function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view, onPickMonth, onResetAll, rangeText, mode = 'all', advancedStats, onBack }) {
     const cur = account.currency;
     const fm = n => money(n, cur);
@@ -41,6 +64,35 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const mpct = p => { const a = Math.abs(p); return (p > 0.004 ? '+' : p < -0.004 ? '-' : '') + (a >= 10 ? a.toFixed(1) : a.toFixed(2)) + '%'; };
     const syms = [...new Set(sorted.map(t => t.symbol))].map(s => { const xs = sorted.filter(t => t.symbol === s); return { s, n: xs.length, pnl: sumOf(xs, t => t.pnl) }; }).sort((a, b) => b.n - a.n);
     const maxSym = Math.max(1, ...syms.map(x => Math.abs(x.pnl)));
+    /* Sorotan akun (garis waktu): balance, hari terbaik, drawdown terdalam, hari terburuk, titik mulai */
+    const tlSummary = () => {
+        const nD = dayKeys.length, gcol = EJC("#34d399"), rcol = EJC("#ff6b81");
+        if (!nD) return React.createElement("p", { className: "pe-empty" }, "Belum ada data.");
+        const eq = cumS.map(c => (account.balance || 0) + c), cur = eq[nD - 1], dv = dayKeys.map(k => dayMap[k]);
+        let pkI = 0; eq.forEach((v, i) => { if (v >= eq[pkI]) pkI = i; });
+        let gs = 0; for (let i = nD - 1; i >= 0 && dv[i] > 0; i--) gs++;
+        let bi = 0; dv.forEach((v, i) => { if (v > dv[bi]) bi = i; });
+        let wi = 0; dv.forEach((v, i) => { if (v < dv[wi]) wi = i; });
+        let di = 0; ddS.forEach((v, i) => { if (v < ddS[di]) di = i; });
+        const nT = k => sorted.filter(t => wib(t.date).day === k).length;
+        let rec = -1; if (ddS[di] < 0) { const pk = cumS[di] - ddS[di]; for (let j = di + 1; j < nD; j++) if (cumS[j] >= pk) { rec = j - di; break; } }
+        const It = (d, col, title, desc, chart, last) => React.createElement("div", { className: "tl-it", key: title },
+            React.createElement("span", { className: "tl-d" }, d),
+            React.createElement("div", { className: "tl-r" }, React.createElement("i", { style: { background: col } }), !last && React.createElement("b", null)),
+            React.createElement("div", { className: "tl-b" }, React.createElement("strong", null, title), React.createElement("p", null, desc), chart));
+        const items = [];
+        items.push(It(lab[pkI === nD - 1 ? nD - 1 : pkI], gcol, pkI === nD - 1 && nD > 1 ? 'Balance tertinggi baru' : `Balance tertinggi ${fm(eq[pkI])}`, pkI === nD - 1 ? (gs >= 2 ? `${gs} hari hijau berturut-turut, balance di ${fm(cur)}` : `Balance sekarang ${fm(cur)}`) : `Sekarang ${fm(cur)}, ${fm(cur - eq[pkI])} dari puncak`));
+        if (dv[bi] > 0) items.push(It(lab[bi], gcol, `Hari terbaik: ${sg(dv[bi])}`, `${nT(dayKeys[bi])} trade pada hari itu`, nD > 2 ? React.createElement(TlBars, { vals: dv.slice(Math.max(0, bi - 4), bi + 5), h: 56 }) : null));
+        if (ddS[di] < 0) items.push(It(lab[di], rcol, `Drawdown terdalam ${fm(ddS[di])}`, rec >= 0 ? `Pulih penuh dalam ${rec} hari trading` : 'Belum pulih penuh dari puncak', nD > 2 ? React.createElement(TlLine, { vals: ddS, h: 56, col: rcol, zero: true }) : null));
+        if (dv[wi] < 0) items.push(It(lab[wi], rcol, `Hari terburuk ${fm(dv[wi])}`, `${nT(dayKeys[wi])} trade, rugi harian terbesar`));
+        items.push(It(lab[0], 'currentColor', `Mulai dengan modal ${fm(account.balance || 0)}`, `Hari pertama ${sg(dv[0])}`, null, true));
+        return React.createElement(React.Fragment, null,
+            React.createElement("div", { className: "tl-top" },
+                React.createElement("div", null, React.createElement("small", null, "BALANCE"), React.createElement("b", null, fm(cur))),
+                React.createElement("div", { className: "tl-gn" }, React.createElement("b", { className: tone(total) }, sg(total)), React.createElement("small", null, `${fp(pctChain(account, filtered))} · ${nD} hari`))),
+            React.createElement(TlLine, { vals: eq, h: 96, col: eq[nD - 1] >= eq[0] ? gcol : rcol }),
+            React.createElement("div", { className: "tl-list" }, items));
+    };
     const [dnaOpen, setDnaOpen] = useState(true);
     const cy = view.y, cm = view.m;
     const cdays = new Date(cy, cm + 1, 0).getDate();
@@ -193,10 +245,8 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                             React.createElement("b", { className: tone(x.pnl) }, sg(x.pnl))))));
             }
             return React.createElement("div", { className: flat ? "pg" : "pe-card" },
-            React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, onBack, sub: `Grafik hasil trading · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
-            CT.k === 'line' && React.createElement("div", { className: "pe-kw pe-kw-r" }, React.createElement(TplKind, { ctl: kctl })),
-            React.createElement("div", { className: "pe-tabs icon-tabs" }, [['daily', 'Daily P&L', 'ChartPie'], ['growth', 'Growth', 'ChartUp'], ['balance', 'Balance', 'Scale'], ['profit', 'Profit', 'Coins'], ['dd', 'Drawdown', 'ChartDown']].map(([k, l, ic]) => React.createElement("button", { key: k, type: "button", className: ct === k ? 'on' : '', "aria-label": l, title: l, onClick: () => setCt(k) }, React.createElement(Icon, { name: ic, size: 14 }), React.createElement("span", null, l)))),
-                        React.createElement(MiniChart, { key: ct + (kctl.kind === 'candle' ? 'c' : 'l'), vals: CT.v, labels: lab, kind: CT.k, fmt: CT.f, candle: CT.k === 'line' && kctl.kind === 'candle', base: ct === 'balance' ? account.balance : 0 }),
+            React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, onBack, sub: `Sorotan akun · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
+            tlSummary(),
             React.createElement("div", { className: "pe-cap" },
                 React.createElement("span", null,
                     React.createElement("i", { className: "dot g" }),

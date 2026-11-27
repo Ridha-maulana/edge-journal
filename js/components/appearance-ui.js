@@ -57,7 +57,7 @@ function ApSpeedDialog({ EJ, st, onClose }) {
     ];
     const HZ = [0, 60, 90, 120], max = info && info.max || 0, can = info && info.ok;
     const note = !info ? '' : !info.native ? 'Pilihan laju layar hanya tersedia di aplikasi Android.' : !info.ok ? 'Aplikasi Android kamu belum mendukung ini. Pasang APK terbaru dulu.' : (max > 60 ? 'Layar HP-mu mendukung sampai ' + max + ' Hz. Pilihan ini meminta layar memakai laju itu untuk aplikasi ini, jadi gulir dan animasi lebih mulus.' : 'Layar HP-mu hanya mendukung 60 Hz.');
-    return h(ApDialog, { title: "Kecepatan & kelancaran", onClose: onClose, className: "ap-sp" },
+    return h(ApDialog, { title: "Kecepatan & kelancaran", onClose: onClose, className: "ap-sp ap-custom" },
         h("div", { className: "fxm" },
             h("div", { className: "sp-lbl" }, "Mode kelancaran"),
             h("div", { className: "fxm-seg sp3" }, MODES.map(([t, ic], i) => h("button", { type: "button", key: t, className: mode === i ? 'on' : '', "aria-pressed": mode === i, onClick: () => EJ.setSpeedMode(i) }, h(Icon, { name: ic, size: 18 }), h("span", null, t)))),
