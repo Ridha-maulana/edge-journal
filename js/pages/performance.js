@@ -49,6 +49,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     }, [performanceView, period, trades.length]);
     const [draft, setDraft] = useState({ s: '', e: '' });
     const [view, setView] = useState(() => { const n = new Date(); return { y: n.getFullYear(), m: n.getMonth() }; });
+    useEffect(() => { document.body.classList.toggle('perf-adv', performanceView === 'advanced'); return () => document.body.classList.remove('perf-adv'); }, [performanceView]);
     useEffect(() => { if (performanceView !== 'overview')
         window.scrollTo({ top: 0, behavior: 'auto' }); }, [performanceView]);
     useEffect(() => { const h = () => { setPerformanceView('overview'); window.scrollTo({ top: 0, behavior: 'auto' }); }; window.addEventListener('perf-home', h); return () => window.removeEventListener('perf-home', h); }, []);
@@ -227,7 +228,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
                         React.createElement("span", null, `Analisis ${period.toLowerCase()} · ${account.name}`)),
                     React.createElement("span", { className: "performance-detail-badge" }, 'DNA')),
                 periodBlock),
-                performanceView === 'advanced' && React.createElement(PerfExtra, { account: account, trades: trades, filtered: filtered, total: total, maxDd: maxDd, onSelectDate: onSelectDate, view: view, onPickMonth: pickMonth, onResetAll: () => setPeriod('All time'), rangeText: periodTxt, mode: 'advanced', advancedStats: React.createElement(AdvancedStats, { account: account, filtered: filtered, total: total, maxDd: maxDd, hwm: hwm, view: view, part: 'card' }) }),
+                performanceView === 'advanced' && React.createElement(PerfExtra, { onBack: () => setPerformanceView('overview'), account: account, trades: trades, filtered: filtered, total: total, maxDd: maxDd, onSelectDate: onSelectDate, view: view, onPickMonth: pickMonth, onResetAll: () => setPeriod('All time'), rangeText: periodTxt, mode: 'advanced', advancedStats: React.createElement(AdvancedStats, { account: account, filtered: filtered, total: total, maxDd: maxDd, hwm: hwm, view: view, part: 'card' }) }),
                 performanceView === 'dna' && React.createElement(PerfExtra, { account: account, trades: trades, filtered: filtered, total: total, maxDd: maxDd, onSelectDate: onSelectDate, view: view, onPickMonth: pickMonth, onResetAll: () => setPeriod('All time'), rangeText: periodTxt, mode: 'dna' }))),
         shareOpen && ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop center top", onClick: e => { if (e.target === e.currentTarget) {
                 setShareOpen(false);

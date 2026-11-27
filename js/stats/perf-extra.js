@@ -1,6 +1,6 @@
 /* Performa per bulan, Trader DNA, grafik tambahan */
 "use strict";
-function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view, onPickMonth, onResetAll, rangeText, mode = 'all', advancedStats }) {
+function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view, onPickMonth, onResetAll, rangeText, mode = 'all', advancedStats, onBack }) {
     const cur = account.currency;
     const fm = n => money(n, cur);
     const sg = n => `${n > 0 ? '+' : ''}${fm(n)}`;
@@ -119,7 +119,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                 React.createElement("b", { className: tone(cmPnl) }, sg(cmPnl))),
             calInner()),
         (() => {
-            const hh = p => React.createElement(PerfHubHead, { ...p, mode: hub, onMode: setHub });
+            const hh = p => React.createElement(PerfHubHead, { ...p, mode: hub, onMode: setHub, onBack });
             if (hub === 'posisi' || hub === 'entri' || hub === 'bulan') {
                 if (hub === 'bulan') return React.createElement(DrillDown, { flat, key: account.id + '-dd', account: account, trades: filtered, rangeText: rangeText, hubHead: hh });
                 return React.createElement(EntryPerf, { flat, key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh });
@@ -130,7 +130,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                 calInner());
             if (hub === 'mg') return React.createElement(React.Fragment, null,
             React.createElement("div", { className: (flat ? "pg" : "pe-card") + " mg" },
-            React.createElement(PerfHubHead, { mode: 'mg', onMode: setHub, sub: `Ringkasan performa bulanan · ${MN[mSel]} ${year}`, lockBtn: React.createElement("div", { className: "mg-years" },
+            React.createElement(PerfHubHead, { mode: 'mg', onMode: setHub, onBack, sub: `Ringkasan performa bulanan · ${MN[mSel]} ${year}`, lockBtn: React.createElement("div", { className: "mg-years" },
                 React.createElement("button", { type: "button", "aria-label": "Tahun sebelumnya", onClick: () => onPickMonth(year - 1, mSel) }, React.createElement(ChevronLeft, { size: 16 })),
                 React.createElement("span", null, year),
                 React.createElement("button", { type: "button", "aria-label": "Tahun berikutnya", onClick: () => onPickMonth(year + 1, mSel) }, React.createElement(ChevronRight, { size: 16 }))) }),
@@ -193,7 +193,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                             React.createElement("b", { className: tone(x.pnl) }, sg(x.pnl))))));
             }
             return React.createElement("div", { className: flat ? "pg" : "pe-card" },
-            React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, sub: `Grafik hasil trading · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
+            React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, onBack, sub: `Grafik hasil trading · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
             CT.k === 'line' && React.createElement("div", { className: "pe-kw pe-kw-r" }, React.createElement(TplKind, { ctl: kctl })),
             React.createElement("div", { className: "pe-tabs icon-tabs" }, [['daily', 'Daily P&L', 'ChartPie'], ['growth', 'Growth', 'ChartUp'], ['balance', 'Balance', 'Scale'], ['profit', 'Profit', 'Coins'], ['dd', 'Drawdown', 'ChartDown']].map(([k, l, ic]) => React.createElement("button", { key: k, type: "button", className: ct === k ? 'on' : '', "aria-label": l, title: l, onClick: () => setCt(k) }, React.createElement(Icon, { name: ic, size: 14 }), React.createElement("span", null, l)))),
                         React.createElement(MiniChart, { key: ct + (kctl.kind === 'candle' ? 'c' : 'l'), vals: CT.v, labels: lab, kind: CT.k, fmt: CT.f, candle: CT.k === 'line' && kctl.kind === 'candle', base: ct === 'balance' ? account.balance : 0 }),

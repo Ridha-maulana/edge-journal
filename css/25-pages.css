@@ -264,7 +264,7 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .ep-in.i{background:rgba(96,140,255,.1);border-color:rgba(96,140,255,.4)}.ep-in.i i{background:#6c93ff}
 .ep-in .pos{color:#22b573}.ep-in .neg{color:#ef6b7b}
 /* v5.12.1 pilihan tampilan tunggal + matriks 3/5 kolom */
-.hub-ttl h3{font-size:24px!important}
+.hub-ttl h3{font-size:26px!important}
 .ep-tabs.ep-sel{display:block;margin:0 0 14px}
 .ep-sel .sel{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 14px;border-radius:12px;border:1px solid var(--c82);background:var(--c123);color:var(--c0);font:inherit;font-weight:600;font-size:15px;cursor:pointer}
 .ep-sel .sel svg{opacity:.7}.ep-sel .sel svg.up{transform:rotate(180deg)}
@@ -346,3 +346,16 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .ep-sel .ep-sl2 small{display:block;margin-top:2px;font-size:var(--fs-xs);color:var(--c122);font-weight:500}
 .ep-sel .sel{flex:1;min-width:0;width:auto}
 .ep-sel .ep-dd{left:auto;right:0;width:max(64%,200px)}
+/* v5.12.6: tombol kembali di judul, pop-up melayang rapat, menu bawah disembunyikan, ringkasan berupa tulisan */
+.hub-row .hub-back{flex:none;width:40px;height:40px;min-width:40px;padding:0}
+.hub-row .hub-ttl{margin-right:auto}
+body.perf-adv .bottom-nav,body.perf-adv .fab{display:none!important}
+body.perf-adv .app-shell{padding-bottom:24px!important}
+.hub-bd{padding:0 8px calc(8px + env(safe-area-inset-bottom,0px))}
+.hub-sheet{width:auto;flex:1;max-height:78vh;border:1px solid var(--c76);border-radius:24px;padding:14px 8px 8px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.hub-st{display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px 10px;font-size:17px;color:var(--c0)}
+.hub-x{width:34px;height:34px;border:0;border-radius:50%;background:var(--c123);color:var(--c122);display:grid;place-items:center;cursor:pointer;padding:0}
+.hub-list .o{min-height:46px;padding:5px 10px}
+.hub-list .hub-gl{padding:8px 10px 2px}
+.ep-ins{gap:6px;margin:0 0 12px}
+.ep-in,.ep-in.p,.ep-in.n,.ep-in.i{padding:0;border:0;border-radius:0;background:none}

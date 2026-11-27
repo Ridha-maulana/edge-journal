@@ -326,7 +326,7 @@ const HUB_OPT = [
     ['pair', 'Performa Pair', 'P&L & porsi trade tiap pair', 'Coins'],
     ['kal', 'Kalender', 'P&L harian tiap tanggal', 'Calendar']
 ];
-function PerfHubHead({ mode, onMode, sub, lockBtn }) {
+function PerfHubHead({ mode, onMode, sub, lockBtn, onBack }) {
     const h = React.createElement;
     const [open, setOpen] = useState(false);
     useEffect(() => {
@@ -340,14 +340,15 @@ function PerfHubHead({ mode, onMode, sub, lockBtn }) {
     const pick = o => { setOpen(false); if (o[0] !== mode) onMode(o[0]); };
     return h('div', { className: 'hub-hd' },
         h('div', { className: 'hub-row' },
+            onBack && h('button', { type: 'button', className: 'icon-btn hub-back', 'aria-label': 'Kembali ke Performance', onClick: onBack }, h(Icon, { name: 'ChevronLeft', size: 18 })),
             h('button', { type: 'button', className: 'hub-ttl', 'aria-haspopup': 'dialog', 'aria-expanded': open, onClick: () => setOpen(true) },
                 h('h3', null, cur[1]), h(Icon, { name: 'ChevronDown', size: 18 })),
             lockBtn || null),
         sub ? h('p', { className: 'hub-sub' }, sub) : null,
         open && ReactDOM.createPortal(h('div', { className: 'hub-bd', onClick: e => { if (e.target === e.currentTarget) setOpen(false); } },
             h('div', { className: 'hub-sheet', role: 'dialog', 'aria-label': 'Pilih tampilan performa' },
-                h('div', { className: 'hub-grip' }),
-                h('div', { className: 'hub-st' }, 'Pilih tampilan'),
+                h('div', { className: 'hub-st' }, h('span', null, 'Pilih tampilan'),
+                    h('button', { type: 'button', className: 'hub-x', 'aria-label': 'Tutup', onClick: () => setOpen(false) }, h(Icon, { name: 'X', size: 20 }))),
                 h('div', { className: 'hub-list', role: 'listbox' }, HUB_OPT.map(o => h(React.Fragment, { key: o[0] }, o[4] ? h('div', { className: 'hub-gl' }, o[4]) : null, h('button', { type: 'button', role: 'option', 'aria-selected': o[0] === mode, className: 'o' + (o[0] === mode ? ' on' : ''), onClick: () => pick(o) },
                     h('i', { className: 'ic' }, h(Icon, { name: o[3], size: 18 })),
                     h('span', { className: 't' }, h('b', null, o[1]), h('small', null, o[2])),
