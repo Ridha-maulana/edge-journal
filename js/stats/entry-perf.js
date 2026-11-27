@@ -55,7 +55,7 @@ function epCols(dim, recs) {
 }
 const epKeyOf = (dim, r) => dim === 'Tahun' ? r.y : dim === 'Bulan' ? r.mk : dim === 'Minggu' ? r.wk : dim === 'Hari' ? r.di : r.ses;
 
-function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
+function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
     const h = React.createElement;
     const fm = n => money(n, account.currency);
     const sg = n => n > 0 ? `+${fm(n)}` : n < 0 ? `−${fm(Math.abs(n))}` : fm(0);
@@ -87,7 +87,7 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
     const zInfo = id => METODE.zoneOf(id);
 
     const pos = mode === 'posisi';
-    if (!recs.length) return h('div', { className: 'pe-card ep' },
+    if (!recs.length) return h('div', { className: (flat ? 'pg' : 'pe-card') + ' ep' },
         hubHead({ sub: `${rangeLbl}` }),
         h('p', { className: 'pe-empty' }, 'Belum ada trade closed. Tutup posisi dan pilih zona entry Metode untuk melihat cara entry mana yang paling menguntungkan.'));
 
@@ -300,13 +300,14 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead }) {
     const curView = tab === 'sum' ? 'Ringkasan' : dim;
     const pickView = v => { if (v === 'Ringkasan') setTab('sum'); else { setDim(v); setTab('time'); } setMenu(false); };
     const tabs = h('div', { className: 'ep-tabs ep-sel', ref: menuRef },
+        h('div', { className: 'ep-sl2' }, h('b', null, 'Lihat per'), h('small', null, 'Atur pengelompokan')),
         h('button', { type: 'button', className: 'sel', 'aria-haspopup': 'listbox', 'aria-expanded': menu, onClick: () => setMenu(m => !m) }, h('span', null, curView), h(Icon, { name: 'ChevronDown', size: 16, className: menu ? 'up' : '' })),
         menu && h('div', { className: 'ep-dd', role: 'listbox' }, views.map(v => h(React.Fragment, { key: v },
             v === 'Ringkasan' && h('i', { className: 'sep' }),
             h('button', { type: 'button', role: 'option', 'aria-selected': v === curView, className: 'o' + (v === curView ? ' on' : ''), onClick: () => pickView(v) }, v,
                 v === 'Ringkasan' ? h('small', null, 'Kontribusi · pips') : (v !== 'Sesi' ? h('small', null, colCount(v) + ' kolom') : null))))));
 
-    return h('div', { className: 'pe-card ep' },
+    return h('div', { className: (flat ? 'pg' : 'pe-card') + ' ep' },
         hubHead({ sub: `${pos ? 'Hasil posisi' : 'Zona entry'} · ${total.n} trade · ${rangeLbl}` }),
         tabs,
         tab === 'time' ? timeTab : (pos ? pSumTab : sumTab),
@@ -322,33 +323,33 @@ const HUB_OPT = [
     ['mg', 'Monthly gain', 'Gain, profit & target per bulan', 'TrendingUp'],
     ['all', 'Performa Keseluruhan', 'Grafik P&L, Growth, Balance', 'ChartUp', 'Ringkasan akun'],
     ['adv', 'Advanced Statistics', 'Profitability, pips, drawdown', 'BarChart3'],
-    ['pair', 'Performa Pair', 'P&L & porsi trade tiap pair', 'Coins']
+    ['pair', 'Performa Pair', 'P&L & porsi trade tiap pair', 'Coins'],
+    ['kal', 'Kalender', 'P&L harian tiap tanggal', 'Calendar']
 ];
 function PerfHubHead({ mode, onMode, sub, lockBtn }) {
     const h = React.createElement;
     const [open, setOpen] = useState(false);
-    const ref = useRef(null);
     useEffect(() => {
         if (!open) return;
-        const off = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
         const esc = e => { if (e.key === 'Escape') setOpen(false); };
-        document.addEventListener('pointerdown', off); document.addEventListener('keydown', esc);
-        return () => { document.removeEventListener('pointerdown', off); document.removeEventListener('keydown', esc); };
-    }, [open]);
-    useEffect(() => {
-        if (!open) return;
-        const t = setTimeout(() => { const m = ref.current && ref.current.querySelector('.hub-menu'); if (m && m.scrollIntoView) m.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 30);
-        return () => clearTimeout(t);
+        document.addEventListener('keydown', esc);
+        const ov = document.body.style.overflow; document.body.style.overflow = 'hidden';
+        return () => { document.removeEventListener('keydown', esc); document.body.style.overflow = ov; };
     }, [open]);
     const cur = HUB_OPT.find(o => o[0] === mode) || HUB_OPT[4];
-    return h('div', { className: 'hub-hd', ref },
+    const pick = o => { setOpen(false); if (o[0] !== mode) onMode(o[0]); };
+    return h('div', { className: 'hub-hd' },
         h('div', { className: 'hub-row' },
-            h('button', { type: 'button', className: 'hub-ttl', 'aria-haspopup': 'listbox', 'aria-expanded': open, onClick: () => setOpen(o => !o) },
-                h('h3', null, cur[1]), h(Icon, { name: 'ChevronDown', size: 18, className: open ? 'up' : '' })),
+            h('button', { type: 'button', className: 'hub-ttl', 'aria-haspopup': 'dialog', 'aria-expanded': open, onClick: () => setOpen(true) },
+                h('h3', null, cur[1]), h(Icon, { name: 'ChevronDown', size: 18 })),
             lockBtn || null),
         sub ? h('p', { className: 'hub-sub' }, sub) : null,
-        open && h('div', { className: 'hub-menu', role: 'listbox' }, HUB_OPT.map(o => h(React.Fragment, { key: o[0] }, o[4] ? h('div', { className: 'hub-gl' }, o[4]) : null, h('button', { type: 'button', role: 'option', 'aria-selected': o[0] === mode, className: 'o' + (o[0] === mode ? ' on' : ''), onClick: () => { setOpen(false); if (o[0] !== mode) onMode(o[0]); } },
-            h('i', { className: 'ic' }, h(Icon, { name: o[3], size: 18 })),
-            h('span', { className: 't' }, h('b', null, o[1]), h('small', null, o[2])),
-            o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null)))));
+        open && ReactDOM.createPortal(h('div', { className: 'hub-bd', onClick: e => { if (e.target === e.currentTarget) setOpen(false); } },
+            h('div', { className: 'hub-sheet', role: 'dialog', 'aria-label': 'Pilih tampilan performa' },
+                h('div', { className: 'hub-grip' }),
+                h('div', { className: 'hub-st' }, 'Pilih tampilan'),
+                h('div', { className: 'hub-list', role: 'listbox' }, HUB_OPT.map(o => h(React.Fragment, { key: o[0] }, o[4] ? h('div', { className: 'hub-gl' }, o[4]) : null, h('button', { type: 'button', role: 'option', 'aria-selected': o[0] === mode, className: 'o' + (o[0] === mode ? ' on' : ''), onClick: () => pick(o) },
+                    h('i', { className: 'ic' }, h(Icon, { name: o[3], size: 18 })),
+                    h('span', { className: 't' }, h('b', null, o[1]), h('small', null, o[2])),
+                    o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null)))))), document.body));
 }

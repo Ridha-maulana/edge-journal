@@ -6,6 +6,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const sg = n => `${n > 0 ? '+' : ''}${fm(n)}`;
     const [ct, setCt] = useState('daily'), kctl = useTplChart('line');
     const [hub, setHub] = useState('posisi');
+    const flat = mode === 'advanced';
     const [showDet, setShowDet] = useState(false);
     const nowW = wib(new Date());
     const year = view.y, mSel = view.m;
@@ -91,11 +92,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const RC = 95, rp = (i, v) => { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; return [130 + Math.cos(a) * RC * v / 100, 130 + Math.sin(a) * RC * v / 100]; };
     const bar = (w, pos) => React.createElement("div", { className: "pe-bar" },
         React.createElement("i", { style: { width: `${Math.max(2, w)}%`, background: pos ? EJC("#34d399") : EJC("#ff6b81") } }));
-    return React.createElement("div", { className: `pe ${mode === 'dna' ? 'only-dna' : mode === 'advanced' ? 'only-advanced' : ''}` },
-        React.createElement("div", { className: "pe-card" },
-            React.createElement("div", { className: "pe-head" },
-                React.createElement("h3", null, "Kalender"),
-                React.createElement("b", { className: tone(cmPnl) }, sg(cmPnl))),
+    const calInner = () => React.createElement(React.Fragment, null,
             React.createElement("div", { className: "cal-nav" },
                 React.createElement("button", { className: "icon-btn", onClick: () => { const d = new Date(cy, cm - 1, 1); onPickMonth(d.getFullYear(), d.getMonth()); } },
                     React.createElement(ChevronLeft, { size: 16 })),
@@ -114,16 +111,25 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                         React.createElement("small", null,
                             v.n,
                             " posisi"))); })),
-            React.createElement("p", { className: "pe-note" }, "Ketuk tanggal yang punya posisi untuk membuka jurnal hari itu.")),
+            React.createElement("p", { className: "pe-note" }, "Ketuk tanggal yang punya posisi untuk membuka jurnal hari itu."));
+    return React.createElement("div", { className: `pe ${mode === 'dna' ? 'only-dna' : mode === 'advanced' ? 'only-advanced' : ''}` },
+        !flat && React.createElement("div", { className: "pe-card" },
+            React.createElement("div", { className: "pe-head" },
+                React.createElement("h3", null, "Kalender"),
+                React.createElement("b", { className: tone(cmPnl) }, sg(cmPnl))),
+            calInner()),
         (() => {
             const hh = p => React.createElement(PerfHubHead, { ...p, mode: hub, onMode: setHub });
             if (hub === 'posisi' || hub === 'entri' || hub === 'bulan') {
-                if (hub === 'bulan') return React.createElement(DrillDown, { key: account.id + '-dd', account: account, trades: filtered, rangeText: rangeText, hubHead: hh });
-                return React.createElement(EntryPerf, { key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh });
+                if (hub === 'bulan') return React.createElement(DrillDown, { flat, key: account.id + '-dd', account: account, trades: filtered, rangeText: rangeText, hubHead: hh });
+                return React.createElement(EntryPerf, { flat, key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh });
             
             }
+            if (hub === 'kal') return React.createElement("div", { className: "pg pg-cal" },
+                hh({ sub: `Total P&L bulan ini \u00B7 ${sg(cmPnl)}` }),
+                calInner());
             if (hub === 'mg') return React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "pe-card mg" },
+            React.createElement("div", { className: (flat ? "pg" : "pe-card") + " mg" },
             React.createElement(PerfHubHead, { mode: 'mg', onMode: setHub, sub: `Ringkasan performa bulanan · ${MN[mSel]} ${year}`, lockBtn: React.createElement("div", { className: "mg-years" },
                 React.createElement("button", { type: "button", "aria-label": "Tahun sebelumnya", onClick: () => onPickMonth(year - 1, mSel) }, React.createElement(ChevronLeft, { size: 16 })),
                 React.createElement("span", null, year),
@@ -162,13 +168,13 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
             React.createElement("div", { className: `mg-note ${ms.n ? (ms.pnl > 0 ? 'pos' : ms.pnl < 0 ? 'neg' : '') : ''}` },
                 React.createElement("b", null, !ms.n ? `Belum ada trade di ${MN[ms.i]}` : ms.pnl > 0 ? `Progres bagus di ${MN[ms.i]}` : ms.pnl < 0 ? `${MN[ms.i]} perlu evaluasi` : `${MN[ms.i]} impas`),
                 React.createElement("span", null, `Trades ${ms.n}  |  Win rate ${ms.n ? Math.round(ms.wins / ms.n * 100) : 0}%  |  Profit ${sg(ms.pnl)}`))));
-            if (hub === 'adv') return React.createElement("div", { className: "pe-card hub-adv" }, hh({ sub: `Statistik lengkap akun \u00B7 ${sorted.length} trade` }), advancedStats);
+            if (hub === 'adv') return React.createElement("div", { className: (flat ? "pg" : "pe-card") + " hub-adv" }, hh({ sub: `Statistik lengkap akun \u00B7 ${sorted.length} trade` }), advancedStats);
             if (hub === 'pair') {
                 const N = sorted.length, byP = syms.slice().sort((x, y) => y.pnl - x.pnl);
                 const best = byP[0], pop = syms[0];
                 const COL = ['#6b8dff', '#34d399', '#f5b942', '#ff6b81', '#a78bfa', '#22d3ee', '#fb923c', '#94a3b8'];
                 const R = 44, C = 2 * Math.PI * R; let off = 0;
-                return React.createElement("div", { className: "pe-card pm" },
+                return React.createElement("div", { className: (flat ? "pg" : "pe-card") + " pm" },
                     hh({ sub: `${syms.length} pair \u00B7 ${N} trade \u00B7 ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
                     !syms.length ? React.createElement("p", { className: "pe-empty" }, "Belum ada data.") : React.createElement(React.Fragment, null,
                         React.createElement("div", { className: "pm-dn" },
@@ -186,7 +192,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
                             React.createElement("span", null, `${x.n} \u00B7 ${(x.n / N * 100).toFixed(1)}%`),
                             React.createElement("b", { className: tone(x.pnl) }, sg(x.pnl))))));
             }
-            return React.createElement("div", { className: "pe-card" },
+            return React.createElement("div", { className: flat ? "pg" : "pe-card" },
             React.createElement(PerfHubHead, { mode: 'all', onMode: setHub, sub: `Grafik hasil trading · ${!rangeText || rangeText === 'All time' ? 'Semua periode' : rangeText}` }),
             CT.k === 'line' && React.createElement("div", { className: "pe-kw pe-kw-r" }, React.createElement(TplKind, { ctl: kctl })),
             React.createElement("div", { className: "pe-tabs icon-tabs" }, [['daily', 'Daily P&L', 'ChartPie'], ['growth', 'Growth', 'ChartUp'], ['balance', 'Balance', 'Scale'], ['profit', 'Profit', 'Coins'], ['dd', 'Drawdown', 'ChartDown']].map(([k, l, ic]) => React.createElement("button", { key: k, type: "button", className: ct === k ? 'on' : '', "aria-label": l, title: l, onClick: () => setCt(k) }, React.createElement(Icon, { name: ic, size: 14 }), React.createElement("span", null, l)))),

@@ -312,3 +312,37 @@ html:not(#_) .tl-card[style*="#eab308"] button.tl-kb{background:#ca8a04!importan
 .adv-flat{overflow:hidden;margin:6px 0 0}
 .adv-title{margin-bottom:var(--gap-j)}.adv-title small{margin:0!important}
 .dna-title{margin-bottom:0}
+
+/* v5.12.5: halaman gabungan datar, menu pop-up bawah, Kalender jadi menu */
+.pe.only-advanced{gap:0}
+.pg{background:none;border:0;border-radius:0;box-shadow:none;padding:0;margin:0}
+.pg .cal-nav{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px}
+.pg .cal-week,.pg .cal-grid{gap:6px}
+.pg .cal-cell{min-height:0;height:52px;padding:4px 2px;align-items:center;justify-content:center;text-align:center;gap:1px;border-radius:var(--r-md)}
+.pg .cal-cell .cal-day{line-height:1.2}
+.pg .cal-cell b,.pg .cal-cell small{line-height:1.2;white-space:nowrap;letter-spacing:-.02em;font-size:var(--fs-xs)}
+.pg .pe-note{margin:12px 0 0}
+.hub-bd{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;animation:hubFade .18s ease both}
+.hub-sheet{width:100%;max-height:80vh;display:flex;flex-direction:column;background:var(--c75);border:1px solid var(--c76);border-bottom:0;border-radius:22px 22px 0 0;padding:8px 12px calc(16px + env(safe-area-inset-bottom,0px));box-shadow:0 -14px 40px rgba(0,0,0,.45);animation:hubUp .26s cubic-bezier(.2,.8,.2,1) both}
+.hub-grip{width:40px;height:4px;border-radius:2px;background:var(--c122);opacity:.45;margin:2px auto 10px;flex:none}
+.hub-st{flex:none;padding:0 10px 6px;font-size:13px;font-weight:700;color:var(--c122)}
+.hub-list{overflow-y:auto;overscroll-behavior:contain;min-height:0}
+.hub-list .o{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:6px 12px;border:0;border-radius:12px;background:none;color:var(--c0);font:inherit;text-align:left;cursor:pointer}
+.hub-list .o .t{display:flex;flex-direction:column;flex:1;min-width:0}.hub-list .o b{font-size:15px}.hub-list .o small{color:var(--c122);font-size:12px;margin-top:2px;font-weight:500}
+.hub-list .o .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--c123);color:var(--c109);flex:none}
+.hub-list .o.on{background:rgba(34,181,115,.16)}.hub-list .o.on b,.hub-list .o .ck{color:var(--c118)}
+@keyframes hubFade{from{opacity:0}to{opacity:1}}
+@keyframes hubUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.hub-bd,.hub-sheet{animation:none}}
+/* v5.13b: halaman datar seperti Tools, tanpa header atas */
+.adv-banner{margin:4px 0 14px}
+.pe.only-advanced>.pg{padding:var(--s2) 0 var(--s4)}
+.pe.only-advanced>.pg>.hub-hd{margin-bottom:var(--s4);padding-bottom:var(--s4);border-bottom:1px solid var(--c255)}
+.pg .hub-sub{margin-top:6px}
+/* kotak pilihan: tulisan di kiri, pilihan lebih kecil di kanan */
+.ep-tabs.ep-sel{display:flex;align-items:center;gap:12px;position:relative;margin:0 0 14px}
+.ep-sel .ep-sl2{flex:0 0 34%;min-width:0;line-height:1.25}
+.ep-sel .ep-sl2 b{display:block;font-size:var(--fs-md);font-weight:700}
+.ep-sel .ep-sl2 small{display:block;margin-top:2px;font-size:var(--fs-xs);color:var(--c122);font-weight:500}
+.ep-sel .sel{flex:1;min-width:0;width:auto}
+.ep-sel .ep-dd{left:auto;right:0;width:max(64%,200px)}
