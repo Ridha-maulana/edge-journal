@@ -359,3 +359,14 @@ body.perf-adv .app-shell{padding-bottom:24px!important}
 .hub-list .hub-gl{padding:8px 10px 2px}
 .ep-ins{gap:6px;margin:0 0 12px}
 .ep-in,.ep-in.p,.ep-in.n,.ep-in.i{padding:0;border:0;border-radius:0;background:none}
+/* v5.12.7: margin samping lebih lega, kontrol (kunci/tahun) pindah ke baris sendiri */
+body.perf-adv .performance-detail-page{padding-left:16px!important;padding-right:16px!important}
+.hub-ctl{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}
+.hub-ctl .ep-sl2{flex:1;min-width:0;line-height:1.25}
+.hub-ctl .ep-sl2 b{display:block;font-size:var(--fs-md);font-weight:700}
+.hub-ctl .ep-sl2 small{display:block;margin-top:2px;font-size:var(--fs-xs);color:var(--c122);font-weight:500}
+.hub-ctl .dd-lock{width:40px;height:40px;min-width:40px;padding:0!important;border-radius:50%;justify-content:center;gap:0;flex:none}
+.hub-ctl .dd-lock span{display:none}
+.hub-ctl .mg-years{flex:none}
+.hub-ctl .mg-years button{width:30px;height:30px}
+.hub-ctl .mg-years span{min-width:44px;font-size:15px}

@@ -8,7 +8,7 @@ const EP_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', '
 const EP_DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sab–Min'];
 const EP_ZIDS = ['retest', 'follow', 'lanjut', 'jenuh'];
 const EP_SHORT = { retest: 'Retest', follow: 'Follow Trend', lanjut: 'Lanjutan', jenuh: 'Ekstensi Jenuh', none: 'Belum ada zona' };
-const EP_COL = { retest: '#f0b429', follow: '#22b573', lanjut: '#2fd28a', jenuh: '#ef6b7b', none: '#6b7280' };
+const EP_COL = { retest: '#f0b429', follow: '#0f8f55', lanjut: '#4be0a8', jenuh: '#ef6b7b', none: '#6b7280' };
 const EP_DIMS = ['Tahun', 'Bulan', 'Minggu', 'Hari', 'Sesi'];
 const EP_DIM_SUB = { Tahun: 'Tiap tahun yang ada trade', Bulan: 'Tiap bulan yang ada trade', Minggu: 'Minggu ke-1 sampai ke-5 dalam bulan', Hari: 'Senin sampai Jumat (+ akhir pekan)', Sesi: 'Asia · London · New York' };
 const EP_SAMPLE_MIN = 30, EP_SAMPLE_SOP = 100;
@@ -338,13 +338,15 @@ function PerfHubHead({ mode, onMode, sub, lockBtn, onBack }) {
     }, [open]);
     const cur = HUB_OPT.find(o => o[0] === mode) || HUB_OPT[4];
     const pick = o => { setOpen(false); if (o[0] !== mode) onMode(o[0]); };
-    return h('div', { className: 'hub-hd' },
+    const ctl = lockBtn ? ({ bulan: ['Kunci data', 'Gabungkan semua periode'], mg: ['Tahun', 'Pilih tahun ringkasan'] }[mode] || ['', '']) : null;
+    return h(React.Fragment, null, h('div', { className: 'hub-hd' },
         h('div', { className: 'hub-row' },
-            onBack && h('button', { type: 'button', className: 'icon-btn hub-back', 'aria-label': 'Kembali ke Performance', onClick: onBack }, h(Icon, { name: 'ChevronLeft', size: 18 })),
+            onBack && h('button', { type: 'button', className: 'icon-btn hub-back', 'aria-label': 'Kembali ke Performance', onClick: () => { try { if (typeof hapticFire === 'function') hapticFire(10); } catch (e) { } onBack(); } }, h(Icon, { name: 'ChevronLeft', size: 18 })),
             h('button', { type: 'button', className: 'hub-ttl', 'aria-haspopup': 'dialog', 'aria-expanded': open, onClick: () => setOpen(true) },
                 h('h3', null, cur[1]), h(Icon, { name: 'ChevronDown', size: 18 })),
-            lockBtn || null),
-        sub ? h('p', { className: 'hub-sub' }, sub) : null,
+            null),
+        sub ? h('p', { className: 'hub-sub' }, sub) : null),
+        ctl && h('div', { className: 'hub-ctl' }, h('div', { className: 'ep-sl2' }, h('b', null, ctl[0]), h('small', null, ctl[1])), lockBtn),
         open && ReactDOM.createPortal(h('div', { className: 'hub-bd', onClick: e => { if (e.target === e.currentTarget) setOpen(false); } },
             h('div', { className: 'hub-sheet', role: 'dialog', 'aria-label': 'Pilih tampilan performa' },
                 h('div', { className: 'hub-st' }, h('span', null, 'Pilih tampilan'),
