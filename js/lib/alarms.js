@@ -1,4 +1,4 @@
-/* Alarm (v5.12.9): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
+/* Alarm (v5.12.10): penyimpanan lokal, jadwal, alarm susulan, nada dering, bunyi di dalam aplikasi, dan alarm native di APK.
    - Data hanya di HP ini (localStorage "ej-alarms-v1"), tidak ikut sinkron online.
    - Aplikasi terbuka (web/PWA): jam dicek tiap detik, layar alarm + nada + getar.
    - APK 1.4.0+ (plugin EjAlarm): jadwal dikirim ke AlarmManager Android, jadi alarm berbunyi walau aplikasi tertutup atau HP terkunci,

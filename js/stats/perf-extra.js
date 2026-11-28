@@ -28,7 +28,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const fm = n => money(n, cur);
     const sg = n => `${n > 0 ? '+' : ''}${fm(n)}`;
     const [ct, setCt] = useState('daily'), kctl = useTplChart('line');
-    const [hub, setHub] = useState('posisi');
+    const [hub, setHub] = useState('entri');
     const flat = mode === 'advanced';
     const [showDet, setShowDet] = useState(false);
     const nowW = wib(new Date());

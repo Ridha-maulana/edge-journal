@@ -396,3 +396,9 @@ html[data-nanim="2"] .spin,html[data-nanim="2"] [class*="spinner"],html[data-nan
 .tl-b p{margin:3px 0 0;font-size:12.5px;line-height:1.4;opacity:.62}
 .tl-b .tl-ln{margin-top:8px}.tl-bs{display:block;width:100%;margin-top:8px}
 .tl-it:last-child .tl-b{padding-bottom:4px}
+
+/* v5.12.10 saklar Pips di pop up menu (Performa Entri / Posisi) */
+.epp-sw{display:flex;align-items:center;gap:8px;flex:none;cursor:pointer}
+.epp-sw small{font-size:12px!important;font-weight:700;margin:0!important;color:var(--c109)!important}
+.epp-sw.on small{color:var(--c118)!important}
+.epp-sw.on .fxm-sw{background:#22c55e}.epp-sw.on .fxm-sw::after{left:21px}

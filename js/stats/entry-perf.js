@@ -55,13 +55,28 @@ function epCols(dim, recs) {
 }
 const epKeyOf = (dim, r) => dim === 'Tahun' ? r.y : dim === 'Bulan' ? r.mk : dim === 'Minggu' ? r.wk : dim === 'Hari' ? r.di : r.ses;
 
+/* Pilihan tampilan P&L / Pips untuk Performa Entri dan Posisi (v5.12.10): disimpan per halaman, saklarnya ada di pop up menu */
+const eppGet = m => { try { return localStorage.getItem('ej3-epp-' + m) === '1'; } catch (e) { return false; } };
+const eppSet = (m, v) => { try { localStorage.setItem('ej3-epp-' + m, v ? '1' : '0'); } catch (e) { } window.dispatchEvent(new Event('ej-epp')); };
+function useEpp(m) {
+    const [v, setV] = useState(() => eppGet(m));
+    useEffect(() => { const f = () => setV(eppGet(m)); f(); window.addEventListener('ej-epp', f); return () => window.removeEventListener('ej-epp', f); }, [m]);
+    return v;
+}
+function EppSwitch({ mode }) {
+    const on = useEpp(mode), flip = e => { e.stopPropagation(); eppSet(mode, !on); };
+    return React.createElement("span", { className: 'epp-sw' + (on ? ' on' : ''), role: 'switch', 'aria-checked': on, 'aria-label': 'Tampilkan pips', tabIndex: 0, onClick: flip, onKeyDown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(e); } } },
+        React.createElement("small", null, 'Pips'), React.createElement("i", { className: 'fxm-sw' }));
+}
+
 function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
     const h = React.createElement;
     const fm = n => money(n, account.currency);
     const sg = n => n > 0 ? `+${fm(n)}` : n < 0 ? `−${fm(Math.abs(n))}` : fm(0);
     const tn = n => n > 0 ? 'pos' : n < 0 ? 'neg' : 'zero';
     const pp = v => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)} pips`;
-    const [metric, setMetric] = useState('pl');
+    const eppV = useEpp(mode);
+    const [metric, setMetric] = useState(eppV ? 'pips' : 'pl');
     const isP = metric === 'pips';
     const mtog = h('div', { className: 'ep-mt', role: 'group', 'aria-label': 'Tampilkan' }, [['pl', 'P&L'], ['pips', 'Pips']].map(([k, l]) => h('button', { key: k, type: 'button', className: metric === k ? 'on' : '', 'aria-pressed': metric === k, onClick: () => setMetric(k) }, l)));
     const recs = useMemo(() => epBuild(trades), [trades]);
@@ -104,10 +119,12 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
     const nCol = cols.length;
     const vis = nCol > 3 ? 5 : 3;
     const sgc = v => Math.abs(v) >= 1000 ? `${v > 0 ? '+' : '−'}$${(Math.abs(v) / 1000).toFixed(1)}k` : sg(v);
-    const sgx = vis === 5 ? sgc : sg;
+    const pf = v => { const a = Math.abs(v), t = (vis === 5 && a >= 1000) ? `${(a / 1000).toFixed(1)}k` : a.toFixed(1); return `${v > 0 ? '+' : v < 0 ? '−' : ''}${t}`; };
+    const sgx = eppV ? pf : (vis === 5 ? sgc : sg);
+    const mv = s => eppV ? s.pips : s.net;
     const grid = rowIds.map(id => cols.map(c => epStat(data.filter(r => rowOf(r) === id && epKeyOf(dim, r) === c.key))));
     const tots = cols.map(c => epStat(data.filter(r => epKeyOf(dim, r) === c.key)));
-    const maxAbs = Math.max(1, ...grid.flat().map(s => Math.abs(s.net)));
+    const maxAbs = Math.max(1, ...grid.flat().map(s => Math.abs(mv(s))));
     const onScroll = () => {
         const el = scrRef.current; if (!el || nCol <= vis) return;
         const step = el.scrollWidth / nCol;
@@ -116,10 +133,10 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
     };
     const cell = (s, k, ci, id) => {
         if (!s.n) return h('div', { key: k, className: 'ep-cx em' }, '–');
-        if (pos && id === 'be') return h('div', { key: k, className: 'ep-cx', style: { background: 'rgba(107,114,128,.28)' } }, h('b', null, `${s.n} · ${Math.round(s.n / tots[ci].n * 100)}%`), h('small', null, `impas ${fm(0)}`));
-        const a = .12 + Math.min(1, Math.abs(s.net) / maxAbs) * .5;
-        return h('div', { key: k, className: 'ep-cx', style: { background: s.net >= 0 ? `rgba(34,181,115,${a})` : `rgba(239,107,123,${a})` } },
-            h('b', null, `${s.n} · ${Math.round(pos ? s.n / tots[ci].n * 100 : s.wr)}%`), h('small', null, sgx(s.net)));
+        if (pos && id === 'be') return h('div', { key: k, className: 'ep-cx', style: { background: 'rgba(107,114,128,.28)' } }, h('b', null, `${s.n} · ${Math.round(s.n / tots[ci].n * 100)}%`), h('small', null, `impas ${eppV ? '0' : fm(0)}`));
+        const a = .12 + Math.min(1, Math.abs(mv(s)) / maxAbs) * .5;
+        return h('div', { key: k, className: 'ep-cx', style: { background: mv(s) >= 0 ? `rgba(34,181,115,${a})` : `rgba(239,107,123,${a})` } },
+            h('b', null, `${s.n} · ${Math.round(pos ? s.n / tots[ci].n * 100 : s.wr)}%`), h('small', null, sgx(mv(s))));
     };
     const matrix = h('div', { className: 'ep-mxw' + (vis === 5 ? ' w5' : '') },
         h('div', { className: 'ep-mxl' },
@@ -131,7 +148,7 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
                 h('div', { className: 'ep-trk' }, cols.map((c, ci) => h('div', { key: c.key, className: 'ep-col' },
                     h('div', { className: 'ep-ch' }, c.label),
                     rowIds.map((id, zi) => cell(grid[zi][ci], id, ci, id)),
-                    h('div', { className: 'ep-cx tt' }, h('span', { className: 'n' }, tots[ci].n), h('span', { className: tn(tots[ci].net) }, sgx(tots[ci].net))))))),
+                    h('div', { className: 'ep-cx tt' }, h('span', { className: 'n' }, tots[ci].n), h('span', { className: tn(mv(tots[ci])) }, sgx(mv(tots[ci])))))))),
             nCol > vis && sc.i > 0 && h('i', { className: 'ep-fade l' }),
             nCol > vis && sc.i < nCol - vis && h('i', { className: 'ep-fade r' })));
     const sbar = nCol > vis && h('div', { className: 'ep-sbar' + (vis === 5 ? ' w5' : '') },
@@ -149,7 +166,7 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
     const timeTab = !data.length
         ? h('p', { className: 'pe-empty' }, 'Belum ada trade yang punya zona entry. Pilih zona di Tambah trade, atau lewat Edit untuk trade lama.')
         : h(React.Fragment, null,
-            h('div', { className: 'ep-sl' }, pos ? `Hasil × ${dimLow} (posisi · persen · P&L)` : `Zona × ${dimLow} (posisi · win rate · P&L)`),
+            h('div', { className: 'ep-sl' }, pos ? `Hasil × ${dimLow} (posisi · persen · ${eppV ? 'pips' : 'P&L'})` : `Zona × ${dimLow} (posisi · win rate · ${eppV ? 'pips' : 'P&L'})`),
             matrix, sbar,
             h('div', { className: 'ep-legend' }, h('span', null, h('i', { style: { background: 'rgba(34,181,115,.55)' } }), 'Untung'), h('span', null, h('i', { style: { background: 'rgba(239,107,123,.55)' } }), 'Rugi'), h('span', null, 'Makin pekat = makin besar')),
             h('div', { className: 'ep-sl', style: { marginTop: 16 } }, pos ? `Perbandingan win dan loss per ${dimLow}` : `Cara yang paling sering dipakai per ${dimLow}`),
@@ -317,8 +334,8 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
 
 /* ===== Kartu gabungan (v5.12.0): judul = pilihan mode (menu turun) ===== */
 const HUB_OPT = [
-    ['posisi', 'Performa Posisi', 'Menurut hasil: Win, Loss, BE', 'Trophy', 'Menurut hasil & waktu'],
-    ['entri', 'Performa Entri', 'Menurut zona entry Metode', 'Target'],
+    ['entri', 'Performa Entri', 'Menurut zona entry Metode', 'Target', 'Menurut hasil & waktu'],
+    ['posisi', 'Performa Posisi', 'Menurut hasil: Win, Loss, BE', 'Trophy'],
     ['bulan', 'Performa Bulanan', 'Bulan, minggu, hari, sesi', 'CalendarDays'],
     ['mg', 'Monthly gain', 'Gain, profit & target per bulan', 'TrendingUp'],
     ['all', 'Performa Keseluruhan', 'Grafik P&L, Growth, Balance', 'ChartUp', 'Ringkasan akun'],
@@ -354,5 +371,5 @@ function PerfHubHead({ mode, onMode, sub, lockBtn, onBack }) {
                 h('div', { className: 'hub-list', role: 'listbox' }, HUB_OPT.map(o => h(React.Fragment, { key: o[0] }, o[4] ? h('div', { className: 'hub-gl' }, o[4]) : null, h('button', { type: 'button', role: 'option', 'aria-selected': o[0] === mode, className: 'o' + (o[0] === mode ? ' on' : ''), onClick: () => pick(o) },
                     h('i', { className: 'ic' }, h(Icon, { name: o[3], size: 18 })),
                     h('span', { className: 't' }, h('b', null, o[1]), h('small', null, o[2])),
-                    o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null)))))), document.body));
+                    (o[0] === 'entri' || o[0] === 'posisi') ? h(EppSwitch, { mode: o[0] }) : o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null)))))), document.body));
 }
