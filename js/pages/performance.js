@@ -55,7 +55,9 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
     useEffect(() => { const h = () => { setPerformanceView('overview'); window.scrollTo({ top: 0, behavior: 'auto' }); }; window.addEventListener('perf-home', h); return () => window.removeEventListener('perf-home', h); }, []);
     useEffect(() => { if (performanceView === 'overview' && rangeOpen) { setRangeOpen(false); if (!customStart && !customEnd)
         setPeriod('All time'); } }, [performanceView]);
-    const pickMonth = (y, m) => { const p2 = n => String(n).padStart(2, '0'); setView({ y, m }); setCustomStart(`${y}-${p2(m + 1)}-01`); setCustomEnd(`${y}-${p2(m + 1)}-${p2(new Date(y, m + 1, 0).getDate())}`); setPeriod('Custom date range'); };
+    const pickMonth = (y, m) => { setView({ y, m }); };   /* v5.13.0: pilih bulan di Kalender / Monthly gain hanya menggeser tampilan, tidak lagi memfilter halaman lain (rentang tanggal lewat Custom date range) */
+    const openRange = () => { setDraft({ s: period === 'Custom date range' ? customStart || '' : '', e: period === 'Custom date range' ? customEnd || '' : '' }); setRangeOpen(true); };
+    const customOn = period === 'Custom date range' && !!customStart && !!customEnd;
     const filtered = trades.filter(t => t.status === 'closed' && withinPeriod(t.date, period, customStart, customEnd));
     const total = filtered.reduce((a, t) => a + (Number(t.pnl) || 0), 0);
     const wins = filtered.filter(t => t.pnl > 0);
@@ -120,15 +122,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
                         else if (v === 'Monthly') {
                             const n = new Date();
                             setView({ y: n.getFullYear(), m: n.getMonth() });
-                        } } }))),
-        period === 'Custom date range' && customStart && customEnd && React.createElement("div", { className: "pe-banner" },
-            React.createElement("span", null,
-                "Menampilkan: ",
-                React.createElement("b", null,
-                    fmtLong(customStart),
-                    " – ",
-                    fmtLong(customEnd))),
-            React.createElement("button", { onClick: () => setPeriod('All time') }, "Semua waktu")));
+                        } } }))));
     useEffect(() => { if (!shareOpen)
         return; let dead = false, url = null; Promise.race([document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 800))]).then(() => { if (dead)
         return; const cvn = drawShareImage({ account: account.name, total, growthPct, start: startBal, now: account.balance + total, days: activeDays, vals: cv, labels: cLabels, best: bestTxt, dd: ddTxt, periodText: periodTxt, hide: shareHide, fmt: v => money(v, account.currency) }); cvn.toBlob(b => { if (dead || !b)
@@ -217,19 +211,17 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
                         "DNA")))),
         performanceView !== 'overview' && React.createElement("div", { className: "performance-detail-page" },
             React.createElement("div", { className: "performance-detail-inner" },
-                performanceView === 'advanced' ? (period === 'Custom date range' && customStart && customEnd ? React.createElement("div", { className: "pe-banner adv-banner" },
-                    React.createElement("span", null, "Menampilkan: ", React.createElement("b", null, fmtLong(customStart), " – ", fmtLong(customEnd))),
-                    React.createElement("button", { onClick: () => setPeriod('All time') }, "Semua waktu")) : null) : React.createElement(React.Fragment, null,
+                performanceView === 'advanced' ? null : React.createElement(React.Fragment, null,
                 React.createElement("div", { className: "cal-top performance-detail-top" },
                     React.createElement("button", { className: "icon-btn", onClick: () => setPerformanceView('overview'), "aria-label": "Kembali ke Performance" },
                         React.createElement(ChevronLeft, { size: 18 })),
                     React.createElement("div", { className: "performance-detail-heading" },
                         React.createElement("strong", null, 'Trader DNA'),
-                        React.createElement("span", null, `Analisis ${period.toLowerCase()} · ${account.name}`)),
+                        React.createElement("span", null, `Analisis ${customOn ? periodTxt : period.toLowerCase()} · ${account.name}`)),
                     React.createElement("span", { className: "performance-detail-badge" }, 'DNA')),
                 periodBlock),
-                performanceView === 'advanced' && React.createElement(PerfExtra, { onBack: () => setPerformanceView('overview'), account: account, trades: trades, filtered: filtered, total: total, maxDd: maxDd, onSelectDate: onSelectDate, view: view, onPickMonth: pickMonth, onResetAll: () => setPeriod('All time'), rangeText: periodTxt, mode: 'advanced', advancedStats: React.createElement(AdvancedStats, { account: account, filtered: filtered, total: total, maxDd: maxDd, hwm: hwm, view: view, part: 'card' }) }),
-                performanceView === 'dna' && React.createElement(PerfExtra, { account: account, trades: trades, filtered: filtered, total: total, maxDd: maxDd, onSelectDate: onSelectDate, view: view, onPickMonth: pickMonth, onResetAll: () => setPeriod('All time'), rangeText: periodTxt, mode: 'dna' }))),
+                performanceView === 'advanced' && React.createElement(PerfExtra, { onBack: () => setPerformanceView('overview'), account: account, trades: trades, filtered: filtered, total: total, maxDd: maxDd, onSelectDate: onSelectDate, view: view, onPickMonth: pickMonth, onResetAll: () => { setPeriod('All time'); setCustomStart(''); setCustomEnd(''); }, onCustomRange: openRange, customOn: customOn, rangeText: periodTxt, mode: 'advanced', advancedStats: React.createElement(AdvancedStats, { account: account, filtered: filtered, total: total, maxDd: maxDd, hwm: hwm, view: view, part: 'card' }) }),
+                performanceView === 'dna' && React.createElement(PerfExtra, { account: account, trades: trades, filtered: filtered, total: total, maxDd: maxDd, onSelectDate: onSelectDate, view: view, onPickMonth: pickMonth, onResetAll: () => { setPeriod('All time'); setCustomStart(''); setCustomEnd(''); }, onCustomRange: openRange, customOn: customOn, rangeText: periodTxt, mode: 'dna' }))),
         shareOpen && ReactDOM.createPortal(React.createElement("div", { className: "modal-backdrop center top", onClick: e => { if (e.target === e.currentTarget) {
                 setShareOpen(false);
                 setShareUrl('');
@@ -254,6 +246,7 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
                     "End Date",
                     React.createElement(DateField, { value: draft.e, min: draft.s || undefined, onChange: v => setDraft({ ...draft, e: v }) })),
                 React.createElement("div", { className: "range-actions" },
+                    (customOn || period === 'Custom date range') && React.createElement("button", { className: "all", onClick: () => { setRangeOpen(false); setPeriod('All time'); setCustomStart(''); setCustomEnd(''); } }, "Semua waktu"),
                     React.createElement("button", { onClick: () => { setRangeOpen(false); if (!customStart && !customEnd)
                             setPeriod('All time'); } }, "Cancel"),
                     React.createElement("button", { className: "ok", onClick: () => { if (!draft.s || !draft.e) {
@@ -262,5 +255,5 @@ function Performance({ homeT, onOpenCandle, onSelectDate, onWallet, account, tra
                         } if (draft.e < draft.s) {
                             notify('Tanggal akhir harus setelah tanggal mulai.');
                             return;
-                        } setCustomStart(draft.s); setCustomEnd(draft.e); setView({ y: Number(draft.s.slice(0, 4)), m: Number(draft.s.slice(5, 7)) - 1 }); setRangeOpen(false); } }, "Confirm")))));
+                        } setCustomStart(draft.s); setCustomEnd(draft.e); setPeriod('Custom date range'); setView({ y: Number(draft.s.slice(0, 4)), m: Number(draft.s.slice(5, 7)) - 1 }); setRangeOpen(false); } }, "Confirm")))));
 }

@@ -1,4 +1,4 @@
-const C='ej3-5.12.10';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
+const C='ej3-5.13.0';   /* naikkan angka ini setiap rilis agar HP memuat versi baru */
 const SHELL=[
   './',
   './index.html',
@@ -7,7 +7,7 @@ const SHELL=[
   './assets/icon-512.png',
   './assets/icon-maskable-v6-512.png',
   './assets/login-art.webp',
-  './assets/sop-metode-satu-warna.pdf', './assets/sop-metode-1.jpg', './assets/sop-metode-2.jpg',
+  './assets/sop-metode-satu-warna.pdf', './assets/sop-metode-1.jpg', './assets/sop-metode-2.jpg', './assets/sop-metode-3.jpg',
   './css/00-colors.css', './js/lib/color-table.js', './js/lib/appearance.js',
   './css/01-base.css',
   './css/02-splash.css',

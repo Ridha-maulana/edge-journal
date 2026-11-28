@@ -1,7 +1,7 @@
 /* Halaman baca Metode Satu Warna: bagian lipat, tab zona, visual Fibonacci, jadwal alarm, PDF asli, dan ubah teks (v5.11.5) */
 "use strict";
 /* ===== visual bagian 2 (v5.11.5): chart GOLD H1 bergambar, tangga zona, strip jam alarm ===== */
-const MV_PDF = { file: 'assets/sop-metode-satu-warna.pdf', pages: ['assets/sop-metode-1.jpg', 'assets/sop-metode-2.jpg'], name: 'SOP-Metode-Satu-Warna.pdf' };
+const MV_PDF = { file: 'assets/sop-metode-satu-warna.pdf', pages: ['assets/sop-metode-1.jpg', 'assets/sop-metode-2.jpg', 'assets/sop-metode-3.jpg'], name: 'SOP-Metode-Satu-Warna.pdf' };
 const MV_CSS = `
 .mv{--mg:#6fe0a6;--ma:#f5c85a;--mr:#ff8d9b;--mc:#22b573;--mk:#f0b429;--mx:#ef6b7b}
 html[data-mode="light"] .mv{--mg:#15803d;--ma:#a16207;--mr:#b91c4a}
@@ -129,10 +129,10 @@ function MetodePdfView({ onBack }) {
             React.createElement("h1", { style: { margin: 0 } }, "SOP Metode Satu Warna"),
             React.createElement("button", { type: "button", className: "sp-back", "aria-label": "Unduh PDF", onClick: mvDownloadPdf }, mvDlIcon(20))),
         React.createElement("div", { className: "mv-zm" },
-            React.createElement("span", null, "PDF asli · 2 halaman · geser untuk melihat sisi lain"),
+            React.createElement("span", null, "PDF asli · 3 halaman · geser untuk melihat sisi lain"),
             React.createElement("button", { type: "button", "aria-label": "Perkecil", disabled: z === 0, onClick: () => setZ(Math.max(0, z - 1)) }, "−"),
             React.createElement("button", { type: "button", "aria-label": "Perbesar", disabled: z === Z.length - 1, onClick: () => setZ(Math.min(Z.length - 1, z + 1)) }, "+")),
-        MV_PDF.pages.map((src, i) => React.createElement("div", { key: i, className: "mv-sc" }, React.createElement("img", { src, alt: "SOP Metode Satu Warna, halaman " + (i + 1) + " dari 2", style: { width: Z[z] + '%' }, loading: "lazy", draggable: false }))),
+        MV_PDF.pages.map((src, i) => React.createElement("div", { key: i, className: "mv-sc" }, React.createElement("img", { src, alt: "SOP Metode Satu Warna, halaman " + (i + 1) + " dari 3", style: { width: Z[z] + '%' }, loading: "lazy", draggable: false }))),
         React.createElement("div", { className: "mv-bt" },
             React.createElement("button", { type: "button", onClick: onBack }, "Kembali ke penjelasan"),
             React.createElement("button", { type: "button", className: "p", onClick: mvDownloadPdf }, "Unduh PDF")));
@@ -193,7 +193,13 @@ function MetodePage({ onBack, sec, tab }) {
         if (n === 2) return React.createElement(React.Fragment, null,
             React.createElement("div", { className: "mt-sl" }, "Peta harga nyata (contoh GOLD H1)"), React.createElement("div", { dangerouslySetInnerHTML: { __html: mvChartSvg() } }),
             React.createElement("div", { className: "mt-sl" }, "Zona Fibonacci"), React.createElement(MvLadder, { zones: d.zones }),
-            React.createElement("div", { className: "mt-sl" }, "Jam alarm dalam sehari (WIB)"), React.createElement(MvAlarmStrip, { rows: d.alarms }));
+            React.createElement("div", { className: "mt-sl" }, "Aturan baku: berakhirnya zona terlarang (> 161.8%)"),
+            d.unlockIntro && React.createElement("p", { className: "mt-pp", style: { marginTop: 0 } }, d.unlockIntro),
+            steps(d.unlock),
+            d.unlockEnd && React.createElement("p", { className: "mt-pp", style: { marginTop: 8 } }, d.unlockEnd),
+            React.createElement("div", { className: "mt-sl" }, "Jam alarm dalam sehari (WIB)"),
+            d.alarmNote && React.createElement("p", { className: "mt-pp", style: { marginTop: 0 } }, d.alarmNote),
+            React.createElement(MvAlarmStrip, { rows: d.alarms }));
         if (n === 3) { const b = side === 'retest';
             return React.createElement(React.Fragment, null,
                 React.createElement("div", { className: "mt-seg", role: "tablist" },
@@ -207,6 +213,10 @@ function MetodePage({ onBack, sec, tab }) {
             d.skipIntro && React.createElement("p", { className: "mt-pp", style: { marginTop: 0 } }, d.skipIntro),
             React.createElement("div", { className: "mt-sl" }, "Kondisi wajib Skip"),
             d.skip.map((p, i) => React.createElement("div", { key: i, className: "mt-sk" }, React.createElement(X, { size: 16 }), React.createElement("div", null, React.createElement("b", null, p[0]), p[1] && React.createElement("p", null, p[1])))));
+        if (n === 6) return React.createElement(React.Fragment, null,
+            d.evalIntro && React.createElement("p", { className: "mt-pp", style: { marginTop: 0 } }, d.evalIntro),
+            React.createElement("div", { className: "mv-zl" }, d.modes.map((p, i) => React.createElement("div", { key: i, className: "mv-zr " + ['g', 'a', 't', 'r'][i % 4] },
+                React.createElement("i", null), React.createElement("div", null, React.createElement("div", { className: "h" }, React.createElement("b", null, p[0])), p[1] && React.createElement("p", null, p[1]))))));
         return steps(d.flow);
     };
     return React.createElement("section", { className: "mt mv" },
@@ -221,7 +231,7 @@ function MetodePage({ onBack, sec, tab }) {
             open[s.n] && React.createElement("div", { className: "mt-acb" }, body(s.n))))),
         React.createElement("div", { className: "mv-pdf" },
             React.createElement("h3", null, "Versi PDF"),
-            React.createElement("div", { className: "mv-pf" }, React.createElement("div", { className: "mv-ic", "aria-hidden": "true" }, "PDF"), React.createElement("div", null, React.createElement("b", null, "SOP Metode Satu Warna"), React.createElement("small", null, "Dokumen asli \u00B7 2 halaman"))),
+            React.createElement("div", { className: "mv-pf" }, React.createElement("div", { className: "mv-ic", "aria-hidden": "true" }, "PDF"), React.createElement("div", null, React.createElement("b", null, "SOP Metode Satu Warna"), React.createElement("small", null, "Dokumen asli \u00B7 3 halaman"))),
             React.createElement("p", null, "Lebih suka membaca dokumen aslinya? Buka langsung di aplikasi, atau simpan ke HP."),
             React.createElement("div", { className: "mv-bt" },
                 React.createElement("button", { type: "button", className: "p", onClick: () => { setPdf(true); try { window.scrollTo(0, 0); } catch (e) { } } }, "Buka PDF"),

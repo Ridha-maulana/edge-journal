@@ -69,7 +69,7 @@ function EppSwitch({ mode }) {
         React.createElement("small", null, 'Pips'), React.createElement("i", { className: 'fxm-sw' }));
 }
 
-function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
+function EntryPerf({ account, trades, rangeText, mode, hubHead, flat, onRange, rangeOn, onAll }) {
     const h = React.createElement;
     const fm = n => money(n, account.currency);
     const sg = n => n > 0 ? `+${fm(n)}` : n < 0 ? `−${fm(Math.abs(n))}` : fm(0);
@@ -104,7 +104,8 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
     const pos = mode === 'posisi';
     if (!recs.length) return h('div', { className: (flat ? 'pg' : 'pe-card') + ' ep' },
         hubHead({ sub: `${rangeLbl}` }),
-        h('p', { className: 'pe-empty' }, 'Belum ada trade closed. Tutup posisi dan pilih zona entry Metode untuk melihat cara entry mana yang paling menguntungkan.'));
+        h('p', { className: 'pe-empty' }, rangeOn ? 'Belum ada trade closed pada rentang tanggal ini.' : 'Belum ada trade closed. Tutup posisi dan pilih zona entry Metode untuk melihat cara entry mana yang paling menguntungkan.'),
+        rangeOn && onRange && h('div', { className: 'ep-ea' }, h('button', { type: 'button', onClick: onRange }, 'Ubah tanggal'), onAll && h('button', { type: 'button', onClick: onAll }, 'Semua waktu')));
 
     const byZone = id => recs.filter(r => (id === 'none' ? !r.z : r.z === id));
     const total = epStat(recs);
@@ -313,16 +314,18 @@ function EntryPerf({ account, trades, rangeText, mode, hubHead, flat }) {
     /* ======= tab bar: tab pertama = pilihan waktu (menu turun langsung di bawahnya) ======= */
     const onTime = () => { if (tab !== 'time') { setTab('time'); setMenu(false); } else setMenu(m => !m); };
     const colCount = d => epCols(d, pos ? recs : zoned).length;
-    const views = ['Sesi', 'Hari', 'Minggu', 'Bulan', 'Tahun', 'Ringkasan'];
+    const views = onRange ? ['Sesi', 'Hari', 'Minggu', 'Bulan', 'Tahun', 'Ringkasan', 'Custom date range'] : ['Sesi', 'Hari', 'Minggu', 'Bulan', 'Tahun', 'Ringkasan'];
     const curView = tab === 'sum' ? 'Ringkasan' : dim;
-    const pickView = v => { if (v === 'Ringkasan') setTab('sum'); else { setDim(v); setTab('time'); } setMenu(false); };
+    const pickView = v => { if (v === 'Custom date range') { setMenu(false); if (onRange) onRange(); return; } if (v === 'Ringkasan') setTab('sum'); else { setDim(v); setTab('time'); } setMenu(false); };
     const tabs = h('div', { className: 'ep-tabs ep-sel', ref: menuRef },
         h('div', { className: 'ep-sl2' }, h('b', null, 'Lihat per'), h('small', null, 'Atur pengelompokan')),
         h('button', { type: 'button', className: 'sel', 'aria-haspopup': 'listbox', 'aria-expanded': menu, onClick: () => setMenu(m => !m) }, h('span', null, curView), h(Icon, { name: 'ChevronDown', size: 16, className: menu ? 'up' : '' })),
         menu && h('div', { className: 'ep-dd', role: 'listbox' }, views.map(v => h(React.Fragment, { key: v },
-            v === 'Ringkasan' && h('i', { className: 'sep' }),
-            h('button', { type: 'button', role: 'option', 'aria-selected': v === curView, className: 'o' + (v === curView ? ' on' : ''), onClick: () => pickView(v) }, v,
-                v === 'Ringkasan' ? h('small', null, 'Kontribusi · pips') : (v !== 'Sesi' ? h('small', null, colCount(v) + ' kolom') : null))))));
+            (v === 'Ringkasan' || v === 'Custom date range') && h('i', { className: 'sep' }),
+            v === 'Custom date range'
+                ? h('button', { type: 'button', role: 'option', 'aria-selected': !!rangeOn, className: 'o cr' + (rangeOn ? ' act' : ''), onClick: () => pickView(v) }, h(Icon, { name: 'CalendarRange', size: 16 }), 'Custom date range', rangeOn ? h('small', null, rangeLbl) : null)
+                : h('button', { type: 'button', role: 'option', 'aria-selected': v === curView, className: 'o' + (v === curView ? ' on' : ''), onClick: () => pickView(v) }, v,
+                    v === 'Ringkasan' ? h('small', null, 'Kontribusi · pips') : (v !== 'Sesi' ? h('small', null, colCount(v) + ' kolom') : null))))));
 
     return h('div', { className: (flat ? 'pg' : 'pe-card') + ' ep' },
         hubHead({ sub: `${pos ? 'Hasil posisi' : 'Zona entry'} · ${total.n} trade · ${rangeLbl}` }),
@@ -371,5 +374,5 @@ function PerfHubHead({ mode, onMode, sub, lockBtn, onBack }) {
                 h('div', { className: 'hub-list', role: 'listbox' }, HUB_OPT.map(o => h(React.Fragment, { key: o[0] }, o[4] ? h('div', { className: 'hub-gl' }, o[4]) : null, h('button', { type: 'button', role: 'option', 'aria-selected': o[0] === mode, className: 'o' + (o[0] === mode ? ' on' : ''), onClick: () => pick(o) },
                     h('i', { className: 'ic' }, h(Icon, { name: o[3], size: 18 })),
                     h('span', { className: 't' }, h('b', null, o[1]), h('small', null, o[2])),
-                    (o[0] === 'entri' || o[0] === 'posisi') ? h(EppSwitch, { mode: o[0] }) : o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null)))))), document.body));
+                    (o[0] === 'entri' || o[0] === 'posisi' || o[0] === 'bulan' || o[0] === 'mg') ? h(EppSwitch, { mode: o[0] }) : o[0] === mode ? h('svg', { className: 'ck', width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, h('path', { d: 'M5 13l4 4L19 7' })) : null)))))), document.body));
 }

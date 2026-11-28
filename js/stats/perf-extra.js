@@ -23,7 +23,7 @@ function TlBars({ vals, h }) {
     return React.createElement("svg", { className: "tl-bs", viewBox: `0 0 ${n * 10} ${h}`, preserveAspectRatio: "none", style: { height: h }, "aria-hidden": "true" },
         vals.map((a, i) => { const bh = Math.max(2, Math.abs(a) / mx * (mid - 2)); return React.createElement("rect", { key: i, x: i * 10 + 1.5, width: 7, y: a >= 0 ? mid - bh : mid, height: bh, rx: 1.5, fill: EJC(a >= 0 ? "#34d399" : "#ff6b81") }); }));
 }
-function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view, onPickMonth, onResetAll, rangeText, mode = 'all', advancedStats, onBack }) {
+function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view, onPickMonth, onResetAll, onCustomRange, customOn, rangeText, mode = 'all', advancedStats, onBack }) {
     const cur = account.currency;
     const fm = n => money(n, cur);
     const sg = n => `${n > 0 ? '+' : ''}${fm(n)}`;
@@ -58,9 +58,11 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
     const lab = dayKeys.map(k => `${k.slice(8)}/${k.slice(5, 7)}`);
     const CT = { growth: { v: cumPS, k: 'line', f: v => `${v > 0 ? '+' : ''}${v.toFixed(1)}%`, t: 'Growth (% dari modal sekarang)' }, balance: { v: cumS.map(c => account.balance + c), k: 'line', f: v => `$${Math.round(v)}`, t: 'Balance / equity' }, profit: { v: cumS, k: 'line', f: v => `$${Math.round(v)}`, t: 'Profit kumulatif' }, daily: { v: dayKeys.map(k => dayMap[k]), k: 'bar', f: v => `$${Math.round(v)}`, t: 'P&L harian (WIB)' }, dd: { v: ddS, k: 'line', f: v => `$${Math.round(v)}`, t: 'Drawdown dari puncak' } }[ct];
     const allClosed = trades.filter(t => t.status === 'closed');
-    const mon = Array.from({ length: 12 }, (_, i) => { const xs = allClosed.filter(t => { const w = wib(t.date); return Number(w.year) === year && w.mi === i; }); return { i, n: xs.length, pnl: sumOf(xs, t => t.pnl), pc: xs.reduce((a, t) => chainAdd(a, tradePct(account, t)), 0), wins: xs.filter(t => t.pnl > 0).length }; });
+    const mon = Array.from({ length: 12 }, (_, i) => { const xs = allClosed.filter(t => { const w = wib(t.date); return Number(w.year) === year && w.mi === i; }); return { i, n: xs.length, pnl: sumOf(xs, t => t.pnl), pips: xs.reduce((a, t) => a + (pipsOf(t) || 0), 0), pc: xs.reduce((a, t) => chainAdd(a, tradePct(account, t)), 0), wins: xs.filter(t => t.pnl > 0).length }; });
     const MN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
     const ms = mon[mSel];
+    const eppM = useEpp('mg');   // saklar P&L / Pips dari menu Pilih tampilan
+    const pgx = v => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(Math.abs(v) >= 100 ? 0 : 1)}`;
     const mpct = p => { const a = Math.abs(p); return (p > 0.004 ? '+' : p < -0.004 ? '-' : '') + (a >= 10 ? a.toFixed(1) : a.toFixed(2)) + '%'; };
     const syms = [...new Set(sorted.map(t => t.symbol))].map(s => { const xs = sorted.filter(t => t.symbol === s); return { s, n: xs.length, pnl: sumOf(xs, t => t.pnl) }; }).sort((a, b) => b.n - a.n);
     const maxSym = Math.max(1, ...syms.map(x => Math.abs(x.pnl)));
@@ -174,7 +176,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
             const hh = p => React.createElement(PerfHubHead, { ...p, mode: hub, onMode: setHub, onBack });
             if (hub === 'posisi' || hub === 'entri' || hub === 'bulan') {
                 if (hub === 'bulan') return React.createElement(DrillDown, { flat, key: account.id + '-dd', account: account, trades: filtered, rangeText: rangeText, hubHead: hh });
-                return React.createElement(EntryPerf, { flat, key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh });
+                return React.createElement(EntryPerf, { flat, key: account.id + '-ep-' + hub, account: account, trades: filtered, rangeText: rangeText, mode: hub, hubHead: hh, onRange: onCustomRange, rangeOn: customOn, onAll: onResetAll });
             
             }
             if (hub === 'kal') return React.createElement("div", { className: "pg pg-cal" },
@@ -189,7 +191,7 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
             React.createElement("div", { className: "mg-body" },
                 React.createElement("div", { className: "mg-stats" }, [
                     ['Gain ' + MN[ms.i], fp(ms.pc), tone(ms.pnl), 'ChartUp'],
-                    ['Profit', sg(ms.pnl), tone(ms.pnl), 'Coins'],
+                    eppM ? ['Pips', pgx(ms.pips), tone(ms.pips), 'Coins'] : ['Profit', sg(ms.pnl), tone(ms.pnl), 'Coins'],
                     ['Trades', ms.n, '', 'BarChart3'],
                     ['Win rate', (ms.n ? Math.round(ms.wins / ms.n * 100) : 0) + '%', '', 'Shield']
                 ].map(([l, v, tn, ic]) => React.createElement("div", { className: "mg-stat", key: l },
@@ -216,10 +218,10 @@ function PerfExtra({ account, trades, filtered, total, maxDd, onSelectDate, view
             React.createElement("div", { className: "mg-lbl" }, "Bulan"),
             React.createElement("div", { className: "mg-row" }, mon.map(m => React.createElement("button", { key: m.i, type: "button", className: mSel === m.i ? 'sel' : '', onClick: () => onPickMonth(year, m.i), ref: mSel === m.i ? (el => { if (el && el.parentNode && el.parentNode.scrollWidth > el.parentNode.clientWidth) el.parentNode.scrollLeft = el.offsetLeft - (el.parentNode.clientWidth - el.offsetWidth) / 2; }) : undefined },
                 React.createElement("span", null, MN[m.i]),
-                React.createElement("em", { className: m.n ? (m.pnl > 0 ? 'pos' : m.pnl < 0 ? 'neg' : '') : 'nil' }, m.n ? sg(m.pnl) : '–')))),
+                React.createElement("em", { className: m.n ? (eppM ? (m.pips > 0 ? 'pos' : m.pips < 0 ? 'neg' : '') : (m.pnl > 0 ? 'pos' : m.pnl < 0 ? 'neg' : '')) : 'nil' }, m.n ? (eppM ? pgx(m.pips) : sg(m.pnl)) : '–')))),
             React.createElement("div", { className: `mg-note ${ms.n ? (ms.pnl > 0 ? 'pos' : ms.pnl < 0 ? 'neg' : '') : ''}` },
                 React.createElement("b", null, !ms.n ? `Belum ada trade di ${MN[ms.i]}` : ms.pnl > 0 ? `Progres bagus di ${MN[ms.i]}` : ms.pnl < 0 ? `${MN[ms.i]} perlu evaluasi` : `${MN[ms.i]} impas`),
-                React.createElement("span", null, `Trades ${ms.n}  |  Win rate ${ms.n ? Math.round(ms.wins / ms.n * 100) : 0}%  |  Profit ${sg(ms.pnl)}`))));
+                React.createElement("span", null, `Trades ${ms.n}  |  Win rate ${ms.n ? Math.round(ms.wins / ms.n * 100) : 0}%  |  ${eppM ? 'Pips ' + pgx(ms.pips) : 'Profit ' + sg(ms.pnl)}`))));
             if (hub === 'adv') return React.createElement("div", { className: (flat ? "pg" : "pe-card") + " hub-adv" }, hh({ sub: `Statistik lengkap akun \u00B7 ${sorted.length} trade` }), advancedStats);
             if (hub === 'pair') {
                 const N = sorted.length, byP = syms.slice().sort((x, y) => y.pnl - x.pnl);

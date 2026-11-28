@@ -402,3 +402,12 @@ html[data-nanim="2"] .spin,html[data-nanim="2"] [class*="spinner"],html[data-nan
 .epp-sw small{font-size:12px!important;font-weight:700;margin:0!important;color:var(--c109)!important}
 .epp-sw.on small{color:var(--c118)!important}
 .epp-sw.on .fxm-sw{background:#22c55e}.epp-sw.on .fxm-sw::after{left:21px}
+
+/* v5.13.0: item Custom date range di menu Lihat per, tombol Semua waktu di dialog rentang, aksi saat rentang kosong */
+.ep-dd .o.cr,.ep-sel .ep-dd .o.cr{flex-wrap:wrap;height:auto;min-height:42px;padding-top:6px;padding-bottom:6px;row-gap:0}
+.ep-dd .o.cr small{flex:none;width:100%;margin:-2px 0 0 24px;text-align:left}
+.ep-dd .o.cr.act{color:var(--c118)}
+.ep-ea{display:flex;gap:10px;justify-content:center;margin:6px 0 10px}
+.ep-ea button{min-height:44px;padding:0 18px;border-radius:12px;border:1px solid var(--c82);background:var(--c123);color:var(--c0);font:inherit;font-weight:600;cursor:pointer}
+.range-actions:has(.all){gap:4px}
+.range-actions button.all{margin-right:auto;white-space:nowrap;padding-left:0;font-size:var(--fs-sm)}

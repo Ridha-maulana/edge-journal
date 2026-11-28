@@ -9,10 +9,10 @@ const DD_MONF = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli',
 const DD_DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
 const DD_WKND = 'Akhir pekan (Sab–Min)';
 const DD_SCOL = { 'Asia': EJC("#34d399"), 'London': EJC("#6b8dff"), 'New York': EJC("#f5b84b"), 'Sepi': EJC("#8a94a6") };
-const DD_LCOL = [EJC("#6b8dff"), EJC("#9b82ff"), EJC("#f5b84b")];   // dot level: bulan (biru), minggu (ungu), hari (kuning) = warna kotak info
-const DD_LV = ['Bulan', 'Minggu', 'Hari', 'Sesi', 'Win/Loss'];
-const DD_LOCK_MSG = ['Menampilkan semua bulan pada periode terpilih', 'Data per nomor minggu dari semua bulan', 'Data per hari dari semua minggu', '3 sesi dengan data agregat dari semua hari', 'Distribusi win/loss agregat dari semua hari'];
-const DD_BEST = ['Bulan terbaik', 'Minggu terbaik', 'Hari terbaik', 'Sesi terbaik'];
+const DD_LCOL = [EJC("#e2e8f0"), EJC("#6b8dff"), EJC("#9b82ff"), EJC("#f5b84b")];   // dot level: bulan (biru), minggu (ungu), hari (kuning) = warna kotak info
+const DD_LV = ['Tahun', 'Bulan', 'Minggu', 'Hari', 'Sesi', 'Win/Loss'];
+const DD_LOCK_MSG = ['Menampilkan semua tahun pada periode terpilih', 'Menampilkan semua bulan dari semua tahun', 'Data per nomor minggu dari semua bulan', 'Data per hari dari semua minggu', '3 sesi dengan data agregat dari semua hari', 'Distribusi win/loss agregat dari semua hari'];
+const DD_BEST = ['Tahun terbaik', 'Bulan terbaik', 'Minggu terbaik', 'Hari terbaik', 'Sesi terbaik'];
 const dd2 = n => String(n).padStart(2, '0');
 function ddBuild(trades) {
     const out = [];
@@ -36,7 +36,7 @@ function ddStat(rs) {
     return {
         n: rs.length, wins: w.length, losses: l.length, wr: rs.length ? w.length / rs.length * 100 : 0, profit: sum(rs), profitPct: rs.reduce((a, r) => chainAdd(a, r.pct), 0), pips: sum(rs, 'pips'),
         avgWin: w.length ? sum(w) / w.length : 0, avgLoss: l.length ? sum(l) / l.length : 0,
-        days: new Set(rs.map(r => r.iso)).size, weeks: new Set(rs.map(r => r.mk + r.wk)).size, sessions: new Set(rs.map(r => r.ses)).size
+        months: new Set(rs.map(r => r.mk)).size, days: new Set(rs.map(r => r.iso)).size, weeks: new Set(rs.map(r => r.mk + r.wk)).size, sessions: new Set(rs.map(r => r.ses)).size
     };
 }
 /* kotak info kecil: day (abu), week (ungu), month (biru), ses (sesi, ada titik warna) */
@@ -75,10 +75,12 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
     const recs = useMemo(() => ddBuild(withPct(account, (trades || []).filter(t => t.status === 'closed'))), [trades, account]);
     const [level, setLevel] = useState(0);
     const [locked, setLocked] = useState(false);
-    const [sel, setSel] = useState({ mk: null, wk: null, day: null, ses: null });
+    const [sel, setSel] = useState({ y: null, mk: null, wk: null, day: null, ses: null });
+    const epp = useEpp('bulan');   // saklar P&L / Pips dari menu Pilih tampilan
     const cardRef = useRef(null);
     const mounted = useRef(false);
     const mks = useMemo(() => [...new Set(recs.map(r => r.mk))].sort(), [recs]);
+    const yrs = useMemo(() => [...new Set(recs.map(r => r.mk.slice(0, 4)))].sort(), [recs]);
     const multiYear = new Set(mks.map(k => k.slice(0, 4))).size > 1;
     const mkIdx = mk => Number(mk.slice(5, 7)) - 1;
     const mkName = mk => `${DD_MONF[mkIdx(mk)]} ${mk.slice(0, 4)}`;
@@ -88,11 +90,12 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
     const wkRange = (mk, wk) => { const g = geo(mk); const a = Math.max(1, (wk - 1) * 7 - g.off + 1), b = Math.min(g.dim, (wk - 1) * 7 - g.off + 7); return a === b ? `${a} ${DD_MON[g.m]}` : `${a}–${b} ${DD_MON[g.m]}`; };
 
     // Validasi pilihan (data bisa berubah karena sinkron / ganti akun)
-    const curM = sel.mk && mks.includes(sel.mk) ? sel.mk : null;
+    const curY = sel.y && yrs.includes(sel.y) ? sel.y : null;
+    const curM = curY && sel.mk && sel.mk.slice(0, 4) === curY && mks.includes(sel.mk) ? sel.mk : null;
     const curW = curM && sel.wk && sel.wk <= weeksIn(curM) && recs.some(r => r.mk === curM && r.wk === sel.wk) ? sel.wk : null;
     const curD = curW && sel.day && recs.some(r => r.mk === curM && r.wk === curW && r.day === sel.day) ? sel.day : null;
     const curS = curD && sel.ses && recs.some(r => r.mk === curM && r.wk === curW && r.day === curD && r.ses === sel.ses) ? sel.ses : null;
-    const cap = curM ? (curW ? (curD ? (curS ? 4 : 3) : 2) : 1) : 0;
+    const cap = curY ? (curM ? (curW ? (curD ? (curS ? 5 : 4) : 3) : 2) : 1) : 0;
     const lv = locked ? level : Math.min(level, cap);
 
     useEffect(() => {
@@ -102,8 +105,8 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
     }, [lv, locked]);
 
     if (!recs.length) return h('div', { className: (flat ? 'pg' : 'pe-card') + ' dd', ref: cardRef },
-        hubHead ? hubHead({ sub: 'Bulan, minggu, hari, sesi' }) : h('h3', null, 'Performa per bulan / minggu / hari / sesi'),
-        h('p', { className: 'pe-empty' }, rangeText && rangeText !== 'All time' ? `Belum ada trade closed pada periode ${rangeText}. Pilih bulan atau periode lain.` : 'Belum ada trade closed. Tutup posisi pertama Anda untuk melihat performa per bulan, minggu, hari, dan sesi.'));
+        hubHead ? hubHead({ sub: 'Tahun, bulan, minggu, hari, sesi' }) : h('h3', null, 'Performa per bulan / minggu / hari / sesi'),
+        h('p', { className: 'pe-empty' }, rangeText && rangeText !== 'All time' ? `Belum ada trade closed pada periode ${rangeText}. Ubah rentang tanggal lewat Custom date range di Performa Entri.` : 'Belum ada trade closed. Tutup posisi pertama Anda untuk melihat performa per bulan, minggu, hari, dan sesi.'));
 
     // ----- susun daftar kartu untuk level aktif -----
     const mkItem = (key, o, rs) => ({ key, st: ddStat(rs), tags: [], ...o });
@@ -113,34 +116,39 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
     const sesNames = SESSIONS.map(s => s.name).filter(n => n !== 'Sepi' || recs.some(r => r.ses === 'Sepi'));
     const dayNames = rs => [...DD_DAYS, ...(rs.some(r => r.day === DD_WKND) ? [DD_WKND] : [])];
     if (lv === 0) {
+        // Tahun: berapa bulan, minggu, hari, sesi (kotak info) + posisi, WR, %, profit
+        title = 'Performa per tahun';
+        small = yrs.length === 1 ? yrs[0] : `${yrs[0]}–${yrs[yrs.length - 1]}`;
+        items = yrs.map(y => { const rs = recs.filter(r => r.mk.slice(0, 4) === y); const st = ddStat(rs); return mkItem(y, { dot: DD_LCOL[0], title: y, tags: [{ cls: 'cnt', text: `${st.months} bulan` }, { cls: 'cnt', text: `${st.weeks} minggu` }, { cls: 'cnt', text: `${st.days} hari` }, { cls: 'cnt', text: `${st.sessions} sesi` }] }, rs); });
+    } else if (lv === 1) {
         // Bulan: berapa minggu, hari, sesi (kotak info) + posisi, WR, %, profit
         title = 'Performa per bulan';
-        const ys = [...new Set(mks.map(k => k.slice(0, 4)))];
-        small = ys.length === 1 ? ys[0] : `${ys[0]}–${ys[ys.length - 1]}`;
-        items = mks.map(mk => { const rs = recs.filter(r => r.mk === mk); const st = ddStat(rs); return mkItem(mk, { dot: DD_LCOL[0], title: mkName(mk), tags: [{ cls: 'cnt', text: `${st.weeks} minggu` }, { cls: 'cnt', text: `${st.days} hari` }, { cls: 'cnt', text: `${st.sessions} sesi` }] }, rs); });
-    } else if (lv === 1) {
+        const ms2 = locked ? mks : mks.filter(k => k.slice(0, 4) === curY);
+        small = locked ? (yrs.length === 1 ? yrs[0] : `${yrs[0]}–${yrs[yrs.length - 1]}`) : curY;
+        items = ms2.map(mk => { const rs = recs.filter(r => r.mk === mk); const st = ddStat(rs); return mkItem(mk, { dot: DD_LCOL[1], title: mkName(mk), tags: [{ cls: 'cnt', text: `${st.weeks} minggu` }, { cls: 'cnt', text: `${st.days} hari` }, { cls: 'cnt', text: `${st.sessions} sesi` }] }, rs); });
+    } else if (lv === 2) {
         // Minggu: bulan & hari apa saja, sesi apa saja + posisi, WR, %, profit
         title = 'Performa per minggu';
         if (locked) {
             small = 'Agregasi Semua Bulan';
             const maxW = Math.max(...mks.map(weeksIn));
-            items = Array.from({ length: maxW }, (_, i) => { const rs = recs.filter(r => r.wk === i + 1); return mkItem(i + 1, { dot: DD_LCOL[1], title: `Minggu ke-${i + 1}`, note: 'Semua Bulan', sub: rs.length ? '' : 'Tidak ada trade', tags: tg(rs, ['month', 'day', 'ses']) }, rs); });
+            items = Array.from({ length: maxW }, (_, i) => { const rs = recs.filter(r => r.wk === i + 1); return mkItem(i + 1, { dot: DD_LCOL[2], title: `Minggu ke-${i + 1}`, note: 'Semua Bulan', sub: rs.length ? '' : 'Tidak ada trade', tags: tg(rs, ['month', 'day', 'ses']) }, rs); });
         } else {
             small = mkName(curM);
-            items = Array.from({ length: weeksIn(curM) }, (_, i) => { const rs = recs.filter(r => r.mk === curM && r.wk === i + 1); return mkItem(i + 1, { dot: DD_LCOL[1], title: `Minggu ke-${i + 1}`, sub: wkRange(curM, i + 1), tags: tg(rs, ['month', 'day', 'ses']) }, rs); });
+            items = Array.from({ length: weeksIn(curM) }, (_, i) => { const rs = recs.filter(r => r.mk === curM && r.wk === i + 1); return mkItem(i + 1, { dot: DD_LCOL[2], title: `Minggu ke-${i + 1}`, sub: wkRange(curM, i + 1), tags: tg(rs, ['month', 'day', 'ses']) }, rs); });
         }
-    } else if (lv === 2) {
+    } else if (lv === 3) {
         // Hari: bulan, minggu, dan sesi apa saja + WR, %, profit
         title = 'Performa per hari';
         if (locked) {
             small = 'Agregasi Semua Minggu';
-            items = dayNames(recs).map(d => { const rs = recs.filter(r => r.day === d); return mkItem(d, { dot: DD_LCOL[2], title: d, note: 'Semua Minggu', sub: rs.length ? '' : 'Tidak ada trade', tags: tg(rs, ['month', 'week', 'ses']) }, rs); });
+            items = dayNames(recs).map(d => { const rs = recs.filter(r => r.day === d); return mkItem(d, { dot: DD_LCOL[3], title: d, note: 'Semua Minggu', sub: rs.length ? '' : 'Tidak ada trade', tags: tg(rs, ['month', 'week', 'ses']) }, rs); });
         } else {
             small = `Minggu ke-${curW} · ${mkShort(curM)}`;
             const scope = recs.filter(r => r.mk === curM && r.wk === curW);
-            items = dayNames(scope).map(d => { const rs = scope.filter(r => r.day === d); return mkItem(d, { dot: DD_LCOL[2], title: d, sub: rs.length ? '' : 'Belum ada trade', tags: tg(rs, ['month', 'week', 'ses']) }, rs); });
+            items = dayNames(scope).map(d => { const rs = scope.filter(r => r.day === d); return mkItem(d, { dot: DD_LCOL[3], title: d, sub: rs.length ? '' : 'Belum ada trade', tags: tg(rs, ['month', 'week', 'ses']) }, rs); });
         }
-    } else if (lv === 3) {
+    } else if (lv === 4) {
         title = 'Performa per sesi';
         if (locked) {
             small = 'Agregasi Semua Hari';
@@ -150,7 +158,7 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
             const scope = recs.filter(r => r.mk === curM && r.wk === curW && r.day === curD);
             items = sesNames.map(n => { const rs = scope.filter(r => r.ses === n); return mkItem(n, { dot: DD_SCOL[n], title: n, sub: sesHrs(n), tags: tg(rs, ['day', 'week', 'month']) }, rs); }).filter(i => i.st.n > 0);
         }
-    } else {
+    } else {   /* level 5: Win/Loss */
         title = 'Distribusi win / loss';
         if (locked) {
             small = 'Agregasi Semua Hari';
@@ -163,8 +171,8 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
     }
 
     // ----- aksi -----
-    const baseSel = { mk: curM, wk: curW, day: curD, ses: curS };
-    const FIELDS = ['mk', 'wk', 'day', 'ses'];
+    const baseSel = { y: curY, mk: curM, wk: curW, day: curD, ses: curS };
+    const FIELDS = ['y', 'mk', 'wk', 'day', 'ses'];
     const applyPick = (key) => {
         const f = FIELDS[lv];
         const next = { ...baseSel };
@@ -173,9 +181,9 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
         setSel(next);
         setLevel(lv + 1);
     };
-    const pick = i => { if (lv >= 4) return; if (locked) { setLevel(lv + 1); return; } if (i.st.n > 0) applyPick(i.key); };
+    const pick = i => { if (lv >= 5) return; if (locked) { setLevel(lv + 1); return; } if (i.st.n > 0) applyPick(i.key); };
     const goNext = () => {
-        if (lv >= 4) return;
+        if (lv >= 5) return;
         if (locked) { setLevel(lv + 1); return; }
         const f = FIELDS[lv];
         if (baseSel[f] != null) { setLevel(lv + 1); return; }
@@ -187,6 +195,8 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
 
     // ----- tampilan -----
     const maxN = Math.max(1, ...items.map(i => i.st.n));
+    const mvOf = st => epp ? st.pips : st.profit;
+    const mtxt = st => epp ? pipTxt(st.pips) : sg(st.profit);
     const tagEls = tags => tags && tags.length > 0 ? h('div', { className: 'dd-tags' }, tags.map((t, k) => h('span', { key: k, className: 'dd-tag ' + t.cls }, t.dot ? h('i', { style: { background: t.dot } }) : null, t.text))) : null;
     // data Win/Loss: Win / Loss, Win Rate, Avg. Win / Loss, Perolehan Pips
     const rowsOf = st => [
@@ -200,13 +210,13 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
 
     let hl = null;
     if (locked) hl = h('div', { className: 'dd-info' }, `🔒 Mode Kunci: ${DD_LOCK_MSG[lv]}`);
-    else if (lv < 4) {
+    else if (lv < 5) {
         const c = items.filter(i => i.st.n > 0);
-        if (c.length) { const b = c.reduce((a, x) => x.st.profit > a.st.profit ? x : a); hl = h('div', { className: 'dd-best' }, `🏆 ${DD_BEST[lv]}: `, h('b', null, b.title), ` · ${sg(b.st.profit)} · WR ${Math.round(b.st.wr)}% · ${b.st.n} posisi`); }
+        if (c.length) { const b = c.reduce((a, x) => mvOf(x.st) > mvOf(a.st) ? x : a); hl = h('div', { className: 'dd-best' }, `🏆 ${DD_BEST[lv]}: `, h('b', null, b.title), ` · ${mtxt(b.st)} · WR ${Math.round(b.st.wr)}% · ${b.st.n} posisi`); }
     }
 
     let body;
-    if (lv < 4) {
+    if (lv < 5) {
         body = items.map(i => {
             const ok = locked || i.st.n > 0;
             return h('div', { key: i.key, className: 'dd-item' + (ok ? ' click' : ' dim') + '', role: ok ? 'button' : undefined, tabIndex: ok ? 0 : undefined, onClick: ok ? () => pick(i) : undefined, onKeyDown: ok ? (e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(i); } }) : undefined },
@@ -214,23 +224,23 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
                 i.sub ? h('div', { className: 'dd-sub' }, i.sub) : null,
                 tagEls(i.tags),
                 h('div', { className: 'dd-row' },
-                    h('span', { className: 'dd-meta' }, h('span', null, `${i.st.n} posisi`), h('span', null, `${Math.round(i.st.wr)}% WR`), h('span', { className: tn(i.st.profit) }, pct(i.st.profitPct))),
-                    h('b', { className: 'dd-pr ' + tn(i.st.profit) }, sg(i.st.profit))),
-                h('div', { className: 'dd-bar' }, h('i', { style: { width: `${i.st.n ? Math.max(3, i.st.n / maxN * 100) : 0}%`, background: i.st.profit < 0 ? EJC("#ff6b81") : EJC("#34d399") } })));
+                    h('span', { className: 'dd-meta' }, h('span', null, `${i.st.n} posisi`), h('span', null, `${Math.round(i.st.wr)}% WR`), h('span', { className: tn(mvOf(i.st)) }, pct(i.st.profitPct))),
+                    h('b', { className: 'dd-pr ' + tn(mvOf(i.st)) }, mtxt(i.st))),
+                h('div', { className: 'dd-bar' }, h('i', { style: { width: `${i.st.n ? Math.max(3, i.st.n / maxN * 100) : 0}%`, background: mvOf(i.st) < 0 ? EJC("#ff6b81") : EJC("#34d399") } })));
         });
     } else if (locked) {
         const total = ddStat(recs);
         body = [...items.map(i => h('div', { key: i.key, className: 'dd-item' }, head(i), tagEls(i.tags), table(rowsOf(i.st)))),
         h('div', { key: 'total', className: 'dd-item dd-total' },
             h('div', { className: 'dd-ihead' }, h('i', { className: 'dd-dot', style: { background: EJC("#eef2ff") } }), h('strong', null, 'Ringkasan Total'), h('span', { className: 'dd-small' }, 'semua sesi')),
-            table([['Total posisi', String(total.n), ''], ...rowsOf(total), ['Profit', `${sg(total.profit)} · ${pct(total.profitPct)}`, tn(total.profit)]]))];
+            table([['Total posisi', String(total.n), ''], ...rowsOf(total), [epp ? 'Pips' : 'Profit', `${mtxt(total)} · ${pct(total.profitPct)}`, tn(mvOf(total))]]))];
     } else {
         const i = items[0];
         body = [h('div', { key: 'donut', className: 'dd-donutwrap' }, h(DdDonut, { st: i.st })),
         h('div', { key: 'card', className: 'dd-item' }, head(i), tagEls(i.tags), table(rowsOf(i.st)))];
     }
 
-    const DD_ICO = ['CalendarDays', 'CalendarRange', 'Calendar', 'Clock', 'Trophy'];
+    const DD_ICO = ['CalendarCheck', 'CalendarDays', 'CalendarRange', 'Calendar', 'Clock', 'Trophy'];
     const crumbs = DD_LV.map((l, i) => h('button', { key: l, type: 'button', className: 'dd-crumb' + (i === lv ? ' on' : crumbOn(i) ? ' seen' : ''), disabled: !crumbOn(i), 'aria-label': l, title: l, onClick: () => crumbOn(i) && setLevel(i) }, h(Icon, { name: DD_ICO[i], size: 15 }), h('span', null, l)));
     const lockBtn = h('button', { key: 'lock', type: 'button', className: 'dd-lock' + (locked ? ' on' : ''), 'aria-label': locked ? 'Terkunci' : 'Kunci', title: locked ? 'Terkunci' : 'Kunci', onClick: () => setLocked(v => !v), 'aria-pressed': locked }, h(Icon, { name: locked ? 'LockKeyhole' : 'LockKeyholeOpen', size: 15 }), h('span', null, locked ? 'Terkunci' : 'Kunci'));
 
@@ -238,5 +248,5 @@ function DrillDown({ account, trades, rangeText, hubHead, flat }) {
         hubHead ? hubHead({ sub: `${title.replace(/^Performa p/, 'P')} · ${small}`, lockBtn }) : h('div', { className: 'dd-top' }, h('h3', { className: 'dd-title' }, title, ' ', h('small', null, `(${small})`)), lockBtn),
         h('div', { className: 'dd-crumbs' }, crumbs),
         hl, body,
-        h('p', { className: 'pe-note' }, 'Minggu mengikuti baris pada Kalender (Senin–Minggu); hari dihitung dari tanggal entry; sesi dihitung dari jam asli Sydney/Tokyo, London, dan New York (otomatis ikut musim panas/dingin); jam entry tetap WIB. Saat ini: Asia ' + sesRangeWib('Asia') + ', London ' + sesRangeWib('London') + ', New York ' + sesRangeWib('New York') + ' WIB. Persen (%) dihitung dari modal awal, sama seperti Gain dan Monthly gain. Data kartu ini mengikuti bulan yang dipilih di Kalender dan bulan/tahun yang dipilih di Monthly gain (satu data, bulan tanpa trade tidak ditampilkan). Tombol Kunci menampilkan data gabungan dari semua bulan/minggu/hari pada periode itu.'));
+        h('p', { className: 'pe-note' }, 'Minggu mengikuti baris pada Kalender (Senin–Minggu); hari dihitung dari tanggal entry; sesi dihitung dari jam asli Sydney/Tokyo, London, dan New York (otomatis ikut musim panas/dingin); jam entry tetap WIB. Saat ini: Asia ' + sesRangeWib('Asia') + ', London ' + sesRangeWib('London') + ', New York ' + sesRangeWib('New York') + ' WIB. Persen (%) dihitung dari modal awal, sama seperti Gain dan Monthly gain. Halaman ini dibuka di tampilan Tahun dan menampilkan semua data akun (atau rentang yang dipilih lewat Custom date range di Performa Entri/Posisi). Ketuk kartu untuk masuk ke bulan, minggu, hari, sesi, lalu Win/Loss. Tombol Kunci menampilkan data gabungan dari semua tahun/bulan/minggu/hari pada periode itu.'));
 }
